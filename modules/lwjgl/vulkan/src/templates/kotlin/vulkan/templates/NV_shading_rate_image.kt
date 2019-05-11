@@ -194,10 +194,10 @@ val NV_shading_rate_image = "NVShadingRateImage".nativeClassVK("NV_shading_rate_
 
         <h5>Valid Usage</h5>
         <ul>
-            <li>The <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#features-features-shadingRateImage">shading rate image</a> feature <b>must</b> be enabled.</li>
+            <li>The <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#features-shadingRateImage">shading rate image</a> feature <b>must</b> be enabled.</li>
             <li>If {@code imageView} is not #NULL_HANDLE, it <b>must</b> be a valid {@code VkImageView} handle of type #IMAGE_VIEW_TYPE_2D or #IMAGE_VIEW_TYPE_2D_ARRAY.</li>
             <li>If {@code imageView} is not #NULL_HANDLE, it <b>must</b> have a format of #FORMAT_R8_UINT.</li>
-            <li>If {@code imageView} is not #NULL_HANDLE, the image <b>must</b> have been created with #IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV set</li>
+            <li>If {@code imageView} is not #NULL_HANDLE, it <b>must</b> have been created with a {@code usage} value including #IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV</li>
             <li>If {@code imageView} is not #NULL_HANDLE, {@code imageLayout} <b>must</b> match the actual {@code VkImageLayout} of each subresource accessible from {@code imageView} at the time the subresource is accessed.</li>
             <li>If {@code imageView} is not #NULL_HANDLE, {@code imageLayout} <b>must</b> be #IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV or #IMAGE_LAYOUT_GENERAL.</li>
         </ul>
@@ -207,7 +207,7 @@ val NV_shading_rate_image = "NVShadingRateImage".nativeClassVK("NV_shading_rate_
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
             <li>{@code imageView} <b>must</b> be a valid {@code VkImageView} handle</li>
             <li>{@code imageLayout} <b>must</b> be a valid {@code VkImageLayout} value</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics operations</li>
             <li>Both of {@code commandBuffer}, and {@code imageView} <b>must</b> have been created, allocated, or retrieved from the same {@code VkDevice}</li>
         </ul>
@@ -220,14 +220,14 @@ val NV_shading_rate_image = "NVShadingRateImage".nativeClassVK("NV_shading_rate_
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics</td><td></td></tr></tbody>
         </table>
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command will be recorded."),
-        VkImageView.IN("imageView", "an image view handle that specifies the shading rate image. {@code imageView} <b>may</b> be set to #NULL_HANDLE, which is equivalent to specifying a view of an image filled with zero values."),
-        VkImageLayout.IN("imageLayout", "the layout that the image subresources accessible from {@code imageView} will be in when the shading rate image is accessed.")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command will be recorded."),
+        VkImageView("imageView", "an image view handle that specifies the shading rate image. {@code imageView} <b>may</b> be set to #NULL_HANDLE, which is equivalent to specifying a view of an image filled with zero values."),
+        VkImageLayout("imageLayout", "the layout that the image subresources accessible from {@code imageView} will be in when the shading rate image is accessed.")
     )
 
     void(
@@ -247,19 +247,19 @@ val NV_shading_rate_image = "NVShadingRateImage".nativeClassVK("NV_shading_rate_
 
         <h5>Valid Usage</h5>
         <ul>
-            <li>The <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#features-features-shadingRateImage">shading rate image</a> feature <b>must</b> be enabled.</li>
+            <li>The <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#features-shadingRateImage">shading rate image</a> feature <b>must</b> be enabled.</li>
             <li>The bound graphics pipeline <b>must</b> have been created with the #DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV dynamic state enabled</li>
             <li>{@code firstViewport} <b>must</b> be less than ##VkPhysicalDeviceLimits{@code ::maxViewports}</li>
             <li>The sum of {@code firstViewport} and {@code viewportCount} <b>must</b> be between 1 and ##VkPhysicalDeviceLimits{@code ::maxViewports}, inclusive</li>
-            <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#features-features-multiViewport">multiple viewports</a> feature is not enabled, {@code firstViewport} <b>must</b> be 0</li>
-            <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#features-features-multiViewport">multiple viewports</a> feature is not enabled, {@code viewportCount} <b>must</b> be 1</li>
+            <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#features-multiViewport">multiple viewports</a> feature is not enabled, {@code firstViewport} <b>must</b> be 0</li>
+            <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#features-multiViewport">multiple viewports</a> feature is not enabled, {@code viewportCount} <b>must</b> be 1</li>
         </ul>
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
             <li>{@code pShadingRatePalettes} <b>must</b> be a valid pointer to an array of {@code viewportCount} valid ##VkShadingRatePaletteNV structures</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics operations</li>
             <li>{@code viewportCount} <b>must</b> be greater than 0</li>
         </ul>
@@ -272,7 +272,7 @@ val NV_shading_rate_image = "NVShadingRateImage".nativeClassVK("NV_shading_rate_
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics</td><td></td></tr></tbody>
         </table>
 
@@ -280,10 +280,10 @@ val NV_shading_rate_image = "NVShadingRateImage".nativeClassVK("NV_shading_rate_
         ##VkShadingRatePaletteNV
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command will be recorded."),
-        uint32_t.IN("firstViewport", "the index of the first viewport whose shading rate palette is updated by the command."),
-        AutoSize("pShadingRatePalettes")..uint32_t.IN("viewportCount", "the number of viewports whose shading rate palettes are updated by the command."),
-        VkShadingRatePaletteNV.const.p.IN("pShadingRatePalettes", "a pointer to an array of ##VkShadingRatePaletteNV structures defining the palette for each viewport.")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command will be recorded."),
+        uint32_t("firstViewport", "the index of the first viewport whose shading rate palette is updated by the command."),
+        AutoSize("pShadingRatePalettes")..uint32_t("viewportCount", "the number of viewports whose shading rate palettes are updated by the command."),
+        VkShadingRatePaletteNV.const.p("pShadingRatePalettes", "a pointer to an array of ##VkShadingRatePaletteNV structures defining the palette for each viewport.")
     )
 
     void(
@@ -315,7 +315,7 @@ val NV_shading_rate_image = "NVShadingRateImage".nativeClassVK("NV_shading_rate_
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
             <li>{@code sampleOrderType} <b>must</b> be a valid {@code VkCoarseSampleOrderTypeNV} value</li>
             <li>If {@code customSampleOrderCount} is not 0, {@code pCustomSampleOrders} <b>must</b> be a valid pointer to an array of {@code customSampleOrderCount} valid ##VkCoarseSampleOrderCustomNV structures</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics operations</li>
         </ul>
 
@@ -327,7 +327,7 @@ val NV_shading_rate_image = "NVShadingRateImage".nativeClassVK("NV_shading_rate_
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics</td><td></td></tr></tbody>
         </table>
 
@@ -335,9 +335,9 @@ val NV_shading_rate_image = "NVShadingRateImage".nativeClassVK("NV_shading_rate_
         ##VkCoarseSampleOrderCustomNV
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command will be recorded."),
-        VkCoarseSampleOrderTypeNV.IN("sampleOrderType", "specifies the mechanism used to order coverage samples in fragments larger than one pixel."),
-        AutoSize("pCustomSampleOrders")..uint32_t.IN("customSampleOrderCount", "specifies the number of custom sample orderings to use when ordering coverage samples."),
-        nullable..VkCoarseSampleOrderCustomNV.const.p.IN("pCustomSampleOrders", "a pointer to an array of ##VkCoarseSampleOrderCustomNV structures, each of which specifies the coverage sample order for a single combination of fragment area and coverage sample count.")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command will be recorded."),
+        VkCoarseSampleOrderTypeNV("sampleOrderType", "specifies the mechanism used to order coverage samples in fragments larger than one pixel."),
+        AutoSize("pCustomSampleOrders")..uint32_t("customSampleOrderCount", "specifies the number of custom sample orderings to use when ordering coverage samples."),
+        nullable..VkCoarseSampleOrderCustomNV.const.p("pCustomSampleOrders", "a pointer to an array of ##VkCoarseSampleOrderCustomNV structures, each of which specifies the coverage sample order for a single combination of fragment area and coverage sample count.")
     )
 }

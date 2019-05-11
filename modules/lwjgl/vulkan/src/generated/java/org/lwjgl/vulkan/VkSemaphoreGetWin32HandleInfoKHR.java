@@ -27,9 +27,9 @@ import static org.lwjgl.system.MemoryStack.*;
  * <ul>
  * <li>{@code handleType} <b>must</b> have been included in {@link VkExportSemaphoreCreateInfo}{@code ::handleTypes} when the {@code semaphore}&#8217;s current payload was created.</li>
  * <li>If {@code handleType} is defined as an NT handle, {@link KHRExternalSemaphoreWin32#vkGetSemaphoreWin32HandleKHR GetSemaphoreWin32HandleKHR} <b>must</b> be called no more than once for each valid unique combination of {@code semaphore} and {@code handleType}.</li>
- * <li>{@code semaphore} <b>must</b> not currently have its payload replaced by an imported payload as described below in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore Payloads</a> unless that imported payload&#8217;s handle type was included in {@link VkExternalSemaphoreProperties}{@code ::exportFromImportedHandleTypes} for {@code handleType}.</li>
- * <li>If {@code handleType} refers to a handle type with copy payload transference semantics, as defined below in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore Payloads</a>, there <b>must</b> be no queue waiting on {@code semaphore}.</li>
- * <li>If {@code handleType} refers to a handle type with copy payload transference semantics, {@code semaphore} <b>must</b> be signaled, or have an associated <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-signaling">semaphore signal operation</a> pending execution.</li>
+ * <li>{@code semaphore} <b>must</b> not currently have its payload replaced by an imported payload as described below in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore Payloads</a> unless that imported payload&#8217;s handle type was included in {@link VkExternalSemaphoreProperties}{@code ::exportFromImportedHandleTypes} for {@code handleType}.</li>
+ * <li>If {@code handleType} refers to a handle type with copy payload transference semantics, as defined below in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore Payloads</a>, there <b>must</b> be no queue waiting on {@code semaphore}.</li>
+ * <li>If {@code handleType} refers to a handle type with copy payload transference semantics, {@code semaphore} <b>must</b> be signaled, or have an associated <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-signaling">semaphore signal operation</a> pending execution.</li>
  * <li>{@code handleType} <b>must</b> be defined as an NT handle or a global share handle.</li>
  * </ul>
  * 
@@ -97,18 +97,14 @@ public class VkSemaphoreGetWin32HandleInfoKHR extends Struct implements NativeRe
         HANDLETYPE = layout.offsetof(3);
     }
 
-    VkSemaphoreGetWin32HandleInfoKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkSemaphoreGetWin32HandleInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkSemaphoreGetWin32HandleInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkSemaphoreGetWin32HandleInfoKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -165,30 +161,31 @@ public class VkSemaphoreGetWin32HandleInfoKHR extends Struct implements NativeRe
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSemaphoreGetWin32HandleInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSemaphoreGetWin32HandleInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkSemaphoreGetWin32HandleInfoKHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkSemaphoreGetWin32HandleInfoKHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkSemaphoreGetWin32HandleInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSemaphoreGetWin32HandleInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkSemaphoreGetWin32HandleInfoKHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkSemaphoreGetWin32HandleInfoKHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkSemaphoreGetWin32HandleInfoKHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkSemaphoreGetWin32HandleInfoKHR} instance allocated with {@link BufferUtils}. */
     public static VkSemaphoreGetWin32HandleInfoKHR create() {
-        return new VkSemaphoreGetWin32HandleInfoKHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkSemaphoreGetWin32HandleInfoKHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkSemaphoreGetWin32HandleInfoKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkSemaphoreGetWin32HandleInfoKHR} instance for the specified memory address. */
     public static VkSemaphoreGetWin32HandleInfoKHR create(long address) {
-        return new VkSemaphoreGetWin32HandleInfoKHR(address, null);
+        return wrap(VkSemaphoreGetWin32HandleInfoKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSemaphoreGetWin32HandleInfoKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkSemaphoreGetWin32HandleInfoKHR.class, address);
     }
 
     /**
@@ -197,7 +194,7 @@ public class VkSemaphoreGetWin32HandleInfoKHR extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkSemaphoreGetWin32HandleInfoKHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -206,7 +203,7 @@ public class VkSemaphoreGetWin32HandleInfoKHR extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkSemaphoreGetWin32HandleInfoKHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -215,7 +212,8 @@ public class VkSemaphoreGetWin32HandleInfoKHR extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkSemaphoreGetWin32HandleInfoKHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -225,43 +223,43 @@ public class VkSemaphoreGetWin32HandleInfoKHR extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkSemaphoreGetWin32HandleInfoKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSemaphoreGetWin32HandleInfoKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSemaphoreGetWin32HandleInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkSemaphoreGetWin32HandleInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkSemaphoreGetWin32HandleInfoKHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkSemaphoreGetWin32HandleInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkSemaphoreGetWin32HandleInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkSemaphoreGetWin32HandleInfoKHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkSemaphoreGetWin32HandleInfoKHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkSemaphoreGetWin32HandleInfoKHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSemaphoreGetWin32HandleInfoKHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkSemaphoreGetWin32HandleInfoKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkSemaphoreGetWin32HandleInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkSemaphoreGetWin32HandleInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSemaphoreGetWin32HandleInfoKHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkSemaphoreGetWin32HandleInfoKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -289,7 +287,7 @@ public class VkSemaphoreGetWin32HandleInfoKHR extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkSemaphoreGetWin32HandleInfoKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -299,36 +297,38 @@ public class VkSemaphoreGetWin32HandleInfoKHR extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkSemaphoreGetWin32HandleInfoKHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkSemaphoreGetWin32HandleInfoKHR.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkSemaphoreGetWin32HandleInfoKHR.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkSemaphoreGetWin32HandleInfoKHR.PNEXT); }
     /** Unsafe version of {@link #semaphore}. */
-    public static long nsemaphore(long struct) { return memGetLong(struct + VkSemaphoreGetWin32HandleInfoKHR.SEMAPHORE); }
+    public static long nsemaphore(long struct) { return UNSAFE.getLong(null, struct + VkSemaphoreGetWin32HandleInfoKHR.SEMAPHORE); }
     /** Unsafe version of {@link #handleType}. */
-    public static int nhandleType(long struct) { return memGetInt(struct + VkSemaphoreGetWin32HandleInfoKHR.HANDLETYPE); }
+    public static int nhandleType(long struct) { return UNSAFE.getInt(null, struct + VkSemaphoreGetWin32HandleInfoKHR.HANDLETYPE); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkSemaphoreGetWin32HandleInfoKHR.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkSemaphoreGetWin32HandleInfoKHR.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkSemaphoreGetWin32HandleInfoKHR.PNEXT, value); }
     /** Unsafe version of {@link #semaphore(long) semaphore}. */
-    public static void nsemaphore(long struct, long value) { memPutLong(struct + VkSemaphoreGetWin32HandleInfoKHR.SEMAPHORE, value); }
+    public static void nsemaphore(long struct, long value) { UNSAFE.putLong(null, struct + VkSemaphoreGetWin32HandleInfoKHR.SEMAPHORE, value); }
     /** Unsafe version of {@link #handleType(int) handleType}. */
-    public static void nhandleType(long struct, int value) { memPutInt(struct + VkSemaphoreGetWin32HandleInfoKHR.HANDLETYPE, value); }
+    public static void nhandleType(long struct, int value) { UNSAFE.putInt(null, struct + VkSemaphoreGetWin32HandleInfoKHR.HANDLETYPE, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkSemaphoreGetWin32HandleInfoKHR} structs. */
     public static class Buffer extends StructBuffer<VkSemaphoreGetWin32HandleInfoKHR, Buffer> implements NativeResource {
 
+        private static final VkSemaphoreGetWin32HandleInfoKHR ELEMENT_FACTORY = VkSemaphoreGetWin32HandleInfoKHR.create(-1L);
+
         /**
-         * Creates a new {@link VkSemaphoreGetWin32HandleInfoKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkSemaphoreGetWin32HandleInfoKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -354,18 +354,8 @@ public class VkSemaphoreGetWin32HandleInfoKHR extends Struct implements NativeRe
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkSemaphoreGetWin32HandleInfoKHR newInstance(long address) {
-            return new VkSemaphoreGetWin32HandleInfoKHR(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkSemaphoreGetWin32HandleInfoKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

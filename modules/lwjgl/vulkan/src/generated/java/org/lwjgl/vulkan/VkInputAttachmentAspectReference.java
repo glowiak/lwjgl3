@@ -22,6 +22,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code aspectMask} <b>must</b> not include {@link VK10#VK_IMAGE_ASPECT_METADATA_BIT IMAGE_ASPECT_METADATA_BIT}</li>
+ * <li>{@code aspectMask} <b>must</b> not include {@code VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT} for any index {@code i}.</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -81,18 +82,14 @@ public class VkInputAttachmentAspectReference extends Struct implements NativeRe
         ASPECTMASK = layout.offsetof(2);
     }
 
-    VkInputAttachmentAspectReference(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkInputAttachmentAspectReference} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkInputAttachmentAspectReference} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkInputAttachmentAspectReference(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -142,30 +139,31 @@ public class VkInputAttachmentAspectReference extends Struct implements NativeRe
 
     // -----------------------------------
 
-    /** Returns a new {@link VkInputAttachmentAspectReference} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkInputAttachmentAspectReference} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkInputAttachmentAspectReference malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkInputAttachmentAspectReference.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkInputAttachmentAspectReference} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkInputAttachmentAspectReference} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkInputAttachmentAspectReference calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkInputAttachmentAspectReference.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkInputAttachmentAspectReference} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkInputAttachmentAspectReference} instance allocated with {@link BufferUtils}. */
     public static VkInputAttachmentAspectReference create() {
-        return new VkInputAttachmentAspectReference(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkInputAttachmentAspectReference.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkInputAttachmentAspectReference} instance for the specified memory address. */
+    /** Returns a new {@code VkInputAttachmentAspectReference} instance for the specified memory address. */
     public static VkInputAttachmentAspectReference create(long address) {
-        return new VkInputAttachmentAspectReference(address, null);
+        return wrap(VkInputAttachmentAspectReference.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkInputAttachmentAspectReference createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkInputAttachmentAspectReference.class, address);
     }
 
     /**
@@ -174,7 +172,7 @@ public class VkInputAttachmentAspectReference extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkInputAttachmentAspectReference.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -183,7 +181,7 @@ public class VkInputAttachmentAspectReference extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkInputAttachmentAspectReference.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -192,7 +190,8 @@ public class VkInputAttachmentAspectReference extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkInputAttachmentAspectReference.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -202,43 +201,43 @@ public class VkInputAttachmentAspectReference extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkInputAttachmentAspectReference.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkInputAttachmentAspectReference.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkInputAttachmentAspectReference} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkInputAttachmentAspectReference} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkInputAttachmentAspectReference mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkInputAttachmentAspectReference} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkInputAttachmentAspectReference} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkInputAttachmentAspectReference callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkInputAttachmentAspectReference} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkInputAttachmentAspectReference} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkInputAttachmentAspectReference mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkInputAttachmentAspectReference.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkInputAttachmentAspectReference} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkInputAttachmentAspectReference} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkInputAttachmentAspectReference callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkInputAttachmentAspectReference.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -266,7 +265,7 @@ public class VkInputAttachmentAspectReference extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkInputAttachmentAspectReference.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -276,32 +275,34 @@ public class VkInputAttachmentAspectReference extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkInputAttachmentAspectReference.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #subpass}. */
-    public static int nsubpass(long struct) { return memGetInt(struct + VkInputAttachmentAspectReference.SUBPASS); }
+    public static int nsubpass(long struct) { return UNSAFE.getInt(null, struct + VkInputAttachmentAspectReference.SUBPASS); }
     /** Unsafe version of {@link #inputAttachmentIndex}. */
-    public static int ninputAttachmentIndex(long struct) { return memGetInt(struct + VkInputAttachmentAspectReference.INPUTATTACHMENTINDEX); }
+    public static int ninputAttachmentIndex(long struct) { return UNSAFE.getInt(null, struct + VkInputAttachmentAspectReference.INPUTATTACHMENTINDEX); }
     /** Unsafe version of {@link #aspectMask}. */
-    public static int naspectMask(long struct) { return memGetInt(struct + VkInputAttachmentAspectReference.ASPECTMASK); }
+    public static int naspectMask(long struct) { return UNSAFE.getInt(null, struct + VkInputAttachmentAspectReference.ASPECTMASK); }
 
     /** Unsafe version of {@link #subpass(int) subpass}. */
-    public static void nsubpass(long struct, int value) { memPutInt(struct + VkInputAttachmentAspectReference.SUBPASS, value); }
+    public static void nsubpass(long struct, int value) { UNSAFE.putInt(null, struct + VkInputAttachmentAspectReference.SUBPASS, value); }
     /** Unsafe version of {@link #inputAttachmentIndex(int) inputAttachmentIndex}. */
-    public static void ninputAttachmentIndex(long struct, int value) { memPutInt(struct + VkInputAttachmentAspectReference.INPUTATTACHMENTINDEX, value); }
+    public static void ninputAttachmentIndex(long struct, int value) { UNSAFE.putInt(null, struct + VkInputAttachmentAspectReference.INPUTATTACHMENTINDEX, value); }
     /** Unsafe version of {@link #aspectMask(int) aspectMask}. */
-    public static void naspectMask(long struct, int value) { memPutInt(struct + VkInputAttachmentAspectReference.ASPECTMASK, value); }
+    public static void naspectMask(long struct, int value) { UNSAFE.putInt(null, struct + VkInputAttachmentAspectReference.ASPECTMASK, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkInputAttachmentAspectReference} structs. */
     public static class Buffer extends StructBuffer<VkInputAttachmentAspectReference, Buffer> implements NativeResource {
 
+        private static final VkInputAttachmentAspectReference ELEMENT_FACTORY = VkInputAttachmentAspectReference.create(-1L);
+
         /**
-         * Creates a new {@link VkInputAttachmentAspectReference.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkInputAttachmentAspectReference.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -327,18 +328,8 @@ public class VkInputAttachmentAspectReference extends Struct implements NativeRe
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkInputAttachmentAspectReference newInstance(long address) {
-            return new VkInputAttachmentAspectReference(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkInputAttachmentAspectReference getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code subpass} field. */

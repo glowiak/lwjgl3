@@ -169,7 +169,7 @@ val NV_external_memory_win32 = "NVExternalMemoryWin32".nativeClassVK("NV_externa
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Deprecated</em> by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VK_KHR_external_memory_win32">VK_KHR_external_memory_win32</a> extension</li>
+                <li><em>Deprecated</em> by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VK_KHR_external_memory_win32">VK_KHR_external_memory_win32</a> extension</li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -255,9 +255,9 @@ val NV_external_memory_win32 = "NVExternalMemoryWin32".nativeClassVK("NV_externa
         </dl>
         """,
 
-        VkDevice.IN("device", "the logical device that owns the memory."),
-        VkDeviceMemory.IN("memory", "the {@code VkDeviceMemory} object."),
-        VkExternalMemoryHandleTypeFlagsNV.IN("handleType", "a bitmask of {@code VkExternalMemoryHandleTypeFlagBitsNV} containing a single bit specifying the type of handle requested."),
-        Check(1)..HANDLE.p.OUT("pHandle", "")
+        VkDevice("device", "the logical device that owns the memory."),
+        VkDeviceMemory("memory", "the {@code VkDeviceMemory} object."),
+        VkExternalMemoryHandleTypeFlagsNV("handleType", "a bitmask of {@code VkExternalMemoryHandleTypeFlagBitsNV} containing a single bit specifying the type of handle requested."),
+        Check(1)..HANDLE.p("pHandle", "")
     )
 }

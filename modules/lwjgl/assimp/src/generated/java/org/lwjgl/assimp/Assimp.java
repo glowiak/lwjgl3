@@ -429,6 +429,13 @@ public class Assimp {
     public static final String AI_CONFIG_PP_FID_ANIM_ACCURACY = "PP_FID_ANIM_ACCURACY";
 
     /**
+     * Input parameter to the {@link #aiProcess_FindInvalidData Process_FindInvalidData} step: Set to true to ignore texture coordinates.
+     * 
+     * <p>This may be useful if you have to assign different kind of textures like one for the summer or one for the winter.</p>
+     */
+    public static final String AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS = "PP_FID_IGNORE_TEXTURECOORDS";
+
+    /**
      * Input parameter to the {@link #aiProcess_TransformUVCoords Process_TransformUVCoords} step: Specifies which UV transformations are evaluated.
      * 
      * <p>This is a bitwise combination of the {@code AI_UVTRAFO_XXX} flags (integer property, of course). By default all transformations are enabled
@@ -561,6 +568,13 @@ public class Assimp {
 
     /** @see #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME */
     public static final String AI_CONFIG_IMPORT_UNREAL_KEYFRAME = "IMPORT_UNREAL_KEYFRAME";
+
+    /**
+     * Smd load multiple animations.
+     * 
+     * <p>Property type: bool. Default value: true.</p>
+     */
+    public static final String AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST = "IMPORT_SMD_LOAD_ANIMATION_LIST";
 
     /**
      * Configures the AC loader to collect all surfaces which have the "Backface cull" flag set in separate meshes.
@@ -1001,7 +1015,7 @@ public class Assimp {
         aiImporterFlags_Experimental             = 0x10;
 
     /**
-     * Enumerates all supported types of light sources.
+     * Enumerates all supported types of light sources. ({@code enum aiLightSourceType})
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1146,7 +1160,7 @@ public class Assimp {
      * <li>{@link #aiTextureType_REFLECTION TextureType_REFLECTION} - Reflection texture. Contains the color of a perfect mirror reflection. Rarely used, almost never for real-time applications.</li>
      * <li>{@link #aiTextureType_UNKNOWN TextureType_UNKNOWN} - 
      * Unknown texture. A texture reference that does not match any of the definitions above is considered to be 'unknown'. It is still imported, but is
-     * excluded from any further postprocessing.
+     * excluded from any further post-processing.
      * </li>
      * </ul>
      */
@@ -1177,7 +1191,7 @@ public class Assimp {
      * <h5>Enum values:</h5>
      * 
      * <ul>
-     * <li>{@link #aiShadingMode_Fflat ShadingMode_Fflat} - Flat shading. Shading is done on per-face base, diffuse only. Also known as 'faceted shading'.</li>
+     * <li>{@link #aiShadingMode_Flat ShadingMode_Flat} - Flat shading. Shading is done on per-face base, diffuse only. Also known as 'faceted shading'.</li>
      * <li>{@link #aiShadingMode_Gouraud ShadingMode_Gouraud} - Simple Gouraud shading.</li>
      * <li>{@link #aiShadingMode_Phong ShadingMode_Phong} - Phong-Shading</li>
      * <li>{@link #aiShadingMode_Blinn ShadingMode_Blinn} - Phong-Blinn-Shading</li>
@@ -1190,7 +1204,7 @@ public class Assimp {
      * </ul>
      */
     public static final int
-        aiShadingMode_Fflat        = 0x1,
+        aiShadingMode_Flat         = 0x1,
         aiShadingMode_Gouraud      = 0x2,
         aiShadingMode_Phong        = 0x3,
         aiShadingMode_Blinn        = 0x4,
@@ -1213,7 +1227,7 @@ public class Assimp {
      * <h5>Enum values:</h5>
      * 
      * <ul>
-     * <li>{@link #aiTextureFlags_Invert TextureFlags_Invert} - The texture's color values have to be inverted (componentwise 1-n)</li>
+     * <li>{@link #aiTextureFlags_Invert TextureFlags_Invert} - The texture's color values have to be inverted (component-wise 1-n)</li>
      * <li>{@link #aiTextureFlags_UseAlpha TextureFlags_UseAlpha} - 
      * Explicit request to the application to process the alpha channel of the texture. Mutually exclusive with {@link #aiTextureFlags_IgnoreAlpha TextureFlags_IgnoreAlpha}. These flags are
      * set if the library can say for sure that the alpha channel is used/is not used. If the model format does not define this, it is left to the
@@ -1272,6 +1286,7 @@ public class Assimp {
         AI_MATKEY_ENABLE_WIREFRAME        = "$mat.wireframe",
         AI_MATKEY_BLEND_FUNC              = "$mat.blend",
         AI_MATKEY_OPACITY                 = "$mat.opacity",
+        AI_MATKEY_TRANSPARENCYFACTOR      = "$mat.transparencyfactor",
         AI_MATKEY_BUMPSCALING             = "$mat.bumpscaling",
         AI_MATKEY_SHININESS               = "$mat.shininess",
         AI_MATKEY_REFLECTIVITY            = "$mat.reflectivity",
@@ -1284,6 +1299,13 @@ public class Assimp {
         AI_MATKEY_COLOR_TRANSPARENT       = "$clr.transparent",
         AI_MATKEY_COLOR_REFLECTIVE        = "$clr.reflective",
         AI_MATKEY_GLOBAL_BACKGROUND_IMAGE = "?bg.global",
+        AI_MATKEY_GLOBAL_SHADERLANG       = "?sh.lang",
+        AI_MATKEY_SHADER_VERTEX           = "?sh.vs",
+        AI_MATKEY_SHADER_FRAGMENT         = "?sh.fs",
+        AI_MATKEY_SHADER_GEO              = "?sh.gs",
+        AI_MATKEY_SHADER_TESSELATION      = "?sh.ts",
+        AI_MATKEY_SHADER_PRIMITIVE        = "?sh.ps",
+        AI_MATKEY_SHADER_COMPUTE          = "?sh.cs",
         _AI_MATKEY_TEXTURE_BASE           = "$tex.file",
         _AI_MATKEY_UVWSRC_BASE            = "$tex.uvwsrc",
         _AI_MATKEY_TEXOP_BASE             = "$tex.op",
@@ -1355,6 +1377,22 @@ public class Assimp {
         aiPrimitiveType_LINE     = 0x2,
         aiPrimitiveType_TRIANGLE = 0x4,
         aiPrimitiveType_POLYGON  = 0x8;
+
+    /**
+     * Enumerates the methods of mesh morphing supported by Assimp. ({@code enum aiMorphingMethod})
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #aiMorphingMethod_VERTEX_BLEND MorphingMethod_VERTEX_BLEND} - Interpolation between morph targets.</li>
+     * <li>{@link #aiMorphingMethod_MORPH_NORMALIZED MorphingMethod_MORPH_NORMALIZED} - Normalized morphing between morph targets.</li>
+     * <li>{@link #aiMorphingMethod_MORPH_RELATIVE MorphingMethod_MORPH_RELATIVE} - Relative morphing between morph targets.</li>
+     * </ul>
+     */
+    public static final int
+        aiMorphingMethod_VERTEX_BLEND     = 0x1,
+        aiMorphingMethod_MORPH_NORMALIZED = 0x2,
+        aiMorphingMethod_MORPH_RELATIVE   = 0x3;
 
     /**
      * Enum used to distinguish data types.
@@ -1710,6 +1748,14 @@ public class Assimp {
      * it uses that.</p>
      * </li>
      * <li>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</li>
+     * <li>{@link #aiProcess_DropNormals Process_DropNormals} - 
+     * Drops normals for all faces of all meshes.
+     * 
+     * <p>This is ignored if no normals are present.</p>
+     * 
+     * <p>Face normals are shared between all points of a single face, so a single point can have multiple normals, which forces the library to duplicate
+     * vertices in some cases. {@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices} is <em>senseless</em> then. This process gives sense back to {@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}.</p>
+     * </li>
      * </ul>
      */
     public static final int
@@ -1741,7 +1787,8 @@ public class Assimp {
         aiProcess_Debone                   = 0x4000000,
         aiProcess_GlobalScale              = 0x8000000,
         aiProcess_EmbedTextures            = 0x10000000,
-        aiProcess_ForceGenNormals          = 0x20000000;
+        aiProcess_ForceGenNormals          = 0x20000000,
+        aiProcess_DropNormals              = 0x40000000;
 
     /**
      * Process Presets
@@ -2034,7 +2081,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiGetExportFormatDescription GetExportFormatDescription} */
     public static long naiGetExportFormatDescription(long pIndex) {
         long __functionAddress = Functions.GetExportFormatDescription;
-        return invokePP(__functionAddress, pIndex);
+        return invokePP(pIndex, __functionAddress);
     }
 
     /**
@@ -2060,7 +2107,7 @@ public class Assimp {
         if (CHECKS) {
             AIExportFormatDesc.validate(desc);
         }
-        invokePV(__functionAddress, desc);
+        invokePV(desc, __functionAddress);
     }
 
     /**
@@ -2080,7 +2127,7 @@ public class Assimp {
         if (CHECKS) {
             AIScene.validate(pIn);
         }
-        invokePPV(__functionAddress, pIn, pOut);
+        invokePPV(pIn, pOut, __functionAddress);
     }
 
     /**
@@ -2128,7 +2175,7 @@ public class Assimp {
         if (CHECKS) {
             AIScene.validate(pIn);
         }
-        invokePV(__functionAddress, pIn);
+        invokePV(pIn, __functionAddress);
     }
 
     /**
@@ -2148,7 +2195,7 @@ public class Assimp {
         if (CHECKS) {
             AIScene.validate(pScene);
         }
-        return invokePPPI(__functionAddress, pScene, pFormatId, pFileName, pPreProcessing);
+        return invokePPPI(pScene, pFormatId, pFileName, pPreProcessing, __functionAddress);
     }
 
     /**
@@ -2177,7 +2224,7 @@ public class Assimp {
      *                       
      *                       <p>If assimp detects that the input scene was directly taken from the importer side of the library (i.e. not copied using {@link #aiCopyScene CopyScene} and potentially
      *                       modified afterwards), any postprocessing steps already applied to the scene will not be applied again, unless they show non-idempotent behaviour
-     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      *
      * @return a status code indicating the result of the export
      */
@@ -2216,7 +2263,7 @@ public class Assimp {
      *                       
      *                       <p>If assimp detects that the input scene was directly taken from the importer side of the library (i.e. not copied using {@link #aiCopyScene CopyScene} and potentially
      *                       modified afterwards), any postprocessing steps already applied to the scene will not be applied again, unless they show non-idempotent behaviour
-     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      *
      * @return a status code indicating the result of the export
      */
@@ -2224,9 +2271,11 @@ public class Assimp {
     public static int aiExportScene(@NativeType("struct aiScene const *") AIScene pScene, @NativeType("char const *") CharSequence pFormatId, @NativeType("char const *") CharSequence pFileName, @NativeType("unsigned int") int pPreProcessing) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pFormatIdEncoded = stack.UTF8(pFormatId);
-            ByteBuffer pFileNameEncoded = stack.UTF8(pFileName);
-            return naiExportScene(pScene.address(), memAddress(pFormatIdEncoded), memAddress(pFileNameEncoded), pPreProcessing);
+            stack.nUTF8(pFormatId, true);
+            long pFormatIdEncoded = stack.getPointerAddress();
+            stack.nUTF8(pFileName, true);
+            long pFileNameEncoded = stack.getPointerAddress();
+            return naiExportScene(pScene.address(), pFormatIdEncoded, pFileNameEncoded, pPreProcessing);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2241,7 +2290,7 @@ public class Assimp {
             AIScene.validate(pScene);
             if (pIO != NULL) { AIFileIO.validate(pIO); }
         }
-        return invokePPPPI(__functionAddress, pScene, pFormatId, pFileName, pIO, pPreProcessing);
+        return invokePPPPI(pScene, pFormatId, pFileName, pIO, pPreProcessing, __functionAddress);
     }
 
     /**
@@ -2272,7 +2321,7 @@ public class Assimp {
      *                       
      *                       <p>If assimp detects that the input scene was directly taken from the importer side of the library (i.e. not copied using {@link #aiCopyScene CopyScene} and potentially
      *                       modified afterwards), any postprocessing steps already applied to the scene will not be applied again, unless they show non-idempotent behaviour
-     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      *
      * @return a status code indicating the result of the export
      */
@@ -2313,7 +2362,7 @@ public class Assimp {
      *                       
      *                       <p>If assimp detects that the input scene was directly taken from the importer side of the library (i.e. not copied using {@link #aiCopyScene CopyScene} and potentially
      *                       modified afterwards), any postprocessing steps already applied to the scene will not be applied again, unless they show non-idempotent behaviour
-     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      *
      * @return a status code indicating the result of the export
      */
@@ -2321,9 +2370,11 @@ public class Assimp {
     public static int aiExportSceneEx(@NativeType("struct aiScene const *") AIScene pScene, @NativeType("char const *") CharSequence pFormatId, @NativeType("char const *") CharSequence pFileName, @Nullable @NativeType("struct aiFileIO const *") AIFileIO pIO, @NativeType("unsigned int") int pPreProcessing) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pFormatIdEncoded = stack.UTF8(pFormatId);
-            ByteBuffer pFileNameEncoded = stack.UTF8(pFileName);
-            return naiExportSceneEx(pScene.address(), memAddress(pFormatIdEncoded), memAddress(pFileNameEncoded), memAddressSafe(pIO), pPreProcessing);
+            stack.nUTF8(pFormatId, true);
+            long pFormatIdEncoded = stack.getPointerAddress();
+            stack.nUTF8(pFileName, true);
+            long pFileNameEncoded = stack.getPointerAddress();
+            return naiExportSceneEx(pScene.address(), pFormatIdEncoded, pFileNameEncoded, memAddressSafe(pIO), pPreProcessing);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2337,7 +2388,7 @@ public class Assimp {
         if (CHECKS) {
             AIScene.validate(pScene);
         }
-        return invokePPP(__functionAddress, pScene, pFormatId, pPreProcessing);
+        return invokePPP(pScene, pFormatId, pPreProcessing, __functionAddress);
     }
 
     /**
@@ -2362,7 +2413,7 @@ public class Assimp {
      *                       
      *                       <p>If assimp detects that the input scene was directly taken from the importer side of the library (i.e. not copied using {@link #aiCopyScene CopyScene} and potentially
      *                       modified afterwards), any postprocessing steps already applied to the scene will not be applied again, unless they show non-idempotent behaviour
-     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      *
      * @return the exported data or {@code NULL} in case of error
      */
@@ -2398,7 +2449,7 @@ public class Assimp {
      *                       
      *                       <p>If assimp detects that the input scene was directly taken from the importer side of the library (i.e. not copied using {@link #aiCopyScene CopyScene} and potentially
      *                       modified afterwards), any postprocessing steps already applied to the scene will not be applied again, unless they show non-idempotent behaviour
-     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                       ({@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}, {@link #aiProcess_FlipUVs Process_FlipUVs} and {@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}). One or more of:<br></p><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      *
      * @return the exported data or {@code NULL} in case of error
      */
@@ -2407,8 +2458,9 @@ public class Assimp {
     public static AIExportDataBlob aiExportSceneToBlob(@NativeType("struct aiScene const *") AIScene pScene, @NativeType("char const *") CharSequence pFormatId, @NativeType("unsigned int") int pPreProcessing) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pFormatIdEncoded = stack.UTF8(pFormatId);
-            long __result = naiExportSceneToBlob(pScene.address(), memAddress(pFormatIdEncoded), pPreProcessing);
+            stack.nUTF8(pFormatId, true);
+            long pFormatIdEncoded = stack.getPointerAddress();
+            long __result = naiExportSceneToBlob(pScene.address(), pFormatIdEncoded, pPreProcessing);
             return AIExportDataBlob.createSafe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -2423,7 +2475,7 @@ public class Assimp {
         if (CHECKS) {
             AIExportDataBlob.validate(pData);
         }
-        invokePV(__functionAddress, pData);
+        invokePV(pData, __functionAddress);
     }
 
     /**
@@ -2440,7 +2492,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiImportFile ImportFile} */
     public static long naiImportFile(long pFile, int pFlags) {
         long __functionAddress = Functions.ImportFile;
-        return invokePP(__functionAddress, pFile, pFlags);
+        return invokePP(pFile, pFlags, __functionAddress);
     }
 
     /**
@@ -2452,7 +2504,7 @@ public class Assimp {
      *
      * @param pFile  Path and filename of the file to be imported
      * @param pFlags Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      *
      * @return Pointer to the imported data or {@code NULL} if the import failed.
      */
@@ -2475,7 +2527,7 @@ public class Assimp {
      *
      * @param pFile  Path and filename of the file to be imported
      * @param pFlags Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      *
      * @return Pointer to the imported data or {@code NULL} if the import failed.
      */
@@ -2484,8 +2536,9 @@ public class Assimp {
     public static AIScene aiImportFile(@NativeType("char const *") CharSequence pFile, @NativeType("unsigned int") int pFlags) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pFileEncoded = stack.UTF8(pFile);
-            long __result = naiImportFile(memAddress(pFileEncoded), pFlags);
+            stack.nUTF8(pFile, true);
+            long pFileEncoded = stack.getPointerAddress();
+            long __result = naiImportFile(pFileEncoded, pFlags);
             return AIScene.createSafe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -2500,7 +2553,7 @@ public class Assimp {
         if (CHECKS) {
             if (pFS != NULL) { AIFileIO.validate(pFS); }
         }
-        return invokePPP(__functionAddress, pFile, pFlags, pFS);
+        return invokePPP(pFile, pFlags, pFS, __functionAddress);
     }
 
     /**
@@ -2512,7 +2565,7 @@ public class Assimp {
      *
      * @param pFile  Path and filename of the file to be imported
      * @param pFlags Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      * @param pFS    Will be used to open the model file itself and any other files the loader needs to open. Pass {@code NULL} to use the default implementation.
      *
      * @return Pointer to the imported data or {@code NULL} if the import failed.
@@ -2536,7 +2589,7 @@ public class Assimp {
      *
      * @param pFile  Path and filename of the file to be imported
      * @param pFlags Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      * @param pFS    Will be used to open the model file itself and any other files the loader needs to open. Pass {@code NULL} to use the default implementation.
      *
      * @return Pointer to the imported data or {@code NULL} if the import failed.
@@ -2546,8 +2599,9 @@ public class Assimp {
     public static AIScene aiImportFileEx(@NativeType("char const *") CharSequence pFile, @NativeType("unsigned int") int pFlags, @Nullable @NativeType("struct aiFileIO *") AIFileIO pFS) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pFileEncoded = stack.UTF8(pFile);
-            long __result = naiImportFileEx(memAddress(pFileEncoded), pFlags, memAddressSafe(pFS));
+            stack.nUTF8(pFile, true);
+            long pFileEncoded = stack.getPointerAddress();
+            long __result = naiImportFileEx(pFileEncoded, pFlags, memAddressSafe(pFS));
             return AIScene.createSafe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -2562,7 +2616,7 @@ public class Assimp {
         if (CHECKS) {
             if (pFS != NULL) { AIFileIO.validate(pFS); }
         }
-        return invokePPPP(__functionAddress, pFile, pFlags, pFS, pProps);
+        return invokePPPP(pFile, pFlags, pFS, pProps, __functionAddress);
     }
 
     /**
@@ -2570,7 +2624,7 @@ public class Assimp {
      *
      * @param pFile  Path and filename of the file to be imported
      * @param pFlags Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      * @param pFS    Will be used to open the model file itself and any other files the loader needs to open. Pass {@code NULL} to use the default implementation.
      * @param pProps {@link AIPropertyStore} instance containing import settings.
      *
@@ -2591,7 +2645,7 @@ public class Assimp {
      *
      * @param pFile  Path and filename of the file to be imported
      * @param pFlags Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *               your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      * @param pFS    Will be used to open the model file itself and any other files the loader needs to open. Pass {@code NULL} to use the default implementation.
      * @param pProps {@link AIPropertyStore} instance containing import settings.
      *
@@ -2602,8 +2656,9 @@ public class Assimp {
     public static AIScene aiImportFileExWithProperties(@NativeType("char const *") CharSequence pFile, @NativeType("unsigned int") int pFlags, @Nullable @NativeType("struct aiFileIO *") AIFileIO pFS, @NativeType("struct aiPropertyStore const *") AIPropertyStore pProps) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pFileEncoded = stack.UTF8(pFile);
-            long __result = naiImportFileExWithProperties(memAddress(pFileEncoded), pFlags, memAddressSafe(pFS), pProps.address());
+            stack.nUTF8(pFile, true);
+            long pFileEncoded = stack.getPointerAddress();
+            long __result = naiImportFileExWithProperties(pFileEncoded, pFlags, memAddressSafe(pFS), pProps.address());
             return AIScene.createSafe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -2619,7 +2674,7 @@ public class Assimp {
      */
     public static long naiImportFileFromMemory(long pBuffer, int pLength, int pFlags, long pHint) {
         long __functionAddress = Functions.ImportFileFromMemory;
-        return invokePPP(__functionAddress, pBuffer, pLength, pFlags, pHint);
+        return invokePPP(pBuffer, pLength, pFlags, pHint, __functionAddress);
     }
 
     /**
@@ -2638,7 +2693,7 @@ public class Assimp {
      *
      * @param pBuffer Pointer to the file data
      * @param pFlags  Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *                your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      * @param pHint   An additional hint to the library. If this is a non empty string, the library looks for a loader to support the file extension specified by
      *                {@code pHint} and passes the file to the first matching loader. If this loader is unable to completely the request, the library continues and tries
      *                to determine the file format on its own, a task that may or may not be successful. Check the return value, and you'll know ...
@@ -2671,7 +2726,7 @@ public class Assimp {
      *
      * @param pBuffer Pointer to the file data
      * @param pFlags  Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *                your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      * @param pHint   An additional hint to the library. If this is a non empty string, the library looks for a loader to support the file extension specified by
      *                {@code pHint} and passes the file to the first matching loader. If this loader is unable to completely the request, the library continues and tries
      *                to determine the file format on its own, a task that may or may not be successful. Check the return value, and you'll know ...
@@ -2683,8 +2738,9 @@ public class Assimp {
     public static AIScene aiImportFileFromMemory(@NativeType("char const *") ByteBuffer pBuffer, @NativeType("unsigned int") int pFlags, @Nullable @NativeType("char const *") CharSequence pHint) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pHintEncoded = stack.UTF8Safe(pHint);
-            long __result = naiImportFileFromMemory(memAddress(pBuffer), pBuffer.remaining(), pFlags, memAddressSafe(pHintEncoded));
+            stack.nUTF8Safe(pHint, true);
+            long pHintEncoded = pHint == null ? NULL : stack.getPointerAddress();
+            long __result = naiImportFileFromMemory(memAddress(pBuffer), pBuffer.remaining(), pFlags, pHintEncoded);
             return AIScene.createSafe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -2700,7 +2756,7 @@ public class Assimp {
      */
     public static long naiImportFileFromMemoryWithProperties(long pBuffer, int pLength, int pFlags, long pHint, long pProps) {
         long __functionAddress = Functions.ImportFileFromMemoryWithProperties;
-        return invokePPPP(__functionAddress, pBuffer, pLength, pFlags, pHint, pProps);
+        return invokePPPP(pBuffer, pLength, pFlags, pHint, pProps, __functionAddress);
     }
 
     /**
@@ -2708,7 +2764,7 @@ public class Assimp {
      *
      * @param pBuffer Pointer to the file data
      * @param pFlags  Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *                your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      * @param pHint   An additional hint to the library. If this is a non empty string, the library looks for a loader to support the file extension specified by
      *                {@code pHint} and passes the file to the first matching loader. If this loader is unable to completely the request, the library continues and tries
      *                to determine the file format on its own, a task that may or may not be successful. Check the return value, and you'll know ...
@@ -2731,7 +2787,7 @@ public class Assimp {
      *
      * @param pBuffer Pointer to the file data
      * @param pFlags  Optional post processing steps to be executed after a successful import. If you wish to inspect the imported scene first in order to fine-tune
-     *                your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     *                your post-processing setup, consider to use {@link #aiApplyPostProcessing ApplyPostProcessing}. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      * @param pHint   An additional hint to the library. If this is a non empty string, the library looks for a loader to support the file extension specified by
      *                {@code pHint} and passes the file to the first matching loader. If this loader is unable to completely the request, the library continues and tries
      *                to determine the file format on its own, a task that may or may not be successful. Check the return value, and you'll know ...
@@ -2744,8 +2800,9 @@ public class Assimp {
     public static AIScene aiImportFileFromMemoryWithProperties(@NativeType("char const *") ByteBuffer pBuffer, @NativeType("unsigned int") int pFlags, @Nullable @NativeType("char const *") CharSequence pHint, @NativeType("struct aiPropertyStore const *") AIPropertyStore pProps) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pHintEncoded = stack.UTF8Safe(pHint);
-            long __result = naiImportFileFromMemoryWithProperties(memAddress(pBuffer), pBuffer.remaining(), pFlags, memAddressSafe(pHintEncoded), pProps.address());
+            stack.nUTF8Safe(pHint, true);
+            long pHintEncoded = pHint == null ? NULL : stack.getPointerAddress();
+            long __result = naiImportFileFromMemoryWithProperties(memAddress(pBuffer), pBuffer.remaining(), pFlags, pHintEncoded, pProps.address());
             return AIScene.createSafe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -2760,7 +2817,7 @@ public class Assimp {
         if (CHECKS) {
             AIScene.validate(pScene);
         }
-        return invokePP(__functionAddress, pScene, pFlags);
+        return invokePP(pScene, pFlags, __functionAddress);
     }
 
     /**
@@ -2770,7 +2827,7 @@ public class Assimp {
      * imported scene first to fine-tune your post-processing setup.</p>
      *
      * @param pScene Scene to work on.
-     * @param pFlags Provide a bitwise combination of the {@code aiPostProcessSteps} flags. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
+     * @param pFlags Provide a bitwise combination of the {@code aiPostProcessSteps} flags. One or more of:<br><table><tr><td>{@link #aiProcess_CalcTangentSpace Process_CalcTangentSpace}</td><td>{@link #aiProcess_JoinIdenticalVertices Process_JoinIdenticalVertices}</td><td>{@link #aiProcess_MakeLeftHanded Process_MakeLeftHanded}</td></tr><tr><td>{@link #aiProcess_Triangulate Process_Triangulate}</td><td>{@link #aiProcess_RemoveComponent Process_RemoveComponent}</td><td>{@link #aiProcess_GenNormals Process_GenNormals}</td></tr><tr><td>{@link #aiProcess_GenSmoothNormals Process_GenSmoothNormals}</td><td>{@link #aiProcess_SplitLargeMeshes Process_SplitLargeMeshes}</td><td>{@link #aiProcess_PreTransformVertices Process_PreTransformVertices}</td></tr><tr><td>{@link #aiProcess_LimitBoneWeights Process_LimitBoneWeights}</td><td>{@link #aiProcess_ValidateDataStructure Process_ValidateDataStructure}</td><td>{@link #aiProcess_ImproveCacheLocality Process_ImproveCacheLocality}</td></tr><tr><td>{@link #aiProcess_RemoveRedundantMaterials Process_RemoveRedundantMaterials}</td><td>{@link #aiProcess_FixInfacingNormals Process_FixInfacingNormals}</td><td>{@link #aiProcess_SortByPType Process_SortByPType}</td></tr><tr><td>{@link #aiProcess_FindDegenerates Process_FindDegenerates}</td><td>{@link #aiProcess_FindInvalidData Process_FindInvalidData}</td><td>{@link #aiProcess_GenUVCoords Process_GenUVCoords}</td></tr><tr><td>{@link #aiProcess_TransformUVCoords Process_TransformUVCoords}</td><td>{@link #aiProcess_FindInstances Process_FindInstances}</td><td>{@link #aiProcess_OptimizeMeshes Process_OptimizeMeshes}</td></tr><tr><td>{@link #aiProcess_OptimizeGraph Process_OptimizeGraph}</td><td>{@link #aiProcess_FlipUVs Process_FlipUVs}</td><td>{@link #aiProcess_FlipWindingOrder Process_FlipWindingOrder}</td></tr><tr><td>{@link #aiProcess_SplitByBoneCount Process_SplitByBoneCount}</td><td>{@link #aiProcess_Debone Process_Debone}</td><td>{@link #aiProcess_GlobalScale Process_GlobalScale}</td></tr><tr><td>{@link #aiProcess_EmbedTextures Process_EmbedTextures}</td><td>{@link #aiProcess_ForceGenNormals Process_ForceGenNormals}</td><td>{@link #aiProcess_DropNormals Process_DropNormals}</td></tr><tr><td>{@link #aiProcess_ConvertToLeftHanded Process_ConvertToLeftHanded}</td><td>{@link #aiProcessPreset_TargetRealtime_Fast ProcessPreset_TargetRealtime_Fast}</td><td>{@link #aiProcessPreset_TargetRealtime_Quality ProcessPreset_TargetRealtime_Quality}</td></tr><tr><td>{@link #aiProcessPreset_TargetRealtime_MaxQuality ProcessPreset_TargetRealtime_MaxQuality}</td></tr></table>
      *
      * @return A pointer to the post-processed data. Post processing is done in-place, meaning this is still the same {@link AIScene} which you passed for {@code pScene}.
      *         However, <em>if</em> post-processing failed, the scene could now be {@code NULL}. That's quite a rare case, post processing steps are not really designed to
@@ -2792,7 +2849,7 @@ public class Assimp {
         if (CHECKS) {
             AILogStream.validate(stream);
         }
-        invokePV(__functionAddress, stream);
+        invokePV(stream, __functionAddress);
     }
 
     /**
@@ -2822,7 +2879,7 @@ public class Assimp {
      */
     public static void aiEnableVerboseLogging(@NativeType("aiBool") boolean d) {
         long __functionAddress = Functions.EnableVerboseLogging;
-        invokeV(__functionAddress, d ? 1 : 0);
+        invokeV(d ? 1 : 0, __functionAddress);
     }
 
     // --- [ aiDetachLogStream ] ---
@@ -2833,7 +2890,7 @@ public class Assimp {
         if (CHECKS) {
             AILogStream.validate(stream);
         }
-        return invokePI(__functionAddress, stream);
+        return invokePI(stream, __functionAddress);
     }
 
     /**
@@ -2846,7 +2903,7 @@ public class Assimp {
      * @return {@link #aiReturn_SUCCESS Return_SUCCESS} if the log stream has been detached successfully.
      */
     @NativeType("aiReturn")
-    public static int aiDetachLogStream(@NativeType("struct aiLogStream *") AILogStream stream) {
+    public static int aiDetachLogStream(@NativeType("struct aiLogStream const *") AILogStream stream) {
         return naiDetachLogStream(stream.address());
     }
 
@@ -2869,7 +2926,7 @@ public class Assimp {
         if (CHECKS) {
             if (pScene != NULL) { AIScene.validate(pScene); }
         }
-        invokePV(__functionAddress, pScene);
+        invokePV(pScene, __functionAddress);
     }
 
     /**
@@ -2909,7 +2966,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiIsExtensionSupported IsExtensionSupported} */
     public static int naiIsExtensionSupported(long szExtension) {
         long __functionAddress = Functions.IsExtensionSupported;
-        return invokePI(__functionAddress, szExtension);
+        return invokePI(szExtension, __functionAddress);
     }
 
     /**
@@ -2938,8 +2995,9 @@ public class Assimp {
     public static boolean aiIsExtensionSupported(@NativeType("char const *") CharSequence szExtension) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer szExtensionEncoded = stack.UTF8(szExtension);
-            return naiIsExtensionSupported(memAddress(szExtensionEncoded)) != 0;
+            stack.nUTF8(szExtension, true);
+            long szExtensionEncoded = stack.getPointerAddress();
+            return naiIsExtensionSupported(szExtensionEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2950,7 +3008,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiGetExtensionList GetExtensionList} */
     public static void naiGetExtensionList(long szOut) {
         long __functionAddress = Functions.GetExtensionList;
-        invokePV(__functionAddress, szOut);
+        invokePV(szOut, __functionAddress);
     }
 
     /**
@@ -2972,7 +3030,7 @@ public class Assimp {
         if (CHECKS) {
             AIScene.validate(pIn);
         }
-        invokePPV(__functionAddress, pIn, in);
+        invokePPV(pIn, in, __functionAddress);
     }
 
     /**
@@ -3010,7 +3068,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiReleasePropertyStore ReleasePropertyStore} */
     public static void naiReleasePropertyStore(long p) {
         long __functionAddress = Functions.ReleasePropertyStore;
-        invokePV(__functionAddress, p);
+        invokePV(p, __functionAddress);
     }
 
     /**
@@ -3027,7 +3085,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiSetImportPropertyInteger SetImportPropertyInteger} */
     public static void naiSetImportPropertyInteger(long store, long szName, int value) {
         long __functionAddress = Functions.SetImportPropertyInteger;
-        invokePPV(__functionAddress, store, szName, value);
+        invokePPV(store, szName, value, __functionAddress);
     }
 
     /**
@@ -3037,7 +3095,7 @@ public class Assimp {
      * possible to specify them per import.</p>
      *
      * @param store  Store to modify. Use {@link #aiCreatePropertyStore CreatePropertyStore} to obtain a store.
-     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
+     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS}</td><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td></tr><tr><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
      * @param value  New value for the property
      */
     public static void aiSetImportPropertyInteger(@NativeType("struct aiPropertyStore *") AIPropertyStore store, @NativeType("char const *") ByteBuffer szName, int value) {
@@ -3054,14 +3112,15 @@ public class Assimp {
      * possible to specify them per import.</p>
      *
      * @param store  Store to modify. Use {@link #aiCreatePropertyStore CreatePropertyStore} to obtain a store.
-     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
+     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS}</td><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td></tr><tr><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
      * @param value  New value for the property
      */
     public static void aiSetImportPropertyInteger(@NativeType("struct aiPropertyStore *") AIPropertyStore store, @NativeType("char const *") CharSequence szName, int value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer szNameEncoded = stack.ASCII(szName);
-            naiSetImportPropertyInteger(store.address(), memAddress(szNameEncoded), value);
+            stack.nASCII(szName, true);
+            long szNameEncoded = stack.getPointerAddress();
+            naiSetImportPropertyInteger(store.address(), szNameEncoded, value);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3072,7 +3131,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiSetImportPropertyFloat SetImportPropertyFloat} */
     public static void naiSetImportPropertyFloat(long store, long szName, float value) {
         long __functionAddress = Functions.SetImportPropertyFloat;
-        invokePPV(__functionAddress, store, szName, value);
+        invokePPV(store, szName, value, __functionAddress);
     }
 
     /**
@@ -3082,7 +3141,7 @@ public class Assimp {
      * possible to specify them per import.</p>
      *
      * @param store  Store to modify. Use {@link #aiCreatePropertyStore CreatePropertyStore} to obtain a store.
-     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
+     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS}</td><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td></tr><tr><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
      * @param value  New value for the property
      */
     public static void aiSetImportPropertyFloat(@NativeType("struct aiPropertyStore *") AIPropertyStore store, @NativeType("char const *") ByteBuffer szName, float value) {
@@ -3099,14 +3158,15 @@ public class Assimp {
      * possible to specify them per import.</p>
      *
      * @param store  Store to modify. Use {@link #aiCreatePropertyStore CreatePropertyStore} to obtain a store.
-     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
+     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS}</td><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td></tr><tr><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
      * @param value  New value for the property
      */
     public static void aiSetImportPropertyFloat(@NativeType("struct aiPropertyStore *") AIPropertyStore store, @NativeType("char const *") CharSequence szName, float value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer szNameEncoded = stack.ASCII(szName);
-            naiSetImportPropertyFloat(store.address(), memAddress(szNameEncoded), value);
+            stack.nASCII(szName, true);
+            long szNameEncoded = stack.getPointerAddress();
+            naiSetImportPropertyFloat(store.address(), szNameEncoded, value);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3117,7 +3177,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiSetImportPropertyString SetImportPropertyString} */
     public static void naiSetImportPropertyString(long store, long szName, long value) {
         long __functionAddress = Functions.SetImportPropertyString;
-        invokePPPV(__functionAddress, store, szName, value);
+        invokePPPV(store, szName, value, __functionAddress);
     }
 
     /**
@@ -3127,7 +3187,7 @@ public class Assimp {
      * possible to specify them per import.</p>
      *
      * @param store  Store to modify. Use {@link #aiCreatePropertyStore CreatePropertyStore} to obtain a store.
-     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
+     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS}</td><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td></tr><tr><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
      * @param value  New value for the property
      */
     public static void aiSetImportPropertyString(@NativeType("struct aiPropertyStore *") AIPropertyStore store, @NativeType("char const *") ByteBuffer szName, @NativeType("struct aiString const *") AIString value) {
@@ -3144,14 +3204,15 @@ public class Assimp {
      * possible to specify them per import.</p>
      *
      * @param store  Store to modify. Use {@link #aiCreatePropertyStore CreatePropertyStore} to obtain a store.
-     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
+     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS}</td><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td></tr><tr><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
      * @param value  New value for the property
      */
     public static void aiSetImportPropertyString(@NativeType("struct aiPropertyStore *") AIPropertyStore store, @NativeType("char const *") CharSequence szName, @NativeType("struct aiString const *") AIString value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer szNameEncoded = stack.ASCII(szName);
-            naiSetImportPropertyString(store.address(), memAddress(szNameEncoded), value.address());
+            stack.nASCII(szName, true);
+            long szNameEncoded = stack.getPointerAddress();
+            naiSetImportPropertyString(store.address(), szNameEncoded, value.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3162,7 +3223,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiSetImportPropertyMatrix SetImportPropertyMatrix} */
     public static void naiSetImportPropertyMatrix(long store, long szName, long value) {
         long __functionAddress = Functions.SetImportPropertyMatrix;
-        invokePPPV(__functionAddress, store, szName, value);
+        invokePPPV(store, szName, value, __functionAddress);
     }
 
     /**
@@ -3172,7 +3233,7 @@ public class Assimp {
      * possible to specify them per import.</p>
      *
      * @param store  Store to modify. Use {@link #aiCreatePropertyStore CreatePropertyStore} to obtain a store.
-     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
+     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS}</td><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td></tr><tr><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
      * @param value  New value for the property
      */
     public static void aiSetImportPropertyMatrix(@NativeType("struct aiPropertyStore *") AIPropertyStore store, @NativeType("char const *") ByteBuffer szName, @NativeType("struct aiMatrix4x4 const *") AIMatrix4x4 value) {
@@ -3189,14 +3250,15 @@ public class Assimp {
      * possible to specify them per import.</p>
      *
      * @param store  Store to modify. Use {@link #aiCreatePropertyStore CreatePropertyStore} to obtain a store.
-     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
+     * @param szName Name of the configuration property to be set. One of:<br><table><tr><td>{@link #AI_CONFIG_GLOB_MEASURE_TIME}</td><td>{@link #AI_CONFIG_IMPORT_NO_SKELETON_MESHES}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBBC_MAX_BONES}</td><td>{@link #AI_CONFIG_PP_CT_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_PP_CT_TEXTURE_CHANNEL_INDEX}</td><td>{@link #AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDL_COLORMAP}</td><td>{@link #AI_CONFIG_PP_RRM_EXCLUDE_LIST}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_KEEP_HIERARCHY}</td><td>{@link #AI_CONFIG_PP_PTV_NORMALIZE}</td></tr><tr><td>{@link #AI_CONFIG_PP_PTV_ADD_ROOT_TRANSFORMATION}</td><td>{@link #AI_CONFIG_PP_PTV_ROOT_TRANSFORMATION}</td></tr><tr><td>{@link #AI_CONFIG_PP_FD_REMOVE}</td><td>{@link #AI_CONFIG_PP_FD_CHECKAREA}</td></tr><tr><td>{@link #AI_CONFIG_PP_OG_EXCLUDE_LIST}</td><td>{@link #AI_CONFIG_PP_SLM_TRIANGLE_LIMIT}</td></tr><tr><td>{@link #AI_CONFIG_PP_SLM_VERTEX_LIMIT}</td><td>{@link #AI_CONFIG_PP_LBW_MAX_WEIGHTS}</td></tr><tr><td>{@link #AI_CONFIG_PP_DB_THRESHOLD}</td><td>{@link #AI_CONFIG_PP_DB_ALL_OR_NONE}</td></tr><tr><td>{@link #AI_CONFIG_PP_ICL_PTCACHE_SIZE}</td><td>{@link #AI_CONFIG_PP_RVC_FLAGS}</td></tr><tr><td>{@link #AI_CONFIG_PP_SBP_REMOVE}</td><td>{@link #AI_CONFIG_PP_FID_ANIM_ACCURACY}</td></tr><tr><td>{@link #AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS}</td><td>{@link #AI_CONFIG_PP_TUV_EVALUATE}</td></tr><tr><td>{@link #AI_CONFIG_FAVOUR_SPEED}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ALL_MATERIALS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_MATERIALS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_TEXTURES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_CAMERAS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_READ_LIGHTS}</td><td>{@link #AI_CONFIG_IMPORT_FBX_READ_ANIMATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_STRICT_MODE}</td><td>{@link #AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_FBX_OPTIMIZE_EMPTY_ANIMATION_CURVES}</td><td>{@link #AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_GLOBAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD2_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_MDL_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MDC_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_KEYFRAME}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_UNREAL_KEYFRAME}</td><td>{@link #AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_AC_SEPARATE_BFCULL}</td><td>{@link #AI_CONFIG_IMPORT_AC_EVAL_SUBDIVISION}</td></tr><tr><td>{@link #AI_CONFIG_UNREAL_HANDLE_FLAGS}</td><td>{@link #AI_CONFIG_IMPORT_TER_MAKE_UVS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_ASE_RECONSTRUCT_NORMALS}</td><td>{@link #AI_CONFIG_IMPORT_MD3_HANDLE_MULTIPART}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_MD3_SKIN_NAME}</td><td>{@link #AI_CONFIG_IMPORT_MD3_SHADER_SRC}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWO_ONE_LAYER_ONLY}</td><td>{@link #AI_CONFIG_IMPORT_MD5_NO_ANIM_AUTOLOAD}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_START}</td><td>{@link #AI_CONFIG_IMPORT_LWS_ANIM_END}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IRR_ANIM_FPS}</td><td>{@link #AI_CONFIG_IMPORT_OGRE_MATERIAL_FILE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_OGRE_TEXTURETYPE_FROM_FILENAME}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_SPACE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_ANDROID_JNI_ASSIMP_MANAGER_SUPPORT}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SKIP_CURVE_REPRESENTATIONS}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CUSTOM_TRIANGULATION}</td><td>{@link #AI_CONFIG_IMPORT_IFC_SMOOTHING_ANGLE}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_IFC_CYLINDRICAL_TESSELLATION}</td><td>{@link #AI_CONFIG_IMPORT_COLLADA_IGNORE_UP_DIRECTION}</td></tr><tr><td>{@link #AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES}</td><td>{@link #AI_CONFIG_EXPORT_XFILE_64BIT}</td></tr><tr><td>{@link #AI_CONFIG_EXPORT_POINT_CLOUDS}</td><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY}</td></tr><tr><td>{@link #AI_CONFIG_GLOBAL_SCALE_FACTOR_DEFAULT}</td></tr></table>
      * @param value  New value for the property
      */
     public static void aiSetImportPropertyMatrix(@NativeType("struct aiPropertyStore *") AIPropertyStore store, @NativeType("char const *") CharSequence szName, @NativeType("struct aiMatrix4x4 const *") AIMatrix4x4 value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer szNameEncoded = stack.ASCII(szName);
-            naiSetImportPropertyMatrix(store.address(), memAddress(szNameEncoded), value.address());
+            stack.nASCII(szName, true);
+            long szNameEncoded = stack.getPointerAddress();
+            naiSetImportPropertyMatrix(store.address(), szNameEncoded, value.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3207,7 +3269,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiCreateQuaternionFromMatrix CreateQuaternionFromMatrix} */
     public static void naiCreateQuaternionFromMatrix(long quat, long mat) {
         long __functionAddress = Functions.CreateQuaternionFromMatrix;
-        invokePPV(__functionAddress, quat, mat);
+        invokePPV(quat, mat, __functionAddress);
     }
 
     /**
@@ -3225,7 +3287,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiDecomposeMatrix DecomposeMatrix} */
     public static void naiDecomposeMatrix(long mat, long scaling, long rotation, long position) {
         long __functionAddress = Functions.DecomposeMatrix;
-        invokePPPPV(__functionAddress, mat, scaling, rotation, position);
+        invokePPPPV(mat, scaling, rotation, position, __functionAddress);
     }
 
     /**
@@ -3245,7 +3307,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiTransposeMatrix4 TransposeMatrix4} */
     public static void naiTransposeMatrix4(long mat) {
         long __functionAddress = Functions.TransposeMatrix4;
-        invokePV(__functionAddress, mat);
+        invokePV(mat, __functionAddress);
     }
 
     /**
@@ -3262,7 +3324,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiTransposeMatrix3 TransposeMatrix3} */
     public static void naiTransposeMatrix3(long mat) {
         long __functionAddress = Functions.TransposeMatrix3;
-        invokePV(__functionAddress, mat);
+        invokePV(mat, __functionAddress);
     }
 
     /**
@@ -3279,7 +3341,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiTransformVecByMatrix3 TransformVecByMatrix3} */
     public static void naiTransformVecByMatrix3(long vec, long mat) {
         long __functionAddress = Functions.TransformVecByMatrix3;
-        invokePPV(__functionAddress, vec, mat);
+        invokePPV(vec, mat, __functionAddress);
     }
 
     /**
@@ -3297,7 +3359,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiTransformVecByMatrix4 TransformVecByMatrix4} */
     public static void naiTransformVecByMatrix4(long vec, long mat) {
         long __functionAddress = Functions.TransformVecByMatrix4;
-        invokePPV(__functionAddress, vec, mat);
+        invokePPV(vec, mat, __functionAddress);
     }
 
     /**
@@ -3315,7 +3377,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiMultiplyMatrix4 MultiplyMatrix4} */
     public static void naiMultiplyMatrix4(long dst, long src) {
         long __functionAddress = Functions.MultiplyMatrix4;
-        invokePPV(__functionAddress, dst, src);
+        invokePPV(dst, src, __functionAddress);
     }
 
     /**
@@ -3333,7 +3395,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiMultiplyMatrix3 MultiplyMatrix3} */
     public static void naiMultiplyMatrix3(long dst, long src) {
         long __functionAddress = Functions.MultiplyMatrix3;
-        invokePPV(__functionAddress, dst, src);
+        invokePPV(dst, src, __functionAddress);
     }
 
     /**
@@ -3351,7 +3413,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiIdentityMatrix3 IdentityMatrix3} */
     public static void naiIdentityMatrix3(long mat) {
         long __functionAddress = Functions.IdentityMatrix3;
-        invokePV(__functionAddress, mat);
+        invokePV(mat, __functionAddress);
     }
 
     /**
@@ -3368,7 +3430,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiIdentityMatrix4 IdentityMatrix4} */
     public static void naiIdentityMatrix4(long mat) {
         long __functionAddress = Functions.IdentityMatrix4;
-        invokePV(__functionAddress, mat);
+        invokePV(mat, __functionAddress);
     }
 
     /**
@@ -3397,7 +3459,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiGetImportFormatDescription GetImportFormatDescription} */
     public static long naiGetImportFormatDescription(long pIndex) {
         long __functionAddress = Functions.GetImportFormatDescription;
-        return invokePP(__functionAddress, pIndex);
+        return invokePP(pIndex, __functionAddress);
     }
 
     /**
@@ -3419,7 +3481,7 @@ public class Assimp {
     /** Unsafe version of: {@link #aiGetImporterDesc GetImporterDesc} */
     public static long naiGetImporterDesc(long extension) {
         long __functionAddress = Functions.GetImporterDesc;
-        return invokePP(__functionAddress, extension);
+        return invokePP(extension, __functionAddress);
     }
 
     /**
@@ -3455,8 +3517,9 @@ public class Assimp {
     public static AIImporterDesc aiGetImporterDesc(@NativeType("char const *") CharSequence extension) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer extensionEncoded = stack.ASCII(extension);
-            long __result = naiGetImporterDesc(memAddress(extensionEncoded));
+            stack.nASCII(extension, true);
+            long extensionEncoded = stack.getPointerAddress();
+            long __result = naiGetImporterDesc(extensionEncoded);
             return AIImporterDesc.createSafe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -3471,7 +3534,7 @@ public class Assimp {
         if (CHECKS) {
             AIMaterial.validate(pMat);
         }
-        return invokePPPI(__functionAddress, pMat, pKey, type, index, mPropOut);
+        return invokePPPI(pMat, pKey, type, index, mPropOut, __functionAddress);
     }
 
     /**
@@ -3486,7 +3549,7 @@ public class Assimp {
      * @return Return_xxx values.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialProperty(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiMaterialProperty **") PointerBuffer mPropOut) {
+    public static int aiGetMaterialProperty(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiMaterialProperty const **") PointerBuffer mPropOut) {
         if (CHECKS) {
             checkNT1(pKey);
             check(mPropOut, 1);
@@ -3506,14 +3569,15 @@ public class Assimp {
      * @return Return_xxx values.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialProperty(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiMaterialProperty **") PointerBuffer mPropOut) {
+    public static int aiGetMaterialProperty(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiMaterialProperty const **") PointerBuffer mPropOut) {
         if (CHECKS) {
             check(mPropOut, 1);
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pKeyEncoded = stack.ASCII(pKey);
-            return naiGetMaterialProperty(pMat.address(), memAddress(pKeyEncoded), type, index, memAddress(mPropOut));
+            stack.nASCII(pKey, true);
+            long pKeyEncoded = stack.getPointerAddress();
+            return naiGetMaterialProperty(pMat.address(), pKeyEncoded, type, index, memAddress(mPropOut));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3531,7 +3595,7 @@ public class Assimp {
      * @return Return_xxx values.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialProperty(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") ByteBuffer pKey, @NativeType("struct aiMaterialProperty **") PointerBuffer mPropOut) {
+    public static int aiGetMaterialProperty(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") ByteBuffer pKey, @NativeType("struct aiMaterialProperty const **") PointerBuffer mPropOut) {
         return aiGetMaterialProperty(pMat, pKey, 0, 0, mPropOut);
     }
 
@@ -3545,7 +3609,7 @@ public class Assimp {
      * @return Return_xxx values.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialProperty(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") CharSequence pKey, @NativeType("struct aiMaterialProperty **") PointerBuffer mPropOut) {
+    public static int aiGetMaterialProperty(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") CharSequence pKey, @NativeType("struct aiMaterialProperty const **") PointerBuffer mPropOut) {
         return aiGetMaterialProperty(pMat, pKey, 0, 0, mPropOut);
     }
 
@@ -3561,7 +3625,7 @@ public class Assimp {
         if (CHECKS) {
             AIMaterial.validate(pMat);
         }
-        return invokePPPPI(__functionAddress, pMat, pKey, type, index, pOut, pMax);
+        return invokePPPPI(pMat, pKey, type, index, pOut, pMax, __functionAddress);
     }
 
     /**
@@ -3577,7 +3641,7 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output arrays remains unmodified and {@code pMax} is set to 0.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialFloatArray(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("float *") FloatBuffer pOut, @Nullable @NativeType("unsigned int *") IntBuffer pMax) {
+    public static int aiGetMaterialFloatArray(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("float *") FloatBuffer pOut, @Nullable @NativeType("unsigned int *") IntBuffer pMax) {
         if (CHECKS) {
             checkNT1(pKey);
             checkSafe(pMax, 1);
@@ -3599,15 +3663,16 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output arrays remains unmodified and {@code pMax} is set to 0.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialFloatArray(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("float *") FloatBuffer pOut, @Nullable @NativeType("unsigned int *") IntBuffer pMax) {
+    public static int aiGetMaterialFloatArray(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("float *") FloatBuffer pOut, @Nullable @NativeType("unsigned int *") IntBuffer pMax) {
         if (CHECKS) {
             checkSafe(pMax, 1);
             check(pOut, pMax.get(pMax.position()));
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pKeyEncoded = stack.ASCII(pKey);
-            return naiGetMaterialFloatArray(pMat.address(), memAddress(pKeyEncoded), type, index, memAddress(pOut), memAddressSafe(pMax));
+            stack.nASCII(pKey, true);
+            long pKeyEncoded = stack.getPointerAddress();
+            return naiGetMaterialFloatArray(pMat.address(), pKeyEncoded, type, index, memAddress(pOut), memAddressSafe(pMax));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3625,7 +3690,7 @@ public class Assimp {
         if (CHECKS) {
             AIMaterial.validate(pMat);
         }
-        return invokePPPPI(__functionAddress, pMat, pKey, type, index, pOut, pMax);
+        return invokePPPPI(pMat, pKey, type, index, pOut, pMax, __functionAddress);
     }
 
     /**
@@ -3641,7 +3706,7 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output arrays remains unmodified and {@code pMax} is set to 0.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialIntegerArray(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("int *") IntBuffer pOut, @Nullable @NativeType("unsigned int *") IntBuffer pMax) {
+    public static int aiGetMaterialIntegerArray(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("int *") IntBuffer pOut, @Nullable @NativeType("unsigned int *") IntBuffer pMax) {
         if (CHECKS) {
             checkNT1(pKey);
             checkSafe(pMax, 1);
@@ -3663,15 +3728,16 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output arrays remains unmodified and {@code pMax} is set to 0.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialIntegerArray(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("int *") IntBuffer pOut, @Nullable @NativeType("unsigned int *") IntBuffer pMax) {
+    public static int aiGetMaterialIntegerArray(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("int *") IntBuffer pOut, @Nullable @NativeType("unsigned int *") IntBuffer pMax) {
         if (CHECKS) {
             checkSafe(pMax, 1);
             check(pOut, pMax.get(pMax.position()));
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pKeyEncoded = stack.ASCII(pKey);
-            return naiGetMaterialIntegerArray(pMat.address(), memAddress(pKeyEncoded), type, index, memAddress(pOut), memAddressSafe(pMax));
+            stack.nASCII(pKey, true);
+            long pKeyEncoded = stack.getPointerAddress();
+            return naiGetMaterialIntegerArray(pMat.address(), pKeyEncoded, type, index, memAddress(pOut), memAddressSafe(pMax));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3685,7 +3751,7 @@ public class Assimp {
         if (CHECKS) {
             AIMaterial.validate(pMat);
         }
-        return invokePPPI(__functionAddress, pMat, pKey, type, index, pOut);
+        return invokePPPI(pMat, pKey, type, index, pOut, __functionAddress);
     }
 
     /**
@@ -3700,7 +3766,7 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output struct remains unmodified.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialColor(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiColor4D *") AIColor4D pOut) {
+    public static int aiGetMaterialColor(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiColor4D *") AIColor4D pOut) {
         if (CHECKS) {
             checkNT1(pKey);
         }
@@ -3719,11 +3785,12 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output struct remains unmodified.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialColor(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiColor4D *") AIColor4D pOut) {
+    public static int aiGetMaterialColor(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiColor4D *") AIColor4D pOut) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pKeyEncoded = stack.ASCII(pKey);
-            return naiGetMaterialColor(pMat.address(), memAddress(pKeyEncoded), type, index, pOut.address());
+            stack.nASCII(pKey, true);
+            long pKeyEncoded = stack.getPointerAddress();
+            return naiGetMaterialColor(pMat.address(), pKeyEncoded, type, index, pOut.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3737,7 +3804,7 @@ public class Assimp {
         if (CHECKS) {
             AIMaterial.validate(pMat);
         }
-        return invokePPPI(__functionAddress, pMat, pKey, type, index, pOut);
+        return invokePPPI(pMat, pKey, type, index, pOut, __functionAddress);
     }
 
     /**
@@ -3752,7 +3819,7 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output struct remains unmodified.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialUVTransform(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiUVTransform *") AIUVTransform pOut) {
+    public static int aiGetMaterialUVTransform(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiUVTransform *") AIUVTransform pOut) {
         if (CHECKS) {
             checkNT1(pKey);
         }
@@ -3771,11 +3838,12 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output struct remains unmodified.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialUVTransform(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiUVTransform *") AIUVTransform pOut) {
+    public static int aiGetMaterialUVTransform(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiUVTransform *") AIUVTransform pOut) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pKeyEncoded = stack.ASCII(pKey);
-            return naiGetMaterialUVTransform(pMat.address(), memAddress(pKeyEncoded), type, index, pOut.address());
+            stack.nASCII(pKey, true);
+            long pKeyEncoded = stack.getPointerAddress();
+            return naiGetMaterialUVTransform(pMat.address(), pKeyEncoded, type, index, pOut.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3789,7 +3857,7 @@ public class Assimp {
         if (CHECKS) {
             AIMaterial.validate(pMat);
         }
-        return invokePPPI(__functionAddress, pMat, pKey, type, index, pOut);
+        return invokePPPI(pMat, pKey, type, index, pOut, __functionAddress);
     }
 
     /**
@@ -3804,7 +3872,7 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output struct remains unmodified.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialString(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiString *") AIString pOut) {
+    public static int aiGetMaterialString(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiString *") AIString pOut) {
         if (CHECKS) {
             checkNT1(pKey);
         }
@@ -3823,11 +3891,12 @@ public class Assimp {
      * @return Specifies whether the key has been found. If not, the output struct remains unmodified.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialString(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiString *") AIString pOut) {
+    public static int aiGetMaterialString(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("struct aiString *") AIString pOut) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pKeyEncoded = stack.ASCII(pKey);
-            return naiGetMaterialString(pMat.address(), memAddress(pKeyEncoded), type, index, pOut.address());
+            stack.nASCII(pKey, true);
+            long pKeyEncoded = stack.getPointerAddress();
+            return naiGetMaterialString(pMat.address(), pKeyEncoded, type, index, pOut.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3841,7 +3910,7 @@ public class Assimp {
         if (CHECKS) {
             AIMaterial.validate(pMat);
         }
-        return invokePI(__functionAddress, pMat, type);
+        return invokePI(pMat, type, __functionAddress);
     }
 
     /**
@@ -3853,7 +3922,7 @@ public class Assimp {
      * @return Number of textures for this type.
      */
     @NativeType("unsigned int")
-    public static int aiGetMaterialTextureCount(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("aiTextureType") int type) {
+    public static int aiGetMaterialTextureCount(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("aiTextureType") int type) {
         return naiGetMaterialTextureCount(pMat.address(), type);
     }
 
@@ -3865,7 +3934,7 @@ public class Assimp {
         if (CHECKS) {
             AIMaterial.validate(pMat);
         }
-        return invokePPPPPPPPI(__functionAddress, pMat, type, index, path, mapping, uvindex, blend, op, mapmode, flags);
+        return invokePPPPPPPPI(pMat, type, index, path, mapping, uvindex, blend, op, mapmode, flags, __functionAddress);
     }
 
     /**
@@ -3892,7 +3961,7 @@ public class Assimp {
      * @return {@link #aiReturn_SUCCESS Return_SUCCESS} on success, otherwise something else. Have fun.
      */
     @NativeType("aiReturn")
-    public static int aiGetMaterialTexture(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("aiTextureType") int type, @NativeType("unsigned int") int index, @NativeType("struct aiString *") AIString path, @Nullable @NativeType("aiTextureMapping *") IntBuffer mapping, @Nullable @NativeType("unsigned int *") IntBuffer uvindex, @Nullable @NativeType("float *") FloatBuffer blend, @Nullable @NativeType("aiTextureOp *") IntBuffer op, @Nullable @NativeType("aiTextureMapMode *") IntBuffer mapmode, @Nullable @NativeType("unsigned int *") IntBuffer flags) {
+    public static int aiGetMaterialTexture(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("aiTextureType") int type, @NativeType("unsigned int") int index, @NativeType("struct aiString *") AIString path, @Nullable @NativeType("aiTextureMapping *") IntBuffer mapping, @Nullable @NativeType("unsigned int *") IntBuffer uvindex, @Nullable @NativeType("float *") FloatBuffer blend, @Nullable @NativeType("aiTextureOp *") IntBuffer op, @Nullable @NativeType("aiTextureMapMode *") IntBuffer mapmode, @Nullable @NativeType("unsigned int *") IntBuffer flags) {
         if (CHECKS) {
             checkSafe(mapping, 1);
             checkSafe(uvindex, 1);
@@ -3997,7 +4066,7 @@ public class Assimp {
 
     /** Array version of: {@link #aiGetMaterialFloatArray GetMaterialFloatArray} */
     @NativeType("aiReturn")
-    public static int aiGetMaterialFloatArray(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("float *") float[] pOut, @Nullable @NativeType("unsigned int *") int[] pMax) {
+    public static int aiGetMaterialFloatArray(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("float *") float[] pOut, @Nullable @NativeType("unsigned int *") int[] pMax) {
         long __functionAddress = Functions.GetMaterialFloatArray;
         if (CHECKS) {
             checkNT1(pKey);
@@ -4005,12 +4074,12 @@ public class Assimp {
             check(pOut, pMax[0]);
             AIMaterial.validate(pMat.address());
         }
-        return invokePPPPI(__functionAddress, pMat.address(), memAddress(pKey), type, index, pOut, pMax);
+        return invokePPPPI(pMat.address(), memAddress(pKey), type, index, pOut, pMax, __functionAddress);
     }
 
     /** Array version of: {@link #aiGetMaterialFloatArray GetMaterialFloatArray} */
     @NativeType("aiReturn")
-    public static int aiGetMaterialFloatArray(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("float *") float[] pOut, @Nullable @NativeType("unsigned int *") int[] pMax) {
+    public static int aiGetMaterialFloatArray(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("float *") float[] pOut, @Nullable @NativeType("unsigned int *") int[] pMax) {
         long __functionAddress = Functions.GetMaterialFloatArray;
         if (CHECKS) {
             checkSafe(pMax, 1);
@@ -4019,8 +4088,9 @@ public class Assimp {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pKeyEncoded = stack.ASCII(pKey);
-            return invokePPPPI(__functionAddress, pMat.address(), memAddress(pKeyEncoded), type, index, pOut, pMax);
+            stack.nASCII(pKey, true);
+            long pKeyEncoded = stack.getPointerAddress();
+            return invokePPPPI(pMat.address(), pKeyEncoded, type, index, pOut, pMax, __functionAddress);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4028,7 +4098,7 @@ public class Assimp {
 
     /** Array version of: {@link #aiGetMaterialIntegerArray GetMaterialIntegerArray} */
     @NativeType("aiReturn")
-    public static int aiGetMaterialIntegerArray(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("int *") int[] pOut, @Nullable @NativeType("unsigned int *") int[] pMax) {
+    public static int aiGetMaterialIntegerArray(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") ByteBuffer pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("int *") int[] pOut, @Nullable @NativeType("unsigned int *") int[] pMax) {
         long __functionAddress = Functions.GetMaterialIntegerArray;
         if (CHECKS) {
             checkNT1(pKey);
@@ -4036,12 +4106,12 @@ public class Assimp {
             check(pOut, pMax[0]);
             AIMaterial.validate(pMat.address());
         }
-        return invokePPPPI(__functionAddress, pMat.address(), memAddress(pKey), type, index, pOut, pMax);
+        return invokePPPPI(pMat.address(), memAddress(pKey), type, index, pOut, pMax, __functionAddress);
     }
 
     /** Array version of: {@link #aiGetMaterialIntegerArray GetMaterialIntegerArray} */
     @NativeType("aiReturn")
-    public static int aiGetMaterialIntegerArray(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("char *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("int *") int[] pOut, @Nullable @NativeType("unsigned int *") int[] pMax) {
+    public static int aiGetMaterialIntegerArray(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("char const *") CharSequence pKey, @NativeType("unsigned int") int type, @NativeType("unsigned int") int index, @NativeType("int *") int[] pOut, @Nullable @NativeType("unsigned int *") int[] pMax) {
         long __functionAddress = Functions.GetMaterialIntegerArray;
         if (CHECKS) {
             checkSafe(pMax, 1);
@@ -4050,8 +4120,9 @@ public class Assimp {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pKeyEncoded = stack.ASCII(pKey);
-            return invokePPPPI(__functionAddress, pMat.address(), memAddress(pKeyEncoded), type, index, pOut, pMax);
+            stack.nASCII(pKey, true);
+            long pKeyEncoded = stack.getPointerAddress();
+            return invokePPPPI(pMat.address(), pKeyEncoded, type, index, pOut, pMax, __functionAddress);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4059,7 +4130,7 @@ public class Assimp {
 
     /** Array version of: {@link #aiGetMaterialTexture GetMaterialTexture} */
     @NativeType("aiReturn")
-    public static int aiGetMaterialTexture(@NativeType("struct aiMaterial *") AIMaterial pMat, @NativeType("aiTextureType") int type, @NativeType("unsigned int") int index, @NativeType("struct aiString *") AIString path, @Nullable @NativeType("aiTextureMapping *") int[] mapping, @Nullable @NativeType("unsigned int *") int[] uvindex, @Nullable @NativeType("float *") float[] blend, @Nullable @NativeType("aiTextureOp *") int[] op, @Nullable @NativeType("aiTextureMapMode *") int[] mapmode, @Nullable @NativeType("unsigned int *") int[] flags) {
+    public static int aiGetMaterialTexture(@NativeType("struct aiMaterial const *") AIMaterial pMat, @NativeType("aiTextureType") int type, @NativeType("unsigned int") int index, @NativeType("struct aiString *") AIString path, @Nullable @NativeType("aiTextureMapping *") int[] mapping, @Nullable @NativeType("unsigned int *") int[] uvindex, @Nullable @NativeType("float *") float[] blend, @Nullable @NativeType("aiTextureOp *") int[] op, @Nullable @NativeType("aiTextureMapMode *") int[] mapmode, @Nullable @NativeType("unsigned int *") int[] flags) {
         long __functionAddress = Functions.GetMaterialTexture;
         if (CHECKS) {
             checkSafe(mapping, 1);
@@ -4070,7 +4141,7 @@ public class Assimp {
             checkSafe(flags, 1);
             AIMaterial.validate(pMat.address());
         }
-        return invokePPPPPPPPI(__functionAddress, pMat.address(), type, index, path.address(), mapping, uvindex, blend, op, mapmode, flags);
+        return invokePPPPPPPPI(pMat.address(), type, index, path.address(), mapping, uvindex, blend, op, mapmode, flags, __functionAddress);
     }
 
 }

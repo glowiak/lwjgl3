@@ -607,8 +607,9 @@ public class EXTGPUShader4 {
     public static void glBindFragDataLocationEXT(@NativeType("GLuint") int program, @NativeType("GLuint") int color, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            nglBindFragDataLocationEXT(program, color, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nglBindFragDataLocationEXT(program, color, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -630,8 +631,9 @@ public class EXTGPUShader4 {
     public static int glGetFragDataLocationEXT(@NativeType("GLuint") int program, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nglGetFragDataLocationEXT(program, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nglGetFragDataLocationEXT(program, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -692,7 +694,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 1);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribI2ivEXT VertexAttribI2ivEXT} */
@@ -702,7 +704,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 2);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribI3ivEXT VertexAttribI3ivEXT} */
@@ -712,7 +714,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 3);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribI4ivEXT VertexAttribI4ivEXT} */
@@ -722,7 +724,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribI1uivEXT VertexAttribI1uivEXT} */
@@ -732,7 +734,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 1);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribI2uivEXT VertexAttribI2uivEXT} */
@@ -742,7 +744,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 2);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribI3uivEXT VertexAttribI3uivEXT} */
@@ -752,7 +754,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 3);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribI4uivEXT VertexAttribI4uivEXT} */
@@ -762,7 +764,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribI4svEXT VertexAttribI4svEXT} */
@@ -772,7 +774,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribI4usvEXT VertexAttribI4usvEXT} */
@@ -782,7 +784,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribIPointerEXT VertexAttribIPointerEXT} */
@@ -791,7 +793,7 @@ public class EXTGPUShader4 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, index, size, type, stride, pointer);
+        callPV(index, size, type, stride, pointer, __functionAddress);
     }
 
     /** Array version of: {@link #glVertexAttribIPointerEXT VertexAttribIPointerEXT} */
@@ -800,7 +802,7 @@ public class EXTGPUShader4 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, index, size, type, stride, pointer);
+        callPV(index, size, type, stride, pointer, __functionAddress);
     }
 
     /** Array version of: {@link #glGetVertexAttribIivEXT GetVertexAttribIivEXT} */
@@ -810,7 +812,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(params, 4);
         }
-        callPV(__functionAddress, index, pname, params);
+        callPV(index, pname, params, __functionAddress);
     }
 
     /** Array version of: {@link #glGetVertexAttribIuivEXT GetVertexAttribIuivEXT} */
@@ -820,7 +822,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(params, 4);
         }
-        callPV(__functionAddress, index, pname, params);
+        callPV(index, pname, params, __functionAddress);
     }
 
     /** Array version of: {@link #glGetUniformuivEXT GetUniformuivEXT} */
@@ -830,7 +832,7 @@ public class EXTGPUShader4 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, program, location, params);
+        callPV(program, location, params, __functionAddress);
     }
 
     /** Array version of: {@link #glUniform1uivEXT Uniform1uivEXT} */
@@ -839,7 +841,7 @@ public class EXTGPUShader4 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length, value);
+        callPV(location, value.length, value, __functionAddress);
     }
 
     /** Array version of: {@link #glUniform2uivEXT Uniform2uivEXT} */
@@ -848,7 +850,7 @@ public class EXTGPUShader4 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 1, value);
+        callPV(location, value.length >> 1, value, __functionAddress);
     }
 
     /** Array version of: {@link #glUniform3uivEXT Uniform3uivEXT} */
@@ -857,7 +859,7 @@ public class EXTGPUShader4 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 3, value);
+        callPV(location, value.length / 3, value, __functionAddress);
     }
 
     /** Array version of: {@link #glUniform4uivEXT Uniform4uivEXT} */
@@ -866,7 +868,7 @@ public class EXTGPUShader4 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 2, value);
+        callPV(location, value.length >> 2, value, __functionAddress);
     }
 
 }

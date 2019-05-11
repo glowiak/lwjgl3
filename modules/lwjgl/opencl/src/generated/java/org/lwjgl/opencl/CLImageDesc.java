@@ -121,18 +121,14 @@ public class CLImageDesc extends Struct implements NativeResource {
         BUFFER = layout.offsetof(9);
     }
 
-    CLImageDesc(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link CLImageDesc} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code CLImageDesc} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public CLImageDesc(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -231,30 +227,31 @@ public class CLImageDesc extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link CLImageDesc} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code CLImageDesc} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static CLImageDesc malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(CLImageDesc.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link CLImageDesc} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code CLImageDesc} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static CLImageDesc calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(CLImageDesc.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link CLImageDesc} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code CLImageDesc} instance allocated with {@link BufferUtils}. */
     public static CLImageDesc create() {
-        return new CLImageDesc(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(CLImageDesc.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link CLImageDesc} instance for the specified memory address. */
+    /** Returns a new {@code CLImageDesc} instance for the specified memory address. */
     public static CLImageDesc create(long address) {
-        return new CLImageDesc(address, null);
+        return wrap(CLImageDesc.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static CLImageDesc createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(CLImageDesc.class, address);
     }
 
     /**
@@ -263,7 +260,7 @@ public class CLImageDesc extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLImageDesc.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -272,7 +269,7 @@ public class CLImageDesc extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLImageDesc.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -281,7 +278,8 @@ public class CLImageDesc extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLImageDesc.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -291,43 +289,43 @@ public class CLImageDesc extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLImageDesc.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static CLImageDesc.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link CLImageDesc} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code CLImageDesc} instance allocated on the thread-local {@link MemoryStack}. */
     public static CLImageDesc mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link CLImageDesc} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code CLImageDesc} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static CLImageDesc callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link CLImageDesc} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code CLImageDesc} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static CLImageDesc mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(CLImageDesc.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link CLImageDesc} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code CLImageDesc} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static CLImageDesc callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(CLImageDesc.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -355,7 +353,7 @@ public class CLImageDesc extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLImageDesc.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -365,13 +363,13 @@ public class CLImageDesc extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLImageDesc.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #image_type}. */
-    public static int nimage_type(long struct) { return memGetInt(struct + CLImageDesc.IMAGE_TYPE); }
+    public static int nimage_type(long struct) { return UNSAFE.getInt(null, struct + CLImageDesc.IMAGE_TYPE); }
     /** Unsafe version of {@link #image_width}. */
     public static long nimage_width(long struct) { return memGetAddress(struct + CLImageDesc.IMAGE_WIDTH); }
     /** Unsafe version of {@link #image_height}. */
@@ -385,14 +383,14 @@ public class CLImageDesc extends Struct implements NativeResource {
     /** Unsafe version of {@link #image_slice_pitch}. */
     public static long nimage_slice_pitch(long struct) { return memGetAddress(struct + CLImageDesc.IMAGE_SLICE_PITCH); }
     /** Unsafe version of {@link #num_mip_levels}. */
-    public static int nnum_mip_levels(long struct) { return memGetInt(struct + CLImageDesc.NUM_MIP_LEVELS); }
+    public static int nnum_mip_levels(long struct) { return UNSAFE.getInt(null, struct + CLImageDesc.NUM_MIP_LEVELS); }
     /** Unsafe version of {@link #num_samples}. */
-    public static int nnum_samples(long struct) { return memGetInt(struct + CLImageDesc.NUM_SAMPLES); }
+    public static int nnum_samples(long struct) { return UNSAFE.getInt(null, struct + CLImageDesc.NUM_SAMPLES); }
     /** Unsafe version of {@link #buffer}. */
     public static long nbuffer(long struct) { return memGetAddress(struct + CLImageDesc.BUFFER); }
 
     /** Unsafe version of {@link #image_type(int) image_type}. */
-    public static void nimage_type(long struct, int value) { memPutInt(struct + CLImageDesc.IMAGE_TYPE, value); }
+    public static void nimage_type(long struct, int value) { UNSAFE.putInt(null, struct + CLImageDesc.IMAGE_TYPE, value); }
     /** Unsafe version of {@link #image_width(long) image_width}. */
     public static void nimage_width(long struct, long value) { memPutAddress(struct + CLImageDesc.IMAGE_WIDTH, value); }
     /** Unsafe version of {@link #image_height(long) image_height}. */
@@ -406,9 +404,9 @@ public class CLImageDesc extends Struct implements NativeResource {
     /** Unsafe version of {@link #image_slice_pitch(long) image_slice_pitch}. */
     public static void nimage_slice_pitch(long struct, long value) { memPutAddress(struct + CLImageDesc.IMAGE_SLICE_PITCH, value); }
     /** Unsafe version of {@link #num_mip_levels(int) num_mip_levels}. */
-    public static void nnum_mip_levels(long struct, int value) { memPutInt(struct + CLImageDesc.NUM_MIP_LEVELS, value); }
+    public static void nnum_mip_levels(long struct, int value) { UNSAFE.putInt(null, struct + CLImageDesc.NUM_MIP_LEVELS, value); }
     /** Unsafe version of {@link #num_samples(int) num_samples}. */
-    public static void nnum_samples(long struct, int value) { memPutInt(struct + CLImageDesc.NUM_SAMPLES, value); }
+    public static void nnum_samples(long struct, int value) { UNSAFE.putInt(null, struct + CLImageDesc.NUM_SAMPLES, value); }
     /** Unsafe version of {@link #buffer(long) buffer}. */
     public static void nbuffer(long struct, long value) { memPutAddress(struct + CLImageDesc.BUFFER, value); }
 
@@ -417,8 +415,10 @@ public class CLImageDesc extends Struct implements NativeResource {
     /** An array of {@link CLImageDesc} structs. */
     public static class Buffer extends StructBuffer<CLImageDesc, Buffer> implements NativeResource {
 
+        private static final CLImageDesc ELEMENT_FACTORY = CLImageDesc.create(-1L);
+
         /**
-         * Creates a new {@link CLImageDesc.Buffer} instance backed by the specified container.
+         * Creates a new {@code CLImageDesc.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -444,18 +444,8 @@ public class CLImageDesc extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected CLImageDesc newInstance(long address) {
-            return new CLImageDesc(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected CLImageDesc getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code image_type} field. */

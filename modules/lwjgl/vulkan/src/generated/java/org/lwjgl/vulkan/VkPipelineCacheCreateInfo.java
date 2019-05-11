@@ -22,8 +22,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>If {@code initialDataSize} is not 0, it <b>must</b> be equal to the size of {@code pInitialData}, as returned by {@link VK10#vkGetPipelineCacheData GetPipelineCacheData} when {@code pInitialData} was originally retrieved</li>
- * <li>If {@code initialDataSize} is not 0, {@code pInitialData} <b>must</b> have been retrieved from a previous call to {@link VK10#vkGetPipelineCacheData GetPipelineCacheData}</li>
+ * <li>If {@code initialDataSize} is not 0, it <b>must</b> be equal to the size of {@code pInitialData}, as returned by {@code vkGetPipelineCacheData} when {@code pInitialData} was originally retrieved</li>
+ * <li>If {@code initialDataSize} is not 0, {@code pInitialData} <b>must</b> have been retrieved from a previous call to {@code vkGetPipelineCacheData}</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -95,18 +95,14 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
         PINITIALDATA = layout.offsetof(4);
     }
 
-    VkPipelineCacheCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPipelineCacheCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPipelineCacheCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPipelineCacheCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -167,30 +163,31 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineCacheCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineCacheCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPipelineCacheCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPipelineCacheCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineCacheCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineCacheCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPipelineCacheCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPipelineCacheCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineCacheCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPipelineCacheCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkPipelineCacheCreateInfo create() {
-        return new VkPipelineCacheCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPipelineCacheCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPipelineCacheCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkPipelineCacheCreateInfo} instance for the specified memory address. */
     public static VkPipelineCacheCreateInfo create(long address) {
-        return new VkPipelineCacheCreateInfo(address, null);
+        return wrap(VkPipelineCacheCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineCacheCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPipelineCacheCreateInfo.class, address);
     }
 
     /**
@@ -199,7 +196,7 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static VkPipelineCacheCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -208,7 +205,7 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static VkPipelineCacheCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -217,7 +214,8 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static VkPipelineCacheCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -227,43 +225,43 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static VkPipelineCacheCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineCacheCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineCacheCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPipelineCacheCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPipelineCacheCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPipelineCacheCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPipelineCacheCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPipelineCacheCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPipelineCacheCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPipelineCacheCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineCacheCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPipelineCacheCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPipelineCacheCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPipelineCacheCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineCacheCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPipelineCacheCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -291,7 +289,7 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static VkPipelineCacheCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -301,28 +299,28 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static VkPipelineCacheCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPipelineCacheCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPipelineCacheCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPipelineCacheCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkPipelineCacheCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkPipelineCacheCreateInfo.FLAGS); }
     /** Unsafe version of {@link #initialDataSize}. */
     public static long ninitialDataSize(long struct) { return memGetAddress(struct + VkPipelineCacheCreateInfo.INITIALDATASIZE); }
     /** Unsafe version of {@link #pInitialData() pInitialData}. */
     @Nullable public static ByteBuffer npInitialData(long struct) { return memByteBufferSafe(memGetAddress(struct + VkPipelineCacheCreateInfo.PINITIALDATA), (int)ninitialDataSize(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPipelineCacheCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineCacheCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPipelineCacheCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkPipelineCacheCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineCacheCreateInfo.FLAGS, value); }
     /** Sets the specified value to the {@code initialDataSize} field of the specified {@code struct}. */
     public static void ninitialDataSize(long struct, long value) { memPutAddress(struct + VkPipelineCacheCreateInfo.INITIALDATASIZE, value); }
     /** Unsafe version of {@link #pInitialData(ByteBuffer) pInitialData}. */
@@ -347,7 +345,7 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -356,8 +354,10 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
     /** An array of {@link VkPipelineCacheCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkPipelineCacheCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkPipelineCacheCreateInfo ELEMENT_FACTORY = VkPipelineCacheCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkPipelineCacheCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPipelineCacheCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -383,18 +383,8 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPipelineCacheCreateInfo newInstance(long address) {
-            return new VkPipelineCacheCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPipelineCacheCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

@@ -68,18 +68,14 @@ public class NVGLUFramebuffer extends Struct {
         IMAGE = layout.offsetof(3);
     }
 
-    NVGLUFramebuffer(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link NVGLUFramebuffer} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code NVGLUFramebuffer} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public NVGLUFramebuffer(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -99,15 +95,15 @@ public class NVGLUFramebuffer extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link NVGLUFramebuffer} instance for the specified memory address. */
+    /** Returns a new {@code NVGLUFramebuffer} instance for the specified memory address. */
     public static NVGLUFramebuffer create(long address) {
-        return new NVGLUFramebuffer(address, null);
+        return wrap(NVGLUFramebuffer.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NVGLUFramebuffer createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(NVGLUFramebuffer.class, address);
     }
 
     /**
@@ -117,33 +113,35 @@ public class NVGLUFramebuffer extends Struct {
      * @param capacity the buffer capacity
      */
     public static NVGLUFramebuffer.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NVGLUFramebuffer.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #fbo}. */
-    public static int nfbo(long struct) { return memGetInt(struct + NVGLUFramebuffer.FBO); }
+    public static int nfbo(long struct) { return UNSAFE.getInt(null, struct + NVGLUFramebuffer.FBO); }
     /** Unsafe version of {@link #rbo}. */
-    public static int nrbo(long struct) { return memGetInt(struct + NVGLUFramebuffer.RBO); }
+    public static int nrbo(long struct) { return UNSAFE.getInt(null, struct + NVGLUFramebuffer.RBO); }
     /** Unsafe version of {@link #texture}. */
-    public static int ntexture(long struct) { return memGetInt(struct + NVGLUFramebuffer.TEXTURE); }
+    public static int ntexture(long struct) { return UNSAFE.getInt(null, struct + NVGLUFramebuffer.TEXTURE); }
     /** Unsafe version of {@link #image}. */
-    public static int nimage(long struct) { return memGetInt(struct + NVGLUFramebuffer.IMAGE); }
+    public static int nimage(long struct) { return UNSAFE.getInt(null, struct + NVGLUFramebuffer.IMAGE); }
 
     // -----------------------------------
 
     /** An array of {@link NVGLUFramebuffer} structs. */
     public static class Buffer extends StructBuffer<NVGLUFramebuffer, Buffer> {
 
+        private static final NVGLUFramebuffer ELEMENT_FACTORY = NVGLUFramebuffer.create(-1L);
+
         /**
-         * Creates a new {@link NVGLUFramebuffer.Buffer} instance backed by the specified container.
+         * Creates a new {@code NVGLUFramebuffer.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -169,18 +167,8 @@ public class NVGLUFramebuffer extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected NVGLUFramebuffer newInstance(long address) {
-            return new NVGLUFramebuffer(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected NVGLUFramebuffer getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code fbo} field. */

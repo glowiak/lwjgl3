@@ -30,18 +30,14 @@ import static org.lwjgl.system.MemoryStack.*;
  */
 public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
 
-    VkMemoryAllocateFlagsInfoKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkMemoryAllocateFlagsInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkMemoryAllocateFlagsInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkMemoryAllocateFlagsInfoKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(container);
     }
 
     /** Sets the specified value to the {@code sType} field. */
@@ -87,30 +83,31 @@ public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkMemoryAllocateFlagsInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkMemoryAllocateFlagsInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkMemoryAllocateFlagsInfoKHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkMemoryAllocateFlagsInfoKHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkMemoryAllocateFlagsInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkMemoryAllocateFlagsInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkMemoryAllocateFlagsInfoKHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkMemoryAllocateFlagsInfoKHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkMemoryAllocateFlagsInfoKHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkMemoryAllocateFlagsInfoKHR} instance allocated with {@link BufferUtils}. */
     public static VkMemoryAllocateFlagsInfoKHR create() {
-        return new VkMemoryAllocateFlagsInfoKHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkMemoryAllocateFlagsInfoKHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkMemoryAllocateFlagsInfoKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkMemoryAllocateFlagsInfoKHR} instance for the specified memory address. */
     public static VkMemoryAllocateFlagsInfoKHR create(long address) {
-        return new VkMemoryAllocateFlagsInfoKHR(address, null);
+        return wrap(VkMemoryAllocateFlagsInfoKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkMemoryAllocateFlagsInfoKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkMemoryAllocateFlagsInfoKHR.class, address);
     }
 
     /**
@@ -119,7 +116,7 @@ public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
      * @param capacity the buffer capacity
      */
     public static VkMemoryAllocateFlagsInfoKHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -128,7 +125,7 @@ public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
      * @param capacity the buffer capacity
      */
     public static VkMemoryAllocateFlagsInfoKHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -137,7 +134,8 @@ public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
      * @param capacity the buffer capacity
      */
     public static VkMemoryAllocateFlagsInfoKHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -147,43 +145,43 @@ public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
      * @param capacity the buffer capacity
      */
     public static VkMemoryAllocateFlagsInfoKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkMemoryAllocateFlagsInfoKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkMemoryAllocateFlagsInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkMemoryAllocateFlagsInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkMemoryAllocateFlagsInfoKHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkMemoryAllocateFlagsInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkMemoryAllocateFlagsInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkMemoryAllocateFlagsInfoKHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkMemoryAllocateFlagsInfoKHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkMemoryAllocateFlagsInfoKHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkMemoryAllocateFlagsInfoKHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkMemoryAllocateFlagsInfoKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkMemoryAllocateFlagsInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkMemoryAllocateFlagsInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkMemoryAllocateFlagsInfoKHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkMemoryAllocateFlagsInfoKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -211,7 +209,7 @@ public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
      * @param capacity the buffer capacity
      */
     public static VkMemoryAllocateFlagsInfoKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -221,7 +219,7 @@ public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
      * @param capacity the buffer capacity
      */
     public static VkMemoryAllocateFlagsInfoKHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -229,8 +227,10 @@ public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
     /** An array of {@link VkMemoryAllocateFlagsInfoKHR} structs. */
     public static class Buffer extends VkMemoryAllocateFlagsInfo.Buffer {
 
+        private static final VkMemoryAllocateFlagsInfoKHR ELEMENT_FACTORY = VkMemoryAllocateFlagsInfoKHR.create(-1L);
+
         /**
-         * Creates a new {@link VkMemoryAllocateFlagsInfoKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkMemoryAllocateFlagsInfoKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -256,13 +256,8 @@ public class VkMemoryAllocateFlagsInfoKHR extends VkMemoryAllocateFlagsInfo {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkMemoryAllocateFlagsInfoKHR newInstance(long address) {
-            return new VkMemoryAllocateFlagsInfoKHR(address, container);
+        protected VkMemoryAllocateFlagsInfoKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Sets the specified value to the {@code sType} field. */

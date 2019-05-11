@@ -25,21 +25,21 @@ val MESA_image_dma_buf_export = "MESAImageDMABufExport".nativeClassEGL("MESA_ima
         "ExportDMABUFImageQueryMESA",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLImageKHR.IN("image", ""),
-        nullable..Check(1)..int.p.OUT("fourcc", ""),
-        nullable..Check(1)..int.p.OUT("num_planes", ""),
-        nullable..Check(1)..EGLuint64KHR.p.OUT("modifiers", "")
+        EGLDisplay("dpy", ""),
+        EGLImageKHR("image", ""),
+        nullable..Check(1)..int.p("fourcc", ""),
+        nullable..Check(1)..int.p("num_planes", ""),
+        nullable..Check(1)..EGLuint64KHR.p("modifiers", "")
     )
 
     EGLBoolean(
         "ExportDMABUFImageMESA",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLImageKHR.IN("image", ""),
-        nullable..Check(1)..int.p.OUT("fds", ""),
-        nullable..Check(1)..EGLint.p.OUT("strides", ""),
-        nullable..Check(1)..EGLint.p.OUT("offsets", "")
+        EGLDisplay("dpy", ""),
+        EGLImageKHR("image", ""),
+        nullable..Check(1)..int.p("fds", ""),
+        nullable..Check(1)..EGLint.p("strides", ""),
+        nullable..Check(1)..EGLint.p("offsets", "")
     )
 }

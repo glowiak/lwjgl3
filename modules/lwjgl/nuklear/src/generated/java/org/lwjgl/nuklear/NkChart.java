@@ -66,18 +66,14 @@ public class NkChart extends Struct {
         SLOTS = layout.offsetof(5);
     }
 
-    NkChart(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link NkChart} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code NkChart} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public NkChart(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -102,15 +98,15 @@ public class NkChart extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link NkChart} instance for the specified memory address. */
+    /** Returns a new {@code NkChart} instance for the specified memory address. */
     public static NkChart create(long address) {
-        return new NkChart(address, null);
+        return wrap(NkChart.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkChart createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(NkChart.class, address);
     }
 
     /**
@@ -120,27 +116,27 @@ public class NkChart extends Struct {
      * @param capacity the buffer capacity
      */
     public static NkChart.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkChart.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #slot}. */
-    public static int nslot(long struct) { return memGetInt(struct + NkChart.SLOT); }
+    public static int nslot(long struct) { return UNSAFE.getInt(null, struct + NkChart.SLOT); }
     /** Unsafe version of {@link #x}. */
-    public static float nx(long struct) { return memGetFloat(struct + NkChart.X); }
+    public static float nx(long struct) { return UNSAFE.getFloat(null, struct + NkChart.X); }
     /** Unsafe version of {@link #y}. */
-    public static float ny(long struct) { return memGetFloat(struct + NkChart.Y); }
+    public static float ny(long struct) { return UNSAFE.getFloat(null, struct + NkChart.Y); }
     /** Unsafe version of {@link #w}. */
-    public static float nw(long struct) { return memGetFloat(struct + NkChart.W); }
+    public static float nw(long struct) { return UNSAFE.getFloat(null, struct + NkChart.W); }
     /** Unsafe version of {@link #h}. */
-    public static float nh(long struct) { return memGetFloat(struct + NkChart.H); }
+    public static float nh(long struct) { return UNSAFE.getFloat(null, struct + NkChart.H); }
     /** Unsafe version of {@link #slots}. */
     public static NkChartSlot.Buffer nslots(long struct) { return NkChartSlot.create(struct + NkChart.SLOTS, 4); }
     /** Unsafe version of {@link #slots(int) slots}. */
@@ -153,8 +149,10 @@ public class NkChart extends Struct {
     /** An array of {@link NkChart} structs. */
     public static class Buffer extends StructBuffer<NkChart, Buffer> {
 
+        private static final NkChart ELEMENT_FACTORY = NkChart.create(-1L);
+
         /**
-         * Creates a new {@link NkChart.Buffer} instance backed by the specified container.
+         * Creates a new {@code NkChart.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -180,18 +178,8 @@ public class NkChart extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected NkChart newInstance(long address) {
-            return new NkChart(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected NkChart getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code slot} field. */

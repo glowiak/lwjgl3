@@ -25,7 +25,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <p>There is no mechanism to query the size of an image before creating it, to compare that size against {@code maxResourceSize}. If an application attempts to create an image that exceeds this limit, the creation will fail and {@link VK10#vkCreateImage CreateImage} will return {@link VK10#VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}. While the advertised limit <b>must</b> be at least 2<sup>31</sup>, it <b>may</b> not be possible to create an image that approaches that size, particularly for {@link VK10#VK_IMAGE_TYPE_1D IMAGE_TYPE_1D}.</p>
  * </div>
  * 
- * <p>If the combination of parameters to {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} is not supported by the implementation for use in {@link VK10#vkCreateImage CreateImage}, then all members of {@link VkImageFormatProperties} will be filled with zero.</p>
+ * <p>If the combination of parameters to {@code vkGetPhysicalDeviceImageFormatProperties} is not supported by the implementation for use in {@link VK10#vkCreateImage CreateImage}, then all members of {@link VkImageFormatProperties} will be filled with zero.</p>
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
@@ -39,21 +39,25 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
- * <li>{@code maxExtent} &ndash; are the maximum image dimensions. See the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-extentperimagetype">Allowed Extent Values</a> section below for how these values are constrained by {@code type}.</li>
+ * <li>{@code maxExtent} &ndash; are the maximum image dimensions. See the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-extentperimagetype">Allowed Extent Values</a> section below for how these values are constrained by {@code type}.</li>
  * <li>{@code maxMipLevels} &ndash; the maximum number of mipmap levels. {@code maxMipLevels} <b>must</b> be equal to the number of levels in the complete mipmap chain based on the <code>maxExtent.width</code>, <code>maxExtent.height</code>, and <code>maxExtent.depth</code>, except when one of the following conditions is true, in which case it <b>may</b> instead be 1:
  * 
  * <ul>
- * <li>{@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}{@code ::tiling} was {@link VK10#VK_IMAGE_TILING_LINEAR IMAGE_TILING_LINEAR}</li>
+ * <li>{@code vkGetPhysicalDeviceImageFormatProperties}{@code ::tiling} was {@link VK10#VK_IMAGE_TILING_LINEAR IMAGE_TILING_LINEAR}</li>
+ * <li>{@link VkPhysicalDeviceImageFormatInfo2}{@code ::tiling} was {@link EXTImageDrmFormatModifier#VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT}</li>
  * <li>the {@link VkPhysicalDeviceImageFormatInfo2}{@code ::pNext} chain included an instance of {@link VkPhysicalDeviceExternalImageFormatInfo} with a handle type included in the {@code handleTypes} member for which mipmap image support is not required</li>
+ * <li>image {@code format} is one of those listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion">Formats requiring sampler Y'C<sub>B</sub>C<sub>R</sub> conversion for {@link VK10#VK_IMAGE_ASPECT_COLOR_BIT IMAGE_ASPECT_COLOR_BIT} image views</a></li>
+ * <li>{@code flags} contains {@link EXTFragmentDensityMap#VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT IMAGE_CREATE_SUBSAMPLED_BIT_EXT}</li>
  * </ul></li>
- * <li>{@code maxArrayLayers} &ndash; the maximum number of array layers.
+ * <li>{@code maxArrayLayers} &ndash; the maximum number of array layers. {@code maxArrayLayers} <b>must</b> be no less than {@link VkPhysicalDeviceLimits}{@code ::maxImageArrayLayers}, except when one of the following conditions is true, in which case it <b>may</b> instead be 1:
  * 
  * <ul>
- * <li>If {@code tiling} is {@link VK10#VK_IMAGE_TILING_LINEAR IMAGE_TILING_LINEAR}, then {@code maxArrayLayers} <b>must</b> either be equal to 1 or be no less than {@link VkPhysicalDeviceLimits}{@code ::maxImageArrayLayers}.</li>
- * <li>If {@code tiling} is {@link VK10#VK_IMAGE_TILING_OPTIMAL IMAGE_TILING_OPTIMAL} and {@code type} is {@link VK10#VK_IMAGE_TYPE_3D IMAGE_TYPE_3D}, then {@code maxArrayLayers} <b>must</b> either be equal to 1 or be no less than {@link VkPhysicalDeviceLimits}{@code ::maxImageArrayLayers}.</li>
- * <li>If {@code tiling} is {@link VK10#VK_IMAGE_TILING_OPTIMAL IMAGE_TILING_OPTIMAL} and {@code type} is not {@link VK10#VK_IMAGE_TYPE_3D IMAGE_TYPE_3D}, then {@code maxArrayLayers} <b>must</b> be no less than {@link VkPhysicalDeviceLimits}{@code ::maxImageArrayLayers}.</li>
+ * <li>{@code tiling} is {@link VK10#VK_IMAGE_TILING_LINEAR IMAGE_TILING_LINEAR}</li>
+ * <li>{@code tiling} is {@link VK10#VK_IMAGE_TILING_OPTIMAL IMAGE_TILING_OPTIMAL} and {@code type} is {@link VK10#VK_IMAGE_TYPE_3D IMAGE_TYPE_3D}</li>
+ * <li>{@code format} is one of those listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion">Formats requiring sampler Y'C<sub>B</sub>C<sub>R</sub> conversion for {@link VK10#VK_IMAGE_ASPECT_COLOR_BIT IMAGE_ASPECT_COLOR_BIT} image views</a></li>
+ * <li>If {@code tiling} is {@link EXTImageDrmFormatModifier#VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT}, then {@code maxArrayLayers} <b>must</b> not be 0.</li>
  * </ul></li>
- * <li>{@code sampleCounts} &ndash; a bitmask of {@code VkSampleCountFlagBits} specifying all the supported sample counts for this image as described <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-supported-sample-counts">below</a>.</li>
+ * <li>{@code sampleCounts} &ndash; a bitmask of {@code VkSampleCountFlagBits} specifying all the supported sample counts for this image as described <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-supported-sample-counts">below</a>.</li>
  * <li>{@code maxResourceSize} &ndash; an upper bound on the total image size in bytes, inclusive of all image subresources. Implementations <b>may</b> have an address space limit on total size of a resource, which is advertised by this property. {@code maxResourceSize} <b>must</b> be at least 2<sup>31</sup>.</li>
  * </ul>
  * 
@@ -103,18 +107,14 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
         MAXRESOURCESIZE = layout.offsetof(4);
     }
 
-    VkImageFormatProperties(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkImageFormatProperties} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkImageFormatProperties} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkImageFormatProperties(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -139,30 +139,31 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImageFormatProperties} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImageFormatProperties} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkImageFormatProperties malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkImageFormatProperties.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkImageFormatProperties} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImageFormatProperties} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkImageFormatProperties calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkImageFormatProperties.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkImageFormatProperties} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkImageFormatProperties} instance allocated with {@link BufferUtils}. */
     public static VkImageFormatProperties create() {
-        return new VkImageFormatProperties(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkImageFormatProperties.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkImageFormatProperties} instance for the specified memory address. */
+    /** Returns a new {@code VkImageFormatProperties} instance for the specified memory address. */
     public static VkImageFormatProperties create(long address) {
-        return new VkImageFormatProperties(address, null);
+        return wrap(VkImageFormatProperties.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImageFormatProperties createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkImageFormatProperties.class, address);
     }
 
     /**
@@ -171,7 +172,7 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkImageFormatProperties.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -180,7 +181,7 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkImageFormatProperties.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -189,7 +190,8 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkImageFormatProperties.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -199,43 +201,43 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkImageFormatProperties.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImageFormatProperties.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImageFormatProperties} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkImageFormatProperties} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkImageFormatProperties mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkImageFormatProperties} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkImageFormatProperties} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkImageFormatProperties callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkImageFormatProperties} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkImageFormatProperties} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImageFormatProperties mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkImageFormatProperties.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkImageFormatProperties} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkImageFormatProperties} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImageFormatProperties callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkImageFormatProperties.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -263,7 +265,7 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkImageFormatProperties.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -273,7 +275,7 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkImageFormatProperties.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -281,21 +283,23 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
     /** Unsafe version of {@link #maxExtent}. */
     public static VkExtent3D nmaxExtent(long struct) { return VkExtent3D.create(struct + VkImageFormatProperties.MAXEXTENT); }
     /** Unsafe version of {@link #maxMipLevels}. */
-    public static int nmaxMipLevels(long struct) { return memGetInt(struct + VkImageFormatProperties.MAXMIPLEVELS); }
+    public static int nmaxMipLevels(long struct) { return UNSAFE.getInt(null, struct + VkImageFormatProperties.MAXMIPLEVELS); }
     /** Unsafe version of {@link #maxArrayLayers}. */
-    public static int nmaxArrayLayers(long struct) { return memGetInt(struct + VkImageFormatProperties.MAXARRAYLAYERS); }
+    public static int nmaxArrayLayers(long struct) { return UNSAFE.getInt(null, struct + VkImageFormatProperties.MAXARRAYLAYERS); }
     /** Unsafe version of {@link #sampleCounts}. */
-    public static int nsampleCounts(long struct) { return memGetInt(struct + VkImageFormatProperties.SAMPLECOUNTS); }
+    public static int nsampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkImageFormatProperties.SAMPLECOUNTS); }
     /** Unsafe version of {@link #maxResourceSize}. */
-    public static long nmaxResourceSize(long struct) { return memGetLong(struct + VkImageFormatProperties.MAXRESOURCESIZE); }
+    public static long nmaxResourceSize(long struct) { return UNSAFE.getLong(null, struct + VkImageFormatProperties.MAXRESOURCESIZE); }
 
     // -----------------------------------
 
     /** An array of {@link VkImageFormatProperties} structs. */
     public static class Buffer extends StructBuffer<VkImageFormatProperties, Buffer> implements NativeResource {
 
+        private static final VkImageFormatProperties ELEMENT_FACTORY = VkImageFormatProperties.create(-1L);
+
         /**
-         * Creates a new {@link VkImageFormatProperties.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkImageFormatProperties.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -321,18 +325,8 @@ public class VkImageFormatProperties extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkImageFormatProperties newInstance(long address) {
-            return new VkImageFormatProperties(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkImageFormatProperties getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link VkExtent3D} view of the {@code maxExtent} field. */

@@ -22,8 +22,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>If {@code initialDataSize} is not 0, it <b>must</b> be equal to the size of {@code pInitialData}, as returned by {@link EXTValidationCache#vkGetValidationCacheDataEXT GetValidationCacheDataEXT} when {@code pInitialData} was originally retrieved</li>
- * <li>If {@code initialDataSize} is not 0, {@code pInitialData} <b>must</b> have been retrieved from a previous call to {@link EXTValidationCache#vkGetValidationCacheDataEXT GetValidationCacheDataEXT}</li>
+ * <li>If {@code initialDataSize} is not 0, it <b>must</b> be equal to the size of {@code pInitialData}, as returned by {@code vkGetValidationCacheDataEXT} when {@code pInitialData} was originally retrieved</li>
+ * <li>If {@code initialDataSize} is not 0, {@code pInitialData} <b>must</b> have been retrieved from a previous call to {@code vkGetValidationCacheDataEXT}</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -95,18 +95,14 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
         PINITIALDATA = layout.offsetof(4);
     }
 
-    VkValidationCacheCreateInfoEXT(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkValidationCacheCreateInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkValidationCacheCreateInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkValidationCacheCreateInfoEXT(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -167,30 +163,31 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
 
     // -----------------------------------
 
-    /** Returns a new {@link VkValidationCacheCreateInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkValidationCacheCreateInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkValidationCacheCreateInfoEXT malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkValidationCacheCreateInfoEXT.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkValidationCacheCreateInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkValidationCacheCreateInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkValidationCacheCreateInfoEXT calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkValidationCacheCreateInfoEXT.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkValidationCacheCreateInfoEXT} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkValidationCacheCreateInfoEXT} instance allocated with {@link BufferUtils}. */
     public static VkValidationCacheCreateInfoEXT create() {
-        return new VkValidationCacheCreateInfoEXT(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkValidationCacheCreateInfoEXT.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkValidationCacheCreateInfoEXT} instance for the specified memory address. */
+    /** Returns a new {@code VkValidationCacheCreateInfoEXT} instance for the specified memory address. */
     public static VkValidationCacheCreateInfoEXT create(long address) {
-        return new VkValidationCacheCreateInfoEXT(address, null);
+        return wrap(VkValidationCacheCreateInfoEXT.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkValidationCacheCreateInfoEXT createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkValidationCacheCreateInfoEXT.class, address);
     }
 
     /**
@@ -199,7 +196,7 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkValidationCacheCreateInfoEXT.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -208,7 +205,7 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkValidationCacheCreateInfoEXT.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -217,7 +214,8 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkValidationCacheCreateInfoEXT.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -227,43 +225,43 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkValidationCacheCreateInfoEXT.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkValidationCacheCreateInfoEXT.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkValidationCacheCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkValidationCacheCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkValidationCacheCreateInfoEXT mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkValidationCacheCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkValidationCacheCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkValidationCacheCreateInfoEXT callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkValidationCacheCreateInfoEXT} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkValidationCacheCreateInfoEXT} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkValidationCacheCreateInfoEXT mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkValidationCacheCreateInfoEXT.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkValidationCacheCreateInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkValidationCacheCreateInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkValidationCacheCreateInfoEXT callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkValidationCacheCreateInfoEXT.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -291,7 +289,7 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkValidationCacheCreateInfoEXT.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -301,28 +299,28 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkValidationCacheCreateInfoEXT.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkValidationCacheCreateInfoEXT.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkValidationCacheCreateInfoEXT.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkValidationCacheCreateInfoEXT.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkValidationCacheCreateInfoEXT.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkValidationCacheCreateInfoEXT.FLAGS); }
     /** Unsafe version of {@link #initialDataSize}. */
     public static long ninitialDataSize(long struct) { return memGetAddress(struct + VkValidationCacheCreateInfoEXT.INITIALDATASIZE); }
     /** Unsafe version of {@link #pInitialData() pInitialData}. */
     @Nullable public static ByteBuffer npInitialData(long struct) { return memByteBufferSafe(memGetAddress(struct + VkValidationCacheCreateInfoEXT.PINITIALDATA), (int)ninitialDataSize(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkValidationCacheCreateInfoEXT.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkValidationCacheCreateInfoEXT.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkValidationCacheCreateInfoEXT.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkValidationCacheCreateInfoEXT.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkValidationCacheCreateInfoEXT.FLAGS, value); }
     /** Sets the specified value to the {@code initialDataSize} field of the specified {@code struct}. */
     public static void ninitialDataSize(long struct, long value) { memPutAddress(struct + VkValidationCacheCreateInfoEXT.INITIALDATASIZE, value); }
     /** Unsafe version of {@link #pInitialData(ByteBuffer) pInitialData}. */
@@ -347,7 +345,7 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -356,8 +354,10 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
     /** An array of {@link VkValidationCacheCreateInfoEXT} structs. */
     public static class Buffer extends StructBuffer<VkValidationCacheCreateInfoEXT, Buffer> implements NativeResource {
 
+        private static final VkValidationCacheCreateInfoEXT ELEMENT_FACTORY = VkValidationCacheCreateInfoEXT.create(-1L);
+
         /**
-         * Creates a new {@link VkValidationCacheCreateInfoEXT.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkValidationCacheCreateInfoEXT.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -383,18 +383,8 @@ public class VkValidationCacheCreateInfoEXT extends Struct implements NativeReso
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkValidationCacheCreateInfoEXT newInstance(long address) {
-            return new VkValidationCacheCreateInfoEXT(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkValidationCacheCreateInfoEXT getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

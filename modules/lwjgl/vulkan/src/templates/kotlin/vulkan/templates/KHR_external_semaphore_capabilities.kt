@@ -37,7 +37,7 @@ val KHR_external_semaphore_capabilities = "KHRExternalSemaphoreCapabilities".nat
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -111,8 +111,8 @@ val KHR_external_semaphore_capabilities = "KHRExternalSemaphoreCapabilities".nat
         "GetPhysicalDeviceExternalSemaphorePropertiesKHR",
         "See #GetPhysicalDeviceExternalSemaphoreProperties().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device from which to query the semaphore capabilities."),
-        VkPhysicalDeviceExternalSemaphoreInfo.const.p.IN("pExternalSemaphoreInfo", "points to an instance of the ##VkPhysicalDeviceExternalSemaphoreInfo structure, describing the parameters that would be consumed by #CreateSemaphore()."),
-        VkExternalSemaphoreProperties.p.OUT("pExternalSemaphoreProperties", "points to an instance of the ##VkExternalSemaphoreProperties structure in which capabilities are returned.")
+        VkPhysicalDevice("physicalDevice", "the physical device from which to query the semaphore capabilities."),
+        VkPhysicalDeviceExternalSemaphoreInfo.const.p("pExternalSemaphoreInfo", "points to an instance of the ##VkPhysicalDeviceExternalSemaphoreInfo structure, describing the parameters that would be consumed by #CreateSemaphore()."),
+        VkExternalSemaphoreProperties.p("pExternalSemaphoreProperties", "points to an instance of the ##VkExternalSemaphoreProperties structure in which capabilities are returned.")
     )
 }

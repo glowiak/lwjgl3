@@ -80,18 +80,14 @@ public class STBRPRect extends Struct implements NativeResource {
         WAS_PACKED = layout.offsetof(5);
     }
 
-    STBRPRect(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link STBRPRect} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code STBRPRect} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public STBRPRect(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -161,30 +157,31 @@ public class STBRPRect extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link STBRPRect} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code STBRPRect} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static STBRPRect malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(STBRPRect.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link STBRPRect} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code STBRPRect} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static STBRPRect calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(STBRPRect.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link STBRPRect} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code STBRPRect} instance allocated with {@link BufferUtils}. */
     public static STBRPRect create() {
-        return new STBRPRect(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(STBRPRect.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link STBRPRect} instance for the specified memory address. */
+    /** Returns a new {@code STBRPRect} instance for the specified memory address. */
     public static STBRPRect create(long address) {
-        return new STBRPRect(address, null);
+        return wrap(STBRPRect.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static STBRPRect createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(STBRPRect.class, address);
     }
 
     /**
@@ -193,7 +190,7 @@ public class STBRPRect extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBRPRect.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -202,7 +199,7 @@ public class STBRPRect extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBRPRect.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -211,7 +208,8 @@ public class STBRPRect extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBRPRect.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -221,43 +219,43 @@ public class STBRPRect extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBRPRect.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static STBRPRect.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link STBRPRect} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code STBRPRect} instance allocated on the thread-local {@link MemoryStack}. */
     public static STBRPRect mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link STBRPRect} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code STBRPRect} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static STBRPRect callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link STBRPRect} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code STBRPRect} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static STBRPRect mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(STBRPRect.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link STBRPRect} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code STBRPRect} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static STBRPRect callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(STBRPRect.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -285,7 +283,7 @@ public class STBRPRect extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBRPRect.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -295,44 +293,46 @@ public class STBRPRect extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBRPRect.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #id}. */
-    public static int nid(long struct) { return memGetInt(struct + STBRPRect.ID); }
+    public static int nid(long struct) { return UNSAFE.getInt(null, struct + STBRPRect.ID); }
     /** Unsafe version of {@link #w}. */
-    public static short nw(long struct) { return memGetShort(struct + STBRPRect.W); }
+    public static short nw(long struct) { return UNSAFE.getShort(null, struct + STBRPRect.W); }
     /** Unsafe version of {@link #h}. */
-    public static short nh(long struct) { return memGetShort(struct + STBRPRect.H); }
+    public static short nh(long struct) { return UNSAFE.getShort(null, struct + STBRPRect.H); }
     /** Unsafe version of {@link #x}. */
-    public static short nx(long struct) { return memGetShort(struct + STBRPRect.X); }
+    public static short nx(long struct) { return UNSAFE.getShort(null, struct + STBRPRect.X); }
     /** Unsafe version of {@link #y}. */
-    public static short ny(long struct) { return memGetShort(struct + STBRPRect.Y); }
+    public static short ny(long struct) { return UNSAFE.getShort(null, struct + STBRPRect.Y); }
     /** Unsafe version of {@link #was_packed}. */
-    public static int nwas_packed(long struct) { return memGetInt(struct + STBRPRect.WAS_PACKED); }
+    public static int nwas_packed(long struct) { return UNSAFE.getInt(null, struct + STBRPRect.WAS_PACKED); }
 
     /** Unsafe version of {@link #id(int) id}. */
-    public static void nid(long struct, int value) { memPutInt(struct + STBRPRect.ID, value); }
+    public static void nid(long struct, int value) { UNSAFE.putInt(null, struct + STBRPRect.ID, value); }
     /** Unsafe version of {@link #w(short) w}. */
-    public static void nw(long struct, short value) { memPutShort(struct + STBRPRect.W, value); }
+    public static void nw(long struct, short value) { UNSAFE.putShort(null, struct + STBRPRect.W, value); }
     /** Unsafe version of {@link #h(short) h}. */
-    public static void nh(long struct, short value) { memPutShort(struct + STBRPRect.H, value); }
+    public static void nh(long struct, short value) { UNSAFE.putShort(null, struct + STBRPRect.H, value); }
     /** Unsafe version of {@link #x(short) x}. */
-    public static void nx(long struct, short value) { memPutShort(struct + STBRPRect.X, value); }
+    public static void nx(long struct, short value) { UNSAFE.putShort(null, struct + STBRPRect.X, value); }
     /** Unsafe version of {@link #y(short) y}. */
-    public static void ny(long struct, short value) { memPutShort(struct + STBRPRect.Y, value); }
+    public static void ny(long struct, short value) { UNSAFE.putShort(null, struct + STBRPRect.Y, value); }
     /** Unsafe version of {@link #was_packed(boolean) was_packed}. */
-    public static void nwas_packed(long struct, int value) { memPutInt(struct + STBRPRect.WAS_PACKED, value); }
+    public static void nwas_packed(long struct, int value) { UNSAFE.putInt(null, struct + STBRPRect.WAS_PACKED, value); }
 
     // -----------------------------------
 
     /** An array of {@link STBRPRect} structs. */
     public static class Buffer extends StructBuffer<STBRPRect, Buffer> implements NativeResource {
 
+        private static final STBRPRect ELEMENT_FACTORY = STBRPRect.create(-1L);
+
         /**
-         * Creates a new {@link STBRPRect.Buffer} instance backed by the specified container.
+         * Creates a new {@code STBRPRect.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -358,18 +358,8 @@ public class STBRPRect extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected STBRPRect newInstance(long address) {
-            return new STBRPRect(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected STBRPRect getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code id} field. */

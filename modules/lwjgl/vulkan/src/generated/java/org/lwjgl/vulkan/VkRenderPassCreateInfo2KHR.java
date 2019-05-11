@@ -33,15 +33,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If any two subpasses operate on attachments with overlapping ranges of the same {@code VkDeviceMemory} object, and at least one subpass writes to that area of {@code VkDeviceMemory}, a subpass dependency <b>must</b> be included (either directly or via some intermediate subpasses) between them</li>
  * <li>If the {@code attachment} member of any element of {@code pInputAttachments}, {@code pColorAttachments}, {@code pResolveAttachments} or {@code pDepthStencilAttachment}, or the attachment indexed by any element of {@code pPreserveAttachments} in any given element of {@code pSubpasses} is bound to a range of a {@code VkDeviceMemory} object that overlaps with any other attachment in any subpass (including the same subpass), the {@link VkAttachmentDescription2KHR} structures describing them <b>must</b> include {@link VK10#VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT} in {@code flags}</li>
  * <li>If the {@code attachment} member of any element of {@code pInputAttachments}, {@code pColorAttachments}, {@code pResolveAttachments} or {@code pDepthStencilAttachment}, or any element of {@code pPreserveAttachments} in any given element of {@code pSubpasses} is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, it <b>must</b> be less than {@code attachmentCount}</li>
- * <li>The value of any element of the {@code pPreserveAttachments} member in any given element of {@code pSubpasses} <b>must</b> not be {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}</li>
- * <li>For any member of {@code pAttachments} with a {@code loadOp} equal to {@link VK10#VK_ATTACHMENT_LOAD_OP_CLEAR ATTACHMENT_LOAD_OP_CLEAR}, the first use of that attachment <b>must</b> not specify a {@code layout} equal to {@code VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL} or {@code VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL}.</li>
- * <li>For any element of {@code pDependencies}, if the {@code srcSubpass} is not {@link VK10#VK_SUBPASS_EXTERNAL SUBPASS_EXTERNAL}, all stage flags included in the {@code srcStageMask} member of that dependency <b>must</b> be a pipeline stage supported by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">pipeline</a> identified by the {@code pipelineBindPoint} member of the source subpass.</li>
- * <li>For any element of {@code pDependencies}, if the {@code dstSubpass} is not {@link VK10#VK_SUBPASS_EXTERNAL SUBPASS_EXTERNAL}, all stage flags included in the {@code dstStageMask} member of that dependency <b>must</b> be a pipeline stage supported by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">pipeline</a> identified by the {@code pipelineBindPoint} member of the source subpass.</li>
+ * <li>For any member of {@code pAttachments} with a {@code loadOp} equal to {@link VK10#VK_ATTACHMENT_LOAD_OP_CLEAR ATTACHMENT_LOAD_OP_CLEAR}, the first use of that attachment <b>must</b> not specify a {@code layout} equal to {@link VK10#VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL}, {@link VK10#VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL}, or {@link VK11#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL}</li>
+ * <li>For any member of {@code pAttachments} with a {@code stencilLoadOp} equal to {@link VK10#VK_ATTACHMENT_LOAD_OP_CLEAR ATTACHMENT_LOAD_OP_CLEAR}, the first use of that attachment <b>must</b> not specify a {@code layout} equal to {@link VK10#VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL}, {@link VK10#VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL}, or {@link VK11#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL}.</li>
+ * <li>For any element of {@code pDependencies}, if the {@code srcSubpass} is not {@link VK10#VK_SUBPASS_EXTERNAL SUBPASS_EXTERNAL}, all stage flags included in the {@code srcStageMask} member of that dependency <b>must</b> be a pipeline stage supported by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">pipeline</a> identified by the {@code pipelineBindPoint} member of the source subpass.</li>
+ * <li>For any element of {@code pDependencies}, if the {@code dstSubpass} is not {@link VK10#VK_SUBPASS_EXTERNAL SUBPASS_EXTERNAL}, all stage flags included in the {@code dstStageMask} member of that dependency <b>must</b> be a pipeline stage supported by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">pipeline</a> identified by the {@code pipelineBindPoint} member of the source subpass.</li>
  * <li>The set of bits included in any element of {@code pCorrelatedViewMasks} <b>must</b> not overlap with the set of bits included in any other element of {@code pCorrelatedViewMasks}</li>
  * <li>If the {@link VkSubpassDescription2KHR}{@code ::viewMask} member of all elements of {@code pSubpasses} is 0, {@code correlatedViewMaskCount} <b>must</b> be 0</li>
  * <li>The {@link VkSubpassDescription2KHR}{@code ::viewMask} member of all elements of {@code pSubpasses} <b>must</b> either all be 0, or all not be 0</li>
  * <li>If the {@link VkSubpassDescription2KHR}{@code ::viewMask} member of all elements of {@code pSubpasses} is 0, the {@code dependencyFlags} member of any element of {@code pDependencies} <b>must</b> not include {@link VK11#VK_DEPENDENCY_VIEW_LOCAL_BIT DEPENDENCY_VIEW_LOCAL_BIT}</li>
  * <li>For any element of {@code pDependencies} where its {@code srcSubpass} member equals its {@code dstSubpass} member, if the {@code viewMask} member of the corresponding element of {@code pSubpasses} includes more than one bit, its {@code dependencyFlags} member <b>must</b> include {@link VK11#VK_DEPENDENCY_VIEW_LOCAL_BIT DEPENDENCY_VIEW_LOCAL_BIT}</li>
+ * <li>The {@code viewMask} member <b>must</b> not include a bit at a position greater than the value of {@link VkPhysicalDeviceLimits}{@code ::maxFramebufferLayers}</li>
+ * <li>If the {@code attachment} member of any element of the {@code pInputAttachments} member of any element of {@code pSubpasses} is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, the {@code aspectMask} member of that element of {@code pInputAttachments} <b>must</b> only include aspects that are present in images of the format specified by the element of {@code pAttachments} specified by {@code attachment}</li>
+ * <li>The {@code srcSubpass} member of each element of {@code pDependencies} <b>must</b> be less than {@code subpassCount}</li>
+ * <li>The {@code dstSubpass} member of each element of {@code pDependencies} <b>must</b> be less than {@code subpassCount}</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -49,7 +53,6 @@ import static org.lwjgl.system.MemoryStack.*;
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link KHRCreateRenderpass2#VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2_KHR STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2_KHR}</li>
  * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
- * <li>{@code flags} <b>must</b> be a valid combination of {@code VkRenderPassCreateFlagBits} values</li>
  * <li>If {@code attachmentCount} is not 0, {@code pAttachments} <b>must</b> be a valid pointer to an array of {@code attachmentCount} valid {@link VkAttachmentDescription2KHR} structures</li>
  * <li>{@code pSubpasses} <b>must</b> be a valid pointer to an array of {@code subpassCount} valid {@link VkSubpassDescription2KHR} structures</li>
  * <li>If {@code dependencyCount} is not 0, {@code pDependencies} <b>must</b> be a valid pointer to an array of {@code dependencyCount} valid {@link VkSubpassDependency2KHR} structures</li>
@@ -85,11 +88,11 @@ import static org.lwjgl.system.MemoryStack.*;
  *     void const * pNext;
  *     VkRenderPassCreateFlags flags;
  *     uint32_t attachmentCount;
- *     {@link VkAttachmentDescription2KHR VkAttachmentDescription2KHR const} * pAttachments;
+ *     {@link VkAttachmentDescription2KHR VkAttachmentDescription2KHR} const * pAttachments;
  *     uint32_t subpassCount;
- *     {@link VkSubpassDescription2KHR VkSubpassDescription2KHR const} * pSubpasses;
+ *     {@link VkSubpassDescription2KHR VkSubpassDescription2KHR} const * pSubpasses;
  *     uint32_t dependencyCount;
- *     {@link VkSubpassDependency2KHR VkSubpassDependency2KHR const} * pDependencies;
+ *     {@link VkSubpassDependency2KHR VkSubpassDependency2KHR} const * pDependencies;
  *     uint32_t correlatedViewMaskCount;
  *     uint32_t const * pCorrelatedViewMasks;
  * }</code></pre>
@@ -147,18 +150,14 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
         PCORRELATEDVIEWMASKS = layout.offsetof(10);
     }
 
-    VkRenderPassCreateInfo2KHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkRenderPassCreateInfo2KHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkRenderPassCreateInfo2KHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkRenderPassCreateInfo2KHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -251,30 +250,31 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
 
     // -----------------------------------
 
-    /** Returns a new {@link VkRenderPassCreateInfo2KHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkRenderPassCreateInfo2KHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkRenderPassCreateInfo2KHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkRenderPassCreateInfo2KHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkRenderPassCreateInfo2KHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkRenderPassCreateInfo2KHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkRenderPassCreateInfo2KHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkRenderPassCreateInfo2KHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkRenderPassCreateInfo2KHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkRenderPassCreateInfo2KHR} instance allocated with {@link BufferUtils}. */
     public static VkRenderPassCreateInfo2KHR create() {
-        return new VkRenderPassCreateInfo2KHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkRenderPassCreateInfo2KHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkRenderPassCreateInfo2KHR} instance for the specified memory address. */
+    /** Returns a new {@code VkRenderPassCreateInfo2KHR} instance for the specified memory address. */
     public static VkRenderPassCreateInfo2KHR create(long address) {
-        return new VkRenderPassCreateInfo2KHR(address, null);
+        return wrap(VkRenderPassCreateInfo2KHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkRenderPassCreateInfo2KHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkRenderPassCreateInfo2KHR.class, address);
     }
 
     /**
@@ -283,7 +283,7 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkRenderPassCreateInfo2KHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -292,7 +292,7 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkRenderPassCreateInfo2KHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -301,7 +301,8 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkRenderPassCreateInfo2KHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -311,43 +312,43 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkRenderPassCreateInfo2KHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkRenderPassCreateInfo2KHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkRenderPassCreateInfo2KHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkRenderPassCreateInfo2KHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkRenderPassCreateInfo2KHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkRenderPassCreateInfo2KHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkRenderPassCreateInfo2KHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkRenderPassCreateInfo2KHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkRenderPassCreateInfo2KHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkRenderPassCreateInfo2KHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkRenderPassCreateInfo2KHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkRenderPassCreateInfo2KHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkRenderPassCreateInfo2KHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkRenderPassCreateInfo2KHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkRenderPassCreateInfo2KHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkRenderPassCreateInfo2KHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -375,7 +376,7 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkRenderPassCreateInfo2KHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -385,54 +386,54 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkRenderPassCreateInfo2KHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkRenderPassCreateInfo2KHR.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkRenderPassCreateInfo2KHR.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkRenderPassCreateInfo2KHR.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkRenderPassCreateInfo2KHR.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkRenderPassCreateInfo2KHR.FLAGS); }
     /** Unsafe version of {@link #attachmentCount}. */
-    public static int nattachmentCount(long struct) { return memGetInt(struct + VkRenderPassCreateInfo2KHR.ATTACHMENTCOUNT); }
+    public static int nattachmentCount(long struct) { return UNSAFE.getInt(null, struct + VkRenderPassCreateInfo2KHR.ATTACHMENTCOUNT); }
     /** Unsafe version of {@link #pAttachments}. */
     @Nullable public static VkAttachmentDescription2KHR.Buffer npAttachments(long struct) { return VkAttachmentDescription2KHR.createSafe(memGetAddress(struct + VkRenderPassCreateInfo2KHR.PATTACHMENTS), nattachmentCount(struct)); }
     /** Unsafe version of {@link #subpassCount}. */
-    public static int nsubpassCount(long struct) { return memGetInt(struct + VkRenderPassCreateInfo2KHR.SUBPASSCOUNT); }
+    public static int nsubpassCount(long struct) { return UNSAFE.getInt(null, struct + VkRenderPassCreateInfo2KHR.SUBPASSCOUNT); }
     /** Unsafe version of {@link #pSubpasses}. */
     public static VkSubpassDescription2KHR.Buffer npSubpasses(long struct) { return VkSubpassDescription2KHR.create(memGetAddress(struct + VkRenderPassCreateInfo2KHR.PSUBPASSES), nsubpassCount(struct)); }
     /** Unsafe version of {@link #dependencyCount}. */
-    public static int ndependencyCount(long struct) { return memGetInt(struct + VkRenderPassCreateInfo2KHR.DEPENDENCYCOUNT); }
+    public static int ndependencyCount(long struct) { return UNSAFE.getInt(null, struct + VkRenderPassCreateInfo2KHR.DEPENDENCYCOUNT); }
     /** Unsafe version of {@link #pDependencies}. */
     @Nullable public static VkSubpassDependency2KHR.Buffer npDependencies(long struct) { return VkSubpassDependency2KHR.createSafe(memGetAddress(struct + VkRenderPassCreateInfo2KHR.PDEPENDENCIES), ndependencyCount(struct)); }
     /** Unsafe version of {@link #correlatedViewMaskCount}. */
-    public static int ncorrelatedViewMaskCount(long struct) { return memGetInt(struct + VkRenderPassCreateInfo2KHR.CORRELATEDVIEWMASKCOUNT); }
+    public static int ncorrelatedViewMaskCount(long struct) { return UNSAFE.getInt(null, struct + VkRenderPassCreateInfo2KHR.CORRELATEDVIEWMASKCOUNT); }
     /** Unsafe version of {@link #pCorrelatedViewMasks() pCorrelatedViewMasks}. */
     @Nullable public static IntBuffer npCorrelatedViewMasks(long struct) { return memIntBufferSafe(memGetAddress(struct + VkRenderPassCreateInfo2KHR.PCORRELATEDVIEWMASKS), ncorrelatedViewMaskCount(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkRenderPassCreateInfo2KHR.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkRenderPassCreateInfo2KHR.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkRenderPassCreateInfo2KHR.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkRenderPassCreateInfo2KHR.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkRenderPassCreateInfo2KHR.FLAGS, value); }
     /** Sets the specified value to the {@code attachmentCount} field of the specified {@code struct}. */
-    public static void nattachmentCount(long struct, int value) { memPutInt(struct + VkRenderPassCreateInfo2KHR.ATTACHMENTCOUNT, value); }
+    public static void nattachmentCount(long struct, int value) { UNSAFE.putInt(null, struct + VkRenderPassCreateInfo2KHR.ATTACHMENTCOUNT, value); }
     /** Unsafe version of {@link #pAttachments(VkAttachmentDescription2KHR.Buffer) pAttachments}. */
     public static void npAttachments(long struct, @Nullable VkAttachmentDescription2KHR.Buffer value) { memPutAddress(struct + VkRenderPassCreateInfo2KHR.PATTACHMENTS, memAddressSafe(value)); nattachmentCount(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code subpassCount} field of the specified {@code struct}. */
-    public static void nsubpassCount(long struct, int value) { memPutInt(struct + VkRenderPassCreateInfo2KHR.SUBPASSCOUNT, value); }
+    public static void nsubpassCount(long struct, int value) { UNSAFE.putInt(null, struct + VkRenderPassCreateInfo2KHR.SUBPASSCOUNT, value); }
     /** Unsafe version of {@link #pSubpasses(VkSubpassDescription2KHR.Buffer) pSubpasses}. */
     public static void npSubpasses(long struct, VkSubpassDescription2KHR.Buffer value) { memPutAddress(struct + VkRenderPassCreateInfo2KHR.PSUBPASSES, value.address()); nsubpassCount(struct, value.remaining()); }
     /** Sets the specified value to the {@code dependencyCount} field of the specified {@code struct}. */
-    public static void ndependencyCount(long struct, int value) { memPutInt(struct + VkRenderPassCreateInfo2KHR.DEPENDENCYCOUNT, value); }
+    public static void ndependencyCount(long struct, int value) { UNSAFE.putInt(null, struct + VkRenderPassCreateInfo2KHR.DEPENDENCYCOUNT, value); }
     /** Unsafe version of {@link #pDependencies(VkSubpassDependency2KHR.Buffer) pDependencies}. */
     public static void npDependencies(long struct, @Nullable VkSubpassDependency2KHR.Buffer value) { memPutAddress(struct + VkRenderPassCreateInfo2KHR.PDEPENDENCIES, memAddressSafe(value)); ndependencyCount(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code correlatedViewMaskCount} field of the specified {@code struct}. */
-    public static void ncorrelatedViewMaskCount(long struct, int value) { memPutInt(struct + VkRenderPassCreateInfo2KHR.CORRELATEDVIEWMASKCOUNT, value); }
+    public static void ncorrelatedViewMaskCount(long struct, int value) { UNSAFE.putInt(null, struct + VkRenderPassCreateInfo2KHR.CORRELATEDVIEWMASKCOUNT, value); }
     /** Unsafe version of {@link #pCorrelatedViewMasks(IntBuffer) pCorrelatedViewMasks}. */
     public static void npCorrelatedViewMasks(long struct, @Nullable IntBuffer value) { memPutAddress(struct + VkRenderPassCreateInfo2KHR.PCORRELATEDVIEWMASKS, memAddressSafe(value)); ncorrelatedViewMaskCount(struct, value == null ? 0 : value.remaining()); }
 
@@ -465,7 +466,7 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -474,8 +475,10 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
     /** An array of {@link VkRenderPassCreateInfo2KHR} structs. */
     public static class Buffer extends StructBuffer<VkRenderPassCreateInfo2KHR, Buffer> implements NativeResource {
 
+        private static final VkRenderPassCreateInfo2KHR ELEMENT_FACTORY = VkRenderPassCreateInfo2KHR.create(-1L);
+
         /**
-         * Creates a new {@link VkRenderPassCreateInfo2KHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkRenderPassCreateInfo2KHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -501,18 +504,8 @@ public class VkRenderPassCreateInfo2KHR extends Struct implements NativeResource
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkRenderPassCreateInfo2KHR newInstance(long address) {
-            return new VkRenderPassCreateInfo2KHR(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkRenderPassCreateInfo2KHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

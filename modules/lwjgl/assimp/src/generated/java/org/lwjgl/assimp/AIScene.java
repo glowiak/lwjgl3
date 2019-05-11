@@ -149,18 +149,14 @@ public class AIScene extends Struct implements NativeResource {
         MPRIVATE = layout.offsetof(15);
     }
 
-    AIScene(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link AIScene} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code AIScene} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public AIScene(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -278,30 +274,31 @@ public class AIScene extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link AIScene} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIScene} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static AIScene malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(AIScene.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link AIScene} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIScene} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static AIScene calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(AIScene.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link AIScene} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code AIScene} instance allocated with {@link BufferUtils}. */
     public static AIScene create() {
-        return new AIScene(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(AIScene.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link AIScene} instance for the specified memory address. */
+    /** Returns a new {@code AIScene} instance for the specified memory address. */
     public static AIScene create(long address) {
-        return new AIScene(address, null);
+        return wrap(AIScene.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIScene createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(AIScene.class, address);
     }
 
     /**
@@ -310,7 +307,7 @@ public class AIScene extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIScene.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -319,7 +316,7 @@ public class AIScene extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIScene.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -328,7 +325,8 @@ public class AIScene extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIScene.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -338,43 +336,43 @@ public class AIScene extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIScene.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIScene.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link AIScene} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code AIScene} instance allocated on the thread-local {@link MemoryStack}. */
     public static AIScene mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link AIScene} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code AIScene} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static AIScene callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link AIScene} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code AIScene} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static AIScene mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(AIScene.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link AIScene} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code AIScene} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static AIScene callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(AIScene.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -402,7 +400,7 @@ public class AIScene extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIScene.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -412,37 +410,37 @@ public class AIScene extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIScene.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #mFlags}. */
-    public static int nmFlags(long struct) { return memGetInt(struct + AIScene.MFLAGS); }
+    public static int nmFlags(long struct) { return UNSAFE.getInt(null, struct + AIScene.MFLAGS); }
     /** Unsafe version of {@link #mRootNode}. */
     @Nullable public static AINode nmRootNode(long struct) { return AINode.createSafe(memGetAddress(struct + AIScene.MROOTNODE)); }
     /** Unsafe version of {@link #mNumMeshes}. */
-    public static int nmNumMeshes(long struct) { return memGetInt(struct + AIScene.MNUMMESHES); }
+    public static int nmNumMeshes(long struct) { return UNSAFE.getInt(null, struct + AIScene.MNUMMESHES); }
     /** Unsafe version of {@link #mMeshes() mMeshes}. */
     @Nullable public static PointerBuffer nmMeshes(long struct) { return memPointerBufferSafe(memGetAddress(struct + AIScene.MMESHES), nmNumMeshes(struct)); }
     /** Unsafe version of {@link #mNumMaterials}. */
-    public static int nmNumMaterials(long struct) { return memGetInt(struct + AIScene.MNUMMATERIALS); }
+    public static int nmNumMaterials(long struct) { return UNSAFE.getInt(null, struct + AIScene.MNUMMATERIALS); }
     /** Unsafe version of {@link #mMaterials() mMaterials}. */
     @Nullable public static PointerBuffer nmMaterials(long struct) { return memPointerBufferSafe(memGetAddress(struct + AIScene.MMATERIALS), nmNumMaterials(struct)); }
     /** Unsafe version of {@link #mNumAnimations}. */
-    public static int nmNumAnimations(long struct) { return memGetInt(struct + AIScene.MNUMANIMATIONS); }
+    public static int nmNumAnimations(long struct) { return UNSAFE.getInt(null, struct + AIScene.MNUMANIMATIONS); }
     /** Unsafe version of {@link #mAnimations() mAnimations}. */
     @Nullable public static PointerBuffer nmAnimations(long struct) { return memPointerBufferSafe(memGetAddress(struct + AIScene.MANIMATIONS), nmNumAnimations(struct)); }
     /** Unsafe version of {@link #mNumTextures}. */
-    public static int nmNumTextures(long struct) { return memGetInt(struct + AIScene.MNUMTEXTURES); }
+    public static int nmNumTextures(long struct) { return UNSAFE.getInt(null, struct + AIScene.MNUMTEXTURES); }
     /** Unsafe version of {@link #mTextures() mTextures}. */
     @Nullable public static PointerBuffer nmTextures(long struct) { return memPointerBufferSafe(memGetAddress(struct + AIScene.MTEXTURES), nmNumTextures(struct)); }
     /** Unsafe version of {@link #mNumLights}. */
-    public static int nmNumLights(long struct) { return memGetInt(struct + AIScene.MNUMLIGHTS); }
+    public static int nmNumLights(long struct) { return UNSAFE.getInt(null, struct + AIScene.MNUMLIGHTS); }
     /** Unsafe version of {@link #mLights() mLights}. */
     @Nullable public static PointerBuffer nmLights(long struct) { return memPointerBufferSafe(memGetAddress(struct + AIScene.MLIGHTS), nmNumLights(struct)); }
     /** Unsafe version of {@link #mNumCameras}. */
-    public static int nmNumCameras(long struct) { return memGetInt(struct + AIScene.MNUMCAMERAS); }
+    public static int nmNumCameras(long struct) { return UNSAFE.getInt(null, struct + AIScene.MNUMCAMERAS); }
     /** Unsafe version of {@link #mCameras() mCameras}. */
     @Nullable public static PointerBuffer nmCameras(long struct) { return memPointerBufferSafe(memGetAddress(struct + AIScene.MCAMERAS), nmNumCameras(struct)); }
     /** Unsafe version of {@link #mMetaData}. */
@@ -450,31 +448,31 @@ public class AIScene extends Struct implements NativeResource {
     public static ByteBuffer nmPrivate(long struct, int capacity) { return memByteBuffer(memGetAddress(struct + AIScene.MPRIVATE), capacity); }
 
     /** Unsafe version of {@link #mFlags(int) mFlags}. */
-    public static void nmFlags(long struct, int value) { memPutInt(struct + AIScene.MFLAGS, value); }
+    public static void nmFlags(long struct, int value) { UNSAFE.putInt(null, struct + AIScene.MFLAGS, value); }
     /** Unsafe version of {@link #mRootNode(AINode) mRootNode}. */
     public static void nmRootNode(long struct, @Nullable AINode value) { memPutAddress(struct + AIScene.MROOTNODE, memAddressSafe(value)); }
     /** Sets the specified value to the {@code mNumMeshes} field of the specified {@code struct}. */
-    public static void nmNumMeshes(long struct, int value) { memPutInt(struct + AIScene.MNUMMESHES, value); }
+    public static void nmNumMeshes(long struct, int value) { UNSAFE.putInt(null, struct + AIScene.MNUMMESHES, value); }
     /** Unsafe version of {@link #mMeshes(PointerBuffer) mMeshes}. */
     public static void nmMeshes(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + AIScene.MMESHES, memAddressSafe(value)); nmNumMeshes(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code mNumMaterials} field of the specified {@code struct}. */
-    public static void nmNumMaterials(long struct, int value) { memPutInt(struct + AIScene.MNUMMATERIALS, value); }
+    public static void nmNumMaterials(long struct, int value) { UNSAFE.putInt(null, struct + AIScene.MNUMMATERIALS, value); }
     /** Unsafe version of {@link #mMaterials(PointerBuffer) mMaterials}. */
     public static void nmMaterials(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + AIScene.MMATERIALS, memAddressSafe(value)); nmNumMaterials(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code mNumAnimations} field of the specified {@code struct}. */
-    public static void nmNumAnimations(long struct, int value) { memPutInt(struct + AIScene.MNUMANIMATIONS, value); }
+    public static void nmNumAnimations(long struct, int value) { UNSAFE.putInt(null, struct + AIScene.MNUMANIMATIONS, value); }
     /** Unsafe version of {@link #mAnimations(PointerBuffer) mAnimations}. */
     public static void nmAnimations(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + AIScene.MANIMATIONS, memAddressSafe(value)); nmNumAnimations(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code mNumTextures} field of the specified {@code struct}. */
-    public static void nmNumTextures(long struct, int value) { memPutInt(struct + AIScene.MNUMTEXTURES, value); }
+    public static void nmNumTextures(long struct, int value) { UNSAFE.putInt(null, struct + AIScene.MNUMTEXTURES, value); }
     /** Unsafe version of {@link #mTextures(PointerBuffer) mTextures}. */
     public static void nmTextures(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + AIScene.MTEXTURES, memAddressSafe(value)); nmNumTextures(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code mNumLights} field of the specified {@code struct}. */
-    public static void nmNumLights(long struct, int value) { memPutInt(struct + AIScene.MNUMLIGHTS, value); }
+    public static void nmNumLights(long struct, int value) { UNSAFE.putInt(null, struct + AIScene.MNUMLIGHTS, value); }
     /** Unsafe version of {@link #mLights(PointerBuffer) mLights}. */
     public static void nmLights(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + AIScene.MLIGHTS, memAddressSafe(value)); nmNumLights(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code mNumCameras} field of the specified {@code struct}. */
-    public static void nmNumCameras(long struct, int value) { memPutInt(struct + AIScene.MNUMCAMERAS, value); }
+    public static void nmNumCameras(long struct, int value) { UNSAFE.putInt(null, struct + AIScene.MNUMCAMERAS, value); }
     /** Unsafe version of {@link #mCameras(PointerBuffer) mCameras}. */
     public static void nmCameras(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + AIScene.MCAMERAS, memAddressSafe(value)); nmNumCameras(struct, value == null ? 0 : value.remaining()); }
     /** Unsafe version of {@link #mMetaData(AIMetaData) mMetaData}. */
@@ -523,7 +521,7 @@ public class AIScene extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -532,8 +530,10 @@ public class AIScene extends Struct implements NativeResource {
     /** An array of {@link AIScene} structs. */
     public static class Buffer extends StructBuffer<AIScene, Buffer> implements NativeResource {
 
+        private static final AIScene ELEMENT_FACTORY = AIScene.create(-1L);
+
         /**
-         * Creates a new {@link AIScene.Buffer} instance backed by the specified container.
+         * Creates a new {@code AIScene.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -559,18 +559,8 @@ public class AIScene extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected AIScene newInstance(long address) {
-            return new AIScene(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected AIScene getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code mFlags} field. */

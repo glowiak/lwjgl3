@@ -52,7 +52,7 @@
                 <arg value="-I${src.main.rel}" if:true="@{simple}"/>
 
                 <source/>
-                <fileset dir="." includes="${src.generated}/*.c" if:true="@{simple}"/>
+                <fileset dir="." includes="${src.generated}/*" if:true="@{simple}"/>
 
                 <regexpmapper from="(\w+)\.c(?:c|pp)?$" to="\1.o"/>
             </apply>
@@ -76,7 +76,7 @@
             <local name="src.main.rel"/>
             <local name="src.generated"/>
             <property name="src.main" location="${module.lwjgl}/@{module}/src/main/c" relative="true"/>
-            <property name="src.main.rel" location="${module.lwjgl.rel}/@{module}/src/main/c" relative="true"/>
+            <property name="src.main.rel" value="${module.lwjgl.rel}/@{module}/src/main/c"/>
             <property name="src.generated" location="${module.lwjgl}/@{module}/src/generated/c" relative="true"/>
 
             <local name="name"/>
@@ -98,6 +98,13 @@
                 <srcfiles file="${bin.native}/wrap_memcpy.o" if:true="${build.arch.x64}"/>
                 <srcfiles dir="${dest}" includes="**"/>
             </uptodate>
+            <local name="lib-dependencies-uptodate"/>
+            <condition property="lib-dependencies-uptodate" value="true">
+            <or>
+                <isset property="lib-uptodate"/>
+                <istrue value="${build.offline}"/>
+            </or>
+            </condition>
 
             <local name="version.script"/>
             <property name="version.script" location="config/${platform}/version.script"/>
@@ -121,6 +128,7 @@
                 <arg line="-z noexecstack"/>
                 <arg line="-O3 -flto -fPIC -pthread -o ${lib}/lib${name}${LIB_POSTFIX}.so"/>
 
+                <arg line="-Wl,--no-undefined"/>
                 <arg line="-Wl,--version-script,${version.script}"/>
                 <arg line="-Wl,--wrap,memcpy" if:true="${build.arch.x64}"/>
                 <fileset dir="${bin.native}" includes="wrap_memcpy.o" if:true="${build.arch.x64}"/>
@@ -163,19 +171,60 @@
                 </fileset>
             </source>
             <beforeLink>
-                <mkdir dir="${lib}/${platform}/x64"/>
-                <parallel threadsPerProcessor="2" failonany="true" unless:set="lib-uptodate">
-                    <update-dependency name="dyncall" artifact="x64/libdyncall_s.a"/>
-                    <update-dependency name="dyncallback" artifact="x64/libdyncallback_s.a"/>
-                    <update-dependency name="dynload" artifact="x64/libdynload_s.a"/>
+                <mkdir dir="${lib}/${platform}/${build.arch}"/>
+                <parallel threadsPerProcessor="2" failonany="true" unless:set="lib-dependencies-uptodate">
+                    <update-dependency name="dyncall" artifact="${build.arch}/libdyncall_s.a"/>
+                    <update-dependency name="dyncallback" artifact="${build.arch}/libdyncallback_s.a"/>
+                    <update-dependency name="dynload" artifact="${build.arch}/libdynload_s.a"/>
                 </parallel>
             </beforeLink>
             <link>
                 <fileset dir="${lib}/${platform}/${build.arch}/">
                     <include name="libdyn*.a"/>
                 </fileset>
+                <arg value="-ldl"/>
             </link>
         </build>
+
+        <!-- BULLET -->
+        <build module="bullet" simple="true" linker="g++" if:true="${binding.bullet}">
+            <beforeLink>
+                <mkdir dir="${lib}/${platform}/${build.arch}/bullet"/>
+                <parallel threadsPerProcessor="2" failonany="true" unless:set="lib-dependencies-uptodate">
+                    <update-dependency name="Bullet3Common" artifact="${build.arch}/bullet/libBullet3Common.a"/>
+                    <update-dependency name="BulletCollision" artifact="${build.arch}/bullet/libBulletCollision.a"/>
+                    <update-dependency name="BulletDynamics" artifact="${build.arch}/bullet/libBulletDynamics.a"/>
+                    <update-dependency name="BulletFileLoader" artifact="${build.arch}/bullet/libBulletFileLoader.a"/>
+                    <update-dependency name="BulletInverseDynamics" artifact="${build.arch}/bullet/libBulletInverseDynamics.a"/>
+                    <update-dependency name="BulletInverseDynamicsUtils" artifact="${build.arch}/bullet/libBulletInverseDynamicsUtils.a"/>
+                    <update-dependency name="BulletRobotics" artifact="${build.arch}/bullet/libBulletRobotics.a"/>
+                    <update-dependency name="BulletSoftBody" artifact="${build.arch}/bullet/libBulletSoftBody.a"/>
+                    <update-dependency name="BulletWorldImporter" artifact="${build.arch}/bullet/libBulletWorldImporter.a"/>
+                    <update-dependency name="LinearMath" artifact="${build.arch}/bullet/libLinearMath.a"/>
+                </parallel>
+            </beforeLink>
+            <link>
+                <arg value="-ldl"/>
+                <arg value="-L${lib}/${platform}/${build.arch}/bullet"/>
+                <!-- Order is important -->
+                <arg value="-lBulletWorldImporter"/>
+                <arg value="-lBulletSoftBody"/>
+                <arg value="-lBulletDynamics"/>
+                <arg value="-lBulletCollision"/>
+                <arg value="-lBulletFileLoader"/>
+                <arg value="-lBulletInverseDynamics"/>
+                <arg value="-lBulletInverseDynamicsUtils"/>
+                <arg value="-lBullet3Common"/>
+                <arg value="-lLinearMath"/>
+                <arg value="-lBulletRobotics"/>
+            </link>
+        </build>
+
+        <!-- LIBDIVIDE -->
+        <build_simple module="libdivide"/>
+
+        <!-- LLVM -->
+        <build_simple module="llvm"/>
 
         <!-- LMDB -->
         <build module="lmdb" simple="true" if:true="${binding.lmdb}">
@@ -200,11 +249,17 @@
             </beforeCompile>
         </build>
 
+        <!-- Meow -->
+        <build module="meow" simple="true" flags="-Werror -Wfatal-errors -maes -msse4.2" if:true="${binding.meow}"/>
+
         <!-- NanoVG -->
         <build module="nanovg" simple="true" if:true="${binding.nanovg}">
             <source>
                 <arg value="-isystem${module.lwjgl.rel}/stb/src/main/c"/>
             </source>
+            <link>
+                <arg value="-lm"/>
+            </link>
         </build>
 
         <!-- NativeFileDialog -->
@@ -228,12 +283,18 @@
                 <arg value="-I${src.main.rel}/include"/>
             </source>
             <link>
+                <arg value="-lglib-2.0"/>
+                <arg value="-lgobject-2.0"/>
                 <arg value="-lgtk-3"/>
             </link>
         </build>
 
         <!-- Nuklear -->
-        <build_simple module="nuklear"/>
+        <build simple="true" module="nuklear">
+            <link>
+                <arg value="-lm"/>
+            </link>
+        </build>
 
         <!-- OpenGL -->
         <build_simple module="opengl"/>
@@ -245,7 +306,11 @@
         <build_simple module="openvr"/>
 
         <!-- ParShapes -->
-        <build_simple module="par"/>
+        <build simple="true" module="par">
+            <link>
+                <arg value="-lm"/>
+            </link>
+        </build>
 
         <!-- Remotery -->
         <build module="remotery" if:true="${binding.remotery}">
@@ -253,6 +318,10 @@
                 <arg value="-I${src.main.rel}"/>
                 <fileset dir="." includes="${src.generated}/*.c" excludes="**/*Metal.c"/>
             </source>
+            <link>
+                <arg value="-ldl"/>
+                <arg value="-lGL"/>
+            </link>
         </build>
 
         <!-- rpmalloc -->
@@ -271,6 +340,9 @@
                 <arg value="-isystem${src.main.rel}"/>
                 <fileset dir="." includes="${src.generated}/*.c"/>
             </source>
+            <link>
+                <arg value="-lm"/>
+            </link>
         </build>
 
         <!-- tinyexr -->
@@ -336,7 +408,7 @@
         <build_simple module="xxhash"/>
 
         <!-- yoga -->
-        <build module="yoga" simple="true" linker="g++" if:true="${binding.yoga}">
+        <build module="yoga" simple="true" lang="c++" if:true="${binding.yoga}">
             <beforeCompile>
                 <compile lang="c++">
                     <arg value="-I${src.main.rel}"/>
@@ -385,13 +457,14 @@
 
             <parallel threadsPerProcessor="4" failonany="true">
 
-            <update-dependency name="Assimp" artifact="x64/libassimp.so" dest="${lib}" if:true="${binding.assimp}"/>
-            <update-dependency name="bgfx" artifact="x64/libbgfx.so" dest="${lib}" if:true="${binding.bgfx}"/>
-            <update-dependency name="jemalloc" artifact="x64/libjemalloc.so" dest="${lib}" if:true="${binding.jemalloc}"/>
-            <update-dependency name="GLFW" artifact="x64/libglfw.so" dest="${lib}" if:true="${binding.glfw}"/>
-            <update-dependency name="GLFW" artifact="x64/libglfw_wayland.so" dest="${lib}" if:true="${binding.glfw}"/>
-            <update-dependency name="OpenAL32" artifact="x64/libopenal.so" dest="${lib}" if:true="${binding.openal}"/>
-            <update-dependency name="OpenVR" artifact="x64/libopenvr_api.so" dest="${lib}" if:true="${binding.openvr}"/>
+            <update-dependency name="Assimp" artifact="${build.arch}/libassimp.so" dest="${lib}" if:true="${binding.assimp}"/>
+            <update-dependency name="bgfx" artifact="${build.arch}/libbgfx.so" dest="${lib}" if:true="${binding.bgfx}"/>
+            <update-dependency name="jemalloc" artifact="${build.arch}/libjemalloc.so" dest="${lib}" if:true="${binding.jemalloc}"/>
+            <update-dependency name="GLFW" artifact="${build.arch}/libglfw.so" dest="${lib}" if:true="${binding.glfw}"/>
+            <update-dependency name="GLFW" artifact="${build.arch}/libglfw_wayland.so" dest="${lib}" if:true="${binding.glfw}"/>
+            <update-dependency name="OpenAL32" artifact="${build.arch}/libopenal.so" dest="${lib}" if:true="${binding.openal}"/>
+            <update-dependency name="OpenVR" artifact="${build.arch}/libopenvr_api.so" dest="${lib}" if:true="${binding.openvr}"/>
+            <update-dependency name="Opus" artifact="${build.arch}/libopus.so" dest="${lib}" if:true="${binding.opus}"/>
 
             </parallel>
 

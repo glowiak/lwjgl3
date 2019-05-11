@@ -93,18 +93,14 @@ public class VkShaderStatisticsInfoAMD extends Struct {
         COMPUTEWORKGROUPSIZE = layout.offsetof(6);
     }
 
-    VkShaderStatisticsInfoAMD(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkShaderStatisticsInfoAMD} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkShaderStatisticsInfoAMD} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkShaderStatisticsInfoAMD(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -136,15 +132,15 @@ public class VkShaderStatisticsInfoAMD extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkShaderStatisticsInfoAMD} instance for the specified memory address. */
+    /** Returns a new {@code VkShaderStatisticsInfoAMD} instance for the specified memory address. */
     public static VkShaderStatisticsInfoAMD create(long address) {
-        return new VkShaderStatisticsInfoAMD(address, null);
+        return wrap(VkShaderStatisticsInfoAMD.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkShaderStatisticsInfoAMD createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkShaderStatisticsInfoAMD.class, address);
     }
 
     /**
@@ -154,34 +150,34 @@ public class VkShaderStatisticsInfoAMD extends Struct {
      * @param capacity the buffer capacity
      */
     public static VkShaderStatisticsInfoAMD.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkShaderStatisticsInfoAMD.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #shaderStageMask}. */
-    public static int nshaderStageMask(long struct) { return memGetInt(struct + VkShaderStatisticsInfoAMD.SHADERSTAGEMASK); }
+    public static int nshaderStageMask(long struct) { return UNSAFE.getInt(null, struct + VkShaderStatisticsInfoAMD.SHADERSTAGEMASK); }
     /** Unsafe version of {@link #resourceUsage}. */
     public static VkShaderResourceUsageAMD nresourceUsage(long struct) { return VkShaderResourceUsageAMD.create(struct + VkShaderStatisticsInfoAMD.RESOURCEUSAGE); }
     /** Unsafe version of {@link #numPhysicalVgprs}. */
-    public static int nnumPhysicalVgprs(long struct) { return memGetInt(struct + VkShaderStatisticsInfoAMD.NUMPHYSICALVGPRS); }
+    public static int nnumPhysicalVgprs(long struct) { return UNSAFE.getInt(null, struct + VkShaderStatisticsInfoAMD.NUMPHYSICALVGPRS); }
     /** Unsafe version of {@link #numPhysicalSgprs}. */
-    public static int nnumPhysicalSgprs(long struct) { return memGetInt(struct + VkShaderStatisticsInfoAMD.NUMPHYSICALSGPRS); }
+    public static int nnumPhysicalSgprs(long struct) { return UNSAFE.getInt(null, struct + VkShaderStatisticsInfoAMD.NUMPHYSICALSGPRS); }
     /** Unsafe version of {@link #numAvailableVgprs}. */
-    public static int nnumAvailableVgprs(long struct) { return memGetInt(struct + VkShaderStatisticsInfoAMD.NUMAVAILABLEVGPRS); }
+    public static int nnumAvailableVgprs(long struct) { return UNSAFE.getInt(null, struct + VkShaderStatisticsInfoAMD.NUMAVAILABLEVGPRS); }
     /** Unsafe version of {@link #numAvailableSgprs}. */
-    public static int nnumAvailableSgprs(long struct) { return memGetInt(struct + VkShaderStatisticsInfoAMD.NUMAVAILABLESGPRS); }
+    public static int nnumAvailableSgprs(long struct) { return UNSAFE.getInt(null, struct + VkShaderStatisticsInfoAMD.NUMAVAILABLESGPRS); }
     /** Unsafe version of {@link #computeWorkGroupSize}. */
     public static IntBuffer ncomputeWorkGroupSize(long struct) { return memIntBuffer(struct + VkShaderStatisticsInfoAMD.COMPUTEWORKGROUPSIZE, 3); }
     /** Unsafe version of {@link #computeWorkGroupSize(int) computeWorkGroupSize}. */
     public static int ncomputeWorkGroupSize(long struct, int index) {
-        return memGetInt(struct + VkShaderStatisticsInfoAMD.COMPUTEWORKGROUPSIZE + check(index, 3) * 4);
+        return UNSAFE.getInt(null, struct + VkShaderStatisticsInfoAMD.COMPUTEWORKGROUPSIZE + check(index, 3) * 4);
     }
 
     // -----------------------------------
@@ -189,8 +185,10 @@ public class VkShaderStatisticsInfoAMD extends Struct {
     /** An array of {@link VkShaderStatisticsInfoAMD} structs. */
     public static class Buffer extends StructBuffer<VkShaderStatisticsInfoAMD, Buffer> {
 
+        private static final VkShaderStatisticsInfoAMD ELEMENT_FACTORY = VkShaderStatisticsInfoAMD.create(-1L);
+
         /**
-         * Creates a new {@link VkShaderStatisticsInfoAMD.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkShaderStatisticsInfoAMD.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -216,18 +214,8 @@ public class VkShaderStatisticsInfoAMD extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkShaderStatisticsInfoAMD newInstance(long address) {
-            return new VkShaderStatisticsInfoAMD(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkShaderStatisticsInfoAMD getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code shaderStageMask} field. */

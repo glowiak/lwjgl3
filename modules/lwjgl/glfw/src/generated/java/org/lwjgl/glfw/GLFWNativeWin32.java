@@ -28,9 +28,10 @@ public class GLFWNativeWin32 {
 
         /** Function address. */
         public static final long
-            GetWin32Adapter = apiGetFunctionAddress(GLFW.getLibrary(), "glfwGetWin32Adapter"),
-            GetWin32Monitor = apiGetFunctionAddress(GLFW.getLibrary(), "glfwGetWin32Monitor"),
-            GetWin32Window  = apiGetFunctionAddress(GLFW.getLibrary(), "glfwGetWin32Window");
+            GetWin32Adapter   = apiGetFunctionAddress(GLFW.getLibrary(), "glfwGetWin32Adapter"),
+            GetWin32Monitor   = apiGetFunctionAddress(GLFW.getLibrary(), "glfwGetWin32Monitor"),
+            GetWin32Window    = apiGetFunctionAddress(GLFW.getLibrary(), "glfwGetWin32Window"),
+            AttachWin32Window = apiGetFunctionAddress(GLFW.getLibrary(), "glfwAttachWin32Window");
 
     }
 
@@ -42,7 +43,7 @@ public class GLFWNativeWin32 {
         if (CHECKS) {
             check(monitor);
         }
-        return invokePP(__functionAddress, monitor);
+        return invokePP(monitor, __functionAddress);
     }
 
     /**
@@ -52,7 +53,7 @@ public class GLFWNativeWin32 {
      *
      * @param monitor the GLFW monitor
      *
-     * @return The UTF-8 encoded adapter device name (for example `\\.\DISPLAY1`) of the specified monitor, or {@code NULL} if an error occurred.
+     * @return the UTF-8 encoded adapter device name (for example `\\.\DISPLAY1`) of the specified monitor, or {@code NULL} if an error occurred
      *
      * @since version 3.1
      */
@@ -71,7 +72,7 @@ public class GLFWNativeWin32 {
         if (CHECKS) {
             check(monitor);
         }
-        return invokePP(__functionAddress, monitor);
+        return invokePP(monitor, __functionAddress);
     }
 
     /**
@@ -81,7 +82,7 @@ public class GLFWNativeWin32 {
      *
      * @param monitor the GLFW monitor
      *
-     * @return The UTF-8 encoded display device name (for example `\\.\DISPLAY1\Monitor0`) of the specified monitor, or {@code NULL} if an error occurred.
+     * @return the UTF-8 encoded display device name (for example `\\.\DISPLAY1\Monitor0`) of the specified monitor, or {@code NULL} if an error occurred
      *
      * @since version 3.1
      */
@@ -101,7 +102,7 @@ public class GLFWNativeWin32 {
      *
      * @param window the GLFW window
      *
-     * @return The {@code HWND} of the specified window, or {@code NULL} if an error occurred.
+     * @return the {@code HWND} of the specified window, or {@code NULL} if an error occurred
      *
      * @since version 3.0
      */
@@ -111,7 +112,35 @@ public class GLFWNativeWin32 {
         if (CHECKS) {
             check(window);
         }
-        return invokePP(__functionAddress, window);
+        return invokePP(window, __functionAddress);
+    }
+
+    // --- [ glfwAttachWin32Window ] ---
+
+    /**
+     * Wraps an existing {@code HWND} in a new GLFW window object.
+     * 
+     * <p>This function creates a GLFW window object and its associated OpenGL or OpenGL ES context for an existing {@code HWND}. The {@code HWND} is not
+     * destroyed by GLFW.</p>
+     * 
+     * <p>This function may be called from any thread.</p>
+     * 
+     * <p><b>LWJGL</b>: This functionality is experimental and not officially supported by GLFW yet.</p>
+     *
+     * @param handle the {@code HWND} to attach to the window object
+     * @param share  the window whose context to share resources with, or {@code NULL} to not share resources
+     *
+     * @return the handle of the created window, or {@code NULL} if an error occurred
+     *
+     * @since version 3.3
+     */
+    @NativeType("GLFWwindow *")
+    public static long glfwAttachWin32Window(@NativeType("HWND") long handle, @NativeType("GLFWwindow *") long share) {
+        long __functionAddress = Functions.AttachWin32Window;
+        if (CHECKS) {
+            check(handle);
+        }
+        return invokePPP(handle, share, __functionAddress);
     }
 
 }

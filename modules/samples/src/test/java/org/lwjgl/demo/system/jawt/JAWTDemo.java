@@ -4,21 +4,30 @@
  */
 package org.lwjgl.demo.system.jawt;
 
+import org.lwjgl.glfw.*;
 import org.lwjgl.system.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
-/** AWT integration demo using jawt. */
+import static org.lwjgl.glfw.GLFW.*;
+
+/** GLFW canvas embedded in AWT using jawt. */
 public final class JAWTDemo {
 
     private JAWTDemo() {
     }
 
     public static void main(String[] args) {
-        if (Platform.get() != Platform.WINDOWS) {
-            throw new UnsupportedOperationException("This demo can only run on Windows.");
+        if (Platform.get() == Platform.MACOSX) {
+            throw new UnsupportedOperationException("This demo cannot run on macOS.");
+        }
+
+        GLFWErrorCallback.createPrint().set();
+        if (!glfwInit()) {
+            throw new IllegalStateException("Unable to initialize glfw");
         }
 
         LWJGLCanvas canvas = new LWJGLCanvas();
@@ -35,8 +44,12 @@ public final class JAWTDemo {
         });
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
-            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE && e.getID() == KeyEvent.KEY_PRESSED) {
                 frame.dispose();
+
+                glfwTerminate();
+                Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+
                 return true;
             }
 
@@ -45,6 +58,7 @@ public final class JAWTDemo {
 
         frame.setLayout(new BorderLayout());
         frame.add(canvas, BorderLayout.CENTER);
+        frame.add(new JTextField(), BorderLayout.SOUTH);
 
         frame.pack();
         frame.setVisible(true);

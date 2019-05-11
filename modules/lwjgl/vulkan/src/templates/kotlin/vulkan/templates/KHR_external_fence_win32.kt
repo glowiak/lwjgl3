@@ -89,7 +89,7 @@ val KHR_external_fence_win32 = "KHRExternalFenceWin32".nativeClassVK("KHR_extern
 ￿    const VkImportFenceWin32HandleInfoKHR*      pImportFenceWin32HandleInfo);</code></pre>
 
         <h5>Description</h5>
-        Importing a fence payload from Windows handles does not transfer ownership of the handle to the Vulkan implementation. For handle types defined as NT handles, the application <b>must</b> release ownership using the fname:CloseHandle system call when the handle is no longer needed.
+        Importing a fence payload from Windows handles does not transfer ownership of the handle to the Vulkan implementation. For handle types defined as NT handles, the application <b>must</b> release ownership using the {@code CloseHandle} system call when the handle is no longer needed.
 
         Applications <b>can</b> import the same fence payload into multiple instances of Vulkan, into the same instance from which it was exported, and multiple times into a given Vulkan instance.
 
@@ -117,8 +117,8 @@ val KHR_external_fence_win32 = "KHRExternalFenceWin32".nativeClassVK("KHR_extern
         ##VkImportFenceWin32HandleInfoKHR
         """,
 
-        VkDevice.IN("device", "the logical device that created the fence."),
-        VkImportFenceWin32HandleInfoKHR.const.p.IN("pImportFenceWin32HandleInfo", "points to a ##VkImportFenceWin32HandleInfoKHR structure specifying the fence and import parameters.")
+        VkDevice("device", "the logical device that created the fence."),
+        VkImportFenceWin32HandleInfoKHR.const.p("pImportFenceWin32HandleInfo", "points to a ##VkImportFenceWin32HandleInfoKHR structure specifying the fence and import parameters.")
     )
 
     VkResult(
@@ -136,9 +136,9 @@ val KHR_external_fence_win32 = "KHRExternalFenceWin32".nativeClassVK("KHR_extern
 ￿    HANDLE*                                     pHandle);</code></pre>
 
         <h5>Description</h5>
-        For handle types defined as NT handles, the handles returned by #GetFenceWin32HandleKHR() are owned by the application. To avoid leaking resources, the application <b>must</b> release ownership of them using the fname:CloseHandle system call when they are no longer needed.
+        For handle types defined as NT handles, the handles returned by {@code vkGetFenceWin32HandleKHR} are owned by the application. To avoid leaking resources, the application <b>must</b> release ownership of them using the {@code CloseHandle} system call when they are no longer needed.
 
-        Exporting a Windows handle from a fence <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-fences-importing">Importing Fence Payloads</a>.
+        Exporting a Windows handle from a fence <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-fences-importing">Importing Fence Payloads</a>.
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
@@ -165,8 +165,8 @@ val KHR_external_fence_win32 = "KHRExternalFenceWin32".nativeClassVK("KHR_extern
         ##VkFenceGetWin32HandleInfoKHR
         """,
 
-        VkDevice.IN("device", "the logical device that created the fence being exported."),
-        VkFenceGetWin32HandleInfoKHR.const.p.IN("pGetWin32HandleInfo", "a pointer to an instance of the ##VkFenceGetWin32HandleInfoKHR structure containing parameters of the export operation."),
-        Check(1)..HANDLE.p.OUT("pHandle", "will return the Windows handle representing the fence state.")
+        VkDevice("device", "the logical device that created the fence being exported."),
+        VkFenceGetWin32HandleInfoKHR.const.p("pGetWin32HandleInfo", "a pointer to an instance of the ##VkFenceGetWin32HandleInfoKHR structure containing parameters of the export operation."),
+        Check(1)..HANDLE.p("pHandle", "will return the Windows handle representing the fence state.")
     )
 }

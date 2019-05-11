@@ -32,7 +32,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If the {@code pNext} chain includes an instance of the {@link VkBindImagePlaneMemoryInfo} structure, {@code memoryOffset} <b>must</b> be an integer multiple of the {@code alignment} member of the {@link VkMemoryRequirements} structure returned from a call to {@link VK11#vkGetImageMemoryRequirements2 GetImageMemoryRequirements2} with {@code image} and the correct {@code planeAspect} for this plane in the {@link VkImagePlaneMemoryRequirementsInfo} structure attached to the {@link VkImageMemoryRequirementsInfo2}&#8217;s {@code pNext} chain</li>
  * <li>If the {@code pNext} chain includes an instance of the {@link VkBindImagePlaneMemoryInfo} structure, the difference of the size of {@code memory} and {@code memoryOffset} <b>must</b> be greater than or equal to the {@code size} member of the {@link VkMemoryRequirements} structure returned from a call to {@link VK11#vkGetImageMemoryRequirements2 GetImageMemoryRequirements2} with the same {@code image} and the correct {@code planeAspect} for this plane in the {@link VkImagePlaneMemoryRequirementsInfo} structure attached to the {@link VkImageMemoryRequirementsInfo2}&#8217;s {@code pNext} chain</li>
  * <li>If {@code image} requires a dedicated allocation (as reported by {@link VK11#vkGetImageMemoryRequirements2 GetImageMemoryRequirements2} in {@link VkMemoryDedicatedRequirements}::requiresDedicatedAllocation for {@code image}), {@code memory} <b>must</b> have been created with {@link VkMemoryDedicatedAllocateInfo}{@code ::image} equal to {@code image} and {@code memoryOffset} <b>must</b> be zero</li>
- * <li>If the {@link VkMemoryAllocateInfo} provided when {@code memory} was allocated included an instance of {@link VkMemoryDedicatedAllocateInfo} in its {@code pNext} chain, and {@link VkMemoryDedicatedAllocateInfo}{@code ::image} was not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, then {@code image} <b>must</b> equal {@link VkMemoryDedicatedAllocateInfo}{@code ::image} and {@code memoryOffset} <b>must</b> be zero.</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing">dedicated allocation image aliasing</a> feature is not enabled, and the {@link VkMemoryAllocateInfo} provided when {@code memory} was allocated included an instance of {@link VkMemoryDedicatedAllocateInfo} in its {@code pNext} chain, and {@link VkMemoryDedicatedAllocateInfo}{@code ::image} was not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, then {@code image} <b>must</b> equal {@link VkMemoryDedicatedAllocateInfo}{@code ::image} and {@code memoryOffset} <b>must</b> be zero.</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing">dedicated allocation image aliasing</a> feature is enabled, and the {@link VkMemoryAllocateInfo} provided when {@code memory} was allocated included an instance of {@link VkMemoryDedicatedAllocateInfo} in its {@code pNext} chain, and {@link VkMemoryDedicatedAllocateInfo}{@code ::image} was not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, then {@code memoryOffset} <b>must</b> be zero, and {@code image} <b>must</b> be either equal to {@link VkMemoryDedicatedAllocateInfo}{@code ::image} or an image that was created using the same parameters in {@link VkImageCreateInfo}, with the exception that {@code extent} and {@code arrayLayers} <b>may</b> differ subject to the following restrictions: every dimension in the {@code extent} parameter of the image being bound <b>must</b> be equal to or smaller than the original image for which the allocation was created; and the {@code arrayLayers} parameter of the image being bound <b>must</b> be equal to or smaller than the original image for which the allocation was created.</li>
  * <li>If {@code image} was created with {@link VkDedicatedAllocationImageCreateInfoNV}{@code ::dedicatedAllocation} equal to {@link VK10#VK_TRUE TRUE}, {@code memory} <b>must</b> have been created with {@link VkDedicatedAllocationMemoryAllocateInfoNV}{@code ::image} equal to {@code image} and {@code memoryOffset} <b>must</b> be zero</li>
  * <li>If the {@code pNext} chain includes {@link VkBindImageMemoryDeviceGroupInfo}, all instances of {@code memory} specified by {@link VkBindImageMemoryDeviceGroupInfo}{@code ::pDeviceIndices} <b>must</b> have been allocated</li>
  * <li>If the {@code pNext} chain includes {@link VkBindImageMemoryDeviceGroupInfo}, and {@link VkBindImageMemoryDeviceGroupInfo}{@code ::splitInstanceBindRegionCount} is not zero, then {@code image} <b>must</b> have been created with the {@link VK11#VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT} bit set</li>
@@ -40,7 +41,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If the {@code pNext} chain includes {@link VkBindImageMemoryDeviceGroupInfo}, the union of the areas of all elements of {@link VkBindImageMemoryDeviceGroupInfo}{@code ::pSplitInstanceBindRegions} that correspond to the same instance of {@code image} <b>must</b> cover the entire image.</li>
  * <li>If {@code image} was created with a valid swapchain handle in {@link VkImageSwapchainCreateInfoKHR}{@code ::swapchain}, then the {@code pNext} chain <b>must</b> include a valid instance of {@link VkBindImageMemorySwapchainInfoKHR}</li>
  * <li>If the {@code pNext} chain includes an instance of {@link VkBindImageMemorySwapchainInfoKHR}, {@code memory} <b>must</b> be {@link VK10#VK_NULL_HANDLE NULL_HANDLE}</li>
- * <li>If the {@code pNext} chain does not include an instance of {@link VkBindImageMemorySwapchainInfoKHR}, {@code memory} <b>must</b> be a valid dname:VkDeviceMemory handle</li>
+ * <li>If the {@code pNext} chain does not include an instance of {@link VkBindImageMemorySwapchainInfoKHR}, {@code memory} <b>must</b> be a valid {@code VkDeviceMemory} handle</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -113,18 +114,14 @@ public class VkBindImageMemoryInfo extends Struct implements NativeResource {
         MEMORYOFFSET = layout.offsetof(4);
     }
 
-    VkBindImageMemoryInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkBindImageMemoryInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkBindImageMemoryInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkBindImageMemoryInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -188,30 +185,31 @@ public class VkBindImageMemoryInfo extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkBindImageMemoryInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkBindImageMemoryInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkBindImageMemoryInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkBindImageMemoryInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkBindImageMemoryInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkBindImageMemoryInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkBindImageMemoryInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkBindImageMemoryInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkBindImageMemoryInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkBindImageMemoryInfo} instance allocated with {@link BufferUtils}. */
     public static VkBindImageMemoryInfo create() {
-        return new VkBindImageMemoryInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkBindImageMemoryInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkBindImageMemoryInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkBindImageMemoryInfo} instance for the specified memory address. */
     public static VkBindImageMemoryInfo create(long address) {
-        return new VkBindImageMemoryInfo(address, null);
+        return wrap(VkBindImageMemoryInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkBindImageMemoryInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkBindImageMemoryInfo.class, address);
     }
 
     /**
@@ -220,7 +218,7 @@ public class VkBindImageMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -229,7 +227,7 @@ public class VkBindImageMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -238,7 +236,8 @@ public class VkBindImageMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -248,43 +247,43 @@ public class VkBindImageMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkBindImageMemoryInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkBindImageMemoryInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkBindImageMemoryInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkBindImageMemoryInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkBindImageMemoryInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkBindImageMemoryInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkBindImageMemoryInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkBindImageMemoryInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkBindImageMemoryInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkBindImageMemoryInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkBindImageMemoryInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkBindImageMemoryInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkBindImageMemoryInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkBindImageMemoryInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkBindImageMemoryInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -312,7 +311,7 @@ public class VkBindImageMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -322,40 +321,42 @@ public class VkBindImageMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkBindImageMemoryInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkBindImageMemoryInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkBindImageMemoryInfo.PNEXT); }
     /** Unsafe version of {@link #image}. */
-    public static long nimage(long struct) { return memGetLong(struct + VkBindImageMemoryInfo.IMAGE); }
+    public static long nimage(long struct) { return UNSAFE.getLong(null, struct + VkBindImageMemoryInfo.IMAGE); }
     /** Unsafe version of {@link #memory}. */
-    public static long nmemory(long struct) { return memGetLong(struct + VkBindImageMemoryInfo.MEMORY); }
+    public static long nmemory(long struct) { return UNSAFE.getLong(null, struct + VkBindImageMemoryInfo.MEMORY); }
     /** Unsafe version of {@link #memoryOffset}. */
-    public static long nmemoryOffset(long struct) { return memGetLong(struct + VkBindImageMemoryInfo.MEMORYOFFSET); }
+    public static long nmemoryOffset(long struct) { return UNSAFE.getLong(null, struct + VkBindImageMemoryInfo.MEMORYOFFSET); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkBindImageMemoryInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkBindImageMemoryInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkBindImageMemoryInfo.PNEXT, value); }
     /** Unsafe version of {@link #image(long) image}. */
-    public static void nimage(long struct, long value) { memPutLong(struct + VkBindImageMemoryInfo.IMAGE, value); }
+    public static void nimage(long struct, long value) { UNSAFE.putLong(null, struct + VkBindImageMemoryInfo.IMAGE, value); }
     /** Unsafe version of {@link #memory(long) memory}. */
-    public static void nmemory(long struct, long value) { memPutLong(struct + VkBindImageMemoryInfo.MEMORY, value); }
+    public static void nmemory(long struct, long value) { UNSAFE.putLong(null, struct + VkBindImageMemoryInfo.MEMORY, value); }
     /** Unsafe version of {@link #memoryOffset(long) memoryOffset}. */
-    public static void nmemoryOffset(long struct, long value) { memPutLong(struct + VkBindImageMemoryInfo.MEMORYOFFSET, value); }
+    public static void nmemoryOffset(long struct, long value) { UNSAFE.putLong(null, struct + VkBindImageMemoryInfo.MEMORYOFFSET, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkBindImageMemoryInfo} structs. */
     public static class Buffer extends StructBuffer<VkBindImageMemoryInfo, Buffer> implements NativeResource {
 
+        private static final VkBindImageMemoryInfo ELEMENT_FACTORY = VkBindImageMemoryInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkBindImageMemoryInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkBindImageMemoryInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -381,18 +382,8 @@ public class VkBindImageMemoryInfo extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkBindImageMemoryInfo newInstance(long address) {
-            return new VkBindImageMemoryInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkBindImageMemoryInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

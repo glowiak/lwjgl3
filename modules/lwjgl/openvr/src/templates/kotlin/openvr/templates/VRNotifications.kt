@@ -10,7 +10,6 @@ import openvr.*
 val VRNotifications = "VRNotifications".nativeClass(
     Module.OPENVR,
     prefixMethod = "VRNotifications_",
-    library = OPENVR_LIBRARY,
     binding = OPENVR_FNTABLE_BINDING
 ) {
     documentation =
@@ -27,19 +26,19 @@ val VRNotifications = "VRNotifications".nativeClass(
         used instead.
         """,
 
-        VROverlayHandle_t.IN("ulOverlayHandle", ""),
-        uint64_t.IN("ulUserValue", ""),
-        EVRNotificationType.IN("type", "", "EVRNotificationType_\\w+"),
-        charASCII.const.p.IN("pchText", ""),
-        EVRNotificationStyle.IN("style", "", "EVRNotificationStyle_\\w+"),
-        nullable..NotificationBitmap_t.const.p.IN("pImage", ""),
-        Check(1)..VRNotificationId.p.OUT("pNotificationId", "")
+        VROverlayHandle_t("ulOverlayHandle", ""),
+        uint64_t("ulUserValue", ""),
+        EVRNotificationType("type", "", "EVRNotificationType_\\w+"),
+        charASCII.const.p("pchText", ""),
+        EVRNotificationStyle("style", "", "EVRNotificationStyle_\\w+"),
+        nullable..NotificationBitmap_t.const.p("pImage", ""),
+        Check(1)..VRNotificationId.p("pNotificationId", "")
     )
 
     EVRNotificationError(
         "RemoveNotification",
         "Destroy a notification, hiding it first if it currently shown to the user.",
 
-        VRNotificationId.IN("notificationId", "")
+        VRNotificationId("notificationId", "")
     )
 }

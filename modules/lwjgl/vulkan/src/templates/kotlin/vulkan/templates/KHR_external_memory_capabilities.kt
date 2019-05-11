@@ -37,7 +37,7 @@ val KHR_external_memory_capabilities = "KHRExternalMemoryCapabilities".nativeCla
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -119,8 +119,8 @@ val KHR_external_memory_capabilities = "KHRExternalMemoryCapabilities".nativeCla
         "GetPhysicalDeviceExternalBufferPropertiesKHR",
         "See #GetPhysicalDeviceExternalBufferProperties().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device from which to query the buffer capabilities."),
-        VkPhysicalDeviceExternalBufferInfo.const.p.IN("pExternalBufferInfo", "points to an instance of the ##VkPhysicalDeviceExternalBufferInfo structure, describing the parameters that would be consumed by #CreateBuffer()."),
-        VkExternalBufferProperties.p.OUT("pExternalBufferProperties", "points to an instance of the ##VkExternalBufferProperties structure in which capabilities are returned.")
+        VkPhysicalDevice("physicalDevice", "the physical device from which to query the buffer capabilities."),
+        VkPhysicalDeviceExternalBufferInfo.const.p("pExternalBufferInfo", "points to an instance of the ##VkPhysicalDeviceExternalBufferInfo structure, describing the parameters that would be consumed by #CreateBuffer()."),
+        VkExternalBufferProperties.p("pExternalBufferProperties", "points to an instance of the ##VkExternalBufferProperties structure in which capabilities are returned.")
     )
 }

@@ -117,54 +117,55 @@ val KHR_robustness = "KHRRobustness".nativeClassGLES("KHR_robustness", postfix =
             indicating completion to the application.
             """
         )}
-        """
+        """,
+        void()
     )
 
     void(
         "ReadnPixelsKHR",
         "Behaves identically to #ReadPixels() except that it does not write more than {@code bufSize} bytes into {@code data}",
 
-        GLint.IN("x", "the left pixel coordinate"),
-        GLint.IN("y", "the lower pixel coordinate"),
-        GLsizei.IN("width", "the number of pixels to read in the x-dimension"),
-        GLsizei.IN("height", "the number of pixels to read in the y-dimension"),
-        GLenum.IN("format", "the pixel format"),
-        GLenum.IN("type", "the pixel type"),
-        AutoSize("pixels")..GLsizei.IN("bufSize", "the maximum number of bytes to write into {@code data}"),
-        PIXEL_PACK_BUFFER..MultiType(
+        GLint("x", "the left pixel coordinate"),
+        GLint("y", "the lower pixel coordinate"),
+        GLsizei("width", "the number of pixels to read in the x-dimension"),
+        GLsizei("height", "the number of pixels to read in the y-dimension"),
+        GLenum("format", "the pixel format"),
+        GLenum("type", "the pixel type"),
+        AutoSize("pixels")..GLsizei("bufSize", "the maximum number of bytes to write into {@code data}"),
+        RawPointer..MultiType(
             PointerMapping.DATA_SHORT,
             PointerMapping.DATA_INT,
             PointerMapping.DATA_FLOAT
-        )..void.p.OUT("pixels", "a buffer in which to place the returned pixel data")
+        )..void.p("pixels", "a buffer in which to place the returned pixel data")
     )
 
     void(
         "GetnUniformfvKHR",
         "Returns the value or values of a uniform of the default uniform block.",
 
-        GLuint.IN("program", "the program object"),
-        GLint.IN("location", "the uniform location"),
-        AutoSize("params")..GLsizei.IN("bufSize", "the maximum number of bytes to write to {@code params}"),
-        ReturnParam..GLfloat.p.OUT("params", "the buffer in which to place the returned data")
+        GLuint("program", "the program object"),
+        GLint("location", "the uniform location"),
+        AutoSize("params")..GLsizei("bufSize", "the maximum number of bytes to write to {@code params}"),
+        ReturnParam..GLfloat.p("params", "the buffer in which to place the returned data")
     )
 
     void(
         "GetnUniformivKHR",
         "Integer version of #GetnUniformfvKHR().",
 
-        GLuint.IN("program", "the program object"),
-        GLint.IN("location", "the uniform location"),
-        AutoSize("params")..GLsizei.IN("bufSize", "the maximum number of bytes to write to {@code params}"),
-        ReturnParam..GLfloat.p.OUT("params", "the buffer in which to place the returned data")
+        GLuint("program", "the program object"),
+        GLint("location", "the uniform location"),
+        AutoSize("params")..GLsizei("bufSize", "the maximum number of bytes to write to {@code params}"),
+        ReturnParam..GLfloat.p("params", "the buffer in which to place the returned data")
     )
 
     void(
         "GetnUniformuivKHR",
         "Unsigned version of #GetnUniformivKHR().",
 
-        GLuint.IN("program", "the program object"),
-        GLint.IN("location", "the uniform location"),
-        AutoSize("params")..GLsizei.IN("bufSize", "the maximum number of bytes to write to {@code params}"),
-        ReturnParam..GLfloat.p.OUT("params", "the buffer in which to place the returned data")
+        GLuint("program", "the program object"),
+        GLint("location", "the uniform location"),
+        AutoSize("params")..GLsizei("bufSize", "the maximum number of bytes to write to {@code params}"),
+        ReturnParam..GLfloat.p("params", "the buffer in which to place the returned data")
     )
 }

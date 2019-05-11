@@ -33,7 +33,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
      */
     public static PointerBuffer allocateDirect(int capacity) {
         ByteBuffer source = BufferUtils.createByteBuffer(BufferUtils.getAllocationSize(capacity, POINTER_SHIFT));
-        return new PointerBuffer(memAddress(source), source, -1, 0, capacity, capacity);
+        return wrap(PointerBuffer.class, memAddress(source), capacity, source);
     }
 
     /**
@@ -43,7 +43,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
      * @param capacity the buffer capacity, in number of pointers
      */
     public static PointerBuffer create(long address, int capacity) {
-        return new PointerBuffer(address, null, -1, 0, capacity, capacity);
+        return wrap(PointerBuffer.class, address, capacity);
     }
 
     /**
@@ -53,7 +53,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
      */
     public static PointerBuffer create(ByteBuffer source) {
         int capacity = source.remaining() >> POINTER_SHIFT;
-        return new PointerBuffer(memAddress(source), source, -1, 0, capacity, capacity);
+        return wrap(PointerBuffer.class, memAddress(source), capacity, source);
     }
 
     @Override
@@ -66,11 +66,6 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
         return POINTER_SIZE;
     }
 
-    @Override
-    protected PointerBuffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int position, int limit, int capacity) {
-        return new PointerBuffer(address, container, mark, position, limit, capacity);
-    }
-
     /**
      * Relative <i>get</i> method. Reads the pointer at this buffer's current position, and then increments the position.
      *
@@ -79,7 +74,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
      * @throws BufferUnderflowException If the buffer's current position is not smaller than its limit
      */
     public long get() {
-        return memGetAddress(address + (nextGetIndex() << POINTER_SHIFT));
+        return memGetAddress(address + Integer.toUnsignedLong(nextGetIndex()) * POINTER_SIZE);
     }
 
     /**
@@ -111,7 +106,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
      * @throws BufferOverflowException If this buffer's current position is not smaller than its limit
      */
     public PointerBuffer put(long p) {
-        memPutAddress(address + (nextPutIndex() << POINTER_SHIFT), p);
+        memPutAddress(address + Integer.toUnsignedLong(nextPutIndex()) * POINTER_SIZE, p);
         return this;
     }
 
@@ -143,7 +138,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
      * @throws IndexOutOfBoundsException If {@code index} is negative or not smaller than the buffer's limit
      */
     public long get(int index) {
-        return memGetAddress(address + (check(index, limit) << POINTER_SHIFT));
+        return memGetAddress(address + check(index, limit) * POINTER_SIZE);
     }
 
     /**
@@ -170,7 +165,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
      * @throws IndexOutOfBoundsException If {@code index} is negative or not smaller than the buffer's limit
      */
     public PointerBuffer put(int index, long p) {
-        memPutAddress(address + (check(index, limit) << POINTER_SHIFT), p);
+        memPutAddress(address + check(index, limit) * POINTER_SIZE, p);
         return this;
     }
 
@@ -395,7 +390,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
     public DoubleBuffer getDoubleBuffer(int size) { return memDoubleBuffer(get(), size); }
 
     /**
-     * Reads the pointer at this buffer's current position, and then increments the position. The pointer is returned as a {@link PointerBuffer} instance that
+     * Reads the pointer at this buffer's current position, and then increments the position. The pointer is returned as a {@code PointerBuffer} instance that
      * starts at the pointer address and has capacity equal to the specified {@code size}.
      *
      * @throws BufferUnderflowException If the buffer's current position is not smaller than its limit
@@ -446,7 +441,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
     /** Returns a {@link DoubleBuffer} instance that starts at the address found at the specified {@code index} and has capacity equal to the specified size. */
     public DoubleBuffer getDoubleBuffer(int index, int size) { return memDoubleBuffer(get(index), size); }
 
-    /** Returns a {@link PointerBuffer} instance that starts at the address found at the specified {@code index} and has capacity equal to the specified size. */
+    /** Returns a {@code PointerBuffer} instance that starts at the address found at the specified {@code index} and has capacity equal to the specified size. */
     public PointerBuffer getPointerBuffer(int index, int size) { return memPointerBuffer(get(index), size); }
 
     /** Decodes the ASCII string that starts at the address found at the specified {@code index}. */

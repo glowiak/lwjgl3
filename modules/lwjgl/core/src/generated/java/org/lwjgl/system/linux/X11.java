@@ -401,7 +401,7 @@ public class X11 {
         throw new UnsupportedOperationException();
     }
 
-    private static final SharedLibrary X11 = Library.loadNative(X11.class, "X11");
+    private static final SharedLibrary X11 = Library.loadNative(X11.class, null, "libX11.so.6", "libX11.so");
 
     /** Contains the function pointers loaded from the X11 {@link SharedLibrary}. */
     public static final class Functions {
@@ -432,7 +432,7 @@ public class X11 {
     /** Unsafe version of: {@link #XOpenDisplay} */
     public static long nXOpenDisplay(long display_name) {
         long __functionAddress = Functions.XOpenDisplay;
-        return invokePP(__functionAddress, display_name);
+        return invokePP(display_name, __functionAddress);
     }
 
     /**
@@ -469,8 +469,9 @@ public class X11 {
     public static long XOpenDisplay(@Nullable @NativeType("char const *") CharSequence display_name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer display_nameEncoded = stack.ASCIISafe(display_name);
-            return nXOpenDisplay(memAddressSafe(display_nameEncoded));
+            stack.nASCIISafe(display_name, true);
+            long display_nameEncoded = display_name == null ? NULL : stack.getPointerAddress();
+            return nXOpenDisplay(display_nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -492,7 +493,7 @@ public class X11 {
         if (CHECKS) {
             check(display);
         }
-        invokePV(__functionAddress, display);
+        invokePV(display, __functionAddress);
     }
 
     // --- [ XDefaultScreen ] ---
@@ -507,7 +508,7 @@ public class X11 {
         if (CHECKS) {
             check(display);
         }
-        return invokePI(__functionAddress, display);
+        return invokePI(display, __functionAddress);
     }
 
     // --- [ XRootWindow ] ---
@@ -524,7 +525,7 @@ public class X11 {
         if (CHECKS) {
             check(display);
         }
-        return invokePP(__functionAddress, display, screen_number);
+        return invokePP(display, screen_number, __functionAddress);
     }
 
     // --- [ XCreateColormap ] ---
@@ -535,7 +536,7 @@ public class X11 {
         if (CHECKS) {
             check(display);
         }
-        return invokePPPP(__functionAddress, display, w, visual, alloc);
+        return invokePPPP(display, w, visual, alloc, __functionAddress);
     }
 
     /**
@@ -568,7 +569,7 @@ public class X11 {
         if (CHECKS) {
             check(display);
         }
-        return invokePPI(__functionAddress, display, colormap);
+        return invokePPI(display, colormap, __functionAddress);
     }
 
     // --- [ XCreateWindow ] ---
@@ -579,7 +580,7 @@ public class X11 {
         if (CHECKS) {
             check(display);
         }
-        return invokePPPPPP(__functionAddress, display, parent, x, y, width, height, border_width, depth, windowClass, visual, valuemask, attributes);
+        return invokePPPPPP(display, parent, x, y, width, height, border_width, depth, windowClass, visual, valuemask, attributes, __functionAddress);
     }
 
     /**
@@ -631,7 +632,7 @@ public class X11 {
         if (CHECKS) {
             check(display);
         }
-        return invokePPI(__functionAddress, display, w);
+        return invokePPI(display, w, __functionAddress);
     }
 
     // --- [ XFree ] ---
@@ -639,7 +640,7 @@ public class X11 {
     /** Unsafe version of: {@link #XFree} */
     public static int nXFree(long data) {
         long __functionAddress = Functions.XFree;
-        return invokePI(__functionAddress, data);
+        return invokePI(data, __functionAddress);
     }
 
     /**

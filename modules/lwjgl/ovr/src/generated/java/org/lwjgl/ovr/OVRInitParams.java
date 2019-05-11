@@ -44,7 +44,6 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link OVRLogCallbackI ovrLogCallback} LogCallback;
  *     uintptr_t UserData;
  *     uint32_t ConnectionTimeoutMS;
- *     char[4];
  * }</code></pre>
  */
 @NativeType("struct ovrInitParams")
@@ -70,8 +69,7 @@ public class OVRInitParams extends Struct implements NativeResource {
             __member(4),
             __member(POINTER_SIZE),
             __member(POINTER_SIZE),
-            __member(4),
-            __padding(4, Pointer.BITS64)
+            __member(4)
         );
 
         SIZEOF = layout.getSize();
@@ -84,18 +82,14 @@ public class OVRInitParams extends Struct implements NativeResource {
         CONNECTIONTIMEOUTMS = layout.offsetof(4);
     }
 
-    OVRInitParams(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link OVRInitParams} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code OVRInitParams} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public OVRInitParams(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -160,84 +154,85 @@ public class OVRInitParams extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRInitParams} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRInitParams} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static OVRInitParams malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(OVRInitParams.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link OVRInitParams} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRInitParams} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static OVRInitParams calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(OVRInitParams.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link OVRInitParams} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code OVRInitParams} instance allocated with {@link BufferUtils}. */
     public static OVRInitParams create() {
-        return new OVRInitParams(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(OVRInitParams.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link OVRInitParams} instance for the specified memory address. */
+    /** Returns a new {@code OVRInitParams} instance for the specified memory address. */
     public static OVRInitParams create(long address) {
-        return new OVRInitParams(address, null);
+        return wrap(OVRInitParams.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static OVRInitParams createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(OVRInitParams.class, address);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRInitParams} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code OVRInitParams} instance allocated on the thread-local {@link MemoryStack}. */
     public static OVRInitParams mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link OVRInitParams} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code OVRInitParams} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static OVRInitParams callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link OVRInitParams} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code OVRInitParams} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRInitParams mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(OVRInitParams.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link OVRInitParams} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code OVRInitParams} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRInitParams callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(OVRInitParams.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #Flags}. */
-    public static int nFlags(long struct) { return memGetInt(struct + OVRInitParams.FLAGS); }
+    public static int nFlags(long struct) { return UNSAFE.getInt(null, struct + OVRInitParams.FLAGS); }
     /** Unsafe version of {@link #RequestedMinorVersion}. */
-    public static int nRequestedMinorVersion(long struct) { return memGetInt(struct + OVRInitParams.REQUESTEDMINORVERSION); }
+    public static int nRequestedMinorVersion(long struct) { return UNSAFE.getInt(null, struct + OVRInitParams.REQUESTEDMINORVERSION); }
     /** Unsafe version of {@link #LogCallback}. */
     @Nullable public static OVRLogCallback nLogCallback(long struct) { return OVRLogCallback.createSafe(memGetAddress(struct + OVRInitParams.LOGCALLBACK)); }
     /** Unsafe version of {@link #UserData}. */
     public static long nUserData(long struct) { return memGetAddress(struct + OVRInitParams.USERDATA); }
     /** Unsafe version of {@link #ConnectionTimeoutMS}. */
-    public static int nConnectionTimeoutMS(long struct) { return memGetInt(struct + OVRInitParams.CONNECTIONTIMEOUTMS); }
+    public static int nConnectionTimeoutMS(long struct) { return UNSAFE.getInt(null, struct + OVRInitParams.CONNECTIONTIMEOUTMS); }
 
     /** Unsafe version of {@link #Flags(int) Flags}. */
-    public static void nFlags(long struct, int value) { memPutInt(struct + OVRInitParams.FLAGS, value); }
+    public static void nFlags(long struct, int value) { UNSAFE.putInt(null, struct + OVRInitParams.FLAGS, value); }
     /** Unsafe version of {@link #RequestedMinorVersion(int) RequestedMinorVersion}. */
-    public static void nRequestedMinorVersion(long struct, int value) { memPutInt(struct + OVRInitParams.REQUESTEDMINORVERSION, value); }
+    public static void nRequestedMinorVersion(long struct, int value) { UNSAFE.putInt(null, struct + OVRInitParams.REQUESTEDMINORVERSION, value); }
     /** Unsafe version of {@link #LogCallback(OVRLogCallbackI) LogCallback}. */
     public static void nLogCallback(long struct, @Nullable OVRLogCallbackI value) { memPutAddress(struct + OVRInitParams.LOGCALLBACK, memAddressSafe(value)); }
     /** Unsafe version of {@link #UserData(long) UserData}. */
     public static void nUserData(long struct, long value) { memPutAddress(struct + OVRInitParams.USERDATA, value); }
     /** Unsafe version of {@link #ConnectionTimeoutMS(int) ConnectionTimeoutMS}. */
-    public static void nConnectionTimeoutMS(long struct, int value) { memPutInt(struct + OVRInitParams.CONNECTIONTIMEOUTMS, value); }
+    public static void nConnectionTimeoutMS(long struct, int value) { UNSAFE.putInt(null, struct + OVRInitParams.CONNECTIONTIMEOUTMS, value); }
 
 }

@@ -71,46 +71,46 @@ val KHR_stream = "KHRStream".nativeClassEGL("KHR_stream", postfix = KHR) {
         "CreateStreamKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        nullable..noneTerminated..EGLint.const.p.IN("attrib_list", "")
+        EGLDisplay("dpy", ""),
+        nullable..noneTerminated..EGLint.const.p("attrib_list", "")
     )
 
     EGLBoolean(
         "DestroyStreamKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLStreamKHR.IN("stream", "")
+        EGLDisplay("dpy", ""),
+        EGLStreamKHR("stream", "")
     )
 
     EGLBoolean(
         "StreamAttribKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLStreamKHR.IN("stream", ""),
-        EGLenum.IN("attribute", ""),
-        EGLint.IN("value", "")
+        EGLDisplay("dpy", ""),
+        EGLStreamKHR("stream", ""),
+        EGLenum("attribute", ""),
+        EGLint("value", "")
     )
 
     EGLBoolean(
         "QueryStreamKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLStreamKHR.IN("stream", ""),
-        EGLenum.IN("attribute", ""),
-        Check(1)..EGLint.p.OUT("value", "")
+        EGLDisplay("dpy", ""),
+        EGLStreamKHR("stream", ""),
+        EGLenum("attribute", ""),
+        Check(1)..EGLint.p("value", "")
     )
 
     EGLBoolean(
         "QueryStreamu64KHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLStreamKHR.IN("stream", ""),
-        EGLenum.IN("attribute", ""),
-        Check(1)..EGLuint64KHR.p.OUT("value", "")
+        EGLDisplay("dpy", ""),
+        EGLStreamKHR("stream", ""),
+        EGLenum("attribute", ""),
+        Check(1)..EGLuint64KHR.p("value", "")
     )
 }
 
@@ -121,45 +121,45 @@ val KHR_stream_attrib = "KHRStreamAttrib".nativeClassEGL("KHR_stream_attrib", po
         "CreateStreamAttribKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        nullable..noneTerminated..EGLAttrib.const.p.IN("attrib_list", "")
+        EGLDisplay("dpy", ""),
+        nullable..noneTerminated..EGLAttrib.const.p("attrib_list", "")
     )
 
     EGLBoolean(
         "SetStreamAttribKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLStreamKHR.IN("stream", ""),
-        EGLenum.IN("attribute", ""),
-        EGLAttrib.IN("value", "")
+        EGLDisplay("dpy", ""),
+        EGLStreamKHR("stream", ""),
+        EGLenum("attribute", ""),
+        EGLAttrib("value", "")
     )
 
     EGLBoolean(
         "QueryStreamAttribKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLStreamKHR.IN("stream", ""),
-        EGLenum.IN("attribute", ""),
-        Check(1)..EGLAttrib.p.OUT("value", "")
+        EGLDisplay("dpy", ""),
+        EGLStreamKHR("stream", ""),
+        EGLenum("attribute", ""),
+        Check(1)..EGLAttrib.p("value", "")
     )
 
     EGLBoolean(
         "StreamConsumerAcquireAttribKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLStreamKHR.IN("stream", ""),
-        nullable..noneTerminated..EGLAttrib.const.p.IN("attrib_list", "")
+        EGLDisplay("dpy", ""),
+        EGLStreamKHR("stream", ""),
+        nullable..noneTerminated..EGLAttrib.const.p("attrib_list", "")
     )
 
     EGLBoolean(
         "StreamConsumerReleaseAttribKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLStreamKHR.IN("stream", ""),
-        nullable..noneTerminated..EGLAttrib.const.p.IN("attrib_list", "")
+        EGLDisplay("dpy", ""),
+        EGLStreamKHR("stream", ""),
+        nullable..noneTerminated..EGLAttrib.const.p("attrib_list", "")
     )
 }

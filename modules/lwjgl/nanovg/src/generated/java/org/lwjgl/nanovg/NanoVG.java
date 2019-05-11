@@ -406,7 +406,7 @@ public class NanoVG {
      * @param b the blue value
      */
     @NativeType("NVGcolor")
-    public static NVGColor nvgRGB(@NativeType("unsigned char") byte r, @NativeType("unsigned char") byte g, @NativeType("unsigned char") byte b, NVGColor __result) {
+    public static NVGColor nvgRGB(@NativeType("unsigned char") byte r, @NativeType("unsigned char") byte g, @NativeType("unsigned char") byte b, @NativeType("NVGcolor") NVGColor __result) {
         nnvgRGB(r, g, b, __result.address());
         return __result;
     }
@@ -424,7 +424,7 @@ public class NanoVG {
      * @param b the blue value
      */
     @NativeType("NVGcolor")
-    public static NVGColor nvgRGBf(float r, float g, float b, NVGColor __result) {
+    public static NVGColor nvgRGBf(float r, float g, float b, @NativeType("NVGcolor") NVGColor __result) {
         nnvgRGBf(r, g, b, __result.address());
         return __result;
     }
@@ -443,7 +443,7 @@ public class NanoVG {
      * @param a the alpha value
      */
     @NativeType("NVGcolor")
-    public static NVGColor nvgRGBA(@NativeType("unsigned char") byte r, @NativeType("unsigned char") byte g, @NativeType("unsigned char") byte b, @NativeType("unsigned char") byte a, NVGColor __result) {
+    public static NVGColor nvgRGBA(@NativeType("unsigned char") byte r, @NativeType("unsigned char") byte g, @NativeType("unsigned char") byte b, @NativeType("unsigned char") byte a, @NativeType("NVGcolor") NVGColor __result) {
         nnvgRGBA(r, g, b, a, __result.address());
         return __result;
     }
@@ -462,7 +462,7 @@ public class NanoVG {
      * @param a the alpha value
      */
     @NativeType("NVGcolor")
-    public static NVGColor nvgRGBAf(float r, float g, float b, float a, NVGColor __result) {
+    public static NVGColor nvgRGBAf(float r, float g, float b, float a, @NativeType("NVGcolor") NVGColor __result) {
         nnvgRGBAf(r, g, b, a, __result.address());
         return __result;
     }
@@ -480,7 +480,7 @@ public class NanoVG {
      * @param u  the interpolation factor
      */
     @NativeType("NVGcolor")
-    public static NVGColor nvgLerpRGBA(@NativeType("NVGcolor") NVGColor c0, @NativeType("NVGcolor") NVGColor c1, float u, NVGColor __result) {
+    public static NVGColor nvgLerpRGBA(@NativeType("NVGcolor") NVGColor c0, @NativeType("NVGcolor") NVGColor c1, float u, @NativeType("NVGcolor") NVGColor __result) {
         nnvgLerpRGBA(c0.address(), c1.address(), u, __result.address());
         return __result;
     }
@@ -497,7 +497,7 @@ public class NanoVG {
      * @param a  the alpha value
      */
     @NativeType("NVGcolor")
-    public static NVGColor nvgTransRGBA(@NativeType("NVGcolor") NVGColor c0, @NativeType("unsigned char") byte a, NVGColor __result) {
+    public static NVGColor nvgTransRGBA(@NativeType("NVGcolor") NVGColor c0, @NativeType("unsigned char") byte a, @NativeType("NVGcolor") NVGColor __result) {
         nnvgTransRGBA(c0.address(), a, __result.address());
         return __result;
     }
@@ -514,7 +514,7 @@ public class NanoVG {
      * @param a  the alpha value
      */
     @NativeType("NVGcolor")
-    public static NVGColor nvgTransRGBAf(@NativeType("NVGcolor") NVGColor c0, float a, NVGColor __result) {
+    public static NVGColor nvgTransRGBAf(@NativeType("NVGcolor") NVGColor c0, float a, @NativeType("NVGcolor") NVGColor __result) {
         nnvgTransRGBAf(c0.address(), a, __result.address());
         return __result;
     }
@@ -534,7 +534,7 @@ public class NanoVG {
      * @param l the lightness value
      */
     @NativeType("NVGcolor")
-    public static NVGColor nvgHSL(float h, float s, float l, NVGColor __result) {
+    public static NVGColor nvgHSL(float h, float s, float l, @NativeType("NVGcolor") NVGColor __result) {
         nnvgHSL(h, s, l, __result.address());
         return __result;
     }
@@ -555,7 +555,7 @@ public class NanoVG {
      * @param a the alpha value
      */
     @NativeType("NVGcolor")
-    public static NVGColor nvgHSLA(float h, float s, float l, @NativeType("unsigned char") byte a, NVGColor __result) {
+    public static NVGColor nvgHSLA(float h, float s, float l, @NativeType("unsigned char") byte a, @NativeType("NVGcolor") NVGColor __result) {
         nnvgHSLA(h, s, l, a, __result.address());
         return __result;
     }
@@ -1207,8 +1207,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            return nnvgCreateImage(ctx, memAddress(filenameEncoded), imageFlags);
+            stack.nASCII(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            return nnvgCreateImage(ctx, filenameEncoded, imageFlags);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1341,7 +1342,7 @@ public class NanoVG {
      * @param ocol the end color
      */
     @NativeType("NVGpaint")
-    public static NVGPaint nvgLinearGradient(@NativeType("NVGcontext *") long ctx, float sx, float sy, float ex, float ey, @NativeType("NVGcolor") NVGColor icol, @NativeType("NVGcolor") NVGColor ocol, NVGPaint __result) {
+    public static NVGPaint nvgLinearGradient(@NativeType("NVGcontext *") long ctx, float sx, float sy, float ex, float ey, @NativeType("NVGcolor") NVGColor icol, @NativeType("NVGcolor") NVGColor ocol, @NativeType("NVGpaint") NVGPaint __result) {
         if (CHECKS) {
             check(ctx);
         }
@@ -1370,7 +1371,7 @@ public class NanoVG {
      * @param ocol the outer color
      */
     @NativeType("NVGpaint")
-    public static NVGPaint nvgBoxGradient(@NativeType("NVGcontext *") long ctx, float x, float y, float w, float h, float r, float f, @NativeType("NVGcolor") NVGColor icol, @NativeType("NVGcolor") NVGColor ocol, NVGPaint __result) {
+    public static NVGPaint nvgBoxGradient(@NativeType("NVGcontext *") long ctx, float x, float y, float w, float h, float r, float f, @NativeType("NVGcolor") NVGColor icol, @NativeType("NVGcolor") NVGColor ocol, @NativeType("NVGpaint") NVGPaint __result) {
         if (CHECKS) {
             check(ctx);
         }
@@ -1397,7 +1398,7 @@ public class NanoVG {
      * @param ocol the end color
      */
     @NativeType("NVGpaint")
-    public static NVGPaint nvgRadialGradient(@NativeType("NVGcontext *") long ctx, float cx, float cy, float inr, float outr, @NativeType("NVGcolor") NVGColor icol, @NativeType("NVGcolor") NVGColor ocol, NVGPaint __result) {
+    public static NVGPaint nvgRadialGradient(@NativeType("NVGcontext *") long ctx, float cx, float cy, float inr, float outr, @NativeType("NVGcolor") NVGColor icol, @NativeType("NVGcolor") NVGColor ocol, @NativeType("NVGpaint") NVGPaint __result) {
         if (CHECKS) {
             check(ctx);
         }
@@ -1425,7 +1426,7 @@ public class NanoVG {
      * @param alpha the alpha value
      */
     @NativeType("NVGpaint")
-    public static NVGPaint nvgImagePattern(@NativeType("NVGcontext *") long ctx, float ox, float oy, float ex, float ey, float angle, int image, float alpha, NVGPaint __result) {
+    public static NVGPaint nvgImagePattern(@NativeType("NVGcontext *") long ctx, float ox, float oy, float ex, float ey, float angle, int image, float alpha, @NativeType("NVGpaint") NVGPaint __result) {
         if (CHECKS) {
             check(ctx);
         }
@@ -1859,9 +1860,11 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            return nnvgCreateFont(ctx, memAddress(nameEncoded), memAddress(filenameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            stack.nASCII(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            return nnvgCreateFont(ctx, nameEncoded, filenameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1914,8 +1917,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nnvgCreateFontMem(ctx, memAddress(nameEncoded), memAddress(data), data.remaining(), freeData);
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nnvgCreateFontMem(ctx, nameEncoded, memAddress(data), data.remaining(), freeData);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1952,8 +1956,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nnvgFindFont(ctx, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nnvgFindFont(ctx, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2006,9 +2011,11 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer baseFontEncoded = stack.ASCII(baseFont);
-            ByteBuffer fallbackFontEncoded = stack.ASCII(fallbackFont);
-            return nnvgAddFallbackFont(ctx, memAddress(baseFontEncoded), memAddress(fallbackFontEncoded));
+            stack.nASCII(baseFont, true);
+            long baseFontEncoded = stack.getPointerAddress();
+            stack.nASCII(fallbackFont, true);
+            long fallbackFontEncoded = stack.getPointerAddress();
+            return nnvgAddFallbackFont(ctx, baseFontEncoded, fallbackFontEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2153,8 +2160,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer fontEncoded = stack.ASCII(font);
-            nnvgFontFace(ctx, memAddress(fontEncoded));
+            stack.nASCII(font, true);
+            long fontEncoded = stack.getPointerAddress();
+            nnvgFontFace(ctx, fontEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2198,8 +2206,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string, false);
-            return nnvgText(ctx, x, y, memAddress(stringEncoded), memAddress(stringEncoded) + stringEncoded.remaining());
+            int stringEncodedLength = stack.nUTF8(string, false);
+            long stringEncoded = stack.getPointerAddress();
+            return nnvgText(ctx, x, y, stringEncoded, stringEncoded + stringEncodedLength);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2253,8 +2262,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string, false);
-            nnvgTextBox(ctx, x, y, breakRowWidth, memAddress(stringEncoded), memAddress(stringEncoded) + stringEncoded.remaining());
+            int stringEncodedLength = stack.nUTF8(string, false);
+            long stringEncoded = stack.getPointerAddress();
+            nnvgTextBox(ctx, x, y, breakRowWidth, stringEncoded, stringEncoded + stringEncodedLength);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2316,8 +2326,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string, false);
-            return nnvgTextBounds(ctx, x, y, memAddress(stringEncoded), memAddress(stringEncoded) + stringEncoded.remaining(), memAddressSafe(bounds));
+            int stringEncodedLength = stack.nUTF8(string, false);
+            long stringEncoded = stack.getPointerAddress();
+            return nnvgTextBounds(ctx, x, y, stringEncoded, stringEncoded + stringEncodedLength, memAddressSafe(bounds));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2377,8 +2388,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string, false);
-            nnvgTextBoxBounds(ctx, x, y, breakRowWidth, memAddress(stringEncoded), memAddress(stringEncoded) + stringEncoded.remaining(), memAddressSafe(bounds));
+            int stringEncodedLength = stack.nUTF8(string, false);
+            long stringEncoded = stack.getPointerAddress();
+            nnvgTextBoxBounds(ctx, x, y, breakRowWidth, stringEncoded, stringEncoded + stringEncodedLength, memAddressSafe(bounds));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2429,8 +2441,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string, false);
-            return nnvgTextGlyphPositions(ctx, x, y, memAddress(stringEncoded), memAddress(stringEncoded) + stringEncoded.remaining(), positions.address(), positions.remaining());
+            int stringEncodedLength = stack.nUTF8(string, false);
+            long stringEncoded = stack.getPointerAddress();
+            return nnvgTextGlyphPositions(ctx, x, y, stringEncoded, stringEncoded + stringEncodedLength, positions.address(), positions.remaining());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2506,12 +2519,34 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string, false);
-            return nnvgTextBreakLines(ctx, memAddress(stringEncoded), memAddress(stringEncoded) + stringEncoded.remaining(), breakRowWidth, rows.address(), rows.remaining());
+            int stringEncodedLength = stack.nUTF8(string, false);
+            long stringEncoded = stack.getPointerAddress();
+            return nnvgTextBreakLines(ctx, stringEncoded, stringEncoded + stringEncodedLength, breakRowWidth, rows.address(), rows.remaining());
         } finally {
             stack.setPointer(stackPointer);
         }
     }
+
+    // --- [ nvgCreateInternal ] ---
+
+    @NativeType("void *")
+    private static native long nvgCreateInternal();
+
+    static final long nvgCreateInternal = nvgCreateInternal();
+
+    // --- [ nvgInternalParams ] ---
+
+    @NativeType("void *")
+    private static native long nvgInternalParams();
+
+    static final long nvgInternalParams = nvgInternalParams();
+
+    // --- [ nvgDeleteInternal ] ---
+
+    @NativeType("void *")
+    private static native long nvgDeleteInternal();
+
+    static final long nvgDeleteInternal = nvgDeleteInternal();
 
     /** Array version of: {@link #nnvgCurrentTransform} */
     public static native void nnvgCurrentTransform(long ctx, float[] xform);
@@ -2674,8 +2709,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string, false);
-            return nnvgTextBounds(ctx, x, y, memAddress(stringEncoded), memAddress(stringEncoded) + stringEncoded.remaining(), bounds);
+            int stringEncodedLength = stack.nUTF8(string, false);
+            long stringEncoded = stack.getPointerAddress();
+            return nnvgTextBounds(ctx, x, y, stringEncoded, stringEncoded + stringEncodedLength, bounds);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2701,8 +2737,9 @@ public class NanoVG {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string, false);
-            nnvgTextBoxBounds(ctx, x, y, breakRowWidth, memAddress(stringEncoded), memAddress(stringEncoded) + stringEncoded.remaining(), bounds);
+            int stringEncodedLength = stack.nUTF8(string, false);
+            long stringEncoded = stack.getPointerAddress();
+            nnvgTextBoxBounds(ctx, x, y, breakRowWidth, stringEncoded, stringEncoded + stringEncodedLength, bounds);
         } finally {
             stack.setPointer(stackPointer);
         }

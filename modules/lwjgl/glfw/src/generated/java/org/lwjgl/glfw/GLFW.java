@@ -424,7 +424,7 @@ public class GLFW {
      * {@code WindowHint}: specifies whether the window framebuffer will be transparent. If enabled and supported by the system, the window framebuffer
      * alpha channel will be used to combine the framebuffer with the background. This does not affect window decorations.
      * </li>
-     * <li>{@link #GLFW_HOVERED HOVERED} - {@code GetWindowAttrib}: indicates whether the cursor is currently directly over the client area of the window, with no other windows between.</li>
+     * <li>{@link #GLFW_HOVERED HOVERED} - {@code GetWindowAttrib}: indicates whether the cursor is currently directly over the content area of the window, with no other windows between.</li>
      * <li>{@link #GLFW_FOCUS_ON_SHOW FOCUS_ON_SHOW} - 
      * {@code WindowHint}: specifies whether input focuses on calling show window.
      * 
@@ -451,7 +451,8 @@ public class GLFW {
         GLFW_CURSOR               = 0x33001,
         GLFW_STICKY_KEYS          = 0x33002,
         GLFW_STICKY_MOUSE_BUTTONS = 0x33003,
-        GLFW_LOCK_KEY_MODS        = 0x33004;
+        GLFW_LOCK_KEY_MODS        = 0x33004,
+        GLFW_RAW_MOUSE_MOTION     = 0x33005;
 
     /** Cursor state. */
     public static final int
@@ -595,6 +596,9 @@ public class GLFW {
      * <li>{@link #GLFW_SCALE_TO_MONITOR SCALE_TO_MONITOR} - 
      * {@code WindowHint}: Specifies whether the window content area should be resized based on the monitor content scale of any monitor it is placed on.
      * This includes the initial placement when the window is created. Possible values are {@link #GLFW_TRUE TRUE} and {@link #GLFW_FALSE FALSE}.
+     * 
+     * <p>This hint only has an effect on platforms where screen coordinates and pixels always map 1:1 such as Windows and X11. On platforms like macOS the
+     * resolution of the framebuffer is changed independently of the window size.</p>
      * </li>
      * </ul>
      */
@@ -686,6 +690,7 @@ public class GLFW {
             GetMonitors                   = apiGetFunctionAddress(GLFW, "glfwGetMonitors"),
             GetPrimaryMonitor             = apiGetFunctionAddress(GLFW, "glfwGetPrimaryMonitor"),
             GetMonitorPos                 = apiGetFunctionAddress(GLFW, "glfwGetMonitorPos"),
+            GetMonitorWorkarea            = apiGetFunctionAddress(GLFW, "glfwGetMonitorWorkarea"),
             GetMonitorPhysicalSize        = apiGetFunctionAddress(GLFW, "glfwGetMonitorPhysicalSize"),
             GetMonitorContentScale        = apiGetFunctionAddress(GLFW, "glfwGetMonitorContentScale"),
             GetMonitorName                = apiGetFunctionAddress(GLFW, "glfwGetMonitorName"),
@@ -745,6 +750,7 @@ public class GLFW {
             PostEmptyEvent                = apiGetFunctionAddress(GLFW, "glfwPostEmptyEvent"),
             GetInputMode                  = apiGetFunctionAddress(GLFW, "glfwGetInputMode"),
             SetInputMode                  = apiGetFunctionAddress(GLFW, "glfwSetInputMode"),
+            RawMouseMotionSupported       = apiGetFunctionAddress(GLFW, "glfwRawMouseMotionSupported"),
             GetKeyName                    = apiGetFunctionAddress(GLFW, "glfwGetKeyName"),
             GetKeyScancode                = apiGetFunctionAddress(GLFW, "glfwGetKeyScancode"),
             GetKey                        = apiGetFunctionAddress(GLFW, "glfwGetKey"),
@@ -874,7 +880,7 @@ public class GLFW {
      */
     public static void glfwInitHint(int hint, int value) {
         long __functionAddress = Functions.InitHint;
-        invokeV(__functionAddress, hint, value);
+        invokeV(hint, value, __functionAddress);
     }
 
     // --- [ glfwGetVersion ] ---
@@ -882,7 +888,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwGetVersion GetVersion} */
     public static void nglfwGetVersion(long major, long minor, long rev) {
         long __functionAddress = Functions.GetVersion;
-        invokePPPV(__functionAddress, major, minor, rev);
+        invokePPPV(major, minor, rev, __functionAddress);
     }
 
     /**
@@ -952,7 +958,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwGetError GetError} */
     public static int nglfwGetError(long description) {
         long __functionAddress = Functions.GetError;
-        return invokePI(__functionAddress, description);
+        return invokePI(description, __functionAddress);
     }
 
     /**
@@ -988,7 +994,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwSetErrorCallback SetErrorCallback} */
     public static long nglfwSetErrorCallback(long cbfun) {
         long __functionAddress = Functions.SetErrorCallback;
-        return invokePP(__functionAddress, cbfun);
+        return invokePP(cbfun, __functionAddress);
     }
 
     /**
@@ -1032,7 +1038,7 @@ public class GLFW {
      */
     public static long nglfwGetMonitors(long count) {
         long __functionAddress = Functions.GetMonitors;
-        return invokePP(__functionAddress, count);
+        return invokePP(count, __functionAddress);
     }
 
     /**
@@ -1088,7 +1094,7 @@ public class GLFW {
         if (CHECKS) {
             check(monitor);
         }
-        invokePPPV(__functionAddress, monitor, xpos, ypos);
+        invokePPPV(monitor, xpos, ypos, __functionAddress);
     }
 
     /**
@@ -1112,6 +1118,46 @@ public class GLFW {
         nglfwGetMonitorPos(monitor, memAddressSafe(xpos), memAddressSafe(ypos));
     }
 
+    // --- [ glfwGetMonitorWorkarea ] ---
+
+    /** Unsafe version of: {@link #glfwGetMonitorWorkarea GetMonitorWorkarea} */
+    public static void nglfwGetMonitorWorkarea(long monitor, long xpos, long ypos, long width, long height) {
+        long __functionAddress = Functions.GetMonitorWorkarea;
+        if (CHECKS) {
+            check(monitor);
+        }
+        invokePPPPPV(monitor, xpos, ypos, width, height, __functionAddress);
+    }
+
+    /**
+     * Retrieves the work area of the monitor.
+     * 
+     * <p>This function returns the position, in screen coordinates, of the upper-left corner of the work area of the specified monitor along with the work area
+     * size in screen coordinates. The work area is defined as the area of the monitor not occluded by the operating system task bar where present. If no task
+     * bar exists then the work area is the monitor resolution in screen coordinates.</p>
+     * 
+     * <p>Any or all of the position and size arguments may be {@code NULL}.  If an error occurs, all non-{@code NULL} position and size arguments will be set to zero.</p>
+     * 
+     * <p>This function must only be called from the main thread.</p>
+     *
+     * @param monitor the monitor to query
+     * @param xpos    where to store the working area x-coordinate, or {@code NULL}
+     * @param ypos    where to store the working area y-coordinate, or {@code NULL}
+     * @param width   where to store the working area width, or {@code NULL}
+     * @param height  where to store the working area height, or {@code NULL}
+     *
+     * @since version 3.3
+     */
+    public static void glfwGetMonitorWorkarea(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") IntBuffer xpos, @Nullable @NativeType("int *") IntBuffer ypos, @Nullable @NativeType("int *") IntBuffer width, @Nullable @NativeType("int *") IntBuffer height) {
+        if (CHECKS) {
+            checkSafe(xpos, 1);
+            checkSafe(ypos, 1);
+            checkSafe(width, 1);
+            checkSafe(height, 1);
+        }
+        nglfwGetMonitorWorkarea(monitor, memAddressSafe(xpos), memAddressSafe(ypos), memAddressSafe(width), memAddressSafe(height));
+    }
+
     // --- [ glfwGetMonitorPhysicalSize ] ---
 
     /** Unsafe version of: {@link #glfwGetMonitorPhysicalSize GetMonitorPhysicalSize} */
@@ -1120,7 +1166,7 @@ public class GLFW {
         if (CHECKS) {
             check(monitor);
         }
-        invokePPPV(__functionAddress, monitor, widthMM, heightMM);
+        invokePPPV(monitor, widthMM, heightMM, __functionAddress);
     }
 
     /**
@@ -1161,15 +1207,16 @@ public class GLFW {
         if (CHECKS) {
             check(monitor);
         }
-        invokePPPV(__functionAddress, monitor, xscale, yscale);
+        invokePPPV(monitor, xscale, yscale, __functionAddress);
     }
 
     /**
      * Retrieves the content scale for the specified monitor.
      * 
      * <p>This function retrieves the content scale for the specified monitor. The content scale is the ratio between the current DPI and the platform's default
-     * DPI. If you scale all pixel dimensions by this scale then your content should appear at an appropriate size. This is especially important for text and
-     * any UI elements.</p>
+     * DPI. This is especially important for text and any UI elements. If the pixel dimensions of your UI scaled by this look appropriate on your machine then
+     * it should appear at a reasonable size on other machines regardless of their DPI and scaling settings. This relies on the system DPI and scaling
+     * settings being somewhat correct.</p>
      * 
      * <p>The content scale may depend on both the monitor resolution and pixel density and on user settings. It may be very different from the raw DPI
      * calculated from the physical size and current resolution.</p>
@@ -1198,7 +1245,7 @@ public class GLFW {
         if (CHECKS) {
             check(monitor);
         }
-        return invokePP(__functionAddress, monitor);
+        return invokePP(monitor, __functionAddress);
     }
 
     /**
@@ -1246,7 +1293,7 @@ public class GLFW {
             check(monitor);
             check(pointer);
         }
-        invokePPV(__functionAddress, monitor, pointer);
+        invokePPV(monitor, pointer, __functionAddress);
     }
 
     // --- [ glfwGetMonitorUserPointer ] ---
@@ -1270,7 +1317,7 @@ public class GLFW {
         if (CHECKS) {
             check(monitor);
         }
-        return invokePP(__functionAddress, monitor);
+        return invokePP(monitor, __functionAddress);
     }
 
     // --- [ glfwSetMonitorCallback ] ---
@@ -1278,7 +1325,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwSetMonitorCallback SetMonitorCallback} */
     public static long nglfwSetMonitorCallback(long cbfun) {
         long __functionAddress = Functions.SetMonitorCallback;
-        return invokePP(__functionAddress, cbfun);
+        return invokePP(cbfun, __functionAddress);
     }
 
     /**
@@ -1311,7 +1358,7 @@ public class GLFW {
         if (CHECKS) {
             check(monitor);
         }
-        return invokePPP(__functionAddress, monitor, count);
+        return invokePPP(monitor, count, __functionAddress);
     }
 
     /**
@@ -1350,7 +1397,7 @@ public class GLFW {
         if (CHECKS) {
             check(monitor);
         }
-        return invokePP(__functionAddress, monitor);
+        return invokePP(monitor, __functionAddress);
     }
 
     /**
@@ -1378,8 +1425,10 @@ public class GLFW {
     // --- [ glfwSetGamma ] ---
 
     /**
-     * Generates a 256-element gamma ramp from the specified exponent and then calls {@link #glfwSetGammaRamp SetGammaRamp} with it. The value must be a finite number greater than
-     * zero.
+     * Generates a gamma ramp and sets it for the specified monitor.
+     * 
+     * <p>This function generates an appropriately sized gamma ramp from the specified exponent and then calls {@link #glfwSetGammaRamp SetGammaRamp} with it. The value must be a
+     * finite number greater than zero.</p>
      * 
      * <p>The software controlled gamma ramp is applied <em>in addition</em> to the hardware gamma correction, which today is usually an approximation of sRGB
      * gamma. This means that setting a perfectly linear ramp, or gamma 1.0, will produce the default (usually sRGB-like) behavior.</p>
@@ -1403,7 +1452,7 @@ public class GLFW {
         if (CHECKS) {
             check(monitor);
         }
-        invokePV(__functionAddress, monitor, gamma);
+        invokePV(monitor, gamma, __functionAddress);
     }
 
     // --- [ glfwGetGammaRamp ] ---
@@ -1414,7 +1463,7 @@ public class GLFW {
         if (CHECKS) {
             check(monitor);
         }
-        return invokePP(__functionAddress, monitor);
+        return invokePP(monitor, __functionAddress);
     }
 
     /**
@@ -1453,12 +1502,14 @@ public class GLFW {
             check(monitor);
             GLFWGammaRamp.validate(ramp);
         }
-        invokePPV(__functionAddress, monitor, ramp);
+        invokePPV(monitor, ramp, __functionAddress);
     }
 
     /**
-     * Sets the current gamma ramp for the specified monitor. The original gamma ramp for that monitor is saved by GLFW the first time this function is called
-     * and is restored by {@link #glfwTerminate Terminate}.
+     * Sets the current gamma ramp for the specified monitor.
+     * 
+     * <p>This function sets the current gamma ramp for the specified monitor. The original gamma ramp for that monitor is saved by GLFW the first time this
+     * function is called and is restored by {@link #glfwTerminate Terminate}.</p>
      * 
      * <p>The software controlled gamma ramp is applied <em>in addition</em> to the hardware gamma correction, which today is usually an approximation of sRGB
      * gamma. This means that setting a perfectly linear ramp, or gamma 1.0, will produce the default (usually sRGB-like) behavior.</p>
@@ -1469,7 +1520,7 @@ public class GLFW {
      * 
      * <ul>
      * <li>This function must only be called from the main thread.</li>
-     * <li>Gamma ramp sizes other than 256 are not supported by all hardware</li>
+     * <li>The size of the specified gamma ramp should match the size of the current ramp for that monitor.</li>
      * <li><b>Windows</b>: The gamma ramp size must be 256.</li>
      * <li><b>Wayland</b>: Gamma handling is a privileged protocol, this function will thus never be implemented and emits {@link #GLFW_PLATFORM_ERROR PLATFORM_ERROR}.</li>
      * <li>The specified gamma ramp is copied before this function returns.</li>
@@ -1566,7 +1617,7 @@ public class GLFW {
      */
     public static void glfwWindowHint(int hint, int value) {
         long __functionAddress = Functions.WindowHint;
-        invokeV(__functionAddress, hint, value);
+        invokeV(hint, value, __functionAddress);
     }
 
     // --- [ glfwWindowHintString ] ---
@@ -1574,7 +1625,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwWindowHintString WindowHintString} */
     public static void nglfwWindowHintString(int hint, long value) {
         long __functionAddress = Functions.WindowHintString;
-        invokePV(__functionAddress, hint, value);
+        invokePV(hint, value, __functionAddress);
     }
 
     /**
@@ -1647,8 +1698,9 @@ public class GLFW {
     public static void glfwWindowHintString(int hint, @NativeType("char const *") CharSequence value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer valueEncoded = stack.UTF8(value);
-            nglfwWindowHintString(hint, memAddress(valueEncoded));
+            stack.nUTF8(value, true);
+            long valueEncoded = stack.getPointerAddress();
+            nglfwWindowHintString(hint, valueEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1659,7 +1711,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwCreateWindow CreateWindow} */
     public static long nglfwCreateWindow(int width, int height, long title, long monitor, long share) {
         long __functionAddress = Functions.CreateWindow;
-        return invokePPPP(__functionAddress, width, height, title, monitor, share);
+        return invokePPPP(width, height, title, monitor, share, __functionAddress);
     }
 
     /**
@@ -1726,9 +1778,10 @@ public class GLFW {
      * <li><b>X11</b>: The class part of the {@code WM_CLASS} window property will by default be set to the window title passed to this function. The instance
      * part will use the contents of the {@code RESOURCE_NAME} environment variable, if present and not empty, or fall back to the window title. Set the
      * {@link #GLFW_X11_CLASS_NAME X11_CLASS_NAME} and {@link #GLFW_X11_INSTANCE_NAME X11_INSTANCE_NAME} window hints to override this.</li>
-     * <li><b>Wayland</b>: The window frame is currently very simple, only allowing window resize or move. A compositor can still emit close, maximize or
-     * fullscreen events, using for example a keybind mechanism. Additionally, the {@code wp_viewporter} protocol is required for this feature, otherwise
-     * the window will not be decorated.</li>
+     * <li><b>Wayland</b>: Compositors should implement the xdg-decoration protocol for GLFW to decorate the window properly. If this protocol isn't
+     * supported, or if the compositor prefers client-side decorations, a very simple fallback frame will be drawn using the {@code wp_viewporter}
+     * protocol. A compositor can still emit close, maximize or fullscreen events, using for instance a keybind mechanism. If neither of these protocols
+     * is supported, the window won't be decorated.</li>
      * <li><b>Wayland</b>: A full screen window will not attempt to change the mode, no matter what the requested size or refresh rate.</li>
      * <li><b>Wayland</b>: Screensaver inhibition requires the idle-inhibit protocol to be implemented in the user's compositor.</li>
      * </ul></div>
@@ -1816,9 +1869,10 @@ public class GLFW {
      * <li><b>X11</b>: The class part of the {@code WM_CLASS} window property will by default be set to the window title passed to this function. The instance
      * part will use the contents of the {@code RESOURCE_NAME} environment variable, if present and not empty, or fall back to the window title. Set the
      * {@link #GLFW_X11_CLASS_NAME X11_CLASS_NAME} and {@link #GLFW_X11_INSTANCE_NAME X11_INSTANCE_NAME} window hints to override this.</li>
-     * <li><b>Wayland</b>: The window frame is currently very simple, only allowing window resize or move. A compositor can still emit close, maximize or
-     * fullscreen events, using for example a keybind mechanism. Additionally, the {@code wp_viewporter} protocol is required for this feature, otherwise
-     * the window will not be decorated.</li>
+     * <li><b>Wayland</b>: Compositors should implement the xdg-decoration protocol for GLFW to decorate the window properly. If this protocol isn't
+     * supported, or if the compositor prefers client-side decorations, a very simple fallback frame will be drawn using the {@code wp_viewporter}
+     * protocol. A compositor can still emit close, maximize or fullscreen events, using for instance a keybind mechanism. If neither of these protocols
+     * is supported, the window won't be decorated.</li>
      * <li><b>Wayland</b>: A full screen window will not attempt to change the mode, no matter what the requested size or refresh rate.</li>
      * <li><b>Wayland</b>: Screensaver inhibition requires the idle-inhibit protocol to be implemented in the user's compositor.</li>
      * </ul></div>
@@ -1838,8 +1892,9 @@ public class GLFW {
         EventLoop.OffScreen.check();
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nglfwCreateWindow(width, height, memAddress(titleEncoded), monitor, share);
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nglfwCreateWindow(width, height, titleEncoded, monitor, share);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1866,7 +1921,7 @@ public class GLFW {
      */
     public static void glfwDestroyWindow(@NativeType("GLFWwindow *") long window) {
         long __functionAddress = Functions.DestroyWindow;
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwWindowShouldClose ] ---
@@ -1888,7 +1943,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePI(__functionAddress, window) != 0;
+        return invokePI(window, __functionAddress) != 0;
     }
 
     // --- [ glfwSetWindowShouldClose ] ---
@@ -1909,7 +1964,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window, value ? 1 : 0);
+        invokePV(window, value ? 1 : 0, __functionAddress);
     }
 
     // --- [ glfwSetWindowTitle ] ---
@@ -1920,7 +1975,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPV(__functionAddress, window, title);
+        invokePPV(window, title, __functionAddress);
     }
 
     /**
@@ -1957,8 +2012,9 @@ public class GLFW {
     public static void glfwSetWindowTitle(@NativeType("GLFWwindow *") long window, @NativeType("char const *") CharSequence title) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            nglfwSetWindowTitle(window, memAddress(titleEncoded));
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            nglfwSetWindowTitle(window, titleEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1977,7 +2033,7 @@ public class GLFW {
             check(window);
             if (images != NULL) { GLFWImage.validate(images, count); }
         }
-        invokePPV(__functionAddress, window, count, images);
+        invokePPV(window, count, images, __functionAddress);
     }
 
     /**
@@ -2020,11 +2076,11 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPPV(__functionAddress, window, xpos, ypos);
+        invokePPPV(window, xpos, ypos, __functionAddress);
     }
 
     /**
-     * Retrieves the position, in screen coordinates, of the upper-left corner of the client area of the specified window.
+     * Retrieves the position, in screen coordinates, of the upper-left corner of the content area of the specified window.
      * 
      * <p>Any or all of the position arguments may be {@code NULL}. If an error occurs, all non-{@code NULL} position arguments will be set to zero.</p>
      * 
@@ -2036,8 +2092,8 @@ public class GLFW {
      * </ul>
      *
      * @param window the window to query
-     * @param xpos   where to store the x-coordinate of the upper-left corner of the client area, or {@code NULL}
-     * @param ypos   where to store the y-coordinate of the upper-left corner of the client area, or {@code NULL}
+     * @param xpos   where to store the x-coordinate of the upper-left corner of the content area, or {@code NULL}
+     * @param ypos   where to store the y-coordinate of the upper-left corner of the content area, or {@code NULL}
      *
      * @since version 3.0
      */
@@ -2052,7 +2108,7 @@ public class GLFW {
     // --- [ glfwSetWindowPos ] ---
 
     /**
-     * Sets the position, in screen coordinates, of the upper-left corner of the client area of the specified windowed mode window. If the window is a full
+     * Sets the position, in screen coordinates, of the upper-left corner of the content area of the specified windowed mode window. If the window is a full
      * screen window, this function does nothing.
      * 
      * <p><b>Do not use this function</b> to move an already visible window unless you have very good reasons for doing so, as it will confuse and annoy the
@@ -2068,8 +2124,8 @@ public class GLFW {
      * </ul>
      *
      * @param window the window to query
-     * @param xpos   the x-coordinate of the upper-left corner of the client area
-     * @param ypos   the y-coordinate of the upper-left corner of the client area
+     * @param xpos   the x-coordinate of the upper-left corner of the content area
+     * @param ypos   the y-coordinate of the upper-left corner of the content area
      *
      * @since version 1.0
      */
@@ -2078,7 +2134,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window, xpos, ypos);
+        invokePV(window, xpos, ypos, __functionAddress);
     }
 
     // --- [ glfwGetWindowSize ] ---
@@ -2089,11 +2145,11 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPPV(__functionAddress, window, width, height);
+        invokePPPV(window, width, height, __functionAddress);
     }
 
     /**
-     * Retrieves the size, in screen coordinates, of the client area of the specified window. If you wish to retrieve the size of the framebuffer of the
+     * Retrieves the size, in screen coordinates, of the content area of the specified window. If you wish to retrieve the size of the framebuffer of the
      * window in pixels, see {@link #glfwGetFramebufferSize GetFramebufferSize}.
      * 
      * <p>Any or all of the size arguments may be {@code NULL}. If an error occurs, all non-{@code NULL} size arguments will be set to zero.</p>
@@ -2101,8 +2157,8 @@ public class GLFW {
      * <p>This function must only be called from the main thread.</p>
      *
      * @param window the window whose size to retrieve
-     * @param width  where to store the width, in screen coordinates, of the client area, or {@code NULL}
-     * @param height where to store the height, in screen coordinates, of the client area, or {@code NULL}
+     * @param width  where to store the width, in screen coordinates, of the content area, or {@code NULL}
+     * @param height where to store the height, in screen coordinates, of the content area, or {@code NULL}
      *
      * @since version 1.0
      */
@@ -2117,7 +2173,7 @@ public class GLFW {
     // --- [ glfwSetWindowSizeLimits ] ---
 
     /**
-     * Sets the size limits of the client area of the specified window. If the window is full screen, the size limits only take effect if once it is made
+     * Sets the size limits of the content area of the specified window. If the window is full screen, the size limits only take effect if once it is made
      * windowed. If the window is not resizable, this function does nothing.
      * 
      * <p>The size limits are applied immediately to a windowed mode window and may cause it to be resized.</p>
@@ -2132,10 +2188,10 @@ public class GLFW {
      * </ul>
      *
      * @param window    the window to set limits for
-     * @param minwidth  the minimum width, in screen coordinates, of the client area, or {@link #GLFW_DONT_CARE DONT_CARE}
-     * @param minheight the minimum height, in screen coordinates, of the client area, or {@link #GLFW_DONT_CARE DONT_CARE}
-     * @param maxwidth  the maximum width, in screen coordinates, of the client area, or {@link #GLFW_DONT_CARE DONT_CARE}
-     * @param maxheight the maximum height, in screen coordinates, of the client area, or {@link #GLFW_DONT_CARE DONT_CARE}
+     * @param minwidth  the minimum width, in screen coordinates, of the content area, or {@link #GLFW_DONT_CARE DONT_CARE}
+     * @param minheight the minimum height, in screen coordinates, of the content area, or {@link #GLFW_DONT_CARE DONT_CARE}
+     * @param maxwidth  the maximum width, in screen coordinates, of the content area, or {@link #GLFW_DONT_CARE DONT_CARE}
+     * @param maxheight the maximum height, in screen coordinates, of the content area, or {@link #GLFW_DONT_CARE DONT_CARE}
      *
      * @since version 3.2
      */
@@ -2144,13 +2200,13 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window, minwidth, minheight, maxwidth, maxheight);
+        invokePV(window, minwidth, minheight, maxwidth, maxheight, __functionAddress);
     }
 
     // --- [ glfwSetWindowAspectRatio ] ---
 
     /**
-     * Sets the required aspect ratio of the client area of the specified window. If the window is full screen, the aspect ratio only takes effect once it is
+     * Sets the required aspect ratio of the content area of the specified window. If the window is full screen, the aspect ratio only takes effect once it is
      * made windowed. If the window is not resizable, this function does nothing.
      * 
      * <p>The aspect ratio is specified as a numerator and a denominator and both values must be greater than zero. For example, the common 16:9 aspect ratio is
@@ -2178,13 +2234,13 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window, numer, denom);
+        invokePV(window, numer, denom, __functionAddress);
     }
 
     // --- [ glfwSetWindowSize ] ---
 
     /**
-     * Sets the size, in pixels, of the client area of the specified window.
+     * Sets the size, in pixels, of the content area of the specified window.
      * 
      * <p>For full screen windows, this function updates the resolution of its desired video mode and switches to the video mode closest to it, without affecting
      * the window's context. As the context is unaffected, the bit depths of the framebuffer remain unchanged.</p>
@@ -2201,8 +2257,8 @@ public class GLFW {
      * </ul>
      *
      * @param window the window to resize
-     * @param width  the desired width, in screen coordinates, of the window client area
-     * @param height the desired height, in screen coordinates, of the window client area
+     * @param width  the desired width, in screen coordinates, of the window content area
+     * @param height the desired height, in screen coordinates, of the window content area
      *
      * @since version 1.0
      */
@@ -2211,7 +2267,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window, width, height);
+        invokePV(window, width, height, __functionAddress);
     }
 
     // --- [ glfwGetFramebufferSize ] ---
@@ -2222,7 +2278,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPPV(__functionAddress, window, width, height);
+        invokePPPV(window, width, height, __functionAddress);
     }
 
     /**
@@ -2255,7 +2311,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPPPPV(__functionAddress, window, left, top, right, bottom);
+        invokePPPPPV(window, left, top, right, bottom, __functionAddress);
     }
 
     /**
@@ -2296,15 +2352,16 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPPV(__functionAddress, window, xscale, yscale);
+        invokePPPV(window, xscale, yscale, __functionAddress);
     }
 
     /**
      * Retrieves the content scale for the specified window.
      * 
      * <p>This function retrieves the content scale for the specified window. The content scale is the ratio between the current DPI and the platform's default
-     * DPI. If you scale all pixel dimensions by this scale then your content should appear at an appropriate size. This is especially important for text and
-     * any UI elements.</p>
+     * DPI. This is especially important for text and any UI elements. If the pixel dimensions of your UI scaled by this look appropriate on your machine then
+     * it should appear at a reasonable size on other machines regardless of their DPI and scaling settings. This relies on the system DPI and scaling
+     * settings being somewhat correct.</p>
      * 
      * <p>On systems where each monitor can have its own content scale, the window content scale will depend on which monitor the system considers the window to
      * be on.</p>
@@ -2348,7 +2405,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePF(__functionAddress, window);
+        return invokePF(window, __functionAddress);
     }
 
     // --- [ glfwSetWindowOpacity ] ---
@@ -2376,7 +2433,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window, opacity);
+        invokePV(window, opacity, __functionAddress);
     }
 
     // --- [ glfwIconifyWindow ] ---
@@ -2403,7 +2460,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwRestoreWindow ] ---
@@ -2424,7 +2481,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwMaximizeWindow ] ---
@@ -2445,7 +2502,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwShowWindow ] ---
@@ -2468,7 +2525,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwHideWindow ] ---
@@ -2487,7 +2544,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwFocusWindow ] ---
@@ -2520,7 +2577,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwRequestWindowAttention ] ---
@@ -2549,7 +2606,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwGetWindowMonitor ] ---
@@ -2571,7 +2628,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePP(__functionAddress, window);
+        return invokePP(window, __functionAddress);
     }
 
     // --- [ glfwSetWindowMonitor ] ---
@@ -2584,7 +2641,7 @@ public class GLFW {
      * <p>When setting a monitor, this function updates the width, height and refresh rate of the desired video mode and switches to the video mode closest to
      * it. The window position is ignored when setting a monitor.</p>
      * 
-     * <p>When the monitor is {@code NULL}, the position, width and height are used to place the window client area. The refresh rate is ignored when no monitor is
+     * <p>When the monitor is {@code NULL}, the position, width and height are used to place the window content area. The refresh rate is ignored when no monitor is
      * specified.</p>
      * 
      * <p>If you only wish to update the resolution of a full screen window or the size of a windowed mode window, see {@link #glfwSetWindowSize SetWindowSize}.</p>
@@ -2602,10 +2659,10 @@ public class GLFW {
      *
      * @param window      the window whose monitor, size or video mode to set
      * @param monitor     the desired monitor, or {@code NULL} to set windowed mode
-     * @param xpos        the desired x-coordinate of the upper-left corner of the client area
-     * @param ypos        the desired y-coordinate of the upper-left corner of the client area
-     * @param width       the desired with, in screen coordinates, of the client area or video mode
-     * @param height      the desired height, in screen coordinates, of the client area or video mode
+     * @param xpos        the desired x-coordinate of the upper-left corner of the content area
+     * @param ypos        the desired y-coordinate of the upper-left corner of the content area
+     * @param width       the desired with, in screen coordinates, of the content area or video mode
+     * @param height      the desired height, in screen coordinates, of the content area or video mode
      * @param refreshRate the desired refresh rate, in Hz, of the video mode, or {@link #GLFW_DONT_CARE DONT_CARE}
      *
      * @since version 3.2
@@ -2615,7 +2672,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPV(__functionAddress, window, monitor, xpos, ypos, width, height, refreshRate);
+        invokePPV(window, monitor, xpos, ypos, width, height, refreshRate, __functionAddress);
     }
 
     // --- [ glfwGetWindowAttrib ] ---
@@ -2642,7 +2699,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePI(__functionAddress, window, attrib);
+        return invokePI(window, attrib, __functionAddress);
     }
 
     // --- [ glfwSetWindowAttrib ] ---
@@ -2669,7 +2726,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window, attrib, value);
+        invokePV(window, attrib, value, __functionAddress);
     }
 
     // --- [ glfwSetWindowUserPointer ] ---
@@ -2689,7 +2746,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPV(__functionAddress, window, pointer);
+        invokePPV(window, pointer, __functionAddress);
     }
 
     // --- [ glfwGetWindowUserPointer ] ---
@@ -2709,7 +2766,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePP(__functionAddress, window);
+        return invokePP(window, __functionAddress);
     }
 
     // --- [ glfwSetWindowPosCallback ] ---
@@ -2720,12 +2777,12 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
      * Sets the position callback of the specified window, which is called when the window is moved. The callback is provided with the position, in screen
-     * coordinates, of the upper-left corner of the client area of the window.
+     * coordinates, of the upper-left corner of the content area of the window.
      * 
      * <p>Notes:</p>
      * 
@@ -2756,12 +2813,12 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
      * Sets the size callback of the specified window, which is called when the window is resized. The callback is provided with the size, in screen
-     * coordinates, of the client area of the window.
+     * coordinates, of the content area of the window.
      * 
      * <p>This function must only be called from the main thread.</p>
      *
@@ -2787,7 +2844,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -2827,11 +2884,11 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
-     * Sets the refresh callback of the specified window, which is called when the client area of the window needs to be redrawn, for example if the window has
+     * Sets the refresh callback of the specified window, which is called when the content area of the window needs to be redrawn, for example if the window has
      * been exposed after having been covered by another window.
      * 
      * <p>On compositing window systems such as Aero, Compiz or Aqua, where the window contents are saved off-screen, this callback may be called only very
@@ -2861,7 +2918,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -2894,7 +2951,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -2930,7 +2987,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -2960,7 +3017,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -2990,7 +3047,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -3062,9 +3119,6 @@ public class GLFW {
      * 
      * <p>On some platforms, certain callbacks may be called outside of a call to one of the event processing functions.</p>
      * 
-     * <p>If no windows exist, this function returns immediately. For synchronization of threads in applications that do not create windows, use your threading
-     * library of choice.</p>
-     * 
      * <p>Event processing is not required for joystick input to work.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
@@ -3101,9 +3155,6 @@ public class GLFW {
      * 
      * <p>On some platforms, certain callbacks may be called outside of a call to one of the event processing functions.</p>
      * 
-     * <p>If no windows exist, this function returns immediately. For synchronization of threads in applications that do not create windows, use your threading
-     * library of choice.</p>
-     * 
      * <p>Event processing is not required for joystick input to work.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
@@ -3120,16 +3171,13 @@ public class GLFW {
     public static void glfwWaitEventsTimeout(double timeout) {
         long __functionAddress = Functions.WaitEventsTimeout;
         EventLoop.OnScreen.check();
-        invokeV(__functionAddress, timeout);
+        invokeV(timeout, __functionAddress);
     }
 
     // --- [ glfwPostEmptyEvent ] ---
 
     /**
      * Posts an empty event from the current thread to the main thread event queue, causing {@link #glfwWaitEvents WaitEvents} or {@link #glfwWaitEventsTimeout WaitEventsTimeout} to return.
-     * 
-     * <p>If no windows exist, this function returns immediately. For synchronization of threads in applications that do not create windows, use your threading
-     * library of choice.</p>
      * 
      * <p>This function may be called from any thread.</p>
      *
@@ -3148,7 +3196,7 @@ public class GLFW {
      * <p>This function must only be called from the main thread.</p>
      *
      * @param window the window to query
-     * @param mode   the input mode whose value to return. One of:<br><table><tr><td>{@link #GLFW_CURSOR CURSOR}</td><td>{@link #GLFW_STICKY_KEYS STICKY_KEYS}</td><td>{@link #GLFW_STICKY_MOUSE_BUTTONS STICKY_MOUSE_BUTTONS}</td><td>{@link #GLFW_LOCK_KEY_MODS LOCK_KEY_MODS}</td></tr></table>
+     * @param mode   the input mode whose value to return. One of:<br><table><tr><td>{@link #GLFW_CURSOR CURSOR}</td><td>{@link #GLFW_STICKY_KEYS STICKY_KEYS}</td><td>{@link #GLFW_STICKY_MOUSE_BUTTONS STICKY_MOUSE_BUTTONS}</td><td>{@link #GLFW_LOCK_KEY_MODS LOCK_KEY_MODS}</td><td>{@link #GLFW_RAW_MOUSE_MOTION RAW_MOUSE_MOTION}</td></tr></table>
      *
      * @return the input mode value
      *
@@ -3159,7 +3207,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePI(__functionAddress, window, mode);
+        return invokePI(window, mode, __functionAddress);
     }
 
     // --- [ glfwSetInputMode ] ---
@@ -3171,23 +3219,26 @@ public class GLFW {
      * 
      * <ul>
      * <li>{@link #GLFW_CURSOR_NORMAL CURSOR_NORMAL} makes the cursor visible and behaving normally.</li>
-     * <li>{@link #GLFW_CURSOR_HIDDEN CURSOR_HIDDEN} makes the cursor invisible when it is over the client area of the window but does not restrict the cursor from leaving.</li>
+     * <li>{@link #GLFW_CURSOR_HIDDEN CURSOR_HIDDEN} makes the cursor invisible when it is over the content area of the window but does not restrict the cursor from leaving.</li>
      * <li>{@link #GLFW_CURSOR_DISABLED CURSOR_DISABLED} hides and grabs the cursor, providing virtual and unlimited cursor movement. This is useful for implementing for example 3D camera
      * controls.</li>
      * </ul>
      * 
-     * <p>If {@code mode} is {@link #GLFW_STICKY_KEYS STICKY_KEYS}, the value must be either {@link #GLFW_TRUE TRUE} to enable sticky keys, or {@link #GLFW_FALSE FALSE} to disable it. If sticky keys are
-     * enabled, a key press will ensure that {@link #glfwGetKey GetKey} returns {@link #GLFW_PRESS PRESS} the next time it is called even if the key had been released before the call. This is
-     * useful when you are only interested in whether keys have been pressed but not when or in which order.</p>
+     * <p>If the {@code mode} is {@link #GLFW_STICKY_KEYS STICKY_KEYS}, the value must be either {@link #GLFW_TRUE TRUE} to enable sticky keys, or {@link #GLFW_FALSE FALSE} to disable it. If sticky keys are enabled, a key
+     * press will ensure that {@link #glfwGetKey GetKey} returns {@link #GLFW_PRESS PRESS} the next time it is called even if the key had been released before the call. This is useful when you
+     * are only interested in whether keys have been pressed but not when or in which order.</p>
      * 
-     * <p>If {@code mode} is {@link #GLFW_STICKY_MOUSE_BUTTONS STICKY_MOUSE_BUTTONS}, the value must be either {@link #GLFW_TRUE TRUE} to enable sticky mouse buttons, or {@link #GLFW_FALSE FALSE} to
-     * disable it. If sticky mouse buttons are enabled, a mouse button press will ensure that {@link #glfwGetMouseButton GetMouseButton} returns {@link #GLFW_PRESS PRESS} the next
-     * time it is called even if the mouse button had been released before the call. This is useful when you are only interested in whether mouse buttons have
-     * been pressed but not when or in which order.</p>
+     * <p>If the {@code mode} is {@link #GLFW_STICKY_MOUSE_BUTTONS STICKY_MOUSE_BUTTONS}, the value must be either {@link #GLFW_TRUE TRUE} to enable sticky mouse buttons, or {@link #GLFW_FALSE FALSE} to disable it. If sticky mouse
+     * buttons are enabled, a mouse button press will ensure that {@link #glfwGetMouseButton GetMouseButton} returns {@link #GLFW_PRESS PRESS} the next time it is called even if the mouse button had
+     * been released before the call. This is useful when you are only interested in whether mouse buttons have been pressed but not when or in which order.</p>
      * 
-     * <p>If {@code mode} is {@link #GLFW_LOCK_KEY_MODS LOCK_KEY_MODS}, the value must be either {@link #GLFW_TRUE TRUE} to enable lock key modifier bits, or {@link #GLFW_FALSE FALSE} to disable them. If enabled, callbacks
-     * that receive modifier bits will also have the {@link #GLFW_MOD_CAPS_LOCK MOD_CAPS_LOCK} bit set when the event was generated with Caps Lock on, and the {@link #GLFW_MOD_NUM_LOCK MOD_NUM_LOCK} bit when Num
-     * Lock was on.</p>
+     * <p>If the {@code mode} is {@link #GLFW_LOCK_KEY_MODS LOCK_KEY_MODS}, the value must be either {@link #GLFW_TRUE TRUE} to enable lock key modifier bits, or {@link #GLFW_FALSE FALSE} to disable them. If enabled,
+     * callbacks that receive modifier bits will also have the {@link #GLFW_MOD_CAPS_LOCK MOD_CAPS_LOCK} bit set when the event was generated with Caps Lock on, and the {@link #GLFW_MOD_NUM_LOCK MOD_NUM_LOCK}
+     * bit when Num Lock was on.</p>
+     * 
+     * <p>If the mode is {@link #GLFW_RAW_MOUSE_MOTION RAW_MOUSE_MOTION}, the value must be either {@link #GLFW_TRUE TRUE} to enable raw (unscaled and unaccelerated) mouse motion when the cursor is disabled,
+     * or {@link #GLFW_FALSE FALSE} to disable it. If raw motion is not supported, attempting to set this will emit {@link #GLFW_PLATFORM_ERROR PLATFORM_ERROR}. Call {@link #glfwRawMouseMotionSupported RawMouseMotionSupported} to check for
+     * support.</p>
      * 
      * <p>This function must only be called from the main thread.</p>
      *
@@ -3202,7 +3253,31 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window, mode, value);
+        invokePV(window, mode, value, __functionAddress);
+    }
+
+    // --- [ glfwRawMouseMotionSupported ] ---
+
+    /**
+     * Returns whether raw mouse motion is supported.
+     * 
+     * <p>This function returns whether raw mouse motion is supported on the current system. This status does not change after GLFW has been initialized so you
+     * only need to check this once. If you attempt to enable raw motion on a system that does not support it, {@link #GLFW_PLATFORM_ERROR PLATFORM_ERROR} will be emitted.</p>
+     * 
+     * <p>Raw mouse motion is closer to the actual motion of the mouse across a surface. It is not affected by the scaling and acceleration applied to the motion
+     * of the desktop cursor. That processing is suitable for a cursor while raw motion is better for controlling for example a 3D camera. Because of this,
+     * raw mouse motion is only provided when the cursor is disabled.</p>
+     * 
+     * <p>This function must only be called from the main thread.</p>
+     *
+     * @return {@link #GLFW_TRUE TRUE} if raw mouse motion is supported on the current machine, or {@link #GLFW_FALSE FALSE} otherwise
+     *
+     * @since version 3.3
+     */
+    @NativeType("int")
+    public static boolean glfwRawMouseMotionSupported() {
+        long __functionAddress = Functions.RawMouseMotionSupported;
+        return invokeI(__functionAddress) != 0;
     }
 
     // --- [ glfwGetKeyName ] ---
@@ -3210,7 +3285,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwGetKeyName GetKeyName} */
     public static long nglfwGetKeyName(int key, int scancode) {
         long __functionAddress = Functions.GetKeyName;
-        return invokeP(__functionAddress, key, scancode);
+        return invokeP(key, scancode, __functionAddress);
     }
 
     /**
@@ -3293,7 +3368,7 @@ public class GLFW {
      */
     public static int glfwGetKeyScancode(int key) {
         long __functionAddress = Functions.GetKeyScancode;
-        return invokeI(__functionAddress, key);
+        return invokeI(key, __functionAddress);
     }
 
     // --- [ glfwGetKey ] ---
@@ -3331,7 +3406,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePI(__functionAddress, window, key);
+        return invokePI(window, key, __functionAddress);
     }
 
     // --- [ glfwGetMouseButton ] ---
@@ -3357,7 +3432,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePI(__functionAddress, window, button);
+        return invokePI(window, button, __functionAddress);
     }
 
     // --- [ glfwGetCursorPos ] ---
@@ -3368,11 +3443,11 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPPV(__functionAddress, window, xpos, ypos);
+        invokePPPV(window, xpos, ypos, __functionAddress);
     }
 
     /**
-     * Returns the position of the cursor, in screen coordinates, relative to the upper-left corner of the client area of the specified window.
+     * Returns the position of the cursor, in screen coordinates, relative to the upper-left corner of the content area of the specified window.
      * 
      * <p>If the cursor is disabled (with {@link #GLFW_CURSOR_DISABLED CURSOR_DISABLED}) then the cursor position is unbounded and limited only by the minimum and maximum values of a
      * <b>double</b>.</p>
@@ -3385,8 +3460,8 @@ public class GLFW {
      * <p>This function must only be called from the main thread.</p>
      *
      * @param window the desired window
-     * @param xpos   where to store the cursor x-coordinate, relative to the left edge of the client area, or {@code NULL}
-     * @param ypos   where to store the cursor y-coordinate, relative to the to top edge of the client area, or {@code NULL}.
+     * @param xpos   where to store the cursor x-coordinate, relative to the left edge of the content area, or {@code NULL}
+     * @param ypos   where to store the cursor y-coordinate, relative to the to top edge of the content area, or {@code NULL}.
      *
      * @since version 1.0
      */
@@ -3401,7 +3476,7 @@ public class GLFW {
     // --- [ glfwSetCursorPos ] ---
 
     /**
-     * Sets the position, in screen coordinates, of the cursor relative to the upper-left corner of the client area of the specified window. The window must
+     * Sets the position, in screen coordinates, of the cursor relative to the upper-left corner of the content area of the specified window. The window must
      * have input focus. If the window does not have input focus when this function is called, it fails silently.
      * 
      * <p><b>Do not use this function</b> to implement things like camera controls. GLFW already provides the {@link #GLFW_CURSOR_DISABLED CURSOR_DISABLED} cursor mode that hides the cursor,
@@ -3417,8 +3492,8 @@ public class GLFW {
      * </ul>
      *
      * @param window the desired window
-     * @param xpos   the desired x-coordinate, relative to the left edge of the client area
-     * @param ypos   the desired y-coordinate, relative to the top edge of the client area
+     * @param xpos   the desired x-coordinate, relative to the left edge of the content area
+     * @param ypos   the desired y-coordinate, relative to the top edge of the content area
      *
      * @since version 1.0
      */
@@ -3427,7 +3502,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window, xpos, ypos);
+        invokePV(window, xpos, ypos, __functionAddress);
     }
 
     // --- [ glfwCreateCursor ] ---
@@ -3438,7 +3513,7 @@ public class GLFW {
         if (CHECKS) {
             GLFWImage.validate(image);
         }
-        return invokePP(__functionAddress, image, xhot, yhot);
+        return invokePP(image, xhot, yhot, __functionAddress);
     }
 
     /**
@@ -3487,7 +3562,7 @@ public class GLFW {
     @NativeType("GLFWcursor *")
     public static long glfwCreateStandardCursor(int shape) {
         long __functionAddress = Functions.CreateStandardCursor;
-        return invokeP(__functionAddress, shape);
+        return invokeP(shape, __functionAddress);
     }
 
     // --- [ glfwDestroyCursor ] ---
@@ -3511,13 +3586,13 @@ public class GLFW {
         if (CHECKS) {
             check(cursor);
         }
-        invokePV(__functionAddress, cursor);
+        invokePV(cursor, __functionAddress);
     }
 
     // --- [ glfwSetCursor ] ---
 
     /**
-     * Sets the cursor image to be used when the cursor is over the client area of the specified window. The set cursor will only be visible when the
+     * Sets the cursor image to be used when the cursor is over the content area of the specified window. The set cursor will only be visible when the
      * <a target="_blank" href="http://www.glfw.org/docs/latest/input.html#cursor_mode">cursor mode</a> of the window is {@link #GLFW_CURSOR_NORMAL CURSOR_NORMAL}.
      * 
      * <p>On some platforms, the set cursor may not be visible unless the window also has input focus.</p>
@@ -3534,7 +3609,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePPV(__functionAddress, window, cursor);
+        invokePPV(window, cursor, __functionAddress);
     }
 
     // --- [ glfwSetKeyCallback ] ---
@@ -3545,7 +3620,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -3586,7 +3661,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -3597,7 +3672,7 @@ public class GLFW {
      * was pressed or released, see the key callback instead.</p>
      * 
      * <p>The character callback behaves as system text input normally does and will not be called if modifier keys are held down that would prevent normal text
-     * input on that platform, for example a Super (Command) key on macOS or Alt key on Windows. There is {@link #glfwSetCharModsCallback SetCharModsCallback} that receives these events.</p>
+     * input on that platform, for example a Super (Command) key on macOS or Alt key on Windows.</p>
      * 
      * <p>This function must only be called from the main thread.</p>
      *
@@ -3622,7 +3697,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -3636,7 +3711,7 @@ public class GLFW {
      * 
      * <p>This function must only be called from the main thread.</p>
      * 
-     * <p>Deprecared: scheduled for removal in version 4.0.</p>
+     * <p>Deprecated: scheduled for removal in version 4.0.</p>
      *
      * @param window the window whose callback to set
      * @param cbfun  the new callback or {@code NULL} to remove the currently set callback
@@ -3659,7 +3734,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -3692,12 +3767,12 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
      * Sets the cursor position callback of the specified window, which is called when the cursor is moved. The callback is provided with the position, in
-     * screen coordinates, relative to the upper-left corner of the client area of the window.
+     * screen coordinates, relative to the upper-left corner of the content area of the window.
      * 
      * <p>This function must only be called from the main thread.</p>
      *
@@ -3722,11 +3797,11 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
-     * Sets the cursor boundary crossing callback of the specified window, which is called when the cursor enters or leaves the client area of the window.
+     * Sets the cursor boundary crossing callback of the specified window, which is called when the cursor enters or leaves the content area of the window.
      * 
      * <p>This function must only be called from the main thread.</p>
      *
@@ -3751,7 +3826,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -3782,7 +3857,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        return invokePPP(__functionAddress, window, cbfun);
+        return invokePPP(window, cbfun, __functionAddress);
     }
 
     /**
@@ -3827,7 +3902,7 @@ public class GLFW {
     @NativeType("int")
     public static boolean glfwJoystickPresent(int jid) {
         long __functionAddress = Functions.JoystickPresent;
-        return invokeI(__functionAddress, jid) != 0;
+        return invokeI(jid, __functionAddress) != 0;
     }
 
     // --- [ glfwGetJoystickAxes ] ---
@@ -3839,7 +3914,7 @@ public class GLFW {
      */
     public static long nglfwGetJoystickAxes(int jid, long count) {
         long __functionAddress = Functions.GetJoystickAxes;
-        return invokePP(__functionAddress, jid, count);
+        return invokePP(jid, count, __functionAddress);
     }
 
     /**
@@ -3881,7 +3956,7 @@ public class GLFW {
      */
     public static long nglfwGetJoystickButtons(int jid, long count) {
         long __functionAddress = Functions.GetJoystickButtons;
-        return invokePP(__functionAddress, jid, count);
+        return invokePP(jid, count, __functionAddress);
     }
 
     /**
@@ -3927,7 +4002,7 @@ public class GLFW {
      */
     public static long nglfwGetJoystickHats(int jid, long count) {
         long __functionAddress = Functions.GetJoystickHats;
-        return invokePP(__functionAddress, jid, count);
+        return invokePP(jid, count, __functionAddress);
     }
 
     /**
@@ -3992,7 +4067,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwGetJoystickName GetJoystickName} */
     public static long nglfwGetJoystickName(int jid) {
         long __functionAddress = Functions.GetJoystickName;
-        return invokeP(__functionAddress, jid);
+        return invokeP(jid, __functionAddress);
     }
 
     /**
@@ -4024,7 +4099,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwGetJoystickGUID GetJoystickGUID} */
     public static long nglfwGetJoystickGUID(int jid) {
         long __functionAddress = Functions.GetJoystickGUID;
-        return invokeP(__functionAddress, jid);
+        return invokeP(jid, __functionAddress);
     }
 
     /**
@@ -4080,7 +4155,7 @@ public class GLFW {
         if (CHECKS) {
             check(pointer);
         }
-        invokePV(__functionAddress, jid, pointer);
+        invokePV(jid, pointer, __functionAddress);
     }
 
     // --- [ glfwGetJoystickUserPointer ] ---
@@ -4101,7 +4176,7 @@ public class GLFW {
     @NativeType("void *")
     public static long glfwGetJoystickUserPointer(int jid) {
         long __functionAddress = Functions.GetJoystickUserPointer;
-        return invokeP(__functionAddress, jid);
+        return invokeP(jid, __functionAddress);
     }
 
     // --- [ glfwJoystickIsGamepad ] ---
@@ -4123,7 +4198,7 @@ public class GLFW {
     @NativeType("int")
     public static boolean glfwJoystickIsGamepad(int jid) {
         long __functionAddress = Functions.JoystickIsGamepad;
-        return invokeI(__functionAddress, jid) != 0;
+        return invokeI(jid, __functionAddress) != 0;
     }
 
     // --- [ glfwSetJoystickCallback ] ---
@@ -4131,7 +4206,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwSetJoystickCallback SetJoystickCallback} */
     public static long nglfwSetJoystickCallback(long cbfun) {
         long __functionAddress = Functions.SetJoystickCallback;
-        return invokePP(__functionAddress, cbfun);
+        return invokePP(cbfun, __functionAddress);
     }
 
     /**
@@ -4161,7 +4236,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwUpdateGamepadMappings UpdateGamepadMappings} */
     public static int nglfwUpdateGamepadMappings(long string) {
         long __functionAddress = Functions.UpdateGamepadMappings;
-        return invokePI(__functionAddress, string);
+        return invokePI(string, __functionAddress);
     }
 
     /**
@@ -4192,43 +4267,12 @@ public class GLFW {
         return nglfwUpdateGamepadMappings(memAddress(string)) != 0;
     }
 
-    /**
-     * Adds the specified SDL_GameControllerDB gamepad mappings.
-     * 
-     * <p>This function parses the specified ASCII encoded string and updates the internal list with any gamepad mappings it finds. This string may contain either
-     * a single gamepad mapping or many mappings separated by newlines. The parser supports the full format of the {@code gamecontrollerdb.txt} source file
-     * including empty lines and comments.</p>
-     * 
-     * <p>See <a target="_blank" href="http://www.glfw.org/docs/latest/input.html#gamepad_mapping">gamepad_mapping</a> for a description of the format.</p>
-     * 
-     * <p>If there is already a gamepad mapping for a given GUID in the internal list, it will be replaced by the one passed to this function. If the library is
-     * terminated and re-initialized the internal list will revert to the built-in default.</p>
-     * 
-     * <p>This function must only be called from the main thread.</p>
-     *
-     * @param string the string containing the gamepad mappings
-     *
-     * @return {@code true}, or {@code false} if an error occurred
-     *
-     * @since version 3.3
-     */
-    @NativeType("int")
-    public static boolean glfwUpdateGamepadMappings(@NativeType("char const *") CharSequence string) {
-        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
-        try {
-            ByteBuffer stringEncoded = stack.ASCII(string);
-            return nglfwUpdateGamepadMappings(memAddress(stringEncoded)) != 0;
-        } finally {
-            stack.setPointer(stackPointer);
-        }
-    }
-
     // --- [ glfwGetGamepadName ] ---
 
     /** Unsafe version of: {@link #glfwGetGamepadName GetGamepadName} */
     public static long nglfwGetGamepadName(int jid) {
         long __functionAddress = Functions.GetGamepadName;
-        return invokeP(__functionAddress, jid);
+        return invokeP(jid, __functionAddress);
     }
 
     /**
@@ -4260,7 +4304,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwGetGamepadState GetGamepadState} */
     public static int nglfwGetGamepadState(int jid, long state) {
         long __functionAddress = Functions.GetGamepadState;
-        return invokePI(__functionAddress, jid, state);
+        return invokePI(jid, state, __functionAddress);
     }
 
     /**
@@ -4293,7 +4337,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwSetClipboardString SetClipboardString} */
     public static void nglfwSetClipboardString(long window, long string) {
         long __functionAddress = Functions.SetClipboardString;
-        invokePPV(__functionAddress, window, string);
+        invokePPV(window, string, __functionAddress);
     }
 
     /**
@@ -4305,7 +4349,6 @@ public class GLFW {
      * 
      * <ul>
      * <li>This function must only be called from the main thread.</li>
-     * <li><b>Wayland</b>: Clipboard is currently unimplemented.</li>
      * </ul>
      *
      * @param window deprecated, any valid window or {@code NULL}.
@@ -4329,7 +4372,6 @@ public class GLFW {
      * 
      * <ul>
      * <li>This function must only be called from the main thread.</li>
-     * <li><b>Wayland</b>: Clipboard is currently unimplemented.</li>
      * </ul>
      *
      * @param window deprecated, any valid window or {@code NULL}.
@@ -4340,8 +4382,9 @@ public class GLFW {
     public static void glfwSetClipboardString(@NativeType("GLFWwindow *") long window, @NativeType("char const *") CharSequence string) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string);
-            nglfwSetClipboardString(window, memAddress(stringEncoded));
+            stack.nUTF8(string, true);
+            long stringEncoded = stack.getPointerAddress();
+            nglfwSetClipboardString(window, stringEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4352,7 +4395,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwGetClipboardString GetClipboardString} */
     public static long nglfwGetClipboardString(long window) {
         long __functionAddress = Functions.GetClipboardString;
-        return invokePP(__functionAddress, window);
+        return invokePP(window, __functionAddress);
     }
 
     /**
@@ -4368,7 +4411,6 @@ public class GLFW {
      * <li>This function must only be called from the main thread.</li>
      * <li>The returned string is allocated and freed by GLFW.  You should not free it yourself.</li>
      * <li>The returned string is valid only until the next call to {@link #glfwGetClipboardString GetClipboardString} or {@link #glfwSetClipboardString SetClipboardString}.</li>
-     * <li><b>Wayland</b>: Clipboard is currently unimplemented.</li>
      * </ul></div>
      *
      * @param window deprecated, any valid window or {@code NULL}.
@@ -4422,7 +4464,7 @@ public class GLFW {
      */
     public static void glfwSetTime(double time) {
         long __functionAddress = Functions.SetTime;
-        invokeV(__functionAddress, time);
+        invokeV(time, __functionAddress);
     }
 
     // --- [ glfwGetTimerValue ] ---
@@ -4484,7 +4526,7 @@ public class GLFW {
      */
     public static void glfwMakeContextCurrent(@NativeType("GLFWwindow *") long window) {
         long __functionAddress = Functions.MakeContextCurrent;
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwGetCurrentContext ] ---
@@ -4527,7 +4569,7 @@ public class GLFW {
         if (CHECKS) {
             check(window);
         }
-        invokePV(__functionAddress, window);
+        invokePV(window, __functionAddress);
     }
 
     // --- [ glfwSwapInterval ] ---
@@ -4563,7 +4605,7 @@ public class GLFW {
      */
     public static void glfwSwapInterval(int interval) {
         long __functionAddress = Functions.SwapInterval;
-        invokeV(__functionAddress, interval);
+        invokeV(interval, __functionAddress);
     }
 
     // --- [ glfwExtensionSupported ] ---
@@ -4571,7 +4613,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwExtensionSupported ExtensionSupported} */
     public static int nglfwExtensionSupported(long extension) {
         long __functionAddress = Functions.ExtensionSupported;
-        return invokePI(__functionAddress, extension);
+        return invokePI(extension, __functionAddress);
     }
 
     /**
@@ -4626,8 +4668,9 @@ public class GLFW {
     public static boolean glfwExtensionSupported(@NativeType("char const *") CharSequence extension) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer extensionEncoded = stack.ASCII(extension);
-            return nglfwExtensionSupported(memAddress(extensionEncoded)) != 0;
+            stack.nASCII(extension, true);
+            long extensionEncoded = stack.getPointerAddress();
+            return nglfwExtensionSupported(extensionEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4638,7 +4681,7 @@ public class GLFW {
     /** Unsafe version of: {@link #glfwGetProcAddress GetProcAddress} */
     public static long nglfwGetProcAddress(long procname) {
         long __functionAddress = Functions.GetProcAddress;
-        return invokePP(__functionAddress, procname);
+        return invokePP(procname, __functionAddress);
     }
 
     /**
@@ -4701,8 +4744,9 @@ public class GLFW {
     public static long glfwGetProcAddress(@NativeType("char const *") CharSequence procname) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer procnameEncoded = stack.ASCII(procname);
-            return nglfwGetProcAddress(memAddress(procnameEncoded));
+            stack.nASCII(procname, true);
+            long procnameEncoded = stack.getPointerAddress();
+            return nglfwGetProcAddress(procnameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4716,7 +4760,7 @@ public class GLFW {
             checkSafe(minor, 1);
             checkSafe(rev, 1);
         }
-        invokePPPV(__functionAddress, major, minor, rev);
+        invokePPPV(major, minor, rev, __functionAddress);
     }
 
     /** Array version of: {@link #glfwGetMonitorPos GetMonitorPos} */
@@ -4727,7 +4771,20 @@ public class GLFW {
             checkSafe(xpos, 1);
             checkSafe(ypos, 1);
         }
-        invokePPPV(__functionAddress, monitor, xpos, ypos);
+        invokePPPV(monitor, xpos, ypos, __functionAddress);
+    }
+
+    /** Array version of: {@link #glfwGetMonitorWorkarea GetMonitorWorkarea} */
+    public static void glfwGetMonitorWorkarea(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") int[] xpos, @Nullable @NativeType("int *") int[] ypos, @Nullable @NativeType("int *") int[] width, @Nullable @NativeType("int *") int[] height) {
+        long __functionAddress = Functions.GetMonitorWorkarea;
+        if (CHECKS) {
+            check(monitor);
+            checkSafe(xpos, 1);
+            checkSafe(ypos, 1);
+            checkSafe(width, 1);
+            checkSafe(height, 1);
+        }
+        invokePPPPPV(monitor, xpos, ypos, width, height, __functionAddress);
     }
 
     /** Array version of: {@link #glfwGetMonitorPhysicalSize GetMonitorPhysicalSize} */
@@ -4738,7 +4795,7 @@ public class GLFW {
             checkSafe(widthMM, 1);
             checkSafe(heightMM, 1);
         }
-        invokePPPV(__functionAddress, monitor, widthMM, heightMM);
+        invokePPPV(monitor, widthMM, heightMM, __functionAddress);
     }
 
     /** Array version of: {@link #glfwGetMonitorContentScale GetMonitorContentScale} */
@@ -4749,7 +4806,7 @@ public class GLFW {
             checkSafe(xscale, 1);
             checkSafe(yscale, 1);
         }
-        invokePPPV(__functionAddress, monitor, xscale, yscale);
+        invokePPPV(monitor, xscale, yscale, __functionAddress);
     }
 
     /** Array version of: {@link #glfwGetWindowPos GetWindowPos} */
@@ -4760,7 +4817,7 @@ public class GLFW {
             checkSafe(xpos, 1);
             checkSafe(ypos, 1);
         }
-        invokePPPV(__functionAddress, window, xpos, ypos);
+        invokePPPV(window, xpos, ypos, __functionAddress);
     }
 
     /** Array version of: {@link #glfwGetWindowSize GetWindowSize} */
@@ -4771,7 +4828,7 @@ public class GLFW {
             checkSafe(width, 1);
             checkSafe(height, 1);
         }
-        invokePPPV(__functionAddress, window, width, height);
+        invokePPPV(window, width, height, __functionAddress);
     }
 
     /** Array version of: {@link #glfwGetFramebufferSize GetFramebufferSize} */
@@ -4782,7 +4839,7 @@ public class GLFW {
             checkSafe(width, 1);
             checkSafe(height, 1);
         }
-        invokePPPV(__functionAddress, window, width, height);
+        invokePPPV(window, width, height, __functionAddress);
     }
 
     /** Array version of: {@link #glfwGetWindowFrameSize GetWindowFrameSize} */
@@ -4795,7 +4852,7 @@ public class GLFW {
             checkSafe(right, 1);
             checkSafe(bottom, 1);
         }
-        invokePPPPPV(__functionAddress, window, left, top, right, bottom);
+        invokePPPPPV(window, left, top, right, bottom, __functionAddress);
     }
 
     /** Array version of: {@link #glfwGetWindowContentScale GetWindowContentScale} */
@@ -4806,7 +4863,7 @@ public class GLFW {
             checkSafe(xscale, 1);
             checkSafe(yscale, 1);
         }
-        invokePPPV(__functionAddress, window, xscale, yscale);
+        invokePPPV(window, xscale, yscale, __functionAddress);
     }
 
     /** Array version of: {@link #glfwGetCursorPos GetCursorPos} */
@@ -4817,7 +4874,7 @@ public class GLFW {
             checkSafe(xpos, 1);
             checkSafe(ypos, 1);
         }
-        invokePPPV(__functionAddress, window, xpos, ypos);
+        invokePPPV(window, xpos, ypos, __functionAddress);
     }
 
 }

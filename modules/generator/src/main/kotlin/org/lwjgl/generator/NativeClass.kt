@@ -182,11 +182,11 @@ class NativeClass internal constructor(
     val prefixTemplate: String,
     val postfix: String,
     val binding: APIBinding?,
-    internal val library: String?,
     internal val callingConvention: CallingConvention
 ) : GeneratorTargetNative(module, className, nativeSubPath) {
     companion object {
         private val JDOC_LINK_PATTERN = """(?<!\p{javaJavaIdentifierPart}|[@#])#(\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*)""".toRegex()
+        private val VOID_ARGS = Parameter(void, ANONYMOUS, "", "")
     }
 
     var extends: NativeClass? = null
@@ -248,7 +248,7 @@ class NativeClass internal constructor(
                 // This will generate additional signatures that cover the entire
                 // GL/GLES API. They will not be used by LWJGL, but may be useful
                 // to users. Using !it.hasCustomJNI here will eliminate them.
-                .filter { !it.hasCustomJNIWithIgnoreAddress }
+                .filter { !it.hasCustomJNIWithIgnoreAddress && (!it.has<Macro>() || !it.get<Macro>().function) }
                 .forEach { JNI.register(it) }
         }
 
@@ -315,12 +315,9 @@ class NativeClass internal constructor(
                                         .copy(ArrayType(it.nativeType as PointerType<*>, autoType))
                                         .removeArrayModifiers()
                                         .replaceModifier<Check> { check ->
-                                            if (check === Unsafe)
-                                                check
-                                            else
-                                                Check("${check.expression.let { expression ->
-                                                    if (expression.contains(' ')) "($expression)" else expression
-                                                }} >> ${autoType.byteShift}")
+                                            Check("${check.expression.let { expression ->
+                                                if (expression.contains(' ')) "($expression)" else expression
+                                            }} >> ${autoType.byteShift}")
                                         }
                                 else
                                     func[it.name].removeArrayModifiers()
@@ -436,12 +433,12 @@ class NativeClass internal constructor(
                 })
                     println("import java.nio.*;\n")
 
-                val needsPointerBuffer: NativeType.() -> Boolean = {
-                    this is PointerType<*> && this.elementType.let { it is PointerType<*> || (it.mapping == PrimitiveMapping.POINTER && it !is StructType) }
+                val needsCustomBuffer: NativeType.() -> Boolean = {
+                    this is PointerType<*> && this.elementType.run { this is PointerType<*> || (mapping == PrimitiveMapping.POINTER && this !is StructType) || mapping == PrimitiveMapping.CLONG }
                 }
                 if (functions.any {
-                    it.returns.nativeType.needsPointerBuffer() || it.hasParam { param ->
-                        param.nativeType.needsPointerBuffer() || (param.has<MultiType>() && param.get<MultiType>().types.contains(PointerMapping.DATA_POINTER))
+                    it.returns.nativeType.needsCustomBuffer() || it.hasParam { param ->
+                        param.nativeType.needsCustomBuffer() || (param.has<MultiType>() && param.get<MultiType>().types.run { contains(PointerMapping.DATA_POINTER) || contains(PointerMapping.DATA_CLONG) })
                     }
                 })
                     println("import org.lwjgl.*;\n")
@@ -458,7 +455,7 @@ class NativeClass internal constructor(
                         it.has<SingleValue>() ||
                         (it.isAutoSizeResultOut && func.hideAutoSizeResultParam) ||
                         it.has<PointerArray>() ||
-                        (it.nativeType is CharSequenceType && it.paramType !== ParameterType.OUT)
+                        (it.nativeType is CharSequenceType && it.isInput)
                     )
                 }
             }
@@ -504,7 +501,7 @@ class NativeClass internal constructor(
 
         val documentation = super.documentation
         if (!documentation.isNullOrBlank())
-            println(processDocumentation(documentation!!).toJavaDoc(indentation = ""))
+            println(processDocumentation(documentation).toJavaDoc(indentation = ""))
         val isOpen = access === Access.PUBLIC && (hasFunctions || extends != null)
         print("${access.modifier}${if (isOpen) "" else "final "}class $className")
         extends.let {
@@ -518,19 +515,22 @@ class NativeClass internal constructor(
         }
 
         fun PrintWriter.libraryInit() {
-            if (library != null || binding !is SimpleBinding) {
-                println(if (library == null)
+            if (module.library != null || binding !is SimpleBinding) {
+                println(if (module.library == null)
                     "\n${t}static { Library.initialize(); }"
-                else if (library.contains('\n'))
-                    """
+                else
+                    module.library.expression(module)
+                        .let { library ->
+                            if (library.contains('\n'))
+                                """
     static {
         ${library.trim()}
     }"""
-                else if (library.endsWith(");"))
-                    "\n${t}static { $library }"
-                else
-                    "\n${t}static { Library.loadSystem(System::load, System::loadLibrary, $className.class, Platform.mapLibraryNameBundled(\"$library\")); }"
-                )
+                            else if (library.endsWith(");"))
+                                "\n${t}static { $library }"
+                            else
+                                "\n${t}static { Library.loadSystem(System::load, System::loadLibrary, $className.class, Platform.mapLibraryNameBundled(\"$library\")); }"
+                        })
             }
         }
 
@@ -665,22 +665,13 @@ class NativeClass internal constructor(
     fun String.enum(documentation: String, expression: String) =
         Constant(this, EnumValueExpression({ if (documentation.isEmpty()) null else processDocumentation(documentation) }, expression))
 
-    fun DataType.IN(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) = createParameter(name, ParameterType.IN, javadoc, links, linkMode)
-    fun PointerType<*>.OUT(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) = createParameter(name, ParameterType.OUT, javadoc, links, linkMode)
-    fun <T : DataType> PointerType<T>.INOUT(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) =
-        createParameter(name, ParameterType.INOUT, javadoc, links, linkMode)
+    operator fun DataType.invoke(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) =
+        if (links.isEmpty() || !links.contains('+'))
+            Parameter(this, name, javadoc, links, linkMode)
+        else
+            Parameter(this, name) { linkMode.appendLinks(javadoc, linksFromRegex(links)) }
 
-    private fun NativeType.createParameter(
-        name: String,
-        paramType: ParameterType,
-        javadoc: String,
-        links: String,
-        linkMode: LinkMode = LinkMode.SINGLE
-    ) = if (links.isEmpty() || !links.contains('+'))
-        Parameter(this, name, paramType, javadoc, links, linkMode)
-    else
-        Parameter(this, name, paramType) { linkMode.appendLinks(javadoc, linksFromRegex(links)) }
-
+    operator fun VoidType.invoke() = VOID_ARGS
     operator fun VoidType.invoke(
         className: String,
         functionDoc: String,
@@ -713,14 +704,20 @@ class NativeClass internal constructor(
         since: String,
         init: (CallbackFunction.() -> Unit)?,
         vararg signature: Parameter
-    ): CallbackType {
-        val callback = CallbackFunction(this@NativeClass.module, className, nativeType, returns, *signature)
+    ): FunctionType {
+        val callback = CallbackFunction(this@NativeClass.module, className, nativeType, returns, *(
+            if (signature.size == 1 && signature[0].nativeType === void) {
+                emptyArray()
+            } else {
+                signature
+            }
+        ))
         if (init != null)
             callback.init()
         callback.functionDoc = { it -> it.toJavaDoc(it.processDocumentation(functionDoc), it.signature.asSequence(), it.returns, returnDoc, see, since) }
         Generator.register(callback)
         Generator.register(CallbackInterface(callback))
-        return CallbackType(callback)
+        return FunctionType(callback)
     }
 
     fun AutoSize(reference: String, vararg dependent: String, factor: AutoSizeFactor? = null) =
@@ -781,6 +778,11 @@ class NativeClass internal constructor(
         noPrefix: Boolean,
         vararg parameters: Parameter
     ): Func {
+        val params = if (parameters.size == 1 && parameters[0].nativeType === void) {
+            emptyArray()
+        } else {
+            parameters
+        }
         val overload = name.indexOf('@').let { if (it == -1) name else name.substring(0, it) }
         val func = Func(
             returns = returns,
@@ -789,7 +791,7 @@ class NativeClass internal constructor(
             documentation = { parameterFilter ->
                 this@NativeClass.toJavaDoc(
                     processDocumentation(documentation),
-                    parameters.asSequence().filter { it !== JNI_ENV && parameterFilter(it) },
+                    params.asSequence().filter { it !== JNI_ENV && parameterFilter(it) },
                     returns.nativeType,
                     returnDoc,
                     see,
@@ -797,7 +799,7 @@ class NativeClass internal constructor(
                 )
             },
             nativeClass = this@NativeClass,
-            parameters = *parameters
+            parameters = *params
         )
 
         if ((_functions.put(name, func)) != null) {
@@ -881,11 +883,10 @@ fun String.nativeClass(
     prefixTemplate: String = prefix,
     postfix: String = "",
     binding: APIBinding? = null,
-    library: String? = null,
     callingConvention: CallingConvention = module.callingConvention,
     init: (NativeClass.() -> Unit)? = null
 ): NativeClass {
-    val ext = NativeClass(module, this, nativeSubPath, templateName, prefix, prefixMethod, prefixConstant, prefixTemplate, postfix, binding, library, callingConvention)
+    val ext = NativeClass(module, this, nativeSubPath, templateName, prefix, prefixMethod, prefixConstant, prefixTemplate, postfix, binding, callingConvention)
     if (init != null)
         ext.init()
 

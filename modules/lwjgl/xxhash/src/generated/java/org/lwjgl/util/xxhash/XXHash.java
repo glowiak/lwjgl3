@@ -17,6 +17,25 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Native bindings to <a target="_blank" href="https://github.com/Cyan4973/xxHash">xxhash</a>.
  * 
  * <p>xxHash is an extremely fast Hash algorithm, running at RAM speed limits. It also successfully passes all tests from the SMHasher suite.</p>
+ * 
+ * <p>A 64-bit version, named XXH64, is available since r35. It offers much better speed, but for 64-bit applications only.</p>
+ * 
+ * <h3>XXH3</h3>
+ * 
+ * <p>XXH3 is a new hash algorithm, featuring vastly improved speed performance for both small and large inputs.</p>
+ * 
+ * <p>In general, expect XXH3 to run about ~2x faster on large inputs, and &gt;3x faster on small ones, though exact difference depend on platform. The
+ * algorithm is portable, will generate the same hash on all platforms. It benefits greatly from vectorization units, but does not require it.</p>
+ * 
+ * <p>XXH3 offers 2 variants, {@code _64bits} and {@code _128bits}. When only 64 bits are needed, prefer calling the {@code _64bits} variant: it reduces the
+ * amount of mixing, resulting in faster speed on small inputs. It's also generally simpler to manipulate a scalar type than a struct. Note: the low
+ * 64-bit field of the {@code _128bits} variant is the same as {@code _64bits} result.</p>
+ * 
+ * <p>The XXH3 algorithm is still considered experimental. It's possible to use it for ephemeral data, but avoid storing long-term values for later re-use.
+ * While labelled experimental, the produced result can still change between versions.</p>
+ * 
+ * <p>The API currently supports one-shot hashing only. The full version will include streaming capability, and canonical representation. Long term optional
+ * feature may include custom secret keys, and secret key generation.</p>
  */
 public class XXHash {
 
@@ -38,10 +57,10 @@ public class XXHash {
     public static final int XXH_VERSION_MAJOR = 0;
 
     /** The minor version number. */
-    public static final int XXH_VERSION_MINOR = 6;
+    public static final int XXH_VERSION_MINOR = 7;
 
     /** The release version number. */
-    public static final int XXH_VERSION_RELEASE = 5;
+    public static final int XXH_VERSION_RELEASE = 0;
 
     /** The version number */
     public static final int XXH_VERSION_NUMBER = (XXH_VERSION_MAJOR *100*100 + XXH_VERSION_MINOR *100 + XXH_VERSION_RELEASE);
@@ -229,7 +248,7 @@ public class XXHash {
      * @param seed  the seed that can be used to alter the result predictably
      */
     @NativeType("XXH32_hash_t")
-    public static long XXH64(@NativeType("void const *") ByteBuffer input, @NativeType("long long") long seed) {
+    public static long XXH64(@NativeType("void const *") ByteBuffer input, @NativeType("unsigned long long") long seed) {
         return nXXH64(memAddress(input), input.remaining(), seed);
     }
 
@@ -281,7 +300,7 @@ public class XXHash {
      * @param seed     the seed that can be used to alter the hashing result predictably
      */
     @NativeType("XXH_errorcode")
-    public static int XXH64_reset(@NativeType("XXH64_state_t *") XXH64State statePtr, @NativeType("long long") long seed) {
+    public static int XXH64_reset(@NativeType("XXH64_state_t *") XXH64State statePtr, @NativeType("unsigned long long") long seed) {
         return nXXH64_reset(statePtr.address(), seed);
     }
 
@@ -348,6 +367,54 @@ public class XXHash {
     @NativeType("XXH32_hash_t")
     public static long XXH64_hashFromCanonical(@NativeType("XXH64_canonical_t const *") XXH64Canonical src) {
         return nXXH64_hashFromCanonical(src.address());
+    }
+
+    // --- [ XXH128 ] ---
+
+    public static native void nXXH128(long data, long len, long seed, long __result);
+
+    @NativeType("XXH128_hash_t")
+    public static XXH128Hash XXH128(@NativeType("void const *") ByteBuffer data, @NativeType("unsigned long long") long seed, @NativeType("XXH128_hash_t") XXH128Hash __result) {
+        nXXH128(memAddress(data), data.remaining(), seed, __result.address());
+        return __result;
+    }
+
+    // --- [ XXH3_64bits ] ---
+
+    public static native long nXXH3_64bits(long data, long len);
+
+    @NativeType("XXH32_hash_t")
+    public static long XXH3_64bits(@NativeType("void const *") ByteBuffer data) {
+        return nXXH3_64bits(memAddress(data), data.remaining());
+    }
+
+    // --- [ XXH3_64bits_withSeed ] ---
+
+    public static native long nXXH3_64bits_withSeed(long data, long len, long seed);
+
+    @NativeType("XXH32_hash_t")
+    public static long XXH3_64bits_withSeed(@NativeType("void const *") ByteBuffer data, @NativeType("unsigned long long") long seed) {
+        return nXXH3_64bits_withSeed(memAddress(data), data.remaining(), seed);
+    }
+
+    // --- [ XXH3_128bits ] ---
+
+    public static native void nXXH3_128bits(long data, long len, long __result);
+
+    @NativeType("XXH128_hash_t")
+    public static XXH128Hash XXH3_128bits(@NativeType("void const *") ByteBuffer data, @NativeType("XXH128_hash_t") XXH128Hash __result) {
+        nXXH3_128bits(memAddress(data), data.remaining(), __result.address());
+        return __result;
+    }
+
+    // --- [ XXH3_128bits_withSeed ] ---
+
+    public static native void nXXH3_128bits_withSeed(long data, long len, long seed, long __result);
+
+    @NativeType("XXH128_hash_t")
+    public static XXH128Hash XXH3_128bits_withSeed(@NativeType("void const *") ByteBuffer data, @NativeType("unsigned long long") long seed, @NativeType("XXH128_hash_t") XXH128Hash __result) {
+        nXXH3_128bits_withSeed(memAddress(data), data.remaining(), seed, __result.address());
+        return __result;
     }
 
 }

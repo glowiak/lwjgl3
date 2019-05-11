@@ -215,7 +215,7 @@ public class ARBDebugOutput {
      * @param severity the message severity level. One of:<br><table><tr><td>{@link #GL_DEBUG_SEVERITY_HIGH_ARB DEBUG_SEVERITY_HIGH_ARB}</td><td>{@link #GL_DEBUG_SEVERITY_MEDIUM_ARB DEBUG_SEVERITY_MEDIUM_ARB}</td><td>{@link #GL_DEBUG_SEVERITY_LOW_ARB DEBUG_SEVERITY_LOW_ARB}</td></tr></table>
      * @param enabled  whether to enable or disable the references subset of messages
      */
-    public static void glDebugMessageControlARB(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLenum") int severity, @Nullable @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
+    public static void glDebugMessageControlARB(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLenum") int severity, @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer ids = stack.ints(id);
@@ -267,8 +267,9 @@ public class ARBDebugOutput {
     public static void glDebugMessageInsertARB(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLuint") int id, @NativeType("GLenum") int severity, @NativeType("GLchar const *") CharSequence buf) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer bufEncoded = stack.UTF8(buf, false);
-            nglDebugMessageInsertARB(source, type, id, severity, bufEncoded.remaining(), memAddress(bufEncoded));
+            int bufEncodedLength = stack.nUTF8(buf, false);
+            long bufEncoded = stack.getPointerAddress();
+            nglDebugMessageInsertARB(source, type, id, severity, bufEncodedLength, bufEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -377,7 +378,7 @@ public class ARBDebugOutput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, source, type, severity, lengthSafe(ids), ids, enabled);
+        callPV(source, type, severity, lengthSafe(ids), ids, enabled, __functionAddress);
     }
 
     /** Array version of: {@link #glGetDebugMessageLogARB GetDebugMessageLogARB} */
@@ -392,7 +393,7 @@ public class ARBDebugOutput {
             checkSafe(severities, count);
             checkSafe(lengths, count);
         }
-        return callPPPPPPI(__functionAddress, count, remainingSafe(messageLog), sources, types, ids, severities, lengths, memAddressSafe(messageLog));
+        return callPPPPPPI(count, remainingSafe(messageLog), sources, types, ids, severities, lengths, memAddressSafe(messageLog), __functionAddress);
     }
 
 }

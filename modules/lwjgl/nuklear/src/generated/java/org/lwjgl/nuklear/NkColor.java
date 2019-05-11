@@ -59,18 +59,14 @@ public class NkColor extends Struct implements NativeResource {
         A = layout.offsetof(3);
     }
 
-    NkColor(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link NkColor} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code NkColor} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public NkColor(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -127,30 +123,31 @@ public class NkColor extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link NkColor} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code NkColor} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static NkColor malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(NkColor.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link NkColor} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code NkColor} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static NkColor calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(NkColor.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link NkColor} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code NkColor} instance allocated with {@link BufferUtils}. */
     public static NkColor create() {
-        return new NkColor(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(NkColor.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link NkColor} instance for the specified memory address. */
+    /** Returns a new {@code NkColor} instance for the specified memory address. */
     public static NkColor create(long address) {
-        return new NkColor(address, null);
+        return wrap(NkColor.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkColor createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(NkColor.class, address);
     }
 
     /**
@@ -159,7 +156,7 @@ public class NkColor extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkColor.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -168,7 +165,7 @@ public class NkColor extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkColor.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -177,7 +174,8 @@ public class NkColor extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkColor.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -187,43 +185,43 @@ public class NkColor extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkColor.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkColor.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link NkColor} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code NkColor} instance allocated on the thread-local {@link MemoryStack}. */
     public static NkColor mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link NkColor} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code NkColor} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static NkColor callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link NkColor} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code NkColor} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static NkColor mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(NkColor.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link NkColor} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code NkColor} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static NkColor callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(NkColor.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -251,7 +249,7 @@ public class NkColor extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkColor.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -261,36 +259,38 @@ public class NkColor extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkColor.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #r}. */
-    public static byte nr(long struct) { return memGetByte(struct + NkColor.R); }
+    public static byte nr(long struct) { return UNSAFE.getByte(null, struct + NkColor.R); }
     /** Unsafe version of {@link #g}. */
-    public static byte ng(long struct) { return memGetByte(struct + NkColor.G); }
+    public static byte ng(long struct) { return UNSAFE.getByte(null, struct + NkColor.G); }
     /** Unsafe version of {@link #b}. */
-    public static byte nb(long struct) { return memGetByte(struct + NkColor.B); }
+    public static byte nb(long struct) { return UNSAFE.getByte(null, struct + NkColor.B); }
     /** Unsafe version of {@link #a}. */
-    public static byte na(long struct) { return memGetByte(struct + NkColor.A); }
+    public static byte na(long struct) { return UNSAFE.getByte(null, struct + NkColor.A); }
 
     /** Unsafe version of {@link #r(byte) r}. */
-    public static void nr(long struct, byte value) { memPutByte(struct + NkColor.R, value); }
+    public static void nr(long struct, byte value) { UNSAFE.putByte(null, struct + NkColor.R, value); }
     /** Unsafe version of {@link #g(byte) g}. */
-    public static void ng(long struct, byte value) { memPutByte(struct + NkColor.G, value); }
+    public static void ng(long struct, byte value) { UNSAFE.putByte(null, struct + NkColor.G, value); }
     /** Unsafe version of {@link #b(byte) b}. */
-    public static void nb(long struct, byte value) { memPutByte(struct + NkColor.B, value); }
+    public static void nb(long struct, byte value) { UNSAFE.putByte(null, struct + NkColor.B, value); }
     /** Unsafe version of {@link #a(byte) a}. */
-    public static void na(long struct, byte value) { memPutByte(struct + NkColor.A, value); }
+    public static void na(long struct, byte value) { UNSAFE.putByte(null, struct + NkColor.A, value); }
 
     // -----------------------------------
 
     /** An array of {@link NkColor} structs. */
     public static class Buffer extends StructBuffer<NkColor, Buffer> implements NativeResource {
 
+        private static final NkColor ELEMENT_FACTORY = NkColor.create(-1L);
+
         /**
-         * Creates a new {@link NkColor.Buffer} instance backed by the specified container.
+         * Creates a new {@code NkColor.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -316,18 +316,8 @@ public class NkColor extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected NkColor newInstance(long address) {
-            return new NkColor(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected NkColor getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code r} field. */

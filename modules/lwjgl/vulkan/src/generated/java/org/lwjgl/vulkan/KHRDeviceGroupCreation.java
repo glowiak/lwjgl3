@@ -68,7 +68,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Deprecation state</b></dt>
  * <dd><ul>
- * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
+ * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
@@ -138,7 +138,7 @@ public class KHRDeviceGroupCreation {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, instance.address(), pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
+        return callPPPI(instance.address(), pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties, __functionAddress);
     }
 
     /**
@@ -166,7 +166,7 @@ public class KHRDeviceGroupCreation {
             check(pPhysicalDeviceGroupCount, 1);
             checkSafe(pPhysicalDeviceGroupProperties, pPhysicalDeviceGroupCount[0]);
         }
-        return callPPPI(__functionAddress, instance.address(), pPhysicalDeviceGroupCount, memAddressSafe(pPhysicalDeviceGroupProperties));
+        return callPPPI(instance.address(), pPhysicalDeviceGroupCount, memAddressSafe(pPhysicalDeviceGroupProperties), __functionAddress);
     }
 
 }

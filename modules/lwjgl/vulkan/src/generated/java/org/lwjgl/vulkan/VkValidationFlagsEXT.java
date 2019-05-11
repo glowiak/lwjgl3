@@ -78,18 +78,14 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
         PDISABLEDVALIDATIONCHECKS = layout.offsetof(3);
     }
 
-    VkValidationFlagsEXT(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkValidationFlagsEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkValidationFlagsEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkValidationFlagsEXT(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -142,30 +138,31 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkValidationFlagsEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkValidationFlagsEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkValidationFlagsEXT malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkValidationFlagsEXT.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkValidationFlagsEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkValidationFlagsEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkValidationFlagsEXT calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkValidationFlagsEXT.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkValidationFlagsEXT} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkValidationFlagsEXT} instance allocated with {@link BufferUtils}. */
     public static VkValidationFlagsEXT create() {
-        return new VkValidationFlagsEXT(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkValidationFlagsEXT.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkValidationFlagsEXT} instance for the specified memory address. */
+    /** Returns a new {@code VkValidationFlagsEXT} instance for the specified memory address. */
     public static VkValidationFlagsEXT create(long address) {
-        return new VkValidationFlagsEXT(address, null);
+        return wrap(VkValidationFlagsEXT.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkValidationFlagsEXT createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkValidationFlagsEXT.class, address);
     }
 
     /**
@@ -174,7 +171,7 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkValidationFlagsEXT.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -183,7 +180,7 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkValidationFlagsEXT.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -192,7 +189,8 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkValidationFlagsEXT.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -202,43 +200,43 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkValidationFlagsEXT.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkValidationFlagsEXT.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkValidationFlagsEXT} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkValidationFlagsEXT} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkValidationFlagsEXT mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkValidationFlagsEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkValidationFlagsEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkValidationFlagsEXT callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkValidationFlagsEXT} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkValidationFlagsEXT} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkValidationFlagsEXT mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkValidationFlagsEXT.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkValidationFlagsEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkValidationFlagsEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkValidationFlagsEXT callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkValidationFlagsEXT.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -266,7 +264,7 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkValidationFlagsEXT.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -276,26 +274,26 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkValidationFlagsEXT.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkValidationFlagsEXT.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkValidationFlagsEXT.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkValidationFlagsEXT.PNEXT); }
     /** Unsafe version of {@link #disabledValidationCheckCount}. */
-    public static int ndisabledValidationCheckCount(long struct) { return memGetInt(struct + VkValidationFlagsEXT.DISABLEDVALIDATIONCHECKCOUNT); }
+    public static int ndisabledValidationCheckCount(long struct) { return UNSAFE.getInt(null, struct + VkValidationFlagsEXT.DISABLEDVALIDATIONCHECKCOUNT); }
     /** Unsafe version of {@link #pDisabledValidationChecks() pDisabledValidationChecks}. */
     public static IntBuffer npDisabledValidationChecks(long struct) { return memIntBuffer(memGetAddress(struct + VkValidationFlagsEXT.PDISABLEDVALIDATIONCHECKS), ndisabledValidationCheckCount(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkValidationFlagsEXT.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkValidationFlagsEXT.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkValidationFlagsEXT.PNEXT, value); }
     /** Sets the specified value to the {@code disabledValidationCheckCount} field of the specified {@code struct}. */
-    public static void ndisabledValidationCheckCount(long struct, int value) { memPutInt(struct + VkValidationFlagsEXT.DISABLEDVALIDATIONCHECKCOUNT, value); }
+    public static void ndisabledValidationCheckCount(long struct, int value) { UNSAFE.putInt(null, struct + VkValidationFlagsEXT.DISABLEDVALIDATIONCHECKCOUNT, value); }
     /** Unsafe version of {@link #pDisabledValidationChecks(IntBuffer) pDisabledValidationChecks}. */
     public static void npDisabledValidationChecks(long struct, IntBuffer value) { memPutAddress(struct + VkValidationFlagsEXT.PDISABLEDVALIDATIONCHECKS, memAddress(value)); ndisabledValidationCheckCount(struct, value.remaining()); }
 
@@ -316,7 +314,7 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -325,8 +323,10 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
     /** An array of {@link VkValidationFlagsEXT} structs. */
     public static class Buffer extends StructBuffer<VkValidationFlagsEXT, Buffer> implements NativeResource {
 
+        private static final VkValidationFlagsEXT ELEMENT_FACTORY = VkValidationFlagsEXT.create(-1L);
+
         /**
-         * Creates a new {@link VkValidationFlagsEXT.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkValidationFlagsEXT.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -352,18 +352,8 @@ public class VkValidationFlagsEXT extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkValidationFlagsEXT newInstance(long address) {
-            return new VkValidationFlagsEXT(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkValidationFlagsEXT getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

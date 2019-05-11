@@ -41,7 +41,7 @@ public class VRDriverManager {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, nDriver, pchValue, unBufferSize);
+        return callPI(nDriver, pchValue, unBufferSize, __functionAddress);
     }
 
     /** @return the length of the number of bytes necessary to hold this string including the trailing null */
@@ -71,7 +71,7 @@ public class VRDriverManager {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJ(__functionAddress, pchDriverName);
+        return callPJ(pchDriverName, __functionAddress);
     }
 
     /**
@@ -80,7 +80,7 @@ public class VRDriverManager {
      * @param pchDriverName the driver name
      */
     @NativeType("DriverHandle_t")
-    public static long VRDriverManager_GetDriverHandle(@NativeType("char *") ByteBuffer pchDriverName) {
+    public static long VRDriverManager_GetDriverHandle(@NativeType("char const *") ByteBuffer pchDriverName) {
         if (CHECKS) {
             checkNT1(pchDriverName);
         }
@@ -93,11 +93,12 @@ public class VRDriverManager {
      * @param pchDriverName the driver name
      */
     @NativeType("DriverHandle_t")
-    public static long VRDriverManager_GetDriverHandle(@NativeType("char *") CharSequence pchDriverName) {
+    public static long VRDriverManager_GetDriverHandle(@NativeType("char const *") CharSequence pchDriverName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchDriverNameEncoded = stack.ASCII(pchDriverName);
-            return nVRDriverManager_GetDriverHandle(memAddress(pchDriverNameEncoded));
+            stack.nASCII(pchDriverName, true);
+            long pchDriverNameEncoded = stack.getPointerAddress();
+            return nVRDriverManager_GetDriverHandle(pchDriverNameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }

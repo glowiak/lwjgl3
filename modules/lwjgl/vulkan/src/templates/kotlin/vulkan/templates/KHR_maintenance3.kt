@@ -16,7 +16,7 @@ val KHR_maintenance3 = "KHRMaintenance3".nativeClassVK("KHR_maintenance3", type 
         The new features are as follows:
 
         <ul>
-            <li>A limit on the maximum number of descriptors that are supported in a single descriptor set layout. Some implementations have a limit on the total size of descriptors in a set, which can&#8217;t be expressed in terms of the limits in Vulkan 1.0.</li>
+            <li>A limit on the maximum number of descriptors that are supported in a single descriptor set layout. Some implementations have a limit on the total size of descriptors in a set, which cannot be expressed in terms of the limits in Vulkan 1.0.</li>
             <li>A limit on the maximum size of a single memory allocation. Some platforms have kernel interfaces that limit the maximum size of an allocation.</li>
         </ul>
 
@@ -44,7 +44,7 @@ val KHR_maintenance3 = "KHRMaintenance3".nativeClassVK("KHR_maintenance3", type 
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -93,8 +93,8 @@ val KHR_maintenance3 = "KHRMaintenance3".nativeClassVK("KHR_maintenance3", type 
         "GetDescriptorSetLayoutSupportKHR",
         "See #GetDescriptorSetLayoutSupport().",
 
-        VkDevice.IN("device", "the logical device that would create the descriptor set layout."),
-        VkDescriptorSetLayoutCreateInfo.const.p.IN("pCreateInfo", "a pointer to an instance of the ##VkDescriptorSetLayoutCreateInfo structure specifying the state of the descriptor set layout object."),
-        VkDescriptorSetLayoutSupport.p.OUT("pSupport", "points to a ##VkDescriptorSetLayoutSupport structure in which information about support for the descriptor set layout object is returned.")
+        VkDevice("device", "the logical device that would create the descriptor set layout."),
+        VkDescriptorSetLayoutCreateInfo.const.p("pCreateInfo", "a pointer to an instance of the ##VkDescriptorSetLayoutCreateInfo structure specifying the state of the descriptor set layout object."),
+        VkDescriptorSetLayoutSupport.p("pSupport", "points to a ##VkDescriptorSetLayoutSupport structure in which information about support for the descriptor set layout object is returned.")
     )
 }

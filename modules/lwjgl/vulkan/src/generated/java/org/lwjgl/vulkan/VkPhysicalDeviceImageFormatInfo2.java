@@ -22,11 +22,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <p>The members of {@link VkPhysicalDeviceImageFormatInfo2} correspond to the arguments to {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}, with {@code sType} and {@code pNext} added for extensibility.</p>
  * 
+ * <h5>Valid Usage</h5>
+ * 
+ * <ul>
+ * <li>{@code tiling} <b>must</b> be {@link EXTImageDrmFormatModifier#VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT} if and only if the {@code pNext} chain contains {@link VkPhysicalDeviceImageDrmFormatModifierInfoEXT}.</li>
+ * <li>If {@code tiling} is {@link EXTImageDrmFormatModifier#VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT} and {@code flags} contains {@link VK10#VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT IMAGE_CREATE_MUTABLE_FORMAT_BIT}, then the {@code pNext} chain <b>must</b> contain {@link VkImageFormatListCreateInfoKHR} with non-zero {@code viewFormatCount}.</li>
+ * </ul>
+ * 
  * <h5>Valid Usage (Implicit)</h5>
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link VK11#VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2 STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2}</li>
- * <li>{@code pNext} <b>must</b> be {@code NULL} or a pointer to a valid instance of {@link VkPhysicalDeviceExternalImageFormatInfo}</li>
+ * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkImageFormatListCreateInfoKHR}, {@link VkImageStencilUsageCreateInfoEXT}, {@link VkPhysicalDeviceExternalImageFormatInfo}, {@link VkPhysicalDeviceImageDrmFormatModifierInfoEXT}, or {@link VkPhysicalDeviceImageViewImageFormatInfoEXT}</li>
+ * <li>Each {@code sType} member in the {@code pNext} chain <b>must</b> be unique</li>
  * <li>{@code format} <b>must</b> be a valid {@code VkFormat} value</li>
  * <li>{@code type} <b>must</b> be a valid {@code VkImageType} value</li>
  * <li>{@code tiling} <b>must</b> be a valid {@code VkImageTiling} value</li>
@@ -43,7 +51,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} &ndash; the type of this structure.</li>
- * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure. The {@code pNext} chain of {@link VkPhysicalDeviceImageFormatInfo2} is used to provide additional image parameters to {@link VK11#vkGetPhysicalDeviceImageFormatProperties2 GetPhysicalDeviceImageFormatProperties2}.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure. The {@code pNext} chain of {@link VkPhysicalDeviceImageFormatInfo2} is used to provide additional image parameters to {@code vkGetPhysicalDeviceImageFormatProperties2}.</li>
  * <li>{@code format} &ndash; a {@code VkFormat} value indicating the image format, corresponding to {@link VkImageCreateInfo}{@code ::format}.</li>
  * <li>{@code type} &ndash; a {@code VkImageType} value indicating the image type, corresponding to {@link VkImageCreateInfo}{@code ::imageType}.</li>
  * <li>{@code tiling} &ndash; a {@code VkImageTiling} value indicating the image tiling, corresponding to {@link VkImageCreateInfo}{@code ::tiling}.</li>
@@ -105,18 +113,14 @@ public class VkPhysicalDeviceImageFormatInfo2 extends Struct implements NativeRe
         FLAGS = layout.offsetof(6);
     }
 
-    VkPhysicalDeviceImageFormatInfo2(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDeviceImageFormatInfo2} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceImageFormatInfo2} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceImageFormatInfo2(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -194,30 +198,31 @@ public class VkPhysicalDeviceImageFormatInfo2 extends Struct implements NativeRe
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceImageFormatInfo2} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceImageFormatInfo2} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceImageFormatInfo2 malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPhysicalDeviceImageFormatInfo2.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceImageFormatInfo2} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceImageFormatInfo2} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceImageFormatInfo2 calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPhysicalDeviceImageFormatInfo2.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceImageFormatInfo2} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPhysicalDeviceImageFormatInfo2} instance allocated with {@link BufferUtils}. */
     public static VkPhysicalDeviceImageFormatInfo2 create() {
-        return new VkPhysicalDeviceImageFormatInfo2(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDeviceImageFormatInfo2.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPhysicalDeviceImageFormatInfo2} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceImageFormatInfo2} instance for the specified memory address. */
     public static VkPhysicalDeviceImageFormatInfo2 create(long address) {
-        return new VkPhysicalDeviceImageFormatInfo2(address, null);
+        return wrap(VkPhysicalDeviceImageFormatInfo2.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceImageFormatInfo2 createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceImageFormatInfo2.class, address);
     }
 
     /**
@@ -226,7 +231,7 @@ public class VkPhysicalDeviceImageFormatInfo2 extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceImageFormatInfo2.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -235,7 +240,7 @@ public class VkPhysicalDeviceImageFormatInfo2 extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceImageFormatInfo2.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -244,7 +249,8 @@ public class VkPhysicalDeviceImageFormatInfo2 extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceImageFormatInfo2.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -254,43 +260,43 @@ public class VkPhysicalDeviceImageFormatInfo2 extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceImageFormatInfo2.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceImageFormatInfo2.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceImageFormatInfo2} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPhysicalDeviceImageFormatInfo2} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPhysicalDeviceImageFormatInfo2 mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPhysicalDeviceImageFormatInfo2} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPhysicalDeviceImageFormatInfo2} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPhysicalDeviceImageFormatInfo2 callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceImageFormatInfo2} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPhysicalDeviceImageFormatInfo2} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceImageFormatInfo2 mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPhysicalDeviceImageFormatInfo2.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceImageFormatInfo2} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPhysicalDeviceImageFormatInfo2} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceImageFormatInfo2 callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPhysicalDeviceImageFormatInfo2.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -318,7 +324,7 @@ public class VkPhysicalDeviceImageFormatInfo2 extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceImageFormatInfo2.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -328,48 +334,50 @@ public class VkPhysicalDeviceImageFormatInfo2 extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceImageFormatInfo2.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPhysicalDeviceImageFormatInfo2.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceImageFormatInfo2.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPhysicalDeviceImageFormatInfo2.PNEXT); }
     /** Unsafe version of {@link #format}. */
-    public static int nformat(long struct) { return memGetInt(struct + VkPhysicalDeviceImageFormatInfo2.FORMAT); }
+    public static int nformat(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceImageFormatInfo2.FORMAT); }
     /** Unsafe version of {@link #type}. */
-    public static int ntype(long struct) { return memGetInt(struct + VkPhysicalDeviceImageFormatInfo2.TYPE); }
+    public static int ntype(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceImageFormatInfo2.TYPE); }
     /** Unsafe version of {@link #tiling}. */
-    public static int ntiling(long struct) { return memGetInt(struct + VkPhysicalDeviceImageFormatInfo2.TILING); }
+    public static int ntiling(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceImageFormatInfo2.TILING); }
     /** Unsafe version of {@link #usage}. */
-    public static int nusage(long struct) { return memGetInt(struct + VkPhysicalDeviceImageFormatInfo2.USAGE); }
+    public static int nusage(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceImageFormatInfo2.USAGE); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkPhysicalDeviceImageFormatInfo2.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceImageFormatInfo2.FLAGS); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPhysicalDeviceImageFormatInfo2.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceImageFormatInfo2.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPhysicalDeviceImageFormatInfo2.PNEXT, value); }
     /** Unsafe version of {@link #format(int) format}. */
-    public static void nformat(long struct, int value) { memPutInt(struct + VkPhysicalDeviceImageFormatInfo2.FORMAT, value); }
+    public static void nformat(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceImageFormatInfo2.FORMAT, value); }
     /** Unsafe version of {@link #type(int) type}. */
-    public static void ntype(long struct, int value) { memPutInt(struct + VkPhysicalDeviceImageFormatInfo2.TYPE, value); }
+    public static void ntype(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceImageFormatInfo2.TYPE, value); }
     /** Unsafe version of {@link #tiling(int) tiling}. */
-    public static void ntiling(long struct, int value) { memPutInt(struct + VkPhysicalDeviceImageFormatInfo2.TILING, value); }
+    public static void ntiling(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceImageFormatInfo2.TILING, value); }
     /** Unsafe version of {@link #usage(int) usage}. */
-    public static void nusage(long struct, int value) { memPutInt(struct + VkPhysicalDeviceImageFormatInfo2.USAGE, value); }
+    public static void nusage(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceImageFormatInfo2.USAGE, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkPhysicalDeviceImageFormatInfo2.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceImageFormatInfo2.FLAGS, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPhysicalDeviceImageFormatInfo2} structs. */
     public static class Buffer extends StructBuffer<VkPhysicalDeviceImageFormatInfo2, Buffer> implements NativeResource {
 
+        private static final VkPhysicalDeviceImageFormatInfo2 ELEMENT_FACTORY = VkPhysicalDeviceImageFormatInfo2.create(-1L);
+
         /**
-         * Creates a new {@link VkPhysicalDeviceImageFormatInfo2.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceImageFormatInfo2.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -395,18 +403,8 @@ public class VkPhysicalDeviceImageFormatInfo2 extends Struct implements NativeRe
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDeviceImageFormatInfo2 newInstance(long address) {
-            return new VkPhysicalDeviceImageFormatInfo2(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPhysicalDeviceImageFormatInfo2 getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

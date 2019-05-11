@@ -31,7 +31,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * // example usage
  * long NSThread = objc_getClass("NSThread");
- * long currentThread = invokePPP(objc_msgSend, NSThread, sel_getUid("currentThread"));</code></pre>
+ * long currentThread = invokePPP(NSThread, sel_getUid("currentThread"), objc_msgSend);</code></pre>
  * 
  * <p>The safe way to use objc_msgSend in C code is to cast it to an appropriate function pointer. This is exactly what the {@link org.lwjgl.system.JNI JNI}
  * class does. If a particular function signature is not available, {@link org.lwjgl.system.dyncall.DynCall DynCall} may be used to invoke it.</p>
@@ -232,7 +232,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(obj);
         }
-        return invokePPP(__functionAddress, obj, size);
+        return invokePPP(obj, size, __functionAddress);
     }
 
     // --- [ object_dispose ] ---
@@ -250,7 +250,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(obj);
         }
-        return invokePP(__functionAddress, obj);
+        return invokePP(obj, __functionAddress);
     }
 
     // --- [ object_getClass ] ---
@@ -265,7 +265,7 @@ public class ObjCRuntime {
     @NativeType("Class")
     public static long object_getClass(@NativeType("id") long obj) {
         long __functionAddress = Functions.object_getClass;
-        return invokePP(__functionAddress, obj);
+        return invokePP(obj, __functionAddress);
     }
 
     // --- [ object_setClass ] ---
@@ -284,7 +284,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        return invokePPP(__functionAddress, obj, cls);
+        return invokePPP(obj, cls, __functionAddress);
     }
 
     // --- [ object_getClassName ] ---
@@ -292,7 +292,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #object_getClassName} */
     public static long nobject_getClassName(long obj) {
         long __functionAddress = Functions.object_getClassName;
-        return invokePP(__functionAddress, obj);
+        return invokePP(obj, __functionAddress);
     }
 
     /**
@@ -331,7 +331,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(obj);
         }
-        return invokePP(__functionAddress, obj);
+        return invokePP(obj, __functionAddress);
     }
 
     // --- [ object_getIvar ] ---
@@ -350,7 +350,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(ivar);
         }
-        return invokePPP(__functionAddress, obj, ivar);
+        return invokePPP(obj, ivar, __functionAddress);
     }
 
     // --- [ object_setIvar ] ---
@@ -371,7 +371,7 @@ public class ObjCRuntime {
             check(ivar);
             check(value);
         }
-        invokePPPV(__functionAddress, obj, ivar, value);
+        invokePPPV(obj, ivar, value, __functionAddress);
     }
 
     // --- [ object_setInstanceVariable ] ---
@@ -382,7 +382,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(obj);
         }
-        return invokePPPP(__functionAddress, obj, name, value);
+        return invokePPPP(obj, name, value, __functionAddress);
     }
 
     /**
@@ -415,8 +415,9 @@ public class ObjCRuntime {
     public static long object_setInstanceVariable(@NativeType("id") long obj, @NativeType("char const *") CharSequence name, @NativeType("void *") ByteBuffer value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nobject_setInstanceVariable(obj, memAddress(nameEncoded), memAddress(value));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nobject_setInstanceVariable(obj, nameEncoded, memAddress(value));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -430,7 +431,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(obj);
         }
-        return invokePPPP(__functionAddress, obj, name, outValue);
+        return invokePPPP(obj, name, outValue, __functionAddress);
     }
 
     /**
@@ -467,8 +468,9 @@ public class ObjCRuntime {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nobject_getInstanceVariable(obj, memAddress(nameEncoded), memAddress(outValue));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nobject_getInstanceVariable(obj, nameEncoded, memAddress(outValue));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -479,7 +481,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_getClass} */
     public static long nobjc_getClass(long name) {
         long __functionAddress = Functions.objc_getClass;
-        return invokePP(__functionAddress, name);
+        return invokePP(name, __functionAddress);
     }
 
     /**
@@ -514,8 +516,9 @@ public class ObjCRuntime {
     public static long objc_getClass(@NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nobjc_getClass(memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nobjc_getClass(nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -526,7 +529,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_getMetaClass} */
     public static long nobjc_getMetaClass(long name) {
         long __functionAddress = Functions.objc_getMetaClass;
-        return invokePP(__functionAddress, name);
+        return invokePP(name, __functionAddress);
     }
 
     /**
@@ -563,8 +566,9 @@ public class ObjCRuntime {
     public static long objc_getMetaClass(@NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nobjc_getMetaClass(memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nobjc_getMetaClass(nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -575,7 +579,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_lookUpClass} */
     public static long nobjc_lookUpClass(long name) {
         long __functionAddress = Functions.objc_lookUpClass;
-        return invokePP(__functionAddress, name);
+        return invokePP(name, __functionAddress);
     }
 
     /**
@@ -610,8 +614,9 @@ public class ObjCRuntime {
     public static long objc_lookUpClass(@NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nobjc_lookUpClass(memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nobjc_lookUpClass(nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -622,7 +627,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_getRequiredClass} */
     public static long nobjc_getRequiredClass(long name) {
         long __functionAddress = Functions.objc_getRequiredClass;
-        return invokePP(__functionAddress, name);
+        return invokePP(name, __functionAddress);
     }
 
     /**
@@ -659,8 +664,9 @@ public class ObjCRuntime {
     public static long objc_getRequiredClass(@NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nobjc_getRequiredClass(memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nobjc_getRequiredClass(nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -676,7 +682,7 @@ public class ObjCRuntime {
      */
     public static int nobjc_getClassList(long buffer, int bufferCount) {
         long __functionAddress = Functions.objc_getClassList;
-        return invokePI(__functionAddress, buffer, bufferCount);
+        return invokePI(buffer, bufferCount, __functionAddress);
     }
 
     /**
@@ -709,7 +715,7 @@ public class ObjCRuntime {
      */
     public static long nobjc_copyClassList(long outCount) {
         long __functionAddress = Functions.objc_copyClassList;
-        return invokePP(__functionAddress, outCount);
+        return invokePP(outCount, __functionAddress);
     }
 
     /**
@@ -735,7 +741,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #class_getName} */
     public static long nclass_getName(long cls) {
         long __functionAddress = Functions.class_getName;
-        return invokePP(__functionAddress, cls);
+        return invokePP(cls, __functionAddress);
     }
 
     /**
@@ -764,7 +770,7 @@ public class ObjCRuntime {
     @NativeType("BOOL")
     public static boolean class_isMetaClass(@NativeType("Class") long cls) {
         long __functionAddress = Functions.class_isMetaClass;
-        return invokePZ(__functionAddress, cls);
+        return invokePZ(cls, __functionAddress);
     }
 
     // --- [ class_getSuperclass ] ---
@@ -779,7 +785,7 @@ public class ObjCRuntime {
     @NativeType("Class")
     public static long class_getSuperclass(@NativeType("Class") long cls) {
         long __functionAddress = Functions.class_getSuperclass;
-        return invokePP(__functionAddress, cls);
+        return invokePP(cls, __functionAddress);
     }
 
     // --- [ class_getVersion ] ---
@@ -803,7 +809,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        return invokePI(__functionAddress, cls);
+        return invokePI(cls, __functionAddress);
     }
 
     // --- [ class_setVersion ] ---
@@ -826,7 +832,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        invokePV(__functionAddress, cls, version);
+        invokePV(cls, version, __functionAddress);
     }
 
     // --- [ class_getInstanceSize ] ---
@@ -841,7 +847,7 @@ public class ObjCRuntime {
     @NativeType("size_t")
     public static long class_getInstanceSize(@NativeType("Class") long cls) {
         long __functionAddress = Functions.class_getInstanceSize;
-        return invokePP(__functionAddress, cls);
+        return invokePP(cls, __functionAddress);
     }
 
     // --- [ class_getInstanceVariable ] ---
@@ -852,7 +858,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        return invokePPP(__functionAddress, cls, name);
+        return invokePPP(cls, name, __functionAddress);
     }
 
     /**
@@ -883,8 +889,9 @@ public class ObjCRuntime {
     public static long class_getInstanceVariable(@NativeType("Class") long cls, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nclass_getInstanceVariable(cls, memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nclass_getInstanceVariable(cls, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -898,7 +905,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        return invokePPP(__functionAddress, cls, name);
+        return invokePPP(cls, name, __functionAddress);
     }
 
     /**
@@ -929,8 +936,9 @@ public class ObjCRuntime {
     public static long class_getClassVariable(@NativeType("Class") long cls, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nclass_getClassVariable(cls, memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nclass_getClassVariable(cls, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -945,7 +953,7 @@ public class ObjCRuntime {
      */
     public static long nclass_copyIvarList(long cls, long outCount) {
         long __functionAddress = Functions.class_copyIvarList;
-        return invokePPP(__functionAddress, cls, outCount);
+        return invokePPP(cls, outCount, __functionAddress);
     }
 
     /**
@@ -991,7 +999,7 @@ public class ObjCRuntime {
             check(cls);
             check(name);
         }
-        return invokePPP(__functionAddress, cls, name);
+        return invokePPP(cls, name, __functionAddress);
     }
 
     // --- [ class_getClassMethod ] ---
@@ -1014,7 +1022,7 @@ public class ObjCRuntime {
             check(cls);
             check(name);
         }
-        return invokePPP(__functionAddress, cls, name);
+        return invokePPP(cls, name, __functionAddress);
     }
 
     // --- [ class_getMethodImplementation ] ---
@@ -1038,7 +1046,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(name);
         }
-        return invokePPP(__functionAddress, cls, name);
+        return invokePPP(cls, name, __functionAddress);
     }
 
     // --- [ class_respondsToSelector ] ---
@@ -1060,7 +1068,7 @@ public class ObjCRuntime {
             check(cls);
             check(name);
         }
-        return invokePPZ(__functionAddress, cls, name);
+        return invokePPZ(cls, name, __functionAddress);
     }
 
     // --- [ class_copyMethodList ] ---
@@ -1072,7 +1080,7 @@ public class ObjCRuntime {
      */
     public static long nclass_copyMethodList(long cls, long outCount) {
         long __functionAddress = Functions.class_copyMethodList;
-        return invokePPP(__functionAddress, cls, outCount);
+        return invokePPP(cls, outCount, __functionAddress);
     }
 
     /**
@@ -1117,7 +1125,7 @@ public class ObjCRuntime {
             check(cls);
             check(protocol);
         }
-        return invokePPZ(__functionAddress, cls, protocol);
+        return invokePPZ(cls, protocol, __functionAddress);
     }
 
     // --- [ class_copyProtocolList ] ---
@@ -1129,7 +1137,7 @@ public class ObjCRuntime {
      */
     public static long nclass_copyProtocolList(long cls, long outCount) {
         long __functionAddress = Functions.class_copyProtocolList;
-        return invokePPP(__functionAddress, cls, outCount);
+        return invokePPP(cls, outCount, __functionAddress);
     }
 
     /**
@@ -1160,7 +1168,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #class_getProperty} */
     public static long nclass_getProperty(long cls, long name) {
         long __functionAddress = Functions.class_getProperty;
-        return invokePPP(__functionAddress, cls, name);
+        return invokePPP(cls, name, __functionAddress);
     }
 
     /**
@@ -1193,8 +1201,9 @@ public class ObjCRuntime {
     public static long class_getProperty(@NativeType("Class") long cls, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nclass_getProperty(cls, memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nclass_getProperty(cls, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1209,7 +1218,7 @@ public class ObjCRuntime {
      */
     public static long nclass_copyPropertyList(long cls, long outCount) {
         long __functionAddress = Functions.class_copyPropertyList;
-        return invokePPP(__functionAddress, cls, outCount);
+        return invokePPP(cls, outCount, __functionAddress);
     }
 
     /**
@@ -1243,7 +1252,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        return invokePP(__functionAddress, cls);
+        return invokePP(cls, __functionAddress);
     }
 
     /**
@@ -1268,7 +1277,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        return invokePP(__functionAddress, cls);
+        return invokePP(cls, __functionAddress);
     }
 
     /**
@@ -1295,7 +1304,7 @@ public class ObjCRuntime {
             check(name);
             check(imp);
         }
-        return invokePPPPZ(__functionAddress, cls, name, imp, types);
+        return invokePPPPZ(cls, name, imp, types, __functionAddress);
     }
 
     /**
@@ -1372,8 +1381,9 @@ public class ObjCRuntime {
     public static boolean class_addMethod(@NativeType("Class") long cls, @NativeType("SEL") long name, @NativeType("IMP") long imp, @NativeType("char const *") CharSequence types) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer typesEncoded = stack.UTF8(types);
-            return nclass_addMethod(cls, name, imp, memAddress(typesEncoded));
+            stack.nUTF8(types, true);
+            long typesEncoded = stack.getPointerAddress();
+            return nclass_addMethod(cls, name, imp, typesEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1389,7 +1399,7 @@ public class ObjCRuntime {
             check(name);
             check(imp);
         }
-        return invokePPPPP(__functionAddress, cls, name, imp, types);
+        return invokePPPPP(cls, name, imp, types, __functionAddress);
     }
 
     /**
@@ -1450,8 +1460,9 @@ public class ObjCRuntime {
     public static long class_replaceMethod(@NativeType("Class") long cls, @NativeType("SEL") long name, @NativeType("IMP") long imp, @NativeType("char const *") CharSequence types) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer typesEncoded = stack.UTF8(types);
-            return nclass_replaceMethod(cls, name, imp, memAddress(typesEncoded));
+            stack.nUTF8(types, true);
+            long typesEncoded = stack.getPointerAddress();
+            return nclass_replaceMethod(cls, name, imp, typesEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1465,7 +1476,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        return invokePPPPZ(__functionAddress, cls, name, size, alignment, types);
+        return invokePPPPZ(cls, name, size, alignment, types, __functionAddress);
     }
 
     /**
@@ -1507,9 +1518,11 @@ public class ObjCRuntime {
     public static boolean class_addIvar(@NativeType("Class") long cls, @NativeType("char const *") CharSequence name, @NativeType("size_t") long size, @NativeType("uint8_t") byte alignment, @NativeType("char const *") CharSequence types) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            ByteBuffer typesEncoded = stack.UTF8(types);
-            return nclass_addIvar(cls, memAddress(nameEncoded), size, alignment, memAddress(typesEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            stack.nUTF8(types, true);
+            long typesEncoded = stack.getPointerAddress();
+            return nclass_addIvar(cls, nameEncoded, size, alignment, typesEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1532,7 +1545,7 @@ public class ObjCRuntime {
             check(cls);
             check(protocol);
         }
-        return invokePPZ(__functionAddress, cls, protocol);
+        return invokePPZ(cls, protocol, __functionAddress);
     }
 
     // --- [ class_addProperty ] ---
@@ -1548,7 +1561,7 @@ public class ObjCRuntime {
             check(cls);
             ObjCPropertyAttribute.validate(attributes, attributeCount);
         }
-        return invokePPPZ(__functionAddress, cls, name, attributes, attributeCount);
+        return invokePPPZ(cls, name, attributes, attributeCount, __functionAddress);
     }
 
     /**
@@ -1581,8 +1594,9 @@ public class ObjCRuntime {
     public static boolean class_addProperty(@NativeType("Class") long cls, @NativeType("char const *") CharSequence name, @NativeType("objc_property_attribute_t const *") ObjCPropertyAttribute.Buffer attributes) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nclass_addProperty(cls, memAddress(nameEncoded), attributes.address(), attributes.remaining());
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nclass_addProperty(cls, nameEncoded, attributes.address(), attributes.remaining());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1601,7 +1615,7 @@ public class ObjCRuntime {
             check(cls);
             ObjCPropertyAttribute.validate(attributes, attributeCount);
         }
-        invokePPPV(__functionAddress, cls, name, attributes, attributeCount);
+        invokePPPV(cls, name, attributes, attributeCount, __functionAddress);
     }
 
     /**
@@ -1628,8 +1642,9 @@ public class ObjCRuntime {
     public static void class_replaceProperty(@NativeType("Class") long cls, @NativeType("char const *") CharSequence name, @NativeType("objc_property_attribute_t const *") ObjCPropertyAttribute.Buffer attributes) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nclass_replaceProperty(cls, memAddress(nameEncoded), attributes.address(), attributes.remaining());
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nclass_replaceProperty(cls, nameEncoded, attributes.address(), attributes.remaining());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1643,7 +1658,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        invokePPV(__functionAddress, cls, layout);
+        invokePPV(cls, layout, __functionAddress);
     }
 
     /**
@@ -1668,8 +1683,9 @@ public class ObjCRuntime {
     public static void class_setIvarLayout(@NativeType("Class") long cls, @NativeType("uint8_t const *") CharSequence layout) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer layoutEncoded = stack.ASCII(layout);
-            nclass_setIvarLayout(cls, memAddress(layoutEncoded));
+            stack.nASCII(layout, true);
+            long layoutEncoded = stack.getPointerAddress();
+            nclass_setIvarLayout(cls, layoutEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1683,7 +1699,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        invokePPV(__functionAddress, cls, layout);
+        invokePPV(cls, layout, __functionAddress);
     }
 
     /**
@@ -1708,8 +1724,9 @@ public class ObjCRuntime {
     public static void class_setWeakIvarLayout(@NativeType("Class") long cls, @NativeType("uint8_t const *") CharSequence layout) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer layoutEncoded = stack.ASCII(layout);
-            nclass_setWeakIvarLayout(cls, memAddress(layoutEncoded));
+            stack.nASCII(layout, true);
+            long layoutEncoded = stack.getPointerAddress();
+            nclass_setWeakIvarLayout(cls, layoutEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1732,7 +1749,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        return invokePPP(__functionAddress, cls, extraBytes);
+        return invokePPP(cls, extraBytes, __functionAddress);
     }
 
     // --- [ objc_constructInstance ] ---
@@ -1740,7 +1757,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_constructInstance} */
     public static long nobjc_constructInstance(long cls, long bytes) {
         long __functionAddress = Functions.objc_constructInstance;
-        return invokePPP(__functionAddress, cls, bytes);
+        return invokePPP(cls, bytes, __functionAddress);
     }
 
     /**
@@ -1782,7 +1799,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(obj);
         }
-        return invokePP(__functionAddress, obj);
+        return invokePP(obj, __functionAddress);
     }
 
     // --- [ objc_allocateClassPair ] ---
@@ -1790,7 +1807,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_allocateClassPair} */
     public static long nobjc_allocateClassPair(long superclass, long name, long extraBytes) {
         long __functionAddress = Functions.objc_allocateClassPair;
-        return invokePPPP(__functionAddress, superclass, name, extraBytes);
+        return invokePPPP(superclass, name, extraBytes, __functionAddress);
     }
 
     /**
@@ -1837,8 +1854,9 @@ public class ObjCRuntime {
     public static long objc_allocateClassPair(@NativeType("Class") long superclass, @NativeType("char const *") CharSequence name, @NativeType("size_t") long extraBytes) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nobjc_allocateClassPair(superclass, memAddress(nameEncoded), extraBytes);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nobjc_allocateClassPair(superclass, nameEncoded, extraBytes);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1856,7 +1874,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        invokePV(__functionAddress, cls);
+        invokePV(cls, __functionAddress);
     }
 
     // --- [ objc_disposeClassPair ] ---
@@ -1873,7 +1891,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        invokePV(__functionAddress, cls);
+        invokePV(cls, __functionAddress);
     }
 
     // --- [ method_getName ] ---
@@ -1893,7 +1911,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(m);
         }
-        return invokePP(__functionAddress, m);
+        return invokePP(m, __functionAddress);
     }
 
     // --- [ method_getImplementation ] ---
@@ -1911,7 +1929,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(m);
         }
-        return invokePP(__functionAddress, m);
+        return invokePP(m, __functionAddress);
     }
 
     // --- [ method_getTypeEncoding ] ---
@@ -1922,7 +1940,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(m);
         }
-        return invokePP(__functionAddress, m);
+        return invokePP(m, __functionAddress);
     }
 
     /**
@@ -1954,7 +1972,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(m);
         }
-        return invokePI(__functionAddress, m);
+        return invokePI(m, __functionAddress);
     }
 
     // --- [ method_copyReturnType ] ---
@@ -1965,7 +1983,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(m);
         }
-        return invokePP(__functionAddress, m);
+        return invokePP(m, __functionAddress);
     }
 
     /**
@@ -1990,7 +2008,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(m);
         }
-        return invokePP(__functionAddress, m, index);
+        return invokePP(m, index, __functionAddress);
     }
 
     /**
@@ -2021,7 +2039,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(m);
         }
-        invokePPPV(__functionAddress, m, dst, dst_len);
+        invokePPPV(m, dst, dst_len, __functionAddress);
     }
 
     /**
@@ -2068,7 +2086,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(m);
         }
-        invokePPPV(__functionAddress, m, index, dst, dst_len);
+        invokePPPV(m, index, dst, dst_len, __functionAddress);
     }
 
     /**
@@ -2124,7 +2142,7 @@ public class ObjCRuntime {
             check(m);
             check(imp);
         }
-        return invokePPP(__functionAddress, m, imp);
+        return invokePPP(m, imp, __functionAddress);
     }
 
     // --- [ method_exchangeImplementations ] ---
@@ -2141,7 +2159,7 @@ public class ObjCRuntime {
             check(m1);
             check(m2);
         }
-        invokePPV(__functionAddress, m1, m2);
+        invokePPV(m1, m2, __functionAddress);
     }
 
     // --- [ ivar_getName ] ---
@@ -2152,7 +2170,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(v);
         }
-        return invokePP(__functionAddress, v);
+        return invokePP(v, __functionAddress);
     }
 
     /**
@@ -2177,7 +2195,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(v);
         }
-        return invokePP(__functionAddress, v);
+        return invokePP(v, __functionAddress);
     }
 
     /**
@@ -2212,7 +2230,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(v);
         }
-        return invokePP(__functionAddress, v);
+        return invokePP(v, __functionAddress);
     }
 
     // --- [ property_getName ] ---
@@ -2223,7 +2241,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(property);
         }
-        return invokePP(__functionAddress, property);
+        return invokePP(property, __functionAddress);
     }
 
     /**
@@ -2248,7 +2266,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(property);
         }
-        return invokePP(__functionAddress, property);
+        return invokePP(property, __functionAddress);
     }
 
     /**
@@ -2277,7 +2295,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(property);
         }
-        return invokePPP(__functionAddress, property, outCount);
+        return invokePPP(property, outCount, __functionAddress);
     }
 
     /**
@@ -2308,7 +2326,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(property);
         }
-        return invokePPP(__functionAddress, property, attributeName);
+        return invokePPP(property, attributeName, __functionAddress);
     }
 
     /**
@@ -2344,8 +2362,9 @@ public class ObjCRuntime {
     public static String property_copyAttributeValue(@NativeType("objc_property_t") long property, @NativeType("char const *") CharSequence attributeName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer attributeNameEncoded = stack.UTF8(attributeName);
-            long __result = nproperty_copyAttributeValue(property, memAddress(attributeNameEncoded));
+            stack.nUTF8(attributeName, true);
+            long attributeNameEncoded = stack.getPointerAddress();
+            long __result = nproperty_copyAttributeValue(property, attributeNameEncoded);
             return memUTF8Safe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -2357,7 +2376,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_getProtocol} */
     public static long nobjc_getProtocol(long name) {
         long __functionAddress = Functions.objc_getProtocol;
-        return invokePP(__functionAddress, name);
+        return invokePP(name, __functionAddress);
     }
 
     /**
@@ -2390,8 +2409,9 @@ public class ObjCRuntime {
     public static long objc_getProtocol(@NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nobjc_getProtocol(memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nobjc_getProtocol(nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2406,7 +2426,7 @@ public class ObjCRuntime {
      */
     public static long nobjc_copyProtocolList(long outCount) {
         long __functionAddress = Functions.objc_copyProtocolList;
-        return invokePP(__functionAddress, outCount);
+        return invokePP(outCount, __functionAddress);
     }
 
     /**
@@ -2453,7 +2473,7 @@ public class ObjCRuntime {
             check(proto);
             check(other);
         }
-        return invokePPZ(__functionAddress, proto, other);
+        return invokePPZ(proto, other, __functionAddress);
     }
 
     // --- [ protocol_isEqual ] ---
@@ -2473,7 +2493,7 @@ public class ObjCRuntime {
             check(proto);
             check(other);
         }
-        return invokePPZ(__functionAddress, proto, other);
+        return invokePPZ(proto, other, __functionAddress);
     }
 
     // --- [ protocol_getName ] ---
@@ -2484,7 +2504,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(p);
         }
-        return invokePP(__functionAddress, p);
+        return invokePP(p, __functionAddress);
     }
 
     /**
@@ -2504,7 +2524,7 @@ public class ObjCRuntime {
     // --- [ protocol_getMethodDescription ] ---
 
     /** Unsafe version of: {@link #protocol_getMethodDescription} */
-    public static native void nprotocol_getMethodDescription(long __functionAddress, long p, long aSel, boolean isRequiredMethod, boolean isInstanceMethod, long __result);
+    public static native void nprotocol_getMethodDescription(long p, long aSel, boolean isRequiredMethod, boolean isInstanceMethod, long __functionAddress, long __result);
 
     /** Unsafe version of: {@link #protocol_getMethodDescription} */
     public static void nprotocol_getMethodDescription(long p, long aSel, boolean isRequiredMethod, boolean isInstanceMethod, long __result) {
@@ -2513,7 +2533,7 @@ public class ObjCRuntime {
             check(p);
             check(aSel);
         }
-        nprotocol_getMethodDescription(__functionAddress, p, aSel, isRequiredMethod, isInstanceMethod, __result);
+        nprotocol_getMethodDescription(p, aSel, isRequiredMethod, isInstanceMethod, __functionAddress, __result);
     }
 
     /**
@@ -2529,7 +2549,7 @@ public class ObjCRuntime {
      *                         <p>If the protocol does not contain the specified method, returns an objc_method_description structure with the value {@code {NULL, NULL}}.</p>
      */
     @NativeType("struct objc_method_description")
-    public static ObjCMethodDescription protocol_getMethodDescription(@NativeType("Protocol *") long p, @NativeType("SEL") long aSel, @NativeType("BOOL") boolean isRequiredMethod, @NativeType("BOOL") boolean isInstanceMethod, ObjCMethodDescription __result) {
+    public static ObjCMethodDescription protocol_getMethodDescription(@NativeType("Protocol *") long p, @NativeType("SEL") long aSel, @NativeType("BOOL") boolean isRequiredMethod, @NativeType("BOOL") boolean isInstanceMethod, @NativeType("struct objc_method_description") ObjCMethodDescription __result) {
         nprotocol_getMethodDescription(p, aSel, isRequiredMethod, isInstanceMethod, __result.address());
         return __result;
     }
@@ -2546,7 +2566,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(p);
         }
-        return invokePPP(__functionAddress, p, isRequiredMethod, isInstanceMethod, outCount);
+        return invokePPP(p, isRequiredMethod, isInstanceMethod, outCount, __functionAddress);
     }
 
     /**
@@ -2584,7 +2604,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(proto);
         }
-        return invokePPP(__functionAddress, proto, name, isRequiredProperty, isInstanceProperty);
+        return invokePPP(proto, name, isRequiredProperty, isInstanceProperty, __functionAddress);
     }
 
     /**
@@ -2621,8 +2641,9 @@ public class ObjCRuntime {
     public static long protocol_getProperty(@NativeType("Protocol *") long proto, @NativeType("char const *") CharSequence name, @NativeType("BOOL") boolean isRequiredProperty, @NativeType("BOOL") boolean isInstanceProperty) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nprotocol_getProperty(proto, memAddress(nameEncoded), isRequiredProperty, isInstanceProperty);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nprotocol_getProperty(proto, nameEncoded, isRequiredProperty, isInstanceProperty);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2640,7 +2661,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(proto);
         }
-        return invokePPP(__functionAddress, proto, outCount);
+        return invokePPP(proto, outCount, __functionAddress);
     }
 
     /**
@@ -2678,7 +2699,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(proto);
         }
-        return invokePPP(__functionAddress, proto, outCount);
+        return invokePPP(proto, outCount, __functionAddress);
     }
 
     /**
@@ -2709,7 +2730,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_allocateProtocol} */
     public static long nobjc_allocateProtocol(long name) {
         long __functionAddress = Functions.objc_allocateProtocol;
-        return invokePP(__functionAddress, name);
+        return invokePP(name, __functionAddress);
     }
 
     /**
@@ -2746,8 +2767,9 @@ public class ObjCRuntime {
     public static long objc_allocateProtocol(@NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nobjc_allocateProtocol(memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nobjc_allocateProtocol(nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2768,7 +2790,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(proto);
         }
-        invokePV(__functionAddress, proto);
+        invokePV(proto, __functionAddress);
     }
 
     // --- [ protocol_addMethodDescription ] ---
@@ -2780,7 +2802,7 @@ public class ObjCRuntime {
             check(proto);
             check(name);
         }
-        invokePPPV(__functionAddress, proto, name, types, isRequiredMethod, isInstanceMethod);
+        invokePPPV(proto, name, types, isRequiredMethod, isInstanceMethod, __functionAddress);
     }
 
     /**
@@ -2819,8 +2841,9 @@ public class ObjCRuntime {
     public static void protocol_addMethodDescription(@NativeType("Protocol *") long proto, @NativeType("SEL") long name, @NativeType("char const *") CharSequence types, @NativeType("BOOL") boolean isRequiredMethod, @NativeType("BOOL") boolean isInstanceMethod) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer typesEncoded = stack.UTF8(types);
-            nprotocol_addMethodDescription(proto, name, memAddress(typesEncoded), isRequiredMethod, isInstanceMethod);
+            stack.nUTF8(types, true);
+            long typesEncoded = stack.getPointerAddress();
+            nprotocol_addMethodDescription(proto, name, typesEncoded, isRequiredMethod, isInstanceMethod);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2843,7 +2866,7 @@ public class ObjCRuntime {
             check(proto);
             check(addition);
         }
-        invokePPV(__functionAddress, proto, addition);
+        invokePPV(proto, addition, __functionAddress);
     }
 
     // --- [ protocol_addProperty ] ---
@@ -2859,7 +2882,7 @@ public class ObjCRuntime {
             check(proto);
             ObjCPropertyAttribute.validate(attributes, attributeCount);
         }
-        invokePPPV(__functionAddress, proto, name, attributes, attributeCount, isRequiredProperty, isInstanceProperty);
+        invokePPPV(proto, name, attributes, attributeCount, isRequiredProperty, isInstanceProperty, __functionAddress);
     }
 
     /**
@@ -2900,8 +2923,9 @@ public class ObjCRuntime {
     public static void protocol_addProperty(@NativeType("Protocol *") long proto, @NativeType("char const *") CharSequence name, @NativeType("objc_property_attribute_t const *") ObjCPropertyAttribute.Buffer attributes, @NativeType("BOOL") boolean isRequiredProperty, @NativeType("BOOL") boolean isInstanceProperty) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nprotocol_addProperty(proto, memAddress(nameEncoded), attributes.address(), attributes.remaining(), isRequiredProperty, isInstanceProperty);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nprotocol_addProperty(proto, nameEncoded, attributes.address(), attributes.remaining(), isRequiredProperty, isInstanceProperty);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2916,7 +2940,7 @@ public class ObjCRuntime {
      */
     public static long nobjc_copyImageNames(long outCount) {
         long __functionAddress = Functions.objc_copyImageNames;
-        return invokePP(__functionAddress, outCount);
+        return invokePP(outCount, __functionAddress);
     }
 
     /**
@@ -2945,7 +2969,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(cls);
         }
-        return invokePP(__functionAddress, cls);
+        return invokePP(cls, __functionAddress);
     }
 
     /**
@@ -2971,7 +2995,7 @@ public class ObjCRuntime {
      */
     public static long nobjc_copyClassNamesForImage(long image, long outCount) {
         long __functionAddress = Functions.objc_copyClassNamesForImage;
-        return invokePPP(__functionAddress, image, outCount);
+        return invokePPP(image, outCount, __functionAddress);
     }
 
     /**
@@ -3010,8 +3034,9 @@ public class ObjCRuntime {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer outCount = stack.callocInt(1);
-            ByteBuffer imageEncoded = stack.UTF8(image);
-            long __result = nobjc_copyClassNamesForImage(memAddress(imageEncoded), memAddress(outCount));
+            stack.nUTF8(image, true);
+            long imageEncoded = stack.getPointerAddress();
+            long __result = nobjc_copyClassNamesForImage(imageEncoded, memAddress(outCount));
             return memPointerBufferSafe(__result, outCount.get(0));
         } finally {
             stack.setPointer(stackPointer);
@@ -3026,7 +3051,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(sel);
         }
-        return invokePP(__functionAddress, sel);
+        return invokePP(sel, __functionAddress);
     }
 
     /**
@@ -3048,7 +3073,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #sel_getUid} */
     public static long nsel_getUid(long str) {
         long __functionAddress = Functions.sel_getUid;
-        return invokePP(__functionAddress, str);
+        return invokePP(str, __functionAddress);
     }
 
     /**
@@ -3081,8 +3106,9 @@ public class ObjCRuntime {
     public static long sel_getUid(@NativeType("char const *") CharSequence str) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nsel_getUid(memAddress(strEncoded));
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nsel_getUid(strEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3093,7 +3119,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #sel_registerName} */
     public static long nsel_registerName(long str) {
         long __functionAddress = Functions.sel_registerName;
-        return invokePP(__functionAddress, str);
+        return invokePP(str, __functionAddress);
     }
 
     /**
@@ -3128,8 +3154,9 @@ public class ObjCRuntime {
     public static long sel_registerName(@NativeType("char const *") CharSequence str) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nsel_registerName(memAddress(strEncoded));
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nsel_registerName(strEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3154,7 +3181,7 @@ public class ObjCRuntime {
             check(lhs);
             check(rhs);
         }
-        return invokePPZ(__functionAddress, lhs, rhs);
+        return invokePPZ(lhs, rhs, __functionAddress);
     }
 
     // --- [ objc_enumerationMutation ] ---
@@ -3173,7 +3200,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(obj);
         }
-        invokePV(__functionAddress, obj);
+        invokePV(obj, __functionAddress);
     }
 
     // --- [ objc_setEnumerationMutationHandler ] ---
@@ -3181,7 +3208,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_setEnumerationMutationHandler} */
     public static void nobjc_setEnumerationMutationHandler(long handler) {
         long __functionAddress = Functions.objc_setEnumerationMutationHandler;
-        invokePV(__functionAddress, handler);
+        invokePV(handler, __functionAddress);
     }
 
     /**
@@ -3209,7 +3236,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(block);
         }
-        return invokePP(__functionAddress, block);
+        return invokePP(block, __functionAddress);
     }
 
     // --- [ imp_getBlock ] ---
@@ -3227,7 +3254,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(anImp);
         }
-        return invokePP(__functionAddress, anImp);
+        return invokePP(anImp, __functionAddress);
     }
 
     // --- [ imp_removeBlock ] ---
@@ -3246,7 +3273,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(anImp);
         }
-        return invokePZ(__functionAddress, anImp);
+        return invokePZ(anImp, __functionAddress);
     }
 
     // --- [ objc_loadWeak ] ---
@@ -3254,7 +3281,7 @@ public class ObjCRuntime {
     /** Unsafe version of: {@link #objc_loadWeak} */
     public static long nobjc_loadWeak(long location) {
         long __functionAddress = Functions.objc_loadWeak;
-        return invokePP(__functionAddress, location);
+        return invokePP(location, __functionAddress);
     }
 
     /**
@@ -3283,7 +3310,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(obj);
         }
-        return invokePPP(__functionAddress, location, obj);
+        return invokePPP(location, obj, __functionAddress);
     }
 
     /**
@@ -3321,7 +3348,7 @@ public class ObjCRuntime {
             check(key);
             check(value);
         }
-        invokePPPPV(__functionAddress, object, key, value, policy);
+        invokePPPPV(object, key, value, policy, __functionAddress);
     }
 
     // --- [ objc_getAssociatedObject ] ---
@@ -3341,7 +3368,7 @@ public class ObjCRuntime {
             check(object);
             check(key);
         }
-        return invokePPP(__functionAddress, object, key);
+        return invokePPP(object, key, __functionAddress);
     }
 
     // --- [ objc_removeAssociatedObjects ] ---
@@ -3360,7 +3387,7 @@ public class ObjCRuntime {
         if (CHECKS) {
             check(object);
         }
-        invokePV(__functionAddress, object);
+        invokePV(object, __functionAddress);
     }
 
 }

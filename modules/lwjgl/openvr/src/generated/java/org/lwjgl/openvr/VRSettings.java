@@ -29,7 +29,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callP(__functionAddress, eError);
+        return callP(eError, __functionAddress);
     }
 
     @Nullable
@@ -47,7 +47,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPZ(__functionAddress, bForce, peError);
+        return callPZ(bForce, peError, __functionAddress);
     }
 
     /** Returns true if file sync occurred (force or settings dirty). */
@@ -66,7 +66,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, pchSection, pchSettingsKey, bValue, peError);
+        callPPPV(pchSection, pchSettingsKey, bValue, peError, __functionAddress);
     }
 
     public static void VRSettings_SetBool(@NativeType("char const *") ByteBuffer pchSection, @NativeType("char const *") ByteBuffer pchSettingsKey, @NativeType("bool") boolean bValue, @NativeType("EVRSettingsError *") IntBuffer peError) {
@@ -84,9 +84,11 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            ByteBuffer pchSettingsKeyEncoded = stack.ASCII(pchSettingsKey);
-            nVRSettings_SetBool(memAddress(pchSectionEncoded), memAddress(pchSettingsKeyEncoded), bValue, memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            stack.nASCII(pchSettingsKey, true);
+            long pchSettingsKeyEncoded = stack.getPointerAddress();
+            nVRSettings_SetBool(pchSectionEncoded, pchSettingsKeyEncoded, bValue, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -99,7 +101,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, pchSection, pchSettingsKey, nValue, peError);
+        callPPPV(pchSection, pchSettingsKey, nValue, peError, __functionAddress);
     }
 
     public static void VRSettings_SetInt32(@NativeType("char const *") ByteBuffer pchSection, @NativeType("char const *") ByteBuffer pchSettingsKey, @NativeType("int32_t") int nValue, @NativeType("EVRSettingsError *") IntBuffer peError) {
@@ -117,9 +119,11 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            ByteBuffer pchSettingsKeyEncoded = stack.ASCII(pchSettingsKey);
-            nVRSettings_SetInt32(memAddress(pchSectionEncoded), memAddress(pchSettingsKeyEncoded), nValue, memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            stack.nASCII(pchSettingsKey, true);
+            long pchSettingsKeyEncoded = stack.getPointerAddress();
+            nVRSettings_SetInt32(pchSectionEncoded, pchSettingsKeyEncoded, nValue, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -132,7 +136,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, pchSection, pchSettingsKey, flValue, peError);
+        callPPPV(pchSection, pchSettingsKey, flValue, peError, __functionAddress);
     }
 
     public static void VRSettings_SetFloat(@NativeType("char const *") ByteBuffer pchSection, @NativeType("char const *") ByteBuffer pchSettingsKey, float flValue, @NativeType("EVRSettingsError *") IntBuffer peError) {
@@ -150,9 +154,11 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            ByteBuffer pchSettingsKeyEncoded = stack.ASCII(pchSettingsKey);
-            nVRSettings_SetFloat(memAddress(pchSectionEncoded), memAddress(pchSettingsKeyEncoded), flValue, memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            stack.nASCII(pchSettingsKey, true);
+            long pchSettingsKeyEncoded = stack.getPointerAddress();
+            nVRSettings_SetFloat(pchSectionEncoded, pchSettingsKeyEncoded, flValue, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -165,7 +171,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPPV(__functionAddress, pchSection, pchSettingsKey, pchValue, peError);
+        callPPPPV(pchSection, pchSettingsKey, pchValue, peError, __functionAddress);
     }
 
     public static void VRSettings_SetString(@NativeType("char const *") ByteBuffer pchSection, @NativeType("char const *") ByteBuffer pchSettingsKey, @NativeType("char const *") ByteBuffer pchValue, @NativeType("EVRSettingsError *") IntBuffer peError) {
@@ -184,10 +190,13 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            ByteBuffer pchSettingsKeyEncoded = stack.ASCII(pchSettingsKey);
-            ByteBuffer pchValueEncoded = stack.ASCII(pchValue);
-            nVRSettings_SetString(memAddress(pchSectionEncoded), memAddress(pchSettingsKeyEncoded), memAddress(pchValueEncoded), memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            stack.nASCII(pchSettingsKey, true);
+            long pchSettingsKeyEncoded = stack.getPointerAddress();
+            stack.nASCII(pchValue, true);
+            long pchValueEncoded = stack.getPointerAddress();
+            nVRSettings_SetString(pchSectionEncoded, pchSettingsKeyEncoded, pchValueEncoded, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -200,7 +209,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPZ(__functionAddress, pchSection, pchSettingsKey, peError);
+        return callPPPZ(pchSection, pchSettingsKey, peError, __functionAddress);
     }
 
     @NativeType("bool")
@@ -220,9 +229,11 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            ByteBuffer pchSettingsKeyEncoded = stack.ASCII(pchSettingsKey);
-            return nVRSettings_GetBool(memAddress(pchSectionEncoded), memAddress(pchSettingsKeyEncoded), memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            stack.nASCII(pchSettingsKey, true);
+            long pchSettingsKeyEncoded = stack.getPointerAddress();
+            return nVRSettings_GetBool(pchSectionEncoded, pchSettingsKeyEncoded, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -235,7 +246,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, pchSection, pchSettingsKey, peError);
+        return callPPPI(pchSection, pchSettingsKey, peError, __functionAddress);
     }
 
     @NativeType("int32_t")
@@ -255,9 +266,11 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            ByteBuffer pchSettingsKeyEncoded = stack.ASCII(pchSettingsKey);
-            return nVRSettings_GetInt32(memAddress(pchSectionEncoded), memAddress(pchSettingsKeyEncoded), memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            stack.nASCII(pchSettingsKey, true);
+            long pchSettingsKeyEncoded = stack.getPointerAddress();
+            return nVRSettings_GetInt32(pchSectionEncoded, pchSettingsKeyEncoded, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -270,7 +283,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPF(__functionAddress, pchSection, pchSettingsKey, peError);
+        return callPPPF(pchSection, pchSettingsKey, peError, __functionAddress);
     }
 
     public static float VRSettings_GetFloat(@NativeType("char const *") ByteBuffer pchSection, @NativeType("char const *") ByteBuffer pchSettingsKey, @NativeType("EVRSettingsError *") IntBuffer peError) {
@@ -288,9 +301,11 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            ByteBuffer pchSettingsKeyEncoded = stack.ASCII(pchSettingsKey);
-            return nVRSettings_GetFloat(memAddress(pchSectionEncoded), memAddress(pchSettingsKeyEncoded), memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            stack.nASCII(pchSettingsKey, true);
+            long pchSettingsKeyEncoded = stack.getPointerAddress();
+            return nVRSettings_GetFloat(pchSectionEncoded, pchSettingsKeyEncoded, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -303,7 +318,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPPV(__functionAddress, pchSection, pchSettingsKey, pchValue, unValueLen, peError);
+        callPPPPV(pchSection, pchSettingsKey, pchValue, unValueLen, peError, __functionAddress);
     }
 
     public static void VRSettings_GetString(@NativeType("char const *") ByteBuffer pchSection, @NativeType("char const *") ByteBuffer pchSettingsKey, @NativeType("char *") ByteBuffer pchValue, @NativeType("EVRSettingsError *") IntBuffer peError) {
@@ -321,9 +336,11 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            ByteBuffer pchSettingsKeyEncoded = stack.ASCII(pchSettingsKey);
-            nVRSettings_GetString(memAddress(pchSectionEncoded), memAddress(pchSettingsKeyEncoded), memAddress(pchValue), pchValue.remaining(), memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            stack.nASCII(pchSettingsKey, true);
+            long pchSettingsKeyEncoded = stack.getPointerAddress();
+            nVRSettings_GetString(pchSectionEncoded, pchSettingsKeyEncoded, memAddress(pchValue), pchValue.remaining(), memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -336,7 +353,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, pchSection, peError);
+        callPPV(pchSection, peError, __functionAddress);
     }
 
     public static void VRSettings_RemoveSection(@NativeType("char const *") ByteBuffer pchSection, @NativeType("EVRSettingsError *") IntBuffer peError) {
@@ -353,8 +370,9 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            nVRSettings_RemoveSection(memAddress(pchSectionEncoded), memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            nVRSettings_RemoveSection(pchSectionEncoded, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -367,7 +385,7 @@ public class VRSettings {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, pchSection, pchSettingsKey, peError);
+        callPPPV(pchSection, pchSettingsKey, peError, __functionAddress);
     }
 
     public static void VRSettings_RemoveKeyInSection(@NativeType("char const *") ByteBuffer pchSection, @NativeType("char const *") ByteBuffer pchSettingsKey, @NativeType("EVRSettingsError *") IntBuffer peError) {
@@ -385,9 +403,11 @@ public class VRSettings {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchSectionEncoded = stack.ASCII(pchSection);
-            ByteBuffer pchSettingsKeyEncoded = stack.ASCII(pchSettingsKey);
-            nVRSettings_RemoveKeyInSection(memAddress(pchSectionEncoded), memAddress(pchSettingsKeyEncoded), memAddress(peError));
+            stack.nASCII(pchSection, true);
+            long pchSectionEncoded = stack.getPointerAddress();
+            stack.nASCII(pchSettingsKey, true);
+            long pchSettingsKeyEncoded = stack.getPointerAddress();
+            nVRSettings_RemoveKeyInSection(pchSectionEncoded, pchSettingsKeyEncoded, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }

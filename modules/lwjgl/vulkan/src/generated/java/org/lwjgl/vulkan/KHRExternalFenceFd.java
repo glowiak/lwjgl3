@@ -89,7 +89,7 @@ public class KHRExternalFenceFd {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, device.address(), pImportFenceFdInfo);
+        return callPPI(device.address(), pImportFenceFdInfo, __functionAddress);
     }
 
     /**
@@ -157,7 +157,7 @@ public class KHRExternalFenceFd {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, device.address(), pGetFdInfo, pFd);
+        return callPPPI(device.address(), pGetFdInfo, pFd, __functionAddress);
     }
 
     /**
@@ -175,25 +175,25 @@ public class KHRExternalFenceFd {
      * 
      * <h5>Description</h5>
      * 
-     * <p>Each call to {@link #vkGetFenceFdKHR GetFenceFdKHR} <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor when it is no longer needed.</p>
+     * <p>Each call to {@code vkGetFenceFdKHR} <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor when it is no longer needed.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
      * <p>Ownership can be released in many ways. For example, the application can call {@code close}() on the file descriptor, or transfer ownership back to Vulkan by using the file descriptor to import a fence payload.</p>
      * </div>
      * 
-     * <p>If {@code pGetFdInfo}-&gt;{@code handleType} is {@link VK11#VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT} and the fence is signaled at the time {@link #vkGetFenceFdKHR GetFenceFdKHR} is called, {@code pFd} <b>may</b> return the value {@code -1} instead of a valid file descriptor.</p>
+     * <p>If {@code pGetFdInfo}-&gt;{@code handleType} is {@link VK11#VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT} and the fence is signaled at the time {@code vkGetFenceFdKHR} is called, {@code pFd} <b>may</b> return the value {@code -1} instead of a valid file descriptor.</p>
      * 
      * <p>Where supported by the operating system, the implementation <b>must</b> set the file descriptor to be closed automatically when an {@code execve} system call is made.</p>
      * 
-     * <p>Exporting a file descriptor from a fence <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing">Importing Fence State</a>.</p>
+     * <p>Exporting a file descriptor from a fence <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-importing">Importing Fence State</a>.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
      * <ul>
      * <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
      * <li>{@code pGetFdInfo} <b>must</b> be a valid pointer to a valid {@link VkFenceGetFdInfoKHR} structure</li>
-     * <li>{@code pFd} <b>must</b> be a valid pointer to a {@code int} value</li>
+     * <li>{@code pFd} <b>must</b> be a valid pointer to an {@code int} value</li>
      * </ul>
      * 
      * <h5>Return Codes</h5>
@@ -234,7 +234,7 @@ public class KHRExternalFenceFd {
             check(__functionAddress);
             check(pFd, 1);
         }
-        return callPPPI(__functionAddress, device.address(), pGetFdInfo.address(), pFd);
+        return callPPPI(device.address(), pGetFdInfo.address(), pFd, __functionAddress);
     }
 
 }

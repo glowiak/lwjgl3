@@ -50,24 +50,24 @@ val QCOM_framebuffer_foveated = "QCOMFramebufferFoveated".nativeClassGLES("QCOM_
         "FramebufferFoveationConfigQCOM",
         "",
 
-        GLuint.IN("fbo", ""),
-        GLuint.IN("numLayers", ""),
-        GLuint.IN("focalPointsPerLayer", ""),
-        GLuint.IN("requestedFeatures", ""),
-        Check(1)..GLuint.p.OUT("providedFeatures", "")
+        GLuint("fbo", ""),
+        GLuint("numLayers", ""),
+        GLuint("focalPointsPerLayer", ""),
+        GLuint("requestedFeatures", ""),
+        Check(1)..GLuint.p("providedFeatures", "")
     )
 
     void(
         "FramebufferFoveationParametersQCOM",
         "",
 
-        GLuint.IN("fbo", ""),
-        GLuint.IN("layer", ""),
-        GLuint.IN("focalPoint", ""),
-        GLfloat.IN("focalX", ""),
-        GLfloat.IN("focalY", ""),
-        GLfloat.IN("gainX", ""),
-        GLfloat.IN("gainY", ""),
-        GLfloat.IN("foveaArea", "")
+        GLuint("fbo", ""),
+        GLuint("layer", ""),
+        GLuint("focalPoint", ""),
+        GLfloat("focalX", ""),
+        GLfloat("focalY", ""),
+        GLfloat("gainX", ""),
+        GLfloat("gainY", ""),
+        GLfloat("foveaArea", "")
     )
 }

@@ -16,7 +16,7 @@ import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
- * This extension provides new entry points to query device display properties and capabilities in a way that can be easily extended by other extensions, without introducing any further entry points. This extension can be considered the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VK_KHR_display">VK_KHR_display</a> equivalent of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2"> VK_KHR_get_physical_device_properties2</a> extension.
+ * This extension provides new entry points to query device display properties and capabilities in a way that can be easily extended by other extensions, without introducing any further entry points. This extension can be considered the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VK_KHR_display">VK_KHR_display</a> equivalent of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2"> VK_KHR_get_physical_device_properties2</a> extension.
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -100,7 +100,7 @@ public class KHRGetDisplayProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, physicalDevice.address(), pPropertyCount, pProperties);
+        return callPPPI(physicalDevice.address(), pPropertyCount, pProperties, __functionAddress);
     }
 
     /**
@@ -118,7 +118,7 @@ public class KHRGetDisplayProperties2 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetPhysicalDeviceDisplayProperties2KHR GetPhysicalDeviceDisplayProperties2KHR} behaves similarly to {@link KHRDisplay#vkGetPhysicalDeviceDisplayPropertiesKHR GetPhysicalDeviceDisplayPropertiesKHR}, with the ability to return extended information via chained output structures.</p>
+     * <p>{@code vkGetPhysicalDeviceDisplayProperties2KHR} behaves similarly to {@link KHRDisplay#vkGetPhysicalDeviceDisplayPropertiesKHR GetPhysicalDeviceDisplayPropertiesKHR}, with the ability to return extended information via chained output structures.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -172,7 +172,7 @@ public class KHRGetDisplayProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, physicalDevice.address(), pPropertyCount, pProperties);
+        return callPPPI(physicalDevice.address(), pPropertyCount, pProperties, __functionAddress);
     }
 
     /**
@@ -190,7 +190,7 @@ public class KHRGetDisplayProperties2 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetPhysicalDeviceDisplayPlaneProperties2KHR GetPhysicalDeviceDisplayPlaneProperties2KHR} behaves similarly to {@link KHRDisplay#vkGetPhysicalDeviceDisplayPlanePropertiesKHR GetPhysicalDeviceDisplayPlanePropertiesKHR}, with the ability to return extended information via chained output structures.</p>
+     * <p>{@code vkGetPhysicalDeviceDisplayPlaneProperties2KHR} behaves similarly to {@link KHRDisplay#vkGetPhysicalDeviceDisplayPlanePropertiesKHR GetPhysicalDeviceDisplayPlanePropertiesKHR}, with the ability to return extended information via chained output structures.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -244,7 +244,7 @@ public class KHRGetDisplayProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), display, pPropertyCount, pProperties);
+        return callPJPPI(physicalDevice.address(), display, pPropertyCount, pProperties, __functionAddress);
     }
 
     /**
@@ -263,7 +263,7 @@ public class KHRGetDisplayProperties2 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetDisplayModeProperties2KHR GetDisplayModeProperties2KHR} behaves similarly to {@link KHRDisplay#vkGetDisplayModePropertiesKHR GetDisplayModePropertiesKHR}, with the ability to return extended information via chained output structures.</p>
+     * <p>{@code vkGetDisplayModeProperties2KHR} behaves similarly to {@link KHRDisplay#vkGetDisplayModePropertiesKHR GetDisplayModePropertiesKHR}, with the ability to return extended information via chained output structures.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -315,7 +315,7 @@ public class KHRGetDisplayProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, physicalDevice.address(), pDisplayPlaneInfo, pCapabilities);
+        return callPPPI(physicalDevice.address(), pDisplayPlaneInfo, pCapabilities, __functionAddress);
     }
 
     /**
@@ -333,7 +333,7 @@ public class KHRGetDisplayProperties2 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetDisplayPlaneCapabilities2KHR GetDisplayPlaneCapabilities2KHR} behaves similarly to {@link KHRDisplay#vkGetDisplayPlaneCapabilitiesKHR GetDisplayPlaneCapabilitiesKHR}, with the ability to specify extended inputs via chained input structures, and to return extended information via chained output structures.</p>
+     * <p>{@code vkGetDisplayPlaneCapabilities2KHR} behaves similarly to {@link KHRDisplay#vkGetDisplayPlaneCapabilitiesKHR GetDisplayPlaneCapabilitiesKHR}, with the ability to specify extended inputs via chained input structures, and to return extended information via chained output structures.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -379,7 +379,7 @@ public class KHRGetDisplayProperties2 {
             check(pPropertyCount, 1);
             checkSafe(pProperties, pPropertyCount[0]);
         }
-        return callPPPI(__functionAddress, physicalDevice.address(), pPropertyCount, memAddressSafe(pProperties));
+        return callPPPI(physicalDevice.address(), pPropertyCount, memAddressSafe(pProperties), __functionAddress);
     }
 
     /** Array version of: {@link #vkGetPhysicalDeviceDisplayPlaneProperties2KHR GetPhysicalDeviceDisplayPlaneProperties2KHR} */
@@ -391,7 +391,7 @@ public class KHRGetDisplayProperties2 {
             check(pPropertyCount, 1);
             checkSafe(pProperties, pPropertyCount[0]);
         }
-        return callPPPI(__functionAddress, physicalDevice.address(), pPropertyCount, memAddressSafe(pProperties));
+        return callPPPI(physicalDevice.address(), pPropertyCount, memAddressSafe(pProperties), __functionAddress);
     }
 
     /** Array version of: {@link #vkGetDisplayModeProperties2KHR GetDisplayModeProperties2KHR} */
@@ -403,7 +403,7 @@ public class KHRGetDisplayProperties2 {
             check(pPropertyCount, 1);
             checkSafe(pProperties, pPropertyCount[0]);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), display, pPropertyCount, memAddressSafe(pProperties));
+        return callPJPPI(physicalDevice.address(), display, pPropertyCount, memAddressSafe(pProperties), __functionAddress);
     }
 
 }

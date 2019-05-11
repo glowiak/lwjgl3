@@ -46,7 +46,14 @@ import static org.lwjgl.system.MemoryStack.*;
  * actually used, so physical committed memory should not be affected in the default implementation.</p>
  * 
  * <p>Will be aligned to a multiple of spans that match memory page size in case of huge pages.</p></li>
- * <li>{@code enable_huge_pages} &ndash; enable use of large/huge pages</li>
+ * <li>{@code enable_huge_pages} &ndash; 
+ * enable use of large/huge pages.
+ * 
+ * <p>If this flag is set to non-zero and page size is zero, the allocator will try to enable huge pages and auto detect the configuration. If this is set to
+ * non-zero and page_size is also non-zero, the allocator will assume huge pages have been configured and enabled prior to initializing the allocator.</p>
+ * 
+ * <p>For Windows, see <a href="https://docs.microsoft.com/en-us/windows/desktop/memory/large-page-support">large-page-support</a>. For Linux, see
+ * <a href="https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt">hugetlbpage.txt</a>.</p></li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -100,18 +107,14 @@ public class RPMallocConfig extends Struct implements NativeResource {
         ENABLE_HUGE_PAGES = layout.offsetof(5);
     }
 
-    RPMallocConfig(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link RPMallocConfig} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code RPMallocConfig} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public RPMallocConfig(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -184,60 +187,61 @@ public class RPMallocConfig extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link RPMallocConfig} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code RPMallocConfig} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static RPMallocConfig malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(RPMallocConfig.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link RPMallocConfig} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code RPMallocConfig} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static RPMallocConfig calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(RPMallocConfig.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link RPMallocConfig} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code RPMallocConfig} instance allocated with {@link BufferUtils}. */
     public static RPMallocConfig create() {
-        return new RPMallocConfig(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(RPMallocConfig.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link RPMallocConfig} instance for the specified memory address. */
+    /** Returns a new {@code RPMallocConfig} instance for the specified memory address. */
     public static RPMallocConfig create(long address) {
-        return new RPMallocConfig(address, null);
+        return wrap(RPMallocConfig.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static RPMallocConfig createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(RPMallocConfig.class, address);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link RPMallocConfig} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code RPMallocConfig} instance allocated on the thread-local {@link MemoryStack}. */
     public static RPMallocConfig mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link RPMallocConfig} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code RPMallocConfig} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static RPMallocConfig callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link RPMallocConfig} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code RPMallocConfig} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static RPMallocConfig mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(RPMallocConfig.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link RPMallocConfig} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code RPMallocConfig} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static RPMallocConfig callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(RPMallocConfig.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     // -----------------------------------
@@ -253,7 +257,7 @@ public class RPMallocConfig extends Struct implements NativeResource {
     /** Unsafe version of {@link #span_map_count}. */
     public static long nspan_map_count(long struct) { return memGetAddress(struct + RPMallocConfig.SPAN_MAP_COUNT); }
     /** Unsafe version of {@link #enable_huge_pages}. */
-    public static int nenable_huge_pages(long struct) { return memGetInt(struct + RPMallocConfig.ENABLE_HUGE_PAGES); }
+    public static int nenable_huge_pages(long struct) { return UNSAFE.getInt(null, struct + RPMallocConfig.ENABLE_HUGE_PAGES); }
 
     /** Unsafe version of {@link #memory_map(RPMemoryMapCallbackI) memory_map}. */
     public static void nmemory_map(long struct, @Nullable RPMemoryMapCallbackI value) { memPutAddress(struct + RPMallocConfig.MEMORY_MAP, memAddressSafe(value)); }
@@ -266,6 +270,6 @@ public class RPMallocConfig extends Struct implements NativeResource {
     /** Unsafe version of {@link #span_map_count(long) span_map_count}. */
     public static void nspan_map_count(long struct, long value) { memPutAddress(struct + RPMallocConfig.SPAN_MAP_COUNT, value); }
     /** Unsafe version of {@link #enable_huge_pages(boolean) enable_huge_pages}. */
-    public static void nenable_huge_pages(long struct, int value) { memPutInt(struct + RPMallocConfig.ENABLE_HUGE_PAGES, value); }
+    public static void nenable_huge_pages(long struct, int value) { UNSAFE.putInt(null, struct + RPMallocConfig.ENABLE_HUGE_PAGES, value); }
 
 }

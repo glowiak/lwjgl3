@@ -26,6 +26,8 @@ import static org.lwjgl.util.lz4.LZ4HC.*;
  * <li>{@code dictLimit} &ndash; below that point, need {@code extDict}</li>
  * <li>{@code lowLimit} &ndash; below that point, no more {@code dict}</li>
  * <li>{@code nextToUpdate} &ndash; index from which to continue dictionary update</li>
+ * <li>{@code favorDecSpeed} &ndash; favor decompression speed if this flag set, otherwise, favor compression ratio</li>
+ * <li>{@code dirty} &ndash; stream has to be fully reset if this flag is set</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -41,7 +43,8 @@ import static org.lwjgl.util.lz4.LZ4HC.*;
  *     uint32_t lowLimit;
  *     uint32_t nextToUpdate;
  *     short compressionLevel;
- *     short favorDecSpeed;
+ *     int8_t favorDecSpeed;
+ *     int8_t dirty;
  *     {@link LZ4HCCCtxInternal LZ4HC_CCtx_internal} * const dictCtx;
  * }</code></pre>
  */
@@ -66,6 +69,7 @@ public class LZ4HCCCtxInternal extends Struct {
         NEXTTOUPDATE,
         COMPRESSIONLEVEL,
         FAVORDECSPEED,
+        DIRTY,
         DICTCTX;
 
     static {
@@ -79,7 +83,8 @@ public class LZ4HCCCtxInternal extends Struct {
             __member(4),
             __member(4),
             __member(2),
-            __member(2),
+            __member(1),
+            __member(1),
             __member(POINTER_SIZE)
         );
 
@@ -96,21 +101,18 @@ public class LZ4HCCCtxInternal extends Struct {
         NEXTTOUPDATE = layout.offsetof(7);
         COMPRESSIONLEVEL = layout.offsetof(8);
         FAVORDECSPEED = layout.offsetof(9);
-        DICTCTX = layout.offsetof(10);
-    }
-
-    LZ4HCCCtxInternal(long address, @Nullable ByteBuffer container) {
-        super(address, container);
+        DIRTY = layout.offsetof(10);
+        DICTCTX = layout.offsetof(11);
     }
 
     /**
-     * Creates a {@link LZ4HCCCtxInternal} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code LZ4HCCCtxInternal} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public LZ4HCCCtxInternal(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -161,22 +163,26 @@ public class LZ4HCCCtxInternal extends Struct {
     /** Returns the value of the {@code compressionLevel} field. */
     public short compressionLevel() { return ncompressionLevel(address()); }
     /** Returns the value of the {@code favorDecSpeed} field. */
-    public short favorDecSpeed() { return nfavorDecSpeed(address()); }
+    @NativeType("int8_t")
+    public byte favorDecSpeed() { return nfavorDecSpeed(address()); }
+    /** Returns the value of the {@code dirty} field. */
+    @NativeType("int8_t")
+    public byte dirty() { return ndirty(address()); }
     /** Returns a {@link LZ4HCCCtxInternal} view of the struct pointed to by the {@code dictCtx} field. */
     @NativeType("LZ4HC_CCtx_internal * const")
     public LZ4HCCCtxInternal dictCtx() { return ndictCtx(address()); }
 
     // -----------------------------------
 
-    /** Returns a new {@link LZ4HCCCtxInternal} instance for the specified memory address. */
+    /** Returns a new {@code LZ4HCCCtxInternal} instance for the specified memory address. */
     public static LZ4HCCCtxInternal create(long address) {
-        return new LZ4HCCCtxInternal(address, null);
+        return wrap(LZ4HCCCtxInternal.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static LZ4HCCCtxInternal createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(LZ4HCCCtxInternal.class, address);
     }
 
     /**
@@ -186,13 +192,13 @@ public class LZ4HCCCtxInternal extends Struct {
      * @param capacity the buffer capacity
      */
     public static LZ4HCCCtxInternal.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static LZ4HCCCtxInternal.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
@@ -201,13 +207,13 @@ public class LZ4HCCCtxInternal extends Struct {
     public static IntBuffer nhashTable(long struct) { return memIntBuffer(struct + LZ4HCCCtxInternal.HASHTABLE, LZ4HC_HASHTABLESIZE); }
     /** Unsafe version of {@link #hashTable(int) hashTable}. */
     public static int nhashTable(long struct, int index) {
-        return memGetInt(struct + LZ4HCCCtxInternal.HASHTABLE + check(index, LZ4HC_HASHTABLESIZE) * 4);
+        return UNSAFE.getInt(null, struct + LZ4HCCCtxInternal.HASHTABLE + check(index, LZ4HC_HASHTABLESIZE) * 4);
     }
     /** Unsafe version of {@link #chainTable}. */
     public static ShortBuffer nchainTable(long struct) { return memShortBuffer(struct + LZ4HCCCtxInternal.CHAINTABLE, LZ4HC_MAXD); }
     /** Unsafe version of {@link #chainTable(int) chainTable}. */
     public static short nchainTable(long struct, int index) {
-        return memGetShort(struct + LZ4HCCCtxInternal.CHAINTABLE + check(index, LZ4HC_MAXD) * 2);
+        return UNSAFE.getShort(null, struct + LZ4HCCCtxInternal.CHAINTABLE + check(index, LZ4HC_MAXD) * 2);
     }
     /** Unsafe version of {@link #end(int) end}. */
     public static ByteBuffer nend(long struct, int capacity) { return memByteBuffer(memGetAddress(struct + LZ4HCCCtxInternal.END), capacity); }
@@ -216,15 +222,17 @@ public class LZ4HCCCtxInternal extends Struct {
     /** Unsafe version of {@link #dictBase(int) dictBase}. */
     public static ByteBuffer ndictBase(long struct, int capacity) { return memByteBuffer(memGetAddress(struct + LZ4HCCCtxInternal.DICTBASE), capacity); }
     /** Unsafe version of {@link #dictLimit}. */
-    public static int ndictLimit(long struct) { return memGetInt(struct + LZ4HCCCtxInternal.DICTLIMIT); }
+    public static int ndictLimit(long struct) { return UNSAFE.getInt(null, struct + LZ4HCCCtxInternal.DICTLIMIT); }
     /** Unsafe version of {@link #lowLimit}. */
-    public static int nlowLimit(long struct) { return memGetInt(struct + LZ4HCCCtxInternal.LOWLIMIT); }
+    public static int nlowLimit(long struct) { return UNSAFE.getInt(null, struct + LZ4HCCCtxInternal.LOWLIMIT); }
     /** Unsafe version of {@link #nextToUpdate}. */
-    public static int nnextToUpdate(long struct) { return memGetInt(struct + LZ4HCCCtxInternal.NEXTTOUPDATE); }
+    public static int nnextToUpdate(long struct) { return UNSAFE.getInt(null, struct + LZ4HCCCtxInternal.NEXTTOUPDATE); }
     /** Unsafe version of {@link #compressionLevel}. */
-    public static short ncompressionLevel(long struct) { return memGetShort(struct + LZ4HCCCtxInternal.COMPRESSIONLEVEL); }
+    public static short ncompressionLevel(long struct) { return UNSAFE.getShort(null, struct + LZ4HCCCtxInternal.COMPRESSIONLEVEL); }
     /** Unsafe version of {@link #favorDecSpeed}. */
-    public static short nfavorDecSpeed(long struct) { return memGetShort(struct + LZ4HCCCtxInternal.FAVORDECSPEED); }
+    public static byte nfavorDecSpeed(long struct) { return UNSAFE.getByte(null, struct + LZ4HCCCtxInternal.FAVORDECSPEED); }
+    /** Unsafe version of {@link #dirty}. */
+    public static byte ndirty(long struct) { return UNSAFE.getByte(null, struct + LZ4HCCCtxInternal.DIRTY); }
     /** Unsafe version of {@link #dictCtx}. */
     public static LZ4HCCCtxInternal ndictCtx(long struct) { return LZ4HCCCtxInternal.create(memGetAddress(struct + LZ4HCCCtxInternal.DICTCTX)); }
 
@@ -233,8 +241,10 @@ public class LZ4HCCCtxInternal extends Struct {
     /** An array of {@link LZ4HCCCtxInternal} structs. */
     public static class Buffer extends StructBuffer<LZ4HCCCtxInternal, Buffer> {
 
+        private static final LZ4HCCCtxInternal ELEMENT_FACTORY = LZ4HCCCtxInternal.create(-1L);
+
         /**
-         * Creates a new {@link LZ4HCCCtxInternal.Buffer} instance backed by the specified container.
+         * Creates a new {@code LZ4HCCCtxInternal.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -260,18 +270,8 @@ public class LZ4HCCCtxInternal extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected LZ4HCCCtxInternal newInstance(long address) {
-            return new LZ4HCCCtxInternal(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected LZ4HCCCtxInternal getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link IntBuffer} view of the {@code hashTable} field. */
@@ -319,7 +319,11 @@ public class LZ4HCCCtxInternal extends Struct {
         /** Returns the value of the {@code compressionLevel} field. */
         public short compressionLevel() { return LZ4HCCCtxInternal.ncompressionLevel(address()); }
         /** Returns the value of the {@code favorDecSpeed} field. */
-        public short favorDecSpeed() { return LZ4HCCCtxInternal.nfavorDecSpeed(address()); }
+        @NativeType("int8_t")
+        public byte favorDecSpeed() { return LZ4HCCCtxInternal.nfavorDecSpeed(address()); }
+        /** Returns the value of the {@code dirty} field. */
+        @NativeType("int8_t")
+        public byte dirty() { return LZ4HCCCtxInternal.ndirty(address()); }
         /** Returns a {@link LZ4HCCCtxInternal} view of the struct pointed to by the {@code dictCtx} field. */
         @NativeType("LZ4HC_CCtx_internal * const")
         public LZ4HCCCtxInternal dictCtx() { return LZ4HCCCtxInternal.ndictCtx(address()); }

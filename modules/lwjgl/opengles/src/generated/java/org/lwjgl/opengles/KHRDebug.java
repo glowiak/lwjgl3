@@ -254,7 +254,7 @@ public class KHRDebug {
      * @param severity the severity of debug messages to enable or disable. One of:<br><table><tr><td>{@link #GL_DEBUG_SEVERITY_HIGH_KHR DEBUG_SEVERITY_HIGH_KHR}</td><td>{@link #GL_DEBUG_SEVERITY_MEDIUM_KHR DEBUG_SEVERITY_MEDIUM_KHR}</td><td>{@link #GL_DEBUG_SEVERITY_LOW_KHR DEBUG_SEVERITY_LOW_KHR}</td></tr><tr><td>{@link #GL_DEBUG_SEVERITY_NOTIFICATION_KHR DEBUG_SEVERITY_NOTIFICATION_KHR}</td></tr></table>
      * @param enabled  whether the selected messages should be enabled or disabled
      */
-    public static void glDebugMessageControlKHR(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLenum") int severity, @Nullable @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
+    public static void glDebugMessageControlKHR(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLenum") int severity, @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer ids = stack.ints(id);
@@ -316,8 +316,9 @@ public class KHRDebug {
     public static void glDebugMessageInsertKHR(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLuint") int id, @NativeType("GLenum") int severity, @NativeType("GLchar const *") CharSequence message) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message, false);
-            nglDebugMessageInsertKHR(source, type, id, severity, messageEncoded.remaining(), memAddress(messageEncoded));
+            int messageEncodedLength = stack.nUTF8(message, false);
+            long messageEncoded = stack.getPointerAddress();
+            nglDebugMessageInsertKHR(source, type, id, severity, messageEncodedLength, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -489,8 +490,9 @@ public class KHRDebug {
     public static void glPushDebugGroupKHR(@NativeType("GLenum") int source, @NativeType("GLuint") int id, @NativeType("GLchar const *") CharSequence message) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message, false);
-            nglPushDebugGroupKHR(source, id, messageEncoded.remaining(), memAddress(messageEncoded));
+            int messageEncodedLength = stack.nUTF8(message, false);
+            long messageEncoded = stack.getPointerAddress();
+            nglPushDebugGroupKHR(source, id, messageEncodedLength, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -540,8 +542,9 @@ public class KHRDebug {
     public static void glObjectLabelKHR(@NativeType("GLenum") int identifier, @NativeType("GLuint") int name, @NativeType("GLchar const *") CharSequence label) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer labelEncoded = stack.UTF8(label, false);
-            nglObjectLabelKHR(identifier, name, labelEncoded.remaining(), memAddress(labelEncoded));
+            int labelEncodedLength = stack.nUTF8(label, false);
+            long labelEncoded = stack.getPointerAddress();
+            nglObjectLabelKHR(identifier, name, labelEncodedLength, labelEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -636,8 +639,9 @@ public class KHRDebug {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer labelEncoded = stack.UTF8(label, false);
-            nglObjectPtrLabelKHR(ptr, labelEncoded.remaining(), memAddress(labelEncoded));
+            int labelEncodedLength = stack.nUTF8(label, false);
+            long labelEncoded = stack.getPointerAddress();
+            nglObjectPtrLabelKHR(ptr, labelEncodedLength, labelEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -705,7 +709,7 @@ public class KHRDebug {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, source, type, severity, lengthSafe(ids), ids, enabled);
+        callPV(source, type, severity, lengthSafe(ids), ids, enabled, __functionAddress);
     }
 
     /** Array version of: {@link #glGetDebugMessageLogKHR GetDebugMessageLogKHR} */
@@ -720,7 +724,7 @@ public class KHRDebug {
             checkSafe(severities, count);
             checkSafe(lengths, count);
         }
-        return callPPPPPPI(__functionAddress, count, remainingSafe(messageLog), sources, types, ids, severities, lengths, memAddressSafe(messageLog));
+        return callPPPPPPI(count, remainingSafe(messageLog), sources, types, ids, severities, lengths, memAddressSafe(messageLog), __functionAddress);
     }
 
     /** Array version of: {@link #glGetObjectLabelKHR GetObjectLabelKHR} */
@@ -730,7 +734,7 @@ public class KHRDebug {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, identifier, name, label.remaining(), length, memAddress(label));
+        callPPV(identifier, name, label.remaining(), length, memAddress(label), __functionAddress);
     }
 
     /** Array version of: {@link #glGetObjectPtrLabelKHR GetObjectPtrLabelKHR} */
@@ -741,7 +745,7 @@ public class KHRDebug {
             check(ptr);
             checkSafe(length, 1);
         }
-        callPPPV(__functionAddress, ptr, label.remaining(), length, memAddress(label));
+        callPPPV(ptr, label.remaining(), length, memAddress(label), __functionAddress);
     }
 
 }

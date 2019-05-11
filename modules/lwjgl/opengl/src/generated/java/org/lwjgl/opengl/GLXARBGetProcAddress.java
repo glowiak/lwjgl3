@@ -41,7 +41,7 @@ public class GLXARBGetProcAddress {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPP(__functionAddress, procName);
+        return callPP(procName, __functionAddress);
     }
 
     /**
@@ -100,8 +100,9 @@ public class GLXARBGetProcAddress {
     public static long glXGetProcAddressARB(@NativeType("GLchar const *") CharSequence procName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer procNameEncoded = stack.ASCII(procName);
-            return nglXGetProcAddressARB(memAddress(procNameEncoded));
+            stack.nASCII(procName, true);
+            long procNameEncoded = stack.getPointerAddress();
+            return nglXGetProcAddressARB(procNameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }

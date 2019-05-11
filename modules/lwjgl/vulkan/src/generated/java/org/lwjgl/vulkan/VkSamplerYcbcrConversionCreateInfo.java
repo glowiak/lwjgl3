@@ -35,17 +35,12 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If the format does not support {@link VK11#VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT}, {@code xChromaOffset} and {@code yChromaOffset} <b>must</b> not be {@link VK11#VK_CHROMA_LOCATION_COSITED_EVEN CHROMA_LOCATION_COSITED_EVEN}</li>
  * <li>If the format does not support {@link VK11#VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT}, {@code xChromaOffset} and {@code yChromaOffset} <b>must</b> not be {@link VK11#VK_CHROMA_LOCATION_MIDPOINT CHROMA_LOCATION_MIDPOINT}</li>
  * <li>{@code format} <b>must</b> represent unsigned normalized values (i.e. the format must be a {@code UNORM} format)</li>
- * <li>If the format has a {@code _422} or {@code _420} suffix:
- * 
- * <ul>
- * <li>{@code components.g} <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY}</li>
- * <li>{@code components.a} <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY}, {@link VK10#VK_COMPONENT_SWIZZLE_ONE COMPONENT_SWIZZLE_ONE}, or {@link VK10#VK_COMPONENT_SWIZZLE_ZERO COMPONENT_SWIZZLE_ZERO}</li>
- * <li>{@code components.r} <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY} or {@link VK10#VK_COMPONENT_SWIZZLE_B COMPONENT_SWIZZLE_B}</li>
- * <li>{@code components.b} <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY} or {@link VK10#VK_COMPONENT_SWIZZLE_R COMPONENT_SWIZZLE_R}</li>
- * <li>If either {@code components.r} or {@code components.b} is {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY}, both values <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY}</li>
- * </ul>
- * </li>
- * <li>If {@code ycbcrModel} is not {@link VK11#VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY}, then {@code components.r}, {@code components.g}, and {@code components.b} <b>must</b> correspond to channels of the {@code format}; that is, {@code components.r}, {@code components.g}, and {@code components.b} <b>must</b> not be {@link VK10#VK_COMPONENT_SWIZZLE_ZERO COMPONENT_SWIZZLE_ZERO} or {@link VK10#VK_COMPONENT_SWIZZLE_ONE COMPONENT_SWIZZLE_ONE}, and <b>must</b> not correspond to a channel which contains zero or one as a consequence of <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-conversion-to-rgba">conversion to RGBA</a></li>
+ * <li>If the format has a {@code _422} or {@code _420} suffix, then {@code components.g} <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY}</li>
+ * <li>If the format has a {@code _422} or {@code _420} suffix, then {@code components.a} <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY}, {@link VK10#VK_COMPONENT_SWIZZLE_ONE COMPONENT_SWIZZLE_ONE}, or {@link VK10#VK_COMPONENT_SWIZZLE_ZERO COMPONENT_SWIZZLE_ZERO}</li>
+ * <li>If the format has a {@code _422} or {@code _420} suffix, then {@code components.r} <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY} or {@link VK10#VK_COMPONENT_SWIZZLE_B COMPONENT_SWIZZLE_B}</li>
+ * <li>If the format has a {@code _422} or {@code _420} suffix, then {@code components.b} <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY} or {@link VK10#VK_COMPONENT_SWIZZLE_R COMPONENT_SWIZZLE_R}</li>
+ * <li>If the format has a {@code _422} or {@code _420} suffix, and if either {@code components.r} or {@code components.b} is {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY}, both values <b>must</b> be {@link VK10#VK_COMPONENT_SWIZZLE_IDENTITY COMPONENT_SWIZZLE_IDENTITY}</li>
+ * <li>If {@code ycbcrModel} is not {@link VK11#VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY}, then {@code components.r}, {@code components.g}, and {@code components.b} <b>must</b> correspond to channels of the {@code format}; that is, {@code components.r}, {@code components.g}, and {@code components.b} <b>must</b> not be {@link VK10#VK_COMPONENT_SWIZZLE_ZERO COMPONENT_SWIZZLE_ZERO} or {@link VK10#VK_COMPONENT_SWIZZLE_ONE COMPONENT_SWIZZLE_ONE}, and <b>must</b> not correspond to a channel which contains zero or one as a consequence of <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-conversion-to-rgba">conversion to RGBA</a></li>
  * <li>If the format does not support {@link VK11#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT}, {@code forceExplicitReconstruction} <b>must</b> be FALSE</li>
  * <li>If the format does not support {@link VK11#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT}, {@code chromaFilter} <b>must</b> be {@link VK10#VK_FILTER_NEAREST FILTER_NEAREST}</li>
  * </ul>
@@ -64,7 +59,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code chromaFilter} <b>must</b> be a valid {@code VkFilter} value</li>
  * </ul>
  * 
- * <p>If {@code chromaFilter} is {@link VK10#VK_FILTER_NEAREST FILTER_NEAREST}, chroma samples are reconstructed to luma channel resolution using nearest-neighbour sampling. Otherwise, chroma samples are reconstructed using interpolation. More details can be found in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion">the description of sampler Y'C<sub>B</sub>C<sub>R</sub> conversion</a> in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures">Image Operations</a> chapter.</p>
+ * <p>If {@code chromaFilter} is {@link VK10#VK_FILTER_NEAREST FILTER_NEAREST}, chroma samples are reconstructed to luma channel resolution using nearest-neighbour sampling. Otherwise, chroma samples are reconstructed using interpolation. More details can be found in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion">the description of sampler Y'C<sub>B</sub>C<sub>R</sub> conversion</a> in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures">Image Operations</a> chapter.</p>
  * 
  * <h5>See Also</h5>
  * 
@@ -79,8 +74,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code ycbcrModel} &ndash; describes the color matrix for conversion between color models.</li>
  * <li>{@code ycbcrRange} &ndash; describes whether the encoded values have headroom and foot room, or whether the encoding uses the full numerical range.</li>
  * <li>{@code components} &ndash; applies a <em>swizzle</em> based on {@code VkComponentSwizzle} enums prior to range expansion and color model conversion.</li>
- * <li>{@code xChromaOffset} &ndash; describes the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-chroma-reconstruction">sample location</a> associated with downsampled chroma channels in the x dimension. {@code xChromaOffset} has no effect for formats in which chroma channels are the same resolution as the luma channel.</li>
- * <li>{@code yChromaOffset} &ndash; describes the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-chroma-reconstruction">sample location</a> associated with downsampled chroma channels in the y dimension. {@code yChromaOffset} has no effect for formats in which the chroma channels are not downsampled vertically.</li>
+ * <li>{@code xChromaOffset} &ndash; describes the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-chroma-reconstruction">sample location</a> associated with downsampled chroma channels in the x dimension. {@code xChromaOffset} has no effect for formats in which chroma channels are the same resolution as the luma channel.</li>
+ * <li>{@code yChromaOffset} &ndash; describes the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-chroma-reconstruction">sample location</a> associated with downsampled chroma channels in the y dimension. {@code yChromaOffset} has no effect for formats in which the chroma channels are not downsampled vertically.</li>
  * <li>{@code chromaFilter} &ndash; the filter for chroma reconstruction.</li>
  * <li>{@code forceExplicitReconstruction} &ndash; <b>can</b> be used to ensure that reconstruction is done explicitly, if supported.</li>
  * </ul>
@@ -151,18 +146,14 @@ public class VkSamplerYcbcrConversionCreateInfo extends Struct implements Native
         FORCEEXPLICITRECONSTRUCTION = layout.offsetof(9);
     }
 
-    VkSamplerYcbcrConversionCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkSamplerYcbcrConversionCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkSamplerYcbcrConversionCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkSamplerYcbcrConversionCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -262,30 +253,31 @@ public class VkSamplerYcbcrConversionCreateInfo extends Struct implements Native
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSamplerYcbcrConversionCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSamplerYcbcrConversionCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkSamplerYcbcrConversionCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkSamplerYcbcrConversionCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkSamplerYcbcrConversionCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSamplerYcbcrConversionCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkSamplerYcbcrConversionCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkSamplerYcbcrConversionCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkSamplerYcbcrConversionCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkSamplerYcbcrConversionCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkSamplerYcbcrConversionCreateInfo create() {
-        return new VkSamplerYcbcrConversionCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkSamplerYcbcrConversionCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkSamplerYcbcrConversionCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkSamplerYcbcrConversionCreateInfo} instance for the specified memory address. */
     public static VkSamplerYcbcrConversionCreateInfo create(long address) {
-        return new VkSamplerYcbcrConversionCreateInfo(address, null);
+        return wrap(VkSamplerYcbcrConversionCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSamplerYcbcrConversionCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkSamplerYcbcrConversionCreateInfo.class, address);
     }
 
     /**
@@ -294,7 +286,7 @@ public class VkSamplerYcbcrConversionCreateInfo extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkSamplerYcbcrConversionCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -303,7 +295,7 @@ public class VkSamplerYcbcrConversionCreateInfo extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkSamplerYcbcrConversionCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -312,7 +304,8 @@ public class VkSamplerYcbcrConversionCreateInfo extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkSamplerYcbcrConversionCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -322,43 +315,43 @@ public class VkSamplerYcbcrConversionCreateInfo extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkSamplerYcbcrConversionCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSamplerYcbcrConversionCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSamplerYcbcrConversionCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkSamplerYcbcrConversionCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkSamplerYcbcrConversionCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkSamplerYcbcrConversionCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkSamplerYcbcrConversionCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkSamplerYcbcrConversionCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkSamplerYcbcrConversionCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkSamplerYcbcrConversionCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSamplerYcbcrConversionCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkSamplerYcbcrConversionCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkSamplerYcbcrConversionCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkSamplerYcbcrConversionCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSamplerYcbcrConversionCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkSamplerYcbcrConversionCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -386,7 +379,7 @@ public class VkSamplerYcbcrConversionCreateInfo extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkSamplerYcbcrConversionCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -396,60 +389,62 @@ public class VkSamplerYcbcrConversionCreateInfo extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkSamplerYcbcrConversionCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkSamplerYcbcrConversionCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkSamplerYcbcrConversionCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkSamplerYcbcrConversionCreateInfo.PNEXT); }
     /** Unsafe version of {@link #format}. */
-    public static int nformat(long struct) { return memGetInt(struct + VkSamplerYcbcrConversionCreateInfo.FORMAT); }
+    public static int nformat(long struct) { return UNSAFE.getInt(null, struct + VkSamplerYcbcrConversionCreateInfo.FORMAT); }
     /** Unsafe version of {@link #ycbcrModel}. */
-    public static int nycbcrModel(long struct) { return memGetInt(struct + VkSamplerYcbcrConversionCreateInfo.YCBCRMODEL); }
+    public static int nycbcrModel(long struct) { return UNSAFE.getInt(null, struct + VkSamplerYcbcrConversionCreateInfo.YCBCRMODEL); }
     /** Unsafe version of {@link #ycbcrRange}. */
-    public static int nycbcrRange(long struct) { return memGetInt(struct + VkSamplerYcbcrConversionCreateInfo.YCBCRRANGE); }
+    public static int nycbcrRange(long struct) { return UNSAFE.getInt(null, struct + VkSamplerYcbcrConversionCreateInfo.YCBCRRANGE); }
     /** Unsafe version of {@link #components}. */
     public static VkComponentMapping ncomponents(long struct) { return VkComponentMapping.create(struct + VkSamplerYcbcrConversionCreateInfo.COMPONENTS); }
     /** Unsafe version of {@link #xChromaOffset}. */
-    public static int nxChromaOffset(long struct) { return memGetInt(struct + VkSamplerYcbcrConversionCreateInfo.XCHROMAOFFSET); }
+    public static int nxChromaOffset(long struct) { return UNSAFE.getInt(null, struct + VkSamplerYcbcrConversionCreateInfo.XCHROMAOFFSET); }
     /** Unsafe version of {@link #yChromaOffset}. */
-    public static int nyChromaOffset(long struct) { return memGetInt(struct + VkSamplerYcbcrConversionCreateInfo.YCHROMAOFFSET); }
+    public static int nyChromaOffset(long struct) { return UNSAFE.getInt(null, struct + VkSamplerYcbcrConversionCreateInfo.YCHROMAOFFSET); }
     /** Unsafe version of {@link #chromaFilter}. */
-    public static int nchromaFilter(long struct) { return memGetInt(struct + VkSamplerYcbcrConversionCreateInfo.CHROMAFILTER); }
+    public static int nchromaFilter(long struct) { return UNSAFE.getInt(null, struct + VkSamplerYcbcrConversionCreateInfo.CHROMAFILTER); }
     /** Unsafe version of {@link #forceExplicitReconstruction}. */
-    public static int nforceExplicitReconstruction(long struct) { return memGetInt(struct + VkSamplerYcbcrConversionCreateInfo.FORCEEXPLICITRECONSTRUCTION); }
+    public static int nforceExplicitReconstruction(long struct) { return UNSAFE.getInt(null, struct + VkSamplerYcbcrConversionCreateInfo.FORCEEXPLICITRECONSTRUCTION); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkSamplerYcbcrConversionCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerYcbcrConversionCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkSamplerYcbcrConversionCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #format(int) format}. */
-    public static void nformat(long struct, int value) { memPutInt(struct + VkSamplerYcbcrConversionCreateInfo.FORMAT, value); }
+    public static void nformat(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerYcbcrConversionCreateInfo.FORMAT, value); }
     /** Unsafe version of {@link #ycbcrModel(int) ycbcrModel}. */
-    public static void nycbcrModel(long struct, int value) { memPutInt(struct + VkSamplerYcbcrConversionCreateInfo.YCBCRMODEL, value); }
+    public static void nycbcrModel(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerYcbcrConversionCreateInfo.YCBCRMODEL, value); }
     /** Unsafe version of {@link #ycbcrRange(int) ycbcrRange}. */
-    public static void nycbcrRange(long struct, int value) { memPutInt(struct + VkSamplerYcbcrConversionCreateInfo.YCBCRRANGE, value); }
+    public static void nycbcrRange(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerYcbcrConversionCreateInfo.YCBCRRANGE, value); }
     /** Unsafe version of {@link #components(VkComponentMapping) components}. */
     public static void ncomponents(long struct, VkComponentMapping value) { memCopy(value.address(), struct + VkSamplerYcbcrConversionCreateInfo.COMPONENTS, VkComponentMapping.SIZEOF); }
     /** Unsafe version of {@link #xChromaOffset(int) xChromaOffset}. */
-    public static void nxChromaOffset(long struct, int value) { memPutInt(struct + VkSamplerYcbcrConversionCreateInfo.XCHROMAOFFSET, value); }
+    public static void nxChromaOffset(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerYcbcrConversionCreateInfo.XCHROMAOFFSET, value); }
     /** Unsafe version of {@link #yChromaOffset(int) yChromaOffset}. */
-    public static void nyChromaOffset(long struct, int value) { memPutInt(struct + VkSamplerYcbcrConversionCreateInfo.YCHROMAOFFSET, value); }
+    public static void nyChromaOffset(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerYcbcrConversionCreateInfo.YCHROMAOFFSET, value); }
     /** Unsafe version of {@link #chromaFilter(int) chromaFilter}. */
-    public static void nchromaFilter(long struct, int value) { memPutInt(struct + VkSamplerYcbcrConversionCreateInfo.CHROMAFILTER, value); }
+    public static void nchromaFilter(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerYcbcrConversionCreateInfo.CHROMAFILTER, value); }
     /** Unsafe version of {@link #forceExplicitReconstruction(boolean) forceExplicitReconstruction}. */
-    public static void nforceExplicitReconstruction(long struct, int value) { memPutInt(struct + VkSamplerYcbcrConversionCreateInfo.FORCEEXPLICITRECONSTRUCTION, value); }
+    public static void nforceExplicitReconstruction(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerYcbcrConversionCreateInfo.FORCEEXPLICITRECONSTRUCTION, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkSamplerYcbcrConversionCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkSamplerYcbcrConversionCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkSamplerYcbcrConversionCreateInfo ELEMENT_FACTORY = VkSamplerYcbcrConversionCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkSamplerYcbcrConversionCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkSamplerYcbcrConversionCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -475,18 +470,8 @@ public class VkSamplerYcbcrConversionCreateInfo extends Struct implements Native
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkSamplerYcbcrConversionCreateInfo newInstance(long address) {
-            return new VkSamplerYcbcrConversionCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkSamplerYcbcrConversionCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

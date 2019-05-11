@@ -39,80 +39,80 @@ val QCOM_extended_get = "QCOMExtendedGet".nativeClassGLES("QCOM_extended_get", p
         "ExtGetTexturesQCOM",
         "",
 
-        nullable..GLuint.p.OUT("textures", ""),
-        AutoSize("textures")..GLint.IN("maxTextures", ""),
-        nullable..Check(1)..GLint.p.OUT("numTextures", "")
+        nullable..GLuint.p("textures", ""),
+        AutoSize("textures")..GLint("maxTextures", ""),
+        nullable..Check(1)..GLint.p("numTextures", "")
     )
 
     void(
         "ExtGetBuffersQCOM",
         "",
 
-        nullable..GLuint.p.OUT("buffers", ""),
-        AutoSize("buffers")..GLint.IN("maxBuffers", ""),
-        nullable..Check(1)..GLint.p.OUT("numBuffers", "")
+        nullable..GLuint.p("buffers", ""),
+        AutoSize("buffers")..GLint("maxBuffers", ""),
+        nullable..Check(1)..GLint.p("numBuffers", "")
     )
 
     void(
         "ExtGetRenderbuffersQCOM",
         "",
 
-        nullable..GLuint.p.OUT("renderbuffers", ""),
-        AutoSize("renderbuffers")..GLint.IN("maxRenderbuffers", ""),
-        nullable..Check(1)..GLint.p.OUT("numRenderbuffers", "")
+        nullable..GLuint.p("renderbuffers", ""),
+        AutoSize("renderbuffers")..GLint("maxRenderbuffers", ""),
+        nullable..Check(1)..GLint.p("numRenderbuffers", "")
     )
 
     void(
         "ExtGetFramebuffersQCOM",
         "",
 
-        nullable..GLuint.p.OUT("framebuffers", ""),
-        AutoSize("framebuffers")..GLint.IN("maxFramebuffers", ""),
-        nullable..Check(1)..GLint.p.OUT("numFramebuffers", "")
+        nullable..GLuint.p("framebuffers", ""),
+        AutoSize("framebuffers")..GLint("maxFramebuffers", ""),
+        nullable..Check(1)..GLint.p("numFramebuffers", "")
     )
 
     void(
         "ExtGetTexLevelParameterivQCOM",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("face", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("pname", ""),
-        ReturnParam..Check(1)..GLint.p.OUT("params", "")
+        GLuint("texture", ""),
+        GLenum("face", ""),
+        GLint("level", ""),
+        GLenum("pname", ""),
+        ReturnParam..Check(1)..GLint.p("params", "")
     )
 
     void(
         "ExtTexObjectStateOverrideiQCOM",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        GLint.IN("param", "")
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        GLint("param", "")
     )
 
     void(
         "ExtGetTexSubImageQCOM",
         "",
 
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLint.IN("zoffset", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLsizei.IN("depth", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
-        Unsafe..void.p.OUT("texels", "")
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLint("zoffset", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLsizei("depth", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
+        Unsafe..void.p("texels", "")
     )
 
     void(
         "ExtGetBufferPointervQCOM",
         "",
 
-        GLenum.IN("target", ""),
-        ReturnParam..Check(1)..void.p.p.OUT("params", "")
+        GLenum("target", ""),
+        ReturnParam..Check(1)..void.p.p("params", "")
     )
 }

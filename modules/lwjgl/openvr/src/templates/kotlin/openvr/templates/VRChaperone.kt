@@ -10,7 +10,6 @@ import openvr.*
 val VRChaperone = "VRChaperone".nativeClass(
     Module.OPENVR,
     prefixMethod = "VRChaperone_",
-    library = OPENVR_LIBRARY,
     binding = OPENVR_FNTABLE_BINDING
 ) {
     documentation =
@@ -25,15 +24,16 @@ val VRChaperone = "VRChaperone".nativeClass(
 
     ChaperoneCalibrationState(
         "GetCalibrationState",
-        "Get the current state of Chaperone calibration. This state can change at any time during a session due to physical base station changes."
+        "Get the current state of Chaperone calibration. This state can change at any time during a session due to physical base station changes.",
+        void()
     )
 
     bool(
         "GetPlayAreaSize",
         "Returns the width and depth of the Play Area (formerly named Soft Bounds) in X and Z. Tracking space center(0, 0, 0) is the center of the Play Area.",
 
-        Check(1)..float.p.OUT("pSizeX", ""),
-        Check(1)..float.p.OUT("pSizeZ", "")
+        Check(1)..float.p("pSizeX", ""),
+        Check(1)..float.p("pSizeZ", "")
     )
 
     bool(
@@ -45,7 +45,7 @@ val VRChaperone = "VRChaperone".nativeClass(
         and 2 sides are parallel to the Z axis. Height of every corner is 0Y (on the floor).
         """,
 
-        HmdQuad_t.p.OUT("rect", "")
+        HmdQuad_t.p("rect", "")
     )
 
     void(
@@ -57,28 +57,29 @@ val VRChaperone = "VRChaperone".nativeClass(
         "SetSceneColor",
         "Optionally give the chaperone system a hit about the color and brightness in the scene.",
 
-        HmdColor_t.IN("color", "")
+        HmdColor_t("color", "")
     )
 
     void(
         "GetBoundsColor",
         "Get the current chaperone bounds draw color and brightness.",
 
-        HmdColor_t.p.OUT("pOutputColorArray", ""),
-        AutoSize("pOutputColorArray")..int.IN("nNumOutputColors", ""),
-        float.IN("flCollisionBoundsFadeDistance", ""),
-        HmdColor_t.p.OUT("pOutputCameraColor", "")
+        HmdColor_t.p("pOutputColorArray", ""),
+        AutoSize("pOutputColorArray")..int("nNumOutputColors", ""),
+        float("flCollisionBoundsFadeDistance", ""),
+        HmdColor_t.p("pOutputCameraColor", "")
     )
 
     bool(
         "AreBoundsVisible",
-        "Determine whether the bounds are showing right now."
+        "Determine whether the bounds are showing right now.",
+        void()
     )
 
     void(
         "ForceBoundsVisible",
         "Force the bounds to show, mostly for utilities.",
 
-        bool.IN("bForce", "")
+        bool("bForce", "")
     )
 }

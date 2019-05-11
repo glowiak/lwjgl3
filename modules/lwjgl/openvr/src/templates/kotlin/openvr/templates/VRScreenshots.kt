@@ -10,7 +10,6 @@ import openvr.*
 val VRScreenshots = "VRScreenshots".nativeClass(
     Module.OPENVR,
     prefixMethod = "VRScreenshots_",
-    library = OPENVR_LIBRARY,
     binding = OPENVR_FNTABLE_BINDING
 ) {
     documentation = "Allows the application to generate screenshots."
@@ -32,10 +31,10 @@ val VRScreenshots = "VRScreenshots".nativeClass(
         the correct one for the format which is currently .png.
         """,
 
-        Check(1)..ScreenshotHandle_t.p.OUT("pOutScreenshotHandle", ""),
-        EVRScreenshotType.IN("type", "", "EVRScreenshotType_\\w+"),
-        charASCII.const.p.IN("pchPreviewFilename", ""),
-        charASCII.const.p.IN("pchVRFilename", "")
+        Check(1)..ScreenshotHandle_t.p("pOutScreenshotHandle", ""),
+        EVRScreenshotType("type", "", "EVRScreenshotType_\\w+"),
+        charASCII.const.p("pchPreviewFilename", ""),
+        charASCII.const.p("pchVRFilename", "")
     )
 
     EVRScreenshotError(
@@ -47,27 +46,27 @@ val VRScreenshots = "VRScreenshots".nativeClass(
         Once hooked your application will receive a #EVREventType_VREvent_RequestScreenshot event when the user presses the buttons to take a screenshot.
         """,
 
-        EVRScreenshotType.const.p.IN("pSupportedTypes", ""),
-        AutoSize("pSupportedTypes")..int.IN("numTypes", "")
+        EVRScreenshotType.const.p("pSupportedTypes", ""),
+        AutoSize("pSupportedTypes")..int("numTypes", "")
     )
 
     EVRScreenshotType(
         "GetScreenshotPropertyType",
         "When your application receives a #EVREventType_VREvent_RequestScreenshot event, call these functions to get the details of the screenshot request.",
 
-        ScreenshotHandle_t.IN("screenshotHandle", ""),
-        Check(1)..EVRScreenshotError.p.OUT("pError", "")
+        ScreenshotHandle_t("screenshotHandle", ""),
+        Check(1)..EVRScreenshotError.p("pError", "")
     )
 
     uint32_t(
         "GetScreenshotPropertyFilename",
         "Get the filename for the preview or vr image (see {@code EScreenshotPropertyFilenames}).",
 
-        ScreenshotHandle_t.IN("screenshotHandle", ""),
-        EVRScreenshotPropertyFilenames.IN("filenameType", "", "EVRScreenshotPropertyFilenames_\\w+"),
-        Return(RESULT, includesNT = true)..nullable..charASCII.p.OUT("pchFilename", ""),
-        AutoSize("pchFilename")..uint32_t.IN("cchFilename", ""),
-        Check(1)..EVRScreenshotError.p.OUT("pError", ""),
+        ScreenshotHandle_t("screenshotHandle", ""),
+        EVRScreenshotPropertyFilenames("filenameType", "", "EVRScreenshotPropertyFilenames_\\w+"),
+        Return(RESULT, includesNT = true)..nullable..charASCII.p("pchFilename", ""),
+        AutoSize("pchFilename")..uint32_t("cchFilename", ""),
+        Check(1)..EVRScreenshotError.p("pError", ""),
 
         returnDoc = "the size of the string"
     )
@@ -79,8 +78,8 @@ val VRScreenshots = "VRScreenshots".nativeClass(
         shows a completion bar.
         """,
 
-        ScreenshotHandle_t.IN("screenshotHandle", ""),
-        float.IN("flProgress", "")
+        ScreenshotHandle_t("screenshotHandle", ""),
+        float("flProgress", "")
     )
 
     EVRScreenshotError(
@@ -92,9 +91,9 @@ val VRScreenshots = "VRScreenshots".nativeClass(
         This is similiar to request screenshot, but doesn't ever talk to the application, just takes the shot and submits.
         """,
 
-        Check(1)..ScreenshotHandle_t.p.OUT("pOutScreenshotHandle", ""),
-        charASCII.const.p.IN("pchPreviewFilename", ""),
-        charASCII.const.p.IN("pchVRFilename", "")
+        Check(1)..ScreenshotHandle_t.p("pOutScreenshotHandle", ""),
+        charASCII.const.p("pchPreviewFilename", ""),
+        charASCII.const.p("pchVRFilename", "")
     )
 
     EVRScreenshotError(
@@ -112,9 +111,9 @@ val VRScreenshots = "VRScreenshots".nativeClass(
         (achievement earned or something).
         """,
 
-        ScreenshotHandle_t.IN("screenshotHandle", ""),
-        EVRScreenshotType.IN("type", "", "EVRScreenshotType_\\w+"),
-        charASCII.const.p.IN("pchSourcePreviewFilename", ""),
-        charASCII.const.p.IN("pchSourceVRFilename", "")
+        ScreenshotHandle_t("screenshotHandle", ""),
+        EVRScreenshotType("type", "", "EVRScreenshotType_\\w+"),
+        charASCII.const.p("pchSourcePreviewFilename", ""),
+        charASCII.const.p("pchSourceVRFilename", "")
     )
 }

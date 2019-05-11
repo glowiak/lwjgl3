@@ -277,7 +277,7 @@ public class OVR {
      * <li>{@link #OVR_FORMAT_B8G8R8X8_UNORM OVR_FORMAT_B8G8R8X8_UNORM} - Not supported for OpenGL applications.</li>
      * <li>{@link #OVR_FORMAT_B8G8R8X8_UNORM_SRGB OVR_FORMAT_B8G8R8X8_UNORM_SRGB} - Not supported for OpenGL applications.</li>
      * <li>{@link #OVR_FORMAT_R16G16B16A16_FLOAT OVR_FORMAT_R16G16B16A16_FLOAT}</li>
-     * <li>{@link #OVR_FORMAT_R11G11B10_FLOAT OVR_FORMAT_R11G11B10_FLOAT}</li>
+     * <li>{@link #OVR_FORMAT_R11G11B10_FLOAT OVR_FORMAT_R11G11B10_FLOAT} - Not supported for D3D12 applications.</li>
      * <li>{@link #OVR_FORMAT_D16_UNORM OVR_FORMAT_D16_UNORM}</li>
      * <li>{@link #OVR_FORMAT_D24_UNORM_S8_UINT OVR_FORMAT_D24_UNORM_S8_UINT}</li>
      * <li>{@link #OVR_FORMAT_D32_FLOAT OVR_FORMAT_D32_FLOAT}</li>
@@ -379,6 +379,12 @@ public class OVR {
      * <li>{@link #ovrMirrorOption_IncludeGuardian MirrorOption_IncludeGuardian} - Shows the boundary system aka Guardian on the mirror texture.</li>
      * <li>{@link #ovrMirrorOption_IncludeNotifications MirrorOption_IncludeNotifications} - Shows system notifications the user receives on the mirror texture.</li>
      * <li>{@link #ovrMirrorOption_IncludeSystemGui MirrorOption_IncludeSystemGui} - Shows the system menu (triggered by hitting the Home button) on the mirror texture.</li>
+     * <li>{@link #ovrMirrorOption_ForceSymmetricFov MirrorOption_ForceSymmetricFov} - 
+     * Forces mirror output to use max symmetric FOV instead of asymmetric full FOV used by HMD.
+     * 
+     * <p>Only valid for rectilinear mirrors i.e. using {@link #ovrMirrorOption_PostDistortion MirrorOption_PostDistortion} with {@code ovrMirrorOption_ForceSymmetricFov} will result in
+     * {@link OVRErrorCode#ovrError_InvalidParameter Error_InvalidParameter} error.</p>
+     * </li>
      * </ul>
      */
     public static final int
@@ -388,23 +394,40 @@ public class OVR {
         ovrMirrorOption_RightEyeOnly         = 0x4,
         ovrMirrorOption_IncludeGuardian      = 0x8,
         ovrMirrorOption_IncludeNotifications = 0x10,
-        ovrMirrorOption_IncludeSystemGui     = 0x20;
+        ovrMirrorOption_IncludeSystemGui     = 0x20,
+        ovrMirrorOption_ForceSymmetricFov    = 0x40;
 
     /**
-     * {@code ovrViewportStencilType}
+     * Viewport stencil types provided by the {@link #ovr_GetFovStencil GetFovStencil} call. {@code ovrFovStencilType}
      * 
      * <h5>Enum values:</h5>
      * 
      * <ul>
-     * <li>{@link #ovrViewportStencil_HiddenArea ViewportStencil_HiddenArea} - Triangle mesh covering parts that are hidden to users.</li>
-     * <li>{@link #ovrViewportStencil_VisibleArea ViewportStencil_VisibleArea} - Triangle mesh covering parts that are visible to users.</li>
-     * <li>{@link #ovrViewportStencil_BorderLine ViewportStencil_BorderLine} - Line buffer that draws the boundary visible to users.</li>
+     * <li>{@link #ovrFovStencil_HiddenArea FovStencil_HiddenArea} - Triangle list covering parts that are hidden to users.</li>
+     * <li>{@link #ovrFovStencil_VisibleArea FovStencil_VisibleArea} - Triangle list covering parts that are visible to users.</li>
+     * <li>{@link #ovrFovStencil_BorderLine FovStencil_BorderLine} - Line list that draws the boundary visible to users.</li>
+     * <li>{@link #ovrFovStencil_VisibleRectangle FovStencil_VisibleRectangle} - Axis-aligned rectangle fit in visible region. 4x vertices: TopLeft, TopRight, BottomRight, BottomLeft.</li>
      * </ul>
      */
     public static final int
-        ovrViewportStencil_HiddenArea  = 0,
-        ovrViewportStencil_VisibleArea = 1,
-        ovrViewportStencil_BorderLine  = 2;
+        ovrFovStencil_HiddenArea       = 0,
+        ovrFovStencil_VisibleArea      = 1,
+        ovrFovStencil_BorderLine       = 2,
+        ovrFovStencil_VisibleRectangle = 3;
+
+    /**
+     * Flags used by {@link OVRFovStencilDesc} and which are passed to {@link #ovr_GetFovStencil GetFovStencil}. ({@code ovrFovStencilFlags}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #ovrFovStencilFlag_MeshOriginAtBottomLeft FovStencilFlag_MeshOriginAtBottomLeft} - 
+     * When used, flips the Y component of the provided 2D mesh coordinates, such that Y increases upwards. When not used, places mesh origin at top-left
+     * where Y increases downwards.
+     * </li>
+     * </ul>
+     */
+    public static final int ovrFovStencilFlag_MeshOriginAtBottomLeft = 0x1;
 
     /**
      * Describes button input types.({@code ovrButton})
@@ -941,8 +964,9 @@ public class OVR {
     public static int ovr_TraceMessage(int level, @NativeType("char const *") CharSequence message) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message);
-            return novr_TraceMessage(level, memAddress(messageEncoded));
+            stack.nUTF8(message, true);
+            long messageEncoded = stack.getPointerAddress();
+            return novr_TraceMessage(level, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1019,8 +1043,9 @@ public class OVR {
     public static int ovr_IdentifyClient(@NativeType("char const *") CharSequence identity) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer identityEncoded = stack.UTF8(identity);
-            return novr_IdentifyClient(memAddress(identityEncoded));
+            stack.nUTF8(identity, true);
+            long identityEncoded = stack.getPointerAddress();
+            return novr_IdentifyClient(identityEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1041,7 +1066,7 @@ public class OVR {
      * @param __result an {@link OVRHmdDesc}. If invoked with {@code NULL} session argument, {@code ovrHmdDesc::Type} to {@link #ovrHmd_None Hmd_None} indicates that the HMD is not connected.
      */
     @NativeType("ovrHmdDesc")
-    public static OVRHmdDesc ovr_GetHmdDesc(@NativeType("ovrSession") long session, OVRHmdDesc __result) {
+    public static OVRHmdDesc ovr_GetHmdDesc(@NativeType("ovrSession") long session, @NativeType("ovrHmdDesc") OVRHmdDesc __result) {
         novr_GetHmdDesc(session, __result.address());
         return __result;
     }
@@ -1082,7 +1107,7 @@ public class OVR {
      * @param __result         an {@link OVRTrackerDesc}. An empty {@code OVRTrackerDesc} will be returned if {@code trackerDescIndex} is out of range.
      */
     @NativeType("ovrTrackerDesc")
-    public static OVRTrackerDesc ovr_GetTrackerDesc(@NativeType("ovrSession") long session, @NativeType("unsigned int") int trackerDescIndex, OVRTrackerDesc __result) {
+    public static OVRTrackerDesc ovr_GetTrackerDesc(@NativeType("ovrSession") long session, @NativeType("unsigned int") int trackerDescIndex, @NativeType("ovrTrackerDesc") OVRTrackerDesc __result) {
         if (CHECKS) {
             check(session);
         }
@@ -1352,7 +1377,7 @@ public class OVR {
      * @param __result      the {@link OVRTrackingState} that is predicted for the given {@code absTime}
      */
     @NativeType("ovrTrackingState")
-    public static OVRTrackingState ovr_GetTrackingState(@NativeType("ovrSession") long session, double absTime, @NativeType("ovrBool") boolean latencyMarker, OVRTrackingState __result) {
+    public static OVRTrackingState ovr_GetTrackingState(@NativeType("ovrSession") long session, double absTime, @NativeType("ovrBool") boolean latencyMarker, @NativeType("ovrTrackingState") OVRTrackingState __result) {
         if (CHECKS) {
             check(session);
         }
@@ -1403,7 +1428,7 @@ public class OVR {
      * @param trackerPoseIndex index of the tracker being requested.
      */
     @NativeType("ovrTrackerPose")
-    public static OVRTrackerPose ovr_GetTrackerPose(@NativeType("ovrSession") long session, @NativeType("unsigned int") int trackerPoseIndex, OVRTrackerPose __result) {
+    public static OVRTrackerPose ovr_GetTrackerPose(@NativeType("ovrSession") long session, @NativeType("unsigned int") int trackerPoseIndex, @NativeType("ovrTrackerPose") OVRTrackerPose __result) {
         if (CHECKS) {
             check(session);
         }
@@ -1465,7 +1490,7 @@ public class OVR {
      * @param __result       an {@link OVRTouchHapticsDesc}
      */
     @NativeType("ovrTouchHapticsDesc")
-    public static OVRTouchHapticsDesc ovr_GetTouchHapticsDesc(@NativeType("ovrSession") long session, @NativeType("ovrControllerType") int controllerType, OVRTouchHapticsDesc __result) {
+    public static OVRTouchHapticsDesc ovr_GetTouchHapticsDesc(@NativeType("ovrSession") long session, @NativeType("ovrControllerType") int controllerType, @NativeType("ovrTouchHapticsDesc") OVRTouchHapticsDesc __result) {
         if (CHECKS) {
             check(session);
         }
@@ -1846,8 +1871,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return novr_SetExternalCameraProperties(session, memAddress(nameEncoded), intrinsics.address(), extrinsics.address());
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return novr_SetExternalCameraProperties(session, nameEncoded, intrinsics.address(), extrinsics.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2004,7 +2030,7 @@ public class OVR {
      * @param __result              the texture width and height size
      */
     @NativeType("ovrSizei")
-    public static OVRSizei ovr_GetFovTextureSize(@NativeType("ovrSession") long session, @NativeType("ovrEyeType") int eye, @NativeType("ovrFovPort") OVRFovPort fov, float pixelsPerDisplayPixel, OVRSizei __result) {
+    public static OVRSizei ovr_GetFovTextureSize(@NativeType("ovrSession") long session, @NativeType("ovrEyeType") int eye, @NativeType("ovrFovPort") OVRFovPort fov, float pixelsPerDisplayPixel, @NativeType("ovrSizei") OVRSizei __result) {
         if (CHECKS) {
             check(session);
         }
@@ -2026,7 +2052,7 @@ public class OVR {
      * @param __result the computed {@link OVREyeRenderDesc} for the given {@code eyeType} and field of view
      */
     @NativeType("ovrEyeRenderDesc")
-    public static OVREyeRenderDesc ovr_GetRenderDesc(@NativeType("ovrSession") long session, @NativeType("ovrEyeType") int eyeType, @NativeType("ovrFovPort") OVRFovPort fov, OVREyeRenderDesc __result) {
+    public static OVREyeRenderDesc ovr_GetRenderDesc(@NativeType("ovrSession") long session, @NativeType("ovrEyeType") int eyeType, @NativeType("ovrFovPort") OVRFovPort fov, @NativeType("ovrEyeRenderDesc") OVREyeRenderDesc __result) {
         if (CHECKS) {
             check(session);
         }
@@ -2034,19 +2060,44 @@ public class OVR {
         return __result;
     }
 
-    // --- [ ovr_GetViewportStencil ] ---
+    // --- [ ovr_GetFovStencil ] ---
 
-    /** Unsafe version of: {@link #ovr_GetViewportStencil GetViewportStencil} */
-    public static native int novr_GetViewportStencil(long session, long viewportStencilDesc, long outMeshBuffer);
+    /** Unsafe version of: {@link #ovr_GetFovStencil GetFovStencil} */
+    public static native int novr_GetFovStencil(long session, long fovStencilDesc, long meshBuffer);
 
-    /** @param session an {@code ovrSession} previously returned by {@link #ovr_Create Create} */
+    /**
+     * Returns a viewport stencil mesh to be used for defining the area or outline the user can see through the lens on an area defined by a given
+     * {@code ovrFovPort}.
+     * 
+     * <p>To find out how big the vertex and index buffers in {@code meshBuffer} buffer should be, first call this function setting {@code AllocVertexCount}
+     * &amp; {@code AllocIndexCount} to 0 while also sending in {@code nullptr} for {@code VertexBuffer} &amp; {@code IndexBuffer}. The SDK will populate
+     * {@code UsedVertexCount} &amp; {@code UsedIndexCount} values.</p>
+     * 
+     * <p>If {@code Alloc*Count} fields in {@code meshBuffer} are smaller than the expected {@code Used*Count} fields, (except when they are 0) then the SDK will
+     * return {@link OVRErrorCode#ovrError_InvalidParameter Error_InvalidParameter} and leave {@code VertexBuffer} and {@code IndexBuffer} untouched.</p>
+     * 
+     * <p>2D positions provided in the buffer will be in the {@code [0,1]} range where Y increases downward, similar to texture-UV space. If Y coordinates need
+     * to be flipped upside down, use the {@link #ovrFovStencilFlag_MeshOriginAtBottomLeft FovStencilFlag_MeshOriginAtBottomLeft}.</p>
+     *
+     * @param session        an {@code ovrSession} previously returned by {@link #ovr_Create Create}
+     * @param fovStencilDesc info provided by caller necessary to generate a stencil mesh
+     * @param meshBuffer     mesh buffer to be partially filled in and returned by the SDK
+     *
+     * @return an ovrResult indicating success or failure. In the case of failure, use {@link #ovr_GetLastErrorInfo GetLastErrorInfo} to get more information. Return values include but aren't
+     *         limited to:
+     *         
+     *         <ul>
+     *         <li>{@link OVRErrorCode#ovrSuccess Success}: Completed successfully.</li>
+     *         <li>{@link OVRErrorCode#ovrError_ServiceConnection Error_ServiceConnection}: The service connection was lost and the application must destroy the session.</li>
+     *         <li>{@link OVRErrorCode#ovrError_InvalidParameter Error_InvalidParameter}: One or more of the parameters</li>
+     *         </ul>
+     */
     @NativeType("ovrResult")
-    public static int ovr_GetViewportStencil(@NativeType("ovrSession") long session, @NativeType("ovrViewportStencilDesc const *") OVRViewportStencilDesc viewportStencilDesc, @NativeType("ovrViewportStencilMeshBuffer *") OVRViewportStencilMeshBuffer outMeshBuffer) {
+    public static int ovr_GetFovStencil(@NativeType("ovrSession") long session, @NativeType("ovrFovStencilDesc const *") OVRFovStencilDesc fovStencilDesc, @NativeType("ovrFovStencilMeshBuffer *") OVRFovStencilMeshBuffer meshBuffer) {
         if (CHECKS) {
             check(session);
-            OVRViewportStencilMeshBuffer.validate(outMeshBuffer.address());
         }
-        return novr_GetViewportStencil(session, viewportStencilDesc.address(), outMeshBuffer.address());
+        return novr_GetFovStencil(session, fovStencilDesc.address(), meshBuffer.address());
     }
 
     // --- [ ovr_WaitToBeginFrame ] ---
@@ -2381,8 +2432,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_GetBool(session, memAddress(propertyNameEncoded), defaultVal);
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_GetBool(session, propertyNameEncoded, defaultVal);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2431,8 +2483,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_SetBool(session, memAddress(propertyNameEncoded), value);
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_SetBool(session, propertyNameEncoded, value);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2475,8 +2528,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_GetInt(session, memAddress(propertyNameEncoded), defaultVal);
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_GetInt(session, propertyNameEncoded, defaultVal);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2525,8 +2579,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_SetInt(session, memAddress(propertyNameEncoded), value);
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_SetInt(session, propertyNameEncoded, value);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2569,8 +2624,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_GetFloat(session, memAddress(propertyNameEncoded), defaultVal);
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_GetFloat(session, propertyNameEncoded, defaultVal);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2619,8 +2675,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_SetFloat(session, memAddress(propertyNameEncoded), value);
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_SetFloat(session, propertyNameEncoded, value);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2669,8 +2726,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_GetFloatArray(session, memAddress(propertyNameEncoded), memAddress(values), values.remaining());
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_GetFloatArray(session, propertyNameEncoded, memAddress(values), values.remaining());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2719,8 +2777,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_SetFloatArray(session, memAddress(propertyNameEncoded), memAddress(values), values.remaining());
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_SetFloatArray(session, propertyNameEncoded, memAddress(values), values.remaining());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2775,9 +2834,11 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            ByteBuffer defaultValEncoded = stack.UTF8Safe(defaultVal);
-            long __result = novr_GetString(session, memAddress(propertyNameEncoded), memAddressSafe(defaultValEncoded));
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            stack.nUTF8Safe(defaultVal, true);
+            long defaultValEncoded = defaultVal == null ? NULL : stack.getPointerAddress();
+            long __result = novr_GetString(session, propertyNameEncoded, defaultValEncoded);
             return memUTF8Safe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -2828,9 +2889,11 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            ByteBuffer valueEncoded = stack.ASCII(value);
-            return novr_SetString(hmddesc, memAddress(propertyNameEncoded), memAddress(valueEncoded));
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            stack.nASCII(value, true);
+            long valueEncoded = stack.getPointerAddress();
+            return novr_SetString(hmddesc, propertyNameEncoded, valueEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2925,8 +2988,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_GetFloatArray(session, memAddress(propertyNameEncoded), values, values.length);
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_GetFloatArray(session, propertyNameEncoded, values, values.length);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2953,8 +3017,9 @@ public class OVR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer propertyNameEncoded = stack.ASCII(propertyName);
-            return novr_SetFloatArray(session, memAddress(propertyNameEncoded), values, values.length);
+            stack.nASCII(propertyName, true);
+            long propertyNameEncoded = stack.getPointerAddress();
+            return novr_SetFloatArray(session, propertyNameEncoded, values, values.length);
         } finally {
             stack.setPointer(stackPointer);
         }

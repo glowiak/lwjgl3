@@ -85,18 +85,14 @@ public class GLXStereoNotifyEventEXT extends Struct {
         STEREO_TREE = layout.offsetof(7);
     }
 
-    GLXStereoNotifyEventEXT(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link GLXStereoNotifyEventEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code GLXStereoNotifyEventEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public GLXStereoNotifyEventEXT(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -126,15 +122,15 @@ public class GLXStereoNotifyEventEXT extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link GLXStereoNotifyEventEXT} instance for the specified memory address. */
+    /** Returns a new {@code GLXStereoNotifyEventEXT} instance for the specified memory address. */
     public static GLXStereoNotifyEventEXT create(long address) {
-        return new GLXStereoNotifyEventEXT(address, null);
+        return wrap(GLXStereoNotifyEventEXT.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static GLXStereoNotifyEventEXT createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(GLXStereoNotifyEventEXT.class, address);
     }
 
     /**
@@ -144,41 +140,43 @@ public class GLXStereoNotifyEventEXT extends Struct {
      * @param capacity the buffer capacity
      */
     public static GLXStereoNotifyEventEXT.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static GLXStereoNotifyEventEXT.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #type}. */
-    public static int ntype(long struct) { return memGetInt(struct + GLXStereoNotifyEventEXT.TYPE); }
+    public static int ntype(long struct) { return UNSAFE.getInt(null, struct + GLXStereoNotifyEventEXT.TYPE); }
     /** Unsafe version of {@link #serial}. */
     public static long nserial(long struct) { return memGetAddress(struct + GLXStereoNotifyEventEXT.SERIAL); }
     /** Unsafe version of {@link #send_event}. */
-    public static int nsend_event(long struct) { return memGetInt(struct + GLXStereoNotifyEventEXT.SEND_EVENT); }
+    public static int nsend_event(long struct) { return UNSAFE.getInt(null, struct + GLXStereoNotifyEventEXT.SEND_EVENT); }
     /** Unsafe version of {@link #display}. */
     public static long ndisplay(long struct) { return memGetAddress(struct + GLXStereoNotifyEventEXT.DISPLAY); }
     /** Unsafe version of {@link #extension}. */
-    public static int nextension(long struct) { return memGetInt(struct + GLXStereoNotifyEventEXT.EXTENSION); }
+    public static int nextension(long struct) { return UNSAFE.getInt(null, struct + GLXStereoNotifyEventEXT.EXTENSION); }
     /** Unsafe version of {@link #evtype}. */
-    public static int nevtype(long struct) { return memGetInt(struct + GLXStereoNotifyEventEXT.EVTYPE); }
+    public static int nevtype(long struct) { return UNSAFE.getInt(null, struct + GLXStereoNotifyEventEXT.EVTYPE); }
     /** Unsafe version of {@link #window}. */
     public static long nwindow(long struct) { return memGetAddress(struct + GLXStereoNotifyEventEXT.WINDOW); }
     /** Unsafe version of {@link #stereo_tree}. */
-    public static int nstereo_tree(long struct) { return memGetInt(struct + GLXStereoNotifyEventEXT.STEREO_TREE); }
+    public static int nstereo_tree(long struct) { return UNSAFE.getInt(null, struct + GLXStereoNotifyEventEXT.STEREO_TREE); }
 
     // -----------------------------------
 
     /** An array of {@link GLXStereoNotifyEventEXT} structs. */
     public static class Buffer extends StructBuffer<GLXStereoNotifyEventEXT, Buffer> {
 
+        private static final GLXStereoNotifyEventEXT ELEMENT_FACTORY = GLXStereoNotifyEventEXT.create(-1L);
+
         /**
-         * Creates a new {@link GLXStereoNotifyEventEXT.Buffer} instance backed by the specified container.
+         * Creates a new {@code GLXStereoNotifyEventEXT.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -204,18 +202,8 @@ public class GLXStereoNotifyEventEXT extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected GLXStereoNotifyEventEXT newInstance(long address) {
-            return new GLXStereoNotifyEventEXT(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected GLXStereoNotifyEventEXT getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code type} field. */

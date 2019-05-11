@@ -74,18 +74,14 @@ public class EXRImage extends Struct implements NativeResource {
         NUM_TILES = layout.offsetof(5);
     }
 
-    EXRImage(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link EXRImage} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code EXRImage} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public EXRImage(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -150,30 +146,31 @@ public class EXRImage extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link EXRImage} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code EXRImage} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static EXRImage malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(EXRImage.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link EXRImage} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code EXRImage} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static EXRImage calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(EXRImage.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link EXRImage} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code EXRImage} instance allocated with {@link BufferUtils}. */
     public static EXRImage create() {
-        return new EXRImage(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(EXRImage.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link EXRImage} instance for the specified memory address. */
+    /** Returns a new {@code EXRImage} instance for the specified memory address. */
     public static EXRImage create(long address) {
-        return new EXRImage(address, null);
+        return wrap(EXRImage.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static EXRImage createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(EXRImage.class, address);
     }
 
     /**
@@ -182,7 +179,7 @@ public class EXRImage extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static EXRImage.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -191,7 +188,7 @@ public class EXRImage extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static EXRImage.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -200,7 +197,8 @@ public class EXRImage extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static EXRImage.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -210,43 +208,43 @@ public class EXRImage extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static EXRImage.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static EXRImage.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link EXRImage} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code EXRImage} instance allocated on the thread-local {@link MemoryStack}. */
     public static EXRImage mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link EXRImage} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code EXRImage} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static EXRImage callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link EXRImage} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code EXRImage} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static EXRImage mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(EXRImage.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link EXRImage} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code EXRImage} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static EXRImage callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(EXRImage.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -274,7 +272,7 @@ public class EXRImage extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static EXRImage.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -284,7 +282,7 @@ public class EXRImage extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static EXRImage.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -294,26 +292,26 @@ public class EXRImage extends Struct implements NativeResource {
     /** Unsafe version of {@link #images() images}. */
     @Nullable public static PointerBuffer nimages(long struct) { return memPointerBufferSafe(memGetAddress(struct + EXRImage.IMAGES), nnum_channels(struct)); }
     /** Unsafe version of {@link #width}. */
-    public static int nwidth(long struct) { return memGetInt(struct + EXRImage.WIDTH); }
+    public static int nwidth(long struct) { return UNSAFE.getInt(null, struct + EXRImage.WIDTH); }
     /** Unsafe version of {@link #height}. */
-    public static int nheight(long struct) { return memGetInt(struct + EXRImage.HEIGHT); }
+    public static int nheight(long struct) { return UNSAFE.getInt(null, struct + EXRImage.HEIGHT); }
     /** Unsafe version of {@link #num_channels}. */
-    public static int nnum_channels(long struct) { return memGetInt(struct + EXRImage.NUM_CHANNELS); }
+    public static int nnum_channels(long struct) { return UNSAFE.getInt(null, struct + EXRImage.NUM_CHANNELS); }
     /** Unsafe version of {@link #num_tiles}. */
-    public static int nnum_tiles(long struct) { return memGetInt(struct + EXRImage.NUM_TILES); }
+    public static int nnum_tiles(long struct) { return UNSAFE.getInt(null, struct + EXRImage.NUM_TILES); }
 
     /** Unsafe version of {@link #tiles(EXRTile.Buffer) tiles}. */
     public static void ntiles(long struct, @Nullable EXRTile.Buffer value) { memPutAddress(struct + EXRImage.TILES, memAddressSafe(value)); nnum_tiles(struct, value == null ? 0 : value.remaining()); }
     /** Unsafe version of {@link #images(PointerBuffer) images}. */
     public static void nimages(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + EXRImage.IMAGES, memAddressSafe(value)); nnum_channels(struct, value == null ? 0 : value.remaining()); }
     /** Unsafe version of {@link #width(int) width}. */
-    public static void nwidth(long struct, int value) { memPutInt(struct + EXRImage.WIDTH, value); }
+    public static void nwidth(long struct, int value) { UNSAFE.putInt(null, struct + EXRImage.WIDTH, value); }
     /** Unsafe version of {@link #height(int) height}. */
-    public static void nheight(long struct, int value) { memPutInt(struct + EXRImage.HEIGHT, value); }
+    public static void nheight(long struct, int value) { UNSAFE.putInt(null, struct + EXRImage.HEIGHT, value); }
     /** Sets the specified value to the {@code num_channels} field of the specified {@code struct}. */
-    public static void nnum_channels(long struct, int value) { memPutInt(struct + EXRImage.NUM_CHANNELS, value); }
+    public static void nnum_channels(long struct, int value) { UNSAFE.putInt(null, struct + EXRImage.NUM_CHANNELS, value); }
     /** Sets the specified value to the {@code num_tiles} field of the specified {@code struct}. */
-    public static void nnum_tiles(long struct, int value) { memPutInt(struct + EXRImage.NUM_TILES, value); }
+    public static void nnum_tiles(long struct, int value) { UNSAFE.putInt(null, struct + EXRImage.NUM_TILES, value); }
 
     /**
      * Validates pointer members that should not be {@code NULL}.
@@ -337,7 +335,7 @@ public class EXRImage extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -346,8 +344,10 @@ public class EXRImage extends Struct implements NativeResource {
     /** An array of {@link EXRImage} structs. */
     public static class Buffer extends StructBuffer<EXRImage, Buffer> implements NativeResource {
 
+        private static final EXRImage ELEMENT_FACTORY = EXRImage.create(-1L);
+
         /**
-         * Creates a new {@link EXRImage.Buffer} instance backed by the specified container.
+         * Creates a new {@code EXRImage.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -373,18 +373,8 @@ public class EXRImage extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected EXRImage newInstance(long address) {
-            return new EXRImage(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected EXRImage getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link EXRTile.Buffer} view of the struct array pointed to by the {@code tiles} field. */

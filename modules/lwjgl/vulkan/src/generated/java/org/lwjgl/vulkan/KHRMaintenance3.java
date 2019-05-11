@@ -16,7 +16,7 @@ import static org.lwjgl.system.JNI.*;
  * <p>The new features are as follows:</p>
  * 
  * <ul>
- * <li>A limit on the maximum number of descriptors that are supported in a single descriptor set layout. Some implementations have a limit on the total size of descriptors in a set, which can&#8217;t be expressed in terms of the limits in Vulkan 1.0.</li>
+ * <li>A limit on the maximum number of descriptors that are supported in a single descriptor set layout. Some implementations have a limit on the total size of descriptors in a set, which cannot be expressed in terms of the limits in Vulkan 1.0.</li>
  * <li>A limit on the maximum size of a single memory allocation. Some platforms have kernel interfaces that limit the maximum size of an allocation.</li>
  * </ul>
  * 
@@ -40,7 +40,7 @@ import static org.lwjgl.system.JNI.*;
  * </ul></dd>
  * <dt><b>Deprecation state</b></dt>
  * <dd><ul>
- * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
+ * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
@@ -101,7 +101,7 @@ public class KHRMaintenance3 {
             check(__functionAddress);
             VkDescriptorSetLayoutCreateInfo.validate(pCreateInfo);
         }
-        callPPPV(__functionAddress, device.address(), pCreateInfo, pSupport);
+        callPPPV(device.address(), pCreateInfo, pSupport, __functionAddress);
     }
 
     /**

@@ -72,24 +72,24 @@ val NV_explicit_multisample = "NVExplicitMultisample".nativeClassGL("NV_explicit
         "GetMultisamplefvNV",
         "",
 
-        GLenum.IN("pname", ""),
-        GLuint.IN("index", ""),
-        Check(2)..GLfloat.p.OUT("val", "")
+        GLenum("pname", ""),
+        GLuint("index", ""),
+        Check(2)..GLfloat.p("val", "")
     )
 
     void(
         "SampleMaskIndexedNV",
         "",
 
-        GLuint.IN("index", ""),
-        GLbitfield.IN("mask", "")
+        GLuint("index", ""),
+        GLbitfield("mask", "")
     )
 
     void(
         "TexRenderbufferNV",
         "",
 
-        GLenum.IN("target", ""),
-        GLuint.IN("renderbuffer", "")
+        GLenum("target", ""),
+        GLuint("renderbuffer", "")
     )
 }

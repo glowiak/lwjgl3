@@ -16,7 +16,7 @@ import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
- * The {@code VK_MVK_macos_surface} extension is an instance extension. It provides a mechanism to create a {@code VkSurfaceKHR} object (defined by the {@link KHRSurface VK_KHR_surface} extension) that refers to an {@code NSView}, the native surface type of macOS, which is underpinned by a {@code CAMetalLayer}, to support rendering to the surface using Apple's Metal framework.
+ * The {@code VK_MVK_macos_surface} extension is an instance extension. It provides a mechanism to create a {@code VkSurfaceKHR} object (defined by the {@link KHRSurface VK_KHR_surface} extension) that refers to an {@code NSView}, the native surface type of macOS, which is underpinned by a dlink:CAMetalLayer, to support rendering to the surface using Apple's Metal framework.
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -77,7 +77,7 @@ public class MVKMacosSurface {
             VkMacOSSurfaceCreateInfoMVK.validate(pCreateInfo);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, instance.address(), pCreateInfo, pAllocator, pSurface);
+        return callPPPPI(instance.address(), pCreateInfo, pAllocator, pSurface, __functionAddress);
     }
 
     /**
@@ -124,7 +124,7 @@ public class MVKMacosSurface {
      *
      * @param instance    the instance with which to associate the surface.
      * @param pCreateInfo a pointer to an instance of the {@link VkMacOSSurfaceCreateInfoMVK} structure containing parameters affecting the creation of the surface object.
-     * @param pAllocator  the allocator used for host memory allocated for the surface object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
+     * @param pAllocator  the allocator used for host memory allocated for the surface object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
      * @param pSurface    points to a {@code VkSurfaceKHR} handle in which the created surface object is returned.
      */
     @NativeType("VkResult")
@@ -145,7 +145,7 @@ public class MVKMacosSurface {
             VkMacOSSurfaceCreateInfoMVK.validate(pCreateInfo.address());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, instance.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pSurface);
+        return callPPPPI(instance.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pSurface, __functionAddress);
     }
 
 }

@@ -127,18 +127,14 @@ public class NSVGShape extends Struct {
         NEXT = layout.offsetof(15);
     }
 
-    NSVGShape(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link NSVGShape} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code NSVGShape} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public NSVGShape(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -147,9 +143,9 @@ public class NSVGShape extends Struct {
     /** Returns a {@link ByteBuffer} view of the {@code id} field. */
     @NativeType("char[64]")
     public ByteBuffer id() { return nid(address()); }
-    /** Returns the value at the specified index of the {@code id} field. */
-    @NativeType("char")
-    public byte id(int index) { return nid(address(), index); }
+    /** Decodes the null-terminated string stored in the {@code id} field. */
+    @NativeType("char[64]")
+    public String idString() { return nidString(address()); }
     /** Returns a {@link NSVGPaint} view of the {@code fill} field. */
     @NativeType("NSVGpaint")
     public NSVGPaint fill() { return nfill(address()); }
@@ -198,15 +194,15 @@ public class NSVGShape extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link NSVGShape} instance for the specified memory address. */
+    /** Returns a new {@code NSVGShape} instance for the specified memory address. */
     public static NSVGShape create(long address) {
-        return new NSVGShape(address, null);
+        return wrap(NSVGShape.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NSVGShape createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(NSVGShape.class, address);
     }
 
     /**
@@ -216,56 +212,54 @@ public class NSVGShape extends Struct {
      * @param capacity the buffer capacity
      */
     public static NSVGShape.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NSVGShape.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #id}. */
     public static ByteBuffer nid(long struct) { return memByteBuffer(struct + NSVGShape.ID, 64); }
-    /** Unsafe version of {@link #id(int) id}. */
-    public static byte nid(long struct, int index) {
-        return memGetByte(struct + NSVGShape.ID + check(index, 64) * 1);
-    }
+    /** Unsafe version of {@link #idString}. */
+    public static String nidString(long struct) { return memASCII(struct + NSVGShape.ID); }
     /** Unsafe version of {@link #fill}. */
     public static NSVGPaint nfill(long struct) { return NSVGPaint.create(struct + NSVGShape.FILL); }
     /** Unsafe version of {@link #stroke}. */
     public static NSVGPaint nstroke(long struct) { return NSVGPaint.create(struct + NSVGShape.STROKE); }
     /** Unsafe version of {@link #opacity}. */
-    public static float nopacity(long struct) { return memGetFloat(struct + NSVGShape.OPACITY); }
+    public static float nopacity(long struct) { return UNSAFE.getFloat(null, struct + NSVGShape.OPACITY); }
     /** Unsafe version of {@link #strokeWidth}. */
-    public static float nstrokeWidth(long struct) { return memGetFloat(struct + NSVGShape.STROKEWIDTH); }
+    public static float nstrokeWidth(long struct) { return UNSAFE.getFloat(null, struct + NSVGShape.STROKEWIDTH); }
     /** Unsafe version of {@link #strokeDashOffset}. */
-    public static float nstrokeDashOffset(long struct) { return memGetFloat(struct + NSVGShape.STROKEDASHOFFSET); }
+    public static float nstrokeDashOffset(long struct) { return UNSAFE.getFloat(null, struct + NSVGShape.STROKEDASHOFFSET); }
     /** Unsafe version of {@link #strokeDashArray}. */
     public static FloatBuffer nstrokeDashArray(long struct) { return memFloatBuffer(struct + NSVGShape.STROKEDASHARRAY, 8); }
     /** Unsafe version of {@link #strokeDashArray(int) strokeDashArray}. */
     public static float nstrokeDashArray(long struct, int index) {
-        return memGetFloat(struct + NSVGShape.STROKEDASHARRAY + check(index, 8) * 4);
+        return UNSAFE.getFloat(null, struct + NSVGShape.STROKEDASHARRAY + check(index, 8) * 4);
     }
     /** Unsafe version of {@link #strokeDashCount}. */
-    public static byte nstrokeDashCount(long struct) { return memGetByte(struct + NSVGShape.STROKEDASHCOUNT); }
+    public static byte nstrokeDashCount(long struct) { return UNSAFE.getByte(null, struct + NSVGShape.STROKEDASHCOUNT); }
     /** Unsafe version of {@link #strokeLineJoin}. */
-    public static byte nstrokeLineJoin(long struct) { return memGetByte(struct + NSVGShape.STROKELINEJOIN); }
+    public static byte nstrokeLineJoin(long struct) { return UNSAFE.getByte(null, struct + NSVGShape.STROKELINEJOIN); }
     /** Unsafe version of {@link #strokeLineCap}. */
-    public static byte nstrokeLineCap(long struct) { return memGetByte(struct + NSVGShape.STROKELINECAP); }
+    public static byte nstrokeLineCap(long struct) { return UNSAFE.getByte(null, struct + NSVGShape.STROKELINECAP); }
     /** Unsafe version of {@link #miterLimit}. */
-    public static float nmiterLimit(long struct) { return memGetFloat(struct + NSVGShape.MITERLIMIT); }
+    public static float nmiterLimit(long struct) { return UNSAFE.getFloat(null, struct + NSVGShape.MITERLIMIT); }
     /** Unsafe version of {@link #fillRule}. */
-    public static byte nfillRule(long struct) { return memGetByte(struct + NSVGShape.FILLRULE); }
+    public static byte nfillRule(long struct) { return UNSAFE.getByte(null, struct + NSVGShape.FILLRULE); }
     /** Unsafe version of {@link #flags}. */
-    public static byte nflags(long struct) { return memGetByte(struct + NSVGShape.FLAGS); }
+    public static byte nflags(long struct) { return UNSAFE.getByte(null, struct + NSVGShape.FLAGS); }
     /** Unsafe version of {@link #bounds}. */
     public static FloatBuffer nbounds(long struct) { return memFloatBuffer(struct + NSVGShape.BOUNDS, 4); }
     /** Unsafe version of {@link #bounds(int) bounds}. */
     public static float nbounds(long struct, int index) {
-        return memGetFloat(struct + NSVGShape.BOUNDS + check(index, 4) * 4);
+        return UNSAFE.getFloat(null, struct + NSVGShape.BOUNDS + check(index, 4) * 4);
     }
     /** Unsafe version of {@link #paths}. */
     public static NSVGPath npaths(long struct) { return NSVGPath.create(memGetAddress(struct + NSVGShape.PATHS)); }
@@ -277,8 +271,10 @@ public class NSVGShape extends Struct {
     /** An array of {@link NSVGShape} structs. */
     public static class Buffer extends StructBuffer<NSVGShape, Buffer> {
 
+        private static final NSVGShape ELEMENT_FACTORY = NSVGShape.create(-1L);
+
         /**
-         * Creates a new {@link NSVGShape.Buffer} instance backed by the specified container.
+         * Creates a new {@code NSVGShape.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -304,26 +300,16 @@ public class NSVGShape extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected NSVGShape newInstance(long address) {
-            return new NSVGShape(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected NSVGShape getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link ByteBuffer} view of the {@code id} field. */
         @NativeType("char[64]")
         public ByteBuffer id() { return NSVGShape.nid(address()); }
-        /** Returns the value at the specified index of the {@code id} field. */
-        @NativeType("char")
-        public byte id(int index) { return NSVGShape.nid(address(), index); }
+        /** Decodes the null-terminated string stored in the {@code id} field. */
+        @NativeType("char[64]")
+        public String idString() { return NSVGShape.nidString(address()); }
         /** Returns a {@link NSVGPaint} view of the {@code fill} field. */
         @NativeType("NSVGpaint")
         public NSVGPaint fill() { return NSVGShape.nfill(address()); }

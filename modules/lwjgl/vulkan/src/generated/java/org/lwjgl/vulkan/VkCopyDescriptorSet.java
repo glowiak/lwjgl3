@@ -22,10 +22,11 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code srcBinding} <b>must</b> be a valid binding within {@code srcSet}</li>
- * <li>The sum of {@code srcArrayElement} and {@code descriptorCount} <b>must</b> be less than or equal to the number of array elements in the descriptor set binding specified by {@code srcBinding}, and all applicable consecutive bindings, as described by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive">the “consecutive binding updates” section</a></li>
+ * <li>The sum of {@code srcArrayElement} and {@code descriptorCount} <b>must</b> be less than or equal to the number of array elements in the descriptor set binding specified by {@code srcBinding}, and all applicable consecutive bindings, as described by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-updates-consecutive">consecutive binding updates</a></li>
  * <li>{@code dstBinding} <b>must</b> be a valid binding within {@code dstSet}</li>
- * <li>The sum of {@code dstArrayElement} and {@code descriptorCount} <b>must</b> be less than or equal to the number of array elements in the descriptor set binding specified by {@code dstBinding}, and all applicable consecutive bindings, as described by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive">the “consecutive binding updates” section</a></li>
- * <li>If {@code srcSet} is equal to {@code dstSet}, then the source and destination ranges of descriptors <b>must</b> not overlap, where the ranges <b>may</b> include array elements from consecutive bindings as described by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive">the “consecutive binding updates” section</a></li>
+ * <li>The sum of {@code dstArrayElement} and {@code descriptorCount} <b>must</b> be less than or equal to the number of array elements in the descriptor set binding specified by {@code dstBinding}, and all applicable consecutive bindings, as described by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-updates-consecutive">consecutive binding updates</a></li>
+ * <li>The type of {@code dstBinding} within {@code dstSet} <b>must</b> be equal to the type of {@code srcBinding} within {@code srcSet}</li>
+ * <li>If {@code srcSet} is equal to {@code dstSet}, then the source and destination ranges of descriptors <b>must</b> not overlap, where the ranges <b>may</b> include array elements from consecutive bindings as described by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-updates-consecutive">consecutive binding updates</a></li>
  * <li>If the descriptor type of the descriptor set binding specified by {@code srcBinding} is {@link EXTInlineUniformBlock#VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT}, {@code srcArrayElement} <b>must</b> be an integer multiple of 4</li>
  * <li>If the descriptor type of the descriptor set binding specified by {@code dstBinding} is {@link EXTInlineUniformBlock#VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT}, {@code dstArrayElement} <b>must</b> be an integer multiple of 4</li>
  * <li>If the descriptor type of the descriptor set binding specified by either {@code srcBinding} or {@code dstBinding} is {@link EXTInlineUniformBlock#VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT}, {@code descriptorCount} <b>must</b> be an integer multiple of 4</li>
@@ -125,18 +126,14 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
         DESCRIPTORCOUNT = layout.offsetof(8);
     }
 
-    VkCopyDescriptorSet(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkCopyDescriptorSet} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkCopyDescriptorSet} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkCopyDescriptorSet(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -228,30 +225,31 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCopyDescriptorSet} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCopyDescriptorSet} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkCopyDescriptorSet malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkCopyDescriptorSet.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkCopyDescriptorSet} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCopyDescriptorSet} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkCopyDescriptorSet calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkCopyDescriptorSet.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkCopyDescriptorSet} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkCopyDescriptorSet} instance allocated with {@link BufferUtils}. */
     public static VkCopyDescriptorSet create() {
-        return new VkCopyDescriptorSet(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkCopyDescriptorSet.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkCopyDescriptorSet} instance for the specified memory address. */
+    /** Returns a new {@code VkCopyDescriptorSet} instance for the specified memory address. */
     public static VkCopyDescriptorSet create(long address) {
-        return new VkCopyDescriptorSet(address, null);
+        return wrap(VkCopyDescriptorSet.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCopyDescriptorSet createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkCopyDescriptorSet.class, address);
     }
 
     /**
@@ -260,7 +258,7 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCopyDescriptorSet.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -269,7 +267,7 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCopyDescriptorSet.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -278,7 +276,8 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCopyDescriptorSet.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -288,43 +287,43 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCopyDescriptorSet.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCopyDescriptorSet.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCopyDescriptorSet} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkCopyDescriptorSet} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkCopyDescriptorSet mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkCopyDescriptorSet} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkCopyDescriptorSet} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkCopyDescriptorSet callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkCopyDescriptorSet} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkCopyDescriptorSet} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCopyDescriptorSet mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkCopyDescriptorSet.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkCopyDescriptorSet} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkCopyDescriptorSet} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCopyDescriptorSet callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkCopyDescriptorSet.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -352,7 +351,7 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCopyDescriptorSet.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -362,56 +361,58 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCopyDescriptorSet.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkCopyDescriptorSet.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkCopyDescriptorSet.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkCopyDescriptorSet.PNEXT); }
     /** Unsafe version of {@link #srcSet}. */
-    public static long nsrcSet(long struct) { return memGetLong(struct + VkCopyDescriptorSet.SRCSET); }
+    public static long nsrcSet(long struct) { return UNSAFE.getLong(null, struct + VkCopyDescriptorSet.SRCSET); }
     /** Unsafe version of {@link #srcBinding}. */
-    public static int nsrcBinding(long struct) { return memGetInt(struct + VkCopyDescriptorSet.SRCBINDING); }
+    public static int nsrcBinding(long struct) { return UNSAFE.getInt(null, struct + VkCopyDescriptorSet.SRCBINDING); }
     /** Unsafe version of {@link #srcArrayElement}. */
-    public static int nsrcArrayElement(long struct) { return memGetInt(struct + VkCopyDescriptorSet.SRCARRAYELEMENT); }
+    public static int nsrcArrayElement(long struct) { return UNSAFE.getInt(null, struct + VkCopyDescriptorSet.SRCARRAYELEMENT); }
     /** Unsafe version of {@link #dstSet}. */
-    public static long ndstSet(long struct) { return memGetLong(struct + VkCopyDescriptorSet.DSTSET); }
+    public static long ndstSet(long struct) { return UNSAFE.getLong(null, struct + VkCopyDescriptorSet.DSTSET); }
     /** Unsafe version of {@link #dstBinding}. */
-    public static int ndstBinding(long struct) { return memGetInt(struct + VkCopyDescriptorSet.DSTBINDING); }
+    public static int ndstBinding(long struct) { return UNSAFE.getInt(null, struct + VkCopyDescriptorSet.DSTBINDING); }
     /** Unsafe version of {@link #dstArrayElement}. */
-    public static int ndstArrayElement(long struct) { return memGetInt(struct + VkCopyDescriptorSet.DSTARRAYELEMENT); }
+    public static int ndstArrayElement(long struct) { return UNSAFE.getInt(null, struct + VkCopyDescriptorSet.DSTARRAYELEMENT); }
     /** Unsafe version of {@link #descriptorCount}. */
-    public static int ndescriptorCount(long struct) { return memGetInt(struct + VkCopyDescriptorSet.DESCRIPTORCOUNT); }
+    public static int ndescriptorCount(long struct) { return UNSAFE.getInt(null, struct + VkCopyDescriptorSet.DESCRIPTORCOUNT); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkCopyDescriptorSet.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkCopyDescriptorSet.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkCopyDescriptorSet.PNEXT, value); }
     /** Unsafe version of {@link #srcSet(long) srcSet}. */
-    public static void nsrcSet(long struct, long value) { memPutLong(struct + VkCopyDescriptorSet.SRCSET, value); }
+    public static void nsrcSet(long struct, long value) { UNSAFE.putLong(null, struct + VkCopyDescriptorSet.SRCSET, value); }
     /** Unsafe version of {@link #srcBinding(int) srcBinding}. */
-    public static void nsrcBinding(long struct, int value) { memPutInt(struct + VkCopyDescriptorSet.SRCBINDING, value); }
+    public static void nsrcBinding(long struct, int value) { UNSAFE.putInt(null, struct + VkCopyDescriptorSet.SRCBINDING, value); }
     /** Unsafe version of {@link #srcArrayElement(int) srcArrayElement}. */
-    public static void nsrcArrayElement(long struct, int value) { memPutInt(struct + VkCopyDescriptorSet.SRCARRAYELEMENT, value); }
+    public static void nsrcArrayElement(long struct, int value) { UNSAFE.putInt(null, struct + VkCopyDescriptorSet.SRCARRAYELEMENT, value); }
     /** Unsafe version of {@link #dstSet(long) dstSet}. */
-    public static void ndstSet(long struct, long value) { memPutLong(struct + VkCopyDescriptorSet.DSTSET, value); }
+    public static void ndstSet(long struct, long value) { UNSAFE.putLong(null, struct + VkCopyDescriptorSet.DSTSET, value); }
     /** Unsafe version of {@link #dstBinding(int) dstBinding}. */
-    public static void ndstBinding(long struct, int value) { memPutInt(struct + VkCopyDescriptorSet.DSTBINDING, value); }
+    public static void ndstBinding(long struct, int value) { UNSAFE.putInt(null, struct + VkCopyDescriptorSet.DSTBINDING, value); }
     /** Unsafe version of {@link #dstArrayElement(int) dstArrayElement}. */
-    public static void ndstArrayElement(long struct, int value) { memPutInt(struct + VkCopyDescriptorSet.DSTARRAYELEMENT, value); }
+    public static void ndstArrayElement(long struct, int value) { UNSAFE.putInt(null, struct + VkCopyDescriptorSet.DSTARRAYELEMENT, value); }
     /** Unsafe version of {@link #descriptorCount(int) descriptorCount}. */
-    public static void ndescriptorCount(long struct, int value) { memPutInt(struct + VkCopyDescriptorSet.DESCRIPTORCOUNT, value); }
+    public static void ndescriptorCount(long struct, int value) { UNSAFE.putInt(null, struct + VkCopyDescriptorSet.DESCRIPTORCOUNT, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkCopyDescriptorSet} structs. */
     public static class Buffer extends StructBuffer<VkCopyDescriptorSet, Buffer> implements NativeResource {
 
+        private static final VkCopyDescriptorSet ELEMENT_FACTORY = VkCopyDescriptorSet.create(-1L);
+
         /**
-         * Creates a new {@link VkCopyDescriptorSet.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkCopyDescriptorSet.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -437,18 +438,8 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkCopyDescriptorSet newInstance(long address) {
-            return new VkCopyDescriptorSet(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkCopyDescriptorSet getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

@@ -44,102 +44,102 @@ val AMD_performance_monitor = "AMDPerformanceMonitor".nativeClassGL("AMD_perform
         "GetPerfMonitorGroupsAMD",
         "",
 
-        nullable..Check(1)..GLint.p.OUT("numGroups", ""),
-        AutoSize("groups")..GLsizei.IN("groupsSize", ""),
-        nullable..GLuint.p.OUT("groups", "")
+        nullable..Check(1)..GLint.p("numGroups", ""),
+        AutoSize("groups")..GLsizei("groupsSize", ""),
+        nullable..GLuint.p("groups", "")
     )
 
     void(
         "GetPerfMonitorCountersAMD",
         "",
 
-        GLuint.IN("group", ""),
-        Check(1)..GLint.p.OUT("numCounters", ""),
-        Check(1)..GLint.p.OUT("maxActiveCounters", ""),
-        AutoSize("counters")..GLsizei.IN("counterSize", ""),
-        GLuint.p.OUT("counters", "")
+        GLuint("group", ""),
+        Check(1)..GLint.p("numCounters", ""),
+        Check(1)..GLint.p("maxActiveCounters", ""),
+        AutoSize("counters")..GLsizei("counterSize", ""),
+        GLuint.p("counters", "")
     )
 
     void(
         "GetPerfMonitorGroupStringAMD",
         "",
 
-        GLuint.IN("group", ""),
-        AutoSize("groupString")..GLsizei.IN("bufSize", ""),
-        Check(1)..GLsizei.p.OUT("length", ""),
-        GLcharASCII.p.OUT("groupString", "")
+        GLuint("group", ""),
+        AutoSize("groupString")..GLsizei("bufSize", ""),
+        Check(1)..GLsizei.p("length", ""),
+        GLcharASCII.p("groupString", "")
     )
 
     void(
         "GetPerfMonitorCounterStringAMD",
         "",
 
-        GLuint.IN("group", ""),
-        GLuint.IN("counter", ""),
-        AutoSize("counterString")..GLsizei.IN("bufSize", ""),
-        nullable..Check(1)..GLsizei.p.OUT("length", ""),
-        nullable..GLcharASCII.p.OUT("counterString", "")
+        GLuint("group", ""),
+        GLuint("counter", ""),
+        AutoSize("counterString")..GLsizei("bufSize", ""),
+        nullable..Check(1)..GLsizei.p("length", ""),
+        nullable..GLcharASCII.p("counterString", "")
     )
 
     void(
         "GetPerfMonitorCounterInfoAMD",
         "",
 
-        GLuint.IN("group", ""),
-        GLuint.IN("counter", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..MultiType(PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT)..void.p.OUT("data", "")
+        GLuint("group", ""),
+        GLuint("counter", ""),
+        GLenum("pname", ""),
+        Check(4)..MultiType(PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT)..void.p("data", "")
     )
 
     void(
         "GenPerfMonitorsAMD",
         "",
 
-        AutoSize("monitors")..GLsizei.IN("n", ""),
-        ReturnParam..GLuint.p.OUT("monitors", "")
+        AutoSize("monitors")..GLsizei("n", ""),
+        ReturnParam..GLuint.p("monitors", "")
     )
 
     void(
         "DeletePerfMonitorsAMD",
         "",
 
-        AutoSize("monitors")..GLsizei.IN("n", ""),
-        SingleValue("monitor")..GLuint.p.IN("monitors", "")
+        AutoSize("monitors")..GLsizei("n", ""),
+        SingleValue("monitor")..GLuint.p("monitors", "")
     )
 
     void(
         "SelectPerfMonitorCountersAMD",
         "",
 
-        GLuint.IN("monitor", ""),
-        GLboolean.IN("enable", ""),
-        GLuint.IN("group", ""),
-        AutoSize("counterList")..GLint.IN("numCounters", ""),
-        GLuint.p.IN("counterList", "")
+        GLuint("monitor", ""),
+        GLboolean("enable", ""),
+        GLuint("group", ""),
+        AutoSize("counterList")..GLint("numCounters", ""),
+        GLuint.p("counterList", "")
     )
 
     void(
         "BeginPerfMonitorAMD",
         "",
 
-        GLuint.IN("monitor", "")
+        GLuint("monitor", "")
     )
 
     void(
         "EndPerfMonitorAMD",
         "",
 
-        GLuint.IN("monitor", "")
+        GLuint("monitor", "")
     )
 
     void(
         "GetPerfMonitorCounterDataAMD",
         "",
 
-        GLuint.IN("monitor", ""),
-        GLenum.IN("pname", ""),
-        AutoSize("data")..GLsizei.IN("dataSize", ""),
-        GLuint.p.OUT("data", ""),
-        Check(1)..nullable..GLint.p.OUT("bytesWritten", "")
+        GLuint("monitor", ""),
+        GLenum("pname", ""),
+        AutoSize("data")..GLsizei("dataSize", ""),
+        GLuint.p("data", ""),
+        Check(1)..nullable..GLint.p("bytesWritten", "")
     )
 }

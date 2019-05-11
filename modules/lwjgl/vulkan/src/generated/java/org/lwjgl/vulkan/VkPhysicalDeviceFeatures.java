@@ -28,7 +28,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>The pointer was formed by {@code OpImageTexelPointer} and the coordinate is less than zero or greater than or equal to the number of whole elements in the bound range.</li>
- * <li>The pointer was not formed by {@code OpImageTexelPointer} and the object pointed to is not wholly contained within the bound range. This includes accesses performed via <em>variable pointers</em> where the buffer descriptor being accessed cannot be statically determined. Uninitialized pointers and pointers equal to {@code OpConstantNull} are treated as pointing to a zero-sized object, so all accesses through such pointers are considered to be out of bounds.
+ * <li>The pointer was not formed by {@code OpImageTexelPointer} and the object pointed to is not wholly contained within the bound range. This includes accesses performed via <em>variable pointers</em> where the buffer descriptor being accessed cannot be statically determined. Uninitialized pointers and pointers equal to {@code OpConstantNull} are treated as pointing to a zero-sized object, so all accesses through such pointers are considered to be out of bounds. Buffer accesses through buffer device addresses are not bounds-checked. If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-cooperativeMatrixRobustBufferAccess">{@code cooperativeMatrixRobustBufferAccess}</a> feature is not enabled, then accesses using {@code OpCooperativeMatrixLoadNV} and {@code OpCooperativeMatrixStoreNV} <b>may</b> not be bounds-checked.
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
@@ -73,33 +73,33 @@ import static org.lwjgl.system.MemoryStack.*;
  * </li>
  * </ul>
  * </li>
- * <li>If {@code robustBufferAccess} is not enabled, out of bounds accesses <b>may</b> corrupt any memory within the process and cause undefined behavior up to and including application termination.</li>
+ * <li>If {@code robustBufferAccess} is not enabled, applications <b>must</b> not perform out of bounds accesses.</li>
  * </ul></li>
- * <li>{@code fullDrawIndexUint32} &ndash; specifies the full 32-bit range of indices is supported for indexed draw calls when using a {@code VkIndexType} of {@link VK10#VK_INDEX_TYPE_UINT32 INDEX_TYPE_UINT32}. {@code maxDrawIndexedIndexValue} is the maximum index value that <b>may</b> be used (aside from the primitive restart index, which is always 2<sup>32</sup>-1 when the {@code VkIndexType} is {@link VK10#VK_INDEX_TYPE_UINT32 INDEX_TYPE_UINT32}). If this feature is supported, {@code maxDrawIndexedIndexValue} <b>must</b> be 2<sup>32</sup>-1; otherwise it <b>must</b> be no smaller than 2<sup>24</sup>-1. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits-maxDrawIndexedIndexValue">maxDrawIndexedIndexValue</a>.</li>
+ * <li>{@code fullDrawIndexUint32} &ndash; specifies the full 32-bit range of indices is supported for indexed draw calls when using a {@code VkIndexType} of {@link VK10#VK_INDEX_TYPE_UINT32 INDEX_TYPE_UINT32}. {@code maxDrawIndexedIndexValue} is the maximum index value that <b>may</b> be used (aside from the primitive restart index, which is always 2<sup>32</sup>-1 when the {@code VkIndexType} is {@link VK10#VK_INDEX_TYPE_UINT32 INDEX_TYPE_UINT32}). If this feature is supported, {@code maxDrawIndexedIndexValue} <b>must</b> be 2<sup>32</sup>-1; otherwise it <b>must</b> be no smaller than 2<sup>24</sup>-1. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits-maxDrawIndexedIndexValue">maxDrawIndexedIndexValue</a>.</li>
  * <li>{@code imageCubeArray} &ndash; specifies whether image views with a {@code VkImageViewType} of {@link VK10#VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY} <b>can</b> be created, and that the corresponding {@code SampledCubeArray} and {@code ImageCubeArray} SPIR-V capabilities <b>can</b> be used in shader code.</li>
  * <li>{@code independentBlend} &ndash; specifies whether the {@link VkPipelineColorBlendAttachmentState} settings are controlled independently per-attachment. If this feature is not enabled, the {@link VkPipelineColorBlendAttachmentState} settings for all color attachments <b>must</b> be identical. Otherwise, a different {@link VkPipelineColorBlendAttachmentState} <b>can</b> be provided for each bound color attachment.</li>
  * <li>{@code geometryShader} &ndash; specifies whether geometry shaders are supported. If this feature is not enabled, the {@link VK10#VK_SHADER_STAGE_GEOMETRY_BIT SHADER_STAGE_GEOMETRY_BIT} and {@link VK10#VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT PIPELINE_STAGE_GEOMETRY_SHADER_BIT} enum values <b>must</b> not be used. This also specifies whether shader modules <b>can</b> declare the {@code Geometry} capability.</li>
  * <li>{@code tessellationShader} &ndash; specifies whether tessellation control and evaluation shaders are supported. If this feature is not enabled, the {@link VK10#VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT SHADER_STAGE_TESSELLATION_CONTROL_BIT}, {@link VK10#VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT SHADER_STAGE_TESSELLATION_EVALUATION_BIT}, {@link VK10#VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT}, {@link VK10#VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT}, and {@link VK10#VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO} enum values <b>must</b> not be used. This also specifies whether shader modules <b>can</b> declare the {@code Tessellation} capability.</li>
- * <li>{@code sampleRateShading} &ndash; specifies whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-sampleshading">Sample Shading</a> and multisample interpolation are supported. If this feature is not enabled, the {@code sampleShadingEnable} member of the {@link VkPipelineMultisampleStateCreateInfo} structure <b>must</b> be set to {@link VK10#VK_FALSE FALSE} and the {@code minSampleShading} member is ignored. This also specifies whether shader modules <b>can</b> declare the {@code SampleRateShading} capability.</li>
- * <li>{@code dualSrcBlend} &ndash; specifies whether blend operations which take two sources are supported. If this feature is not enabled, the {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, and {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA} enum values <b>must</b> not be used as source or destination blending factors. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-dsb">the “Dual-Source Blending” section</a>.</li>
+ * <li>{@code sampleRateShading} &ndash; specifies whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-sampleshading">Sample Shading</a> and multisample interpolation are supported. If this feature is not enabled, the {@code sampleShadingEnable} member of the {@link VkPipelineMultisampleStateCreateInfo} structure <b>must</b> be set to {@link VK10#VK_FALSE FALSE} and the {@code minSampleShading} member is ignored. This also specifies whether shader modules <b>can</b> declare the {@code SampleRateShading} capability.</li>
+ * <li>{@code dualSrcBlend} &ndash; specifies whether blend operations which take two sources are supported. If this feature is not enabled, the {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, and {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA} enum values <b>must</b> not be used as source or destination blending factors. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-dsb">Dual-Source Blending</a>.</li>
  * <li>{@code logicOp} &ndash; specifies whether logic operations are supported. If this feature is not enabled, the {@code logicOpEnable} member of the {@link VkPipelineColorBlendStateCreateInfo} structure <b>must</b> be set to {@link VK10#VK_FALSE FALSE}, and the {@code logicOp} member is ignored.</li>
- * <li>{@code multiDrawIndirect} &ndash; specifies whether multiple draw indirect is supported. If this feature is not enabled, the {@code drawCount} parameter to the {@link VK10#vkCmdDrawIndirect CmdDrawIndirect} and {@link VK10#vkCmdDrawIndexedIndirect CmdDrawIndexedIndirect} commands <b>must</b> be 0 or 1. The {@code maxDrawIndirectCount} member of the {@link VkPhysicalDeviceLimits} structure <b>must</b> also be 1 if this feature is not supported. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits-maxDrawIndirectCount">maxDrawIndirectCount</a>.</li>
- * <li>{@code drawIndirectFirstInstance} &ndash; specifies whether indirect draw calls support the {@code firstInstance} parameter. If this feature is not enabled, the {@code firstInstance} member of all {@link VkDrawIndirectCommand} and {@link VkDrawIndexedIndirectCommand} structures that are provided to the {@link VK10#vkCmdDrawIndirect CmdDrawIndirect} and {@link VK10#vkCmdDrawIndexedIndirect CmdDrawIndexedIndirect} commands <b>must</b> be 0.</li>
+ * <li>{@code multiDrawIndirect} &ndash; specifies whether multiple draw indirect is supported. If this feature is not enabled, the {@code drawCount} parameter to the {@code vkCmdDrawIndirect} and {@code vkCmdDrawIndexedIndirect} commands <b>must</b> be 0 or 1. The {@code maxDrawIndirectCount} member of the {@link VkPhysicalDeviceLimits} structure <b>must</b> also be 1 if this feature is not supported. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits-maxDrawIndirectCount">maxDrawIndirectCount</a>.</li>
+ * <li>{@code drawIndirectFirstInstance} &ndash; specifies whether indirect draw calls support the {@code firstInstance} parameter. If this feature is not enabled, the {@code firstInstance} member of all {@link VkDrawIndirectCommand} and {@link VkDrawIndexedIndirectCommand} structures that are provided to the {@code vkCmdDrawIndirect} and {@code vkCmdDrawIndexedIndirect} commands <b>must</b> be 0.</li>
  * <li>{@code depthClamp} &ndash; specifies whether depth clamping is supported. If this feature is not enabled, the {@code depthClampEnable} member of the {@link VkPipelineRasterizationStateCreateInfo} structure <b>must</b> be set to {@link VK10#VK_FALSE FALSE}. Otherwise, setting {@code depthClampEnable} to {@link VK10#VK_TRUE TRUE} will enable depth clamping.</li>
- * <li>{@code depthBiasClamp} &ndash; specifies whether depth bias clamping is supported. If this feature is not enabled, the {@code depthBiasClamp} member of the {@link VkPipelineRasterizationStateCreateInfo} structure <b>must</b> be set to 0.0 unless the {@link VK10#VK_DYNAMIC_STATE_DEPTH_BIAS DYNAMIC_STATE_DEPTH_BIAS} dynamic state is enabled, and the {@code depthBiasClamp} parameter to {@link VK10#vkCmdSetDepthBias CmdSetDepthBias} <b>must</b> be set to 0.0.</li>
+ * <li>{@code depthBiasClamp} &ndash; specifies whether depth bias clamping is supported. If this feature is not enabled, the {@code depthBiasClamp} member of the {@link VkPipelineRasterizationStateCreateInfo} structure <b>must</b> be set to 0.0 unless the {@link VK10#VK_DYNAMIC_STATE_DEPTH_BIAS DYNAMIC_STATE_DEPTH_BIAS} dynamic state is enabled, and the {@code depthBiasClamp} parameter to {@code vkCmdSetDepthBias} <b>must</b> be set to 0.0.</li>
  * <li>{@code fillModeNonSolid} &ndash; specifies whether point and wireframe fill modes are supported. If this feature is not enabled, the {@link VK10#VK_POLYGON_MODE_POINT POLYGON_MODE_POINT} and {@link VK10#VK_POLYGON_MODE_LINE POLYGON_MODE_LINE} enum values <b>must</b> not be used.</li>
  * <li>{@code depthBounds} &ndash; specifies whether depth bounds tests are supported. If this feature is not enabled, the {@code depthBoundsTestEnable} member of the {@link VkPipelineDepthStencilStateCreateInfo} structure <b>must</b> be set to {@link VK10#VK_FALSE FALSE}. When {@code depthBoundsTestEnable} is set to {@link VK10#VK_FALSE FALSE}, the {@code minDepthBounds} and {@code maxDepthBounds} members of the {@link VkPipelineDepthStencilStateCreateInfo} structure are ignored.</li>
- * <li>{@code wideLines} &ndash; specifies whether lines with width other than 1.0 are supported. If this feature is not enabled, the {@code lineWidth} member of the {@link VkPipelineRasterizationStateCreateInfo} structure <b>must</b> be set to 1.0 unless the {@link VK10#VK_DYNAMIC_STATE_LINE_WIDTH DYNAMIC_STATE_LINE_WIDTH} dynamic state is enabled, and the {@code lineWidth} parameter to {@link VK10#vkCmdSetLineWidth CmdSetLineWidth} <b>must</b> be set to 1.0. When this feature is supported, the range and granularity of supported line widths are indicated by the {@code lineWidthRange} and {@code lineWidthGranularity} members of the {@link VkPhysicalDeviceLimits} structure, respectively.</li>
+ * <li>{@code wideLines} &ndash; specifies whether lines with width other than 1.0 are supported. If this feature is not enabled, the {@code lineWidth} member of the {@link VkPipelineRasterizationStateCreateInfo} structure <b>must</b> be set to 1.0 unless the {@link VK10#VK_DYNAMIC_STATE_LINE_WIDTH DYNAMIC_STATE_LINE_WIDTH} dynamic state is enabled, and the {@code lineWidth} parameter to {@code vkCmdSetLineWidth} <b>must</b> be set to 1.0. When this feature is supported, the range and granularity of supported line widths are indicated by the {@code lineWidthRange} and {@code lineWidthGranularity} members of the {@link VkPhysicalDeviceLimits} structure, respectively.</li>
  * <li>{@code largePoints} &ndash; specifies whether points with size greater than 1.0 are supported. If this feature is not enabled, only a point size of 1.0 written by a shader is supported. The range and granularity of supported point sizes are indicated by the {@code pointSizeRange} and {@code pointSizeGranularity} members of the {@link VkPhysicalDeviceLimits} structure, respectively.</li>
  * <li>{@code alphaToOne} &ndash; specifies whether the implementation is able to replace the alpha value of the color fragment output from the fragment shader with the maximum representable alpha value for fixed-point colors or 1.0 for floating-point colors. If this feature is not enabled, then the {@code alphaToOneEnable} member of the {@link VkPipelineMultisampleStateCreateInfo} structure <b>must</b> be set to {@link VK10#VK_FALSE FALSE}. Otherwise setting {@code alphaToOneEnable} to {@link VK10#VK_TRUE TRUE} will enable alpha-to-one behavior.</li>
  * <li>{@code multiViewport} &ndash; specifies whether more than one viewport is supported. If this feature is not enabled:
  * 
  * <ul>
  * <li>The {@code viewportCount} and {@code scissorCount} members of the {@link VkPipelineViewportStateCreateInfo} structure <b>must</b> be set to 1.</li>
- * <li>The {@code firstViewport} and {@code viewportCount} parameters to the {@link VK10#vkCmdSetViewport CmdSetViewport} command <b>must</b> be set to 0 and 1, respectively.</li>
- * <li>The {@code firstScissor} and {@code scissorCount} parameters to the {@link VK10#vkCmdSetScissor CmdSetScissor} command <b>must</b> be set to 0 and 1, respectively.</li>
+ * <li>The {@code firstViewport} and {@code viewportCount} parameters to the {@code vkCmdSetViewport} command <b>must</b> be set to 0 and 1, respectively.</li>
+ * <li>The {@code firstScissor} and {@code scissorCount} parameters to the {@code vkCmdSetScissor} command <b>must</b> be set to 0 and 1, respectively.</li>
  * <li>The {@code exclusiveScissorCount} member of the {@link VkPipelineViewportExclusiveScissorStateCreateInfoNV} structure <b>must</b> be set to 0 or 1.</li>
- * <li>The {@code firstExclusiveScissor} and {@code exclusiveScissorCount} parameters to the {@link NVScissorExclusive#vkCmdSetExclusiveScissorNV CmdSetExclusiveScissorNV} command <b>must</b> be set to 0 and 1, respectively.</li>
+ * <li>The {@code firstExclusiveScissor} and {@code exclusiveScissorCount} parameters to the {@code vkCmdSetExclusiveScissorNV} command <b>must</b> be set to 0 and 1, respectively.</li>
  * </ul></li>
  * <li>{@code samplerAnisotropy} &ndash; specifies whether anisotropic filtering is supported. If this feature is not enabled, the {@code anisotropyEnable} member of the {@link VkSamplerCreateInfo} structure <b>must</b> be {@link VK10#VK_FALSE FALSE}.</li>
  * <li>{@code textureCompressionETC2} &ndash; specifies whether all of the ETC2 and EAC compressed texture formats are supported. If this feature is enabled, then the {@link VK10#VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_BIT}, {@link VK10#VK_FORMAT_FEATURE_BLIT_SRC_BIT FORMAT_FEATURE_BLIT_SRC_BIT} and {@link VK10#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} features <b>must</b> be supported in {@code optimalTilingFeatures} for the following formats:
@@ -117,7 +117,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@link VK10#VK_FORMAT_EAC_R11G11_SNORM_BLOCK FORMAT_EAC_R11G11_SNORM_BLOCK}</li>
  * </ul>
  * 
- * <p>{@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} and {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} <b>can</b> be used to check for additional supported properties of individual formats.</p></li>
+ * <p>To query for additional properties, or if the feature is not enabled, {@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} and {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} <b>can</b> be used to check for supported properties of individual formats as normal.</p></li>
  * <li>{@code textureCompressionASTC_LDR} &ndash; specifies whether all of the ASTC LDR compressed texture formats are supported. If this feature is enabled, then the {@link VK10#VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_BIT}, {@link VK10#VK_FORMAT_FEATURE_BLIT_SRC_BIT FORMAT_FEATURE_BLIT_SRC_BIT} and {@link VK10#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} features <b>must</b> be supported in {@code optimalTilingFeatures} for the following formats:
  * 
  * <ul>
@@ -151,7 +151,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@link VK10#VK_FORMAT_ASTC_12x12_SRGB_BLOCK FORMAT_ASTC_12x12_SRGB_BLOCK}</li>
  * </ul>
  * 
- * <p>{@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} and {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} <b>can</b> be used to check for additional supported properties of individual formats.</p></li>
+ * <p>To query for additional properties, or if the feature is not enabled, {@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} and {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} <b>can</b> be used to check for supported properties of individual formats as normal.</p></li>
  * <li>{@code textureCompressionBC} &ndash; specifies whether all of the BC compressed texture formats are supported. If this feature is enabled, then the {@link VK10#VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_BIT}, {@link VK10#VK_FORMAT_FEATURE_BLIT_SRC_BIT FORMAT_FEATURE_BLIT_SRC_BIT} and {@link VK10#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} features <b>must</b> be supported in {@code optimalTilingFeatures} for the following formats:
  * 
  * <ul>
@@ -173,14 +173,14 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@link VK10#VK_FORMAT_BC7_SRGB_BLOCK FORMAT_BC7_SRGB_BLOCK}</li>
  * </ul>
  * 
- * <p>{@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} and {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} <b>can</b> be used to check for additional supported properties of individual formats.</p></li>
- * <li>{@code occlusionQueryPrecise} &ndash; specifies whether occlusion queries returning actual sample counts are supported. Occlusion queries are created in a {@code VkQueryPool} by specifying the {@code queryType} of {@link VK10#VK_QUERY_TYPE_OCCLUSION QUERY_TYPE_OCCLUSION} in the {@link VkQueryPoolCreateInfo} structure which is passed to {@link VK10#vkCreateQueryPool CreateQueryPool}. If this feature is enabled, queries of this type <b>can</b> enable {@link VK10#VK_QUERY_CONTROL_PRECISE_BIT QUERY_CONTROL_PRECISE_BIT} in the {@code flags} parameter to {@link VK10#vkCmdBeginQuery CmdBeginQuery}. If this feature is not supported, the implementation supports only boolean occlusion queries. When any samples are passed, boolean queries will return a non-zero result value, otherwise a result value of zero is returned. When this feature is enabled and {@link VK10#VK_QUERY_CONTROL_PRECISE_BIT QUERY_CONTROL_PRECISE_BIT} is set, occlusion queries will report the actual number of samples passed.</li>
+ * <p>To query for additional properties, or if the feature is not enabled, {@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} and {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} <b>can</b> be used to check for supported properties of individual formats as normal.</p></li>
+ * <li>{@code occlusionQueryPrecise} &ndash; specifies whether occlusion queries returning actual sample counts are supported. Occlusion queries are created in a {@code VkQueryPool} by specifying the {@code queryType} of {@link VK10#VK_QUERY_TYPE_OCCLUSION QUERY_TYPE_OCCLUSION} in the {@link VkQueryPoolCreateInfo} structure which is passed to {@code vkCreateQueryPool}. If this feature is enabled, queries of this type <b>can</b> enable {@link VK10#VK_QUERY_CONTROL_PRECISE_BIT QUERY_CONTROL_PRECISE_BIT} in the {@code flags} parameter to {@code vkCmdBeginQuery}. If this feature is not supported, the implementation supports only boolean occlusion queries. When any samples are passed, boolean queries will return a non-zero result value, otherwise a result value of zero is returned. When this feature is enabled and {@link VK10#VK_QUERY_CONTROL_PRECISE_BIT QUERY_CONTROL_PRECISE_BIT} is set, occlusion queries will report the actual number of samples passed.</li>
  * <li>{@code pipelineStatisticsQuery} &ndash; specifies whether the pipeline statistics queries are supported. If this feature is not enabled, queries of type {@link VK10#VK_QUERY_TYPE_PIPELINE_STATISTICS QUERY_TYPE_PIPELINE_STATISTICS} <b>cannot</b> be created, and none of the {@code VkQueryPipelineStatisticFlagBits} bits <b>can</b> be set in the {@code pipelineStatistics} member of the {@link VkQueryPoolCreateInfo} structure.</li>
  * <li>{@code vertexPipelineStoresAndAtomics} &ndash; specifies whether storage buffers and images support stores and atomic operations in the vertex, tessellation, and geometry shader stages. If this feature is not enabled, all storage image, storage texel buffers, and storage buffer variables used by these stages in shader modules <b>must</b> be decorated with the {@code NonWritable} decoration (or the {@code readonly} memory qualifier in GLSL).</li>
  * <li>{@code fragmentStoresAndAtomics} &ndash; specifies whether storage buffers and images support stores and atomic operations in the fragment shader stage. If this feature is not enabled, all storage image, storage texel buffers, and storage buffer variables used by the fragment stage in shader modules <b>must</b> be decorated with the {@code NonWritable} decoration (or the {@code readonly} memory qualifier in GLSL).</li>
- * <li>{@code shaderTessellationAndGeometryPointSize} &ndash; specifies whether the {@code PointSize} built-in decoration is available in the tessellation control, tessellation evaluation, and geometry shader stages. If this feature is not enabled, members decorated with the {@code PointSize} built-in decoration <b>must</b> not be read from or written to and all points written from a tessellation or geometry shader will have a size of 1.0. This also specifies whether shader modules <b>can</b> declare the {@code TessellationPointSize} capability for tessellation control and evaluation shaders, or if the shader modules <b>can</b> declare the {@code GeometryPointSize} capability for geometry shaders. An implementation supporting this feature <b>must</b> also support one or both of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-tessellationShader">{@code tessellationShader}</a> or <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-geometryShader">{@code geometryShader}</a> features.</li>
+ * <li>{@code shaderTessellationAndGeometryPointSize} &ndash; specifies whether the {@code PointSize} built-in decoration is available in the tessellation control, tessellation evaluation, and geometry shader stages. If this feature is not enabled, members decorated with the {@code PointSize} built-in decoration <b>must</b> not be read from or written to and all points written from a tessellation or geometry shader will have a size of 1.0. This also specifies whether shader modules <b>can</b> declare the {@code TessellationPointSize} capability for tessellation control and evaluation shaders, or if the shader modules <b>can</b> declare the {@code GeometryPointSize} capability for geometry shaders. An implementation supporting this feature <b>must</b> also support one or both of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-tessellationShader">{@code tessellationShader}</a> or <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-geometryShader">{@code geometryShader}</a> features.</li>
  * <li>{@code shaderImageGatherExtended} &ndash; specifies whether the extended set of image gather instructions are available in shader code. If this feature is not enabled, the {@code OpImage}*{@code Gather} instructions do not support the {@code Offset} and {@code ConstOffsets} operands. This also specifies whether shader modules <b>can</b> declare the {@code ImageGatherExtended} capability.</li>
- * <li>{@code shaderStorageImageExtendedFormats} &ndash; specifies whether the extended storage image formats are available in shader code. If this feature is not enabled, the formats requiring the {@code StorageImageExtendedFormats} capability are not supported for storage images. This also specifies whether shader modules <b>can</b> declare the {@code StorageImageExtendedFormats} capability.</li>
+ * <li>{@code shaderStorageImageExtendedFormats} &ndash; specifies whether all the extended storage image formats are available in shader code. If this feature is enabled then the {@link VK10#VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT FORMAT_FEATURE_STORAGE_IMAGE_BIT} feature <b>must</b> be supported in {@code optimalTilingFeatures} for all of the extended formats. To query for additional properties, or if the feature is not enabled, {@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} and {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} <b>can</b> be used to check for supported properties of individual formats as normal.</li>
  * <li>{@code shaderStorageImageMultisample} &ndash; specifies whether multisampled storage images are supported. If this feature is not enabled, images that are created with a {@code usage} that includes {@link VK10#VK_IMAGE_USAGE_STORAGE_BIT IMAGE_USAGE_STORAGE_BIT} <b>must</b> be created with {@code samples} equal to {@link VK10#VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT}. This also specifies whether shader modules <b>can</b> declare the {@code StorageImageMultisample} capability.</li>
  * <li>{@code shaderStorageImageReadWithoutFormat} &ndash; specifies whether storage images require a format qualifier to be specified when reading from storage images. If this feature is not enabled, the {@code OpImageRead} instruction <b>must</b> not have an {@code OpTypeImage} of {@code Unknown}. This also specifies whether shader modules <b>can</b> declare the {@code StorageImageReadWithoutFormat} capability.</li>
  * <li>{@code shaderStorageImageWriteWithoutFormat} &ndash; specifies whether storage images require a format qualifier to be specified when writing to storage images. If this feature is not enabled, the {@code OpImageWrite} instruction <b>must</b> not have an {@code OpTypeImage} of {@code Unknown}. This also specifies whether shader modules <b>can</b> declare the {@code StorageImageWriteWithoutFormat} capability.</li>
@@ -195,7 +195,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code shaderInt16} &ndash; specifies whether 16-bit integers (signed and unsigned) are supported in shader code. If this feature is not enabled, 16-bit integer types <b>must</b> not be used in shader code. This also specifies whether shader modules <b>can</b> declare the {@code Int16} capability.</li>
  * <li>{@code shaderResourceResidency} &ndash; specifies whether image operations that return resource residency information are supported in shader code. If this feature is not enabled, the {@code OpImageSparse}* instructions <b>must</b> not be used in shader code. This also specifies whether shader modules <b>can</b> declare the {@code SparseResidency} capability. The feature requires at least one of the {@code sparseResidency}* features to be supported.</li>
  * <li>{@code shaderResourceMinLod} &ndash; specifies whether image operations that specify the minimum resource LOD are supported in shader code. If this feature is not enabled, the {@code MinLod} image operand <b>must</b> not be used in shader code. This also specifies whether shader modules <b>can</b> declare the {@code MinLod} capability.</li>
- * <li>{@code sparseBinding} &ndash; specifies whether resource memory <b>can</b> be managed at opaque sparse block level instead of at the object level. If this feature is not enabled, resource memory <b>must</b> be bound only on a per-object basis using the {@link VK10#vkBindBufferMemory BindBufferMemory} and {@link VK10#vkBindImageMemory BindImageMemory} commands. In this case, buffers and images <b>must</b> not be created with {@link VK10#VK_BUFFER_CREATE_SPARSE_BINDING_BIT BUFFER_CREATE_SPARSE_BINDING_BIT} and {@link VK10#VK_IMAGE_CREATE_SPARSE_BINDING_BIT IMAGE_CREATE_SPARSE_BINDING_BIT} set in the {@code flags} member of the {@link VkBufferCreateInfo} and {@link VkImageCreateInfo} structures, respectively. Otherwise resource memory <b>can</b> be managed as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures">Sparse Resource Features</a>.</li>
+ * <li>{@code sparseBinding} &ndash; specifies whether resource memory <b>can</b> be managed at opaque sparse block level instead of at the object level. If this feature is not enabled, resource memory <b>must</b> be bound only on a per-object basis using the {@code vkBindBufferMemory} and {@code vkBindImageMemory} commands. In this case, buffers and images <b>must</b> not be created with {@link VK10#VK_BUFFER_CREATE_SPARSE_BINDING_BIT BUFFER_CREATE_SPARSE_BINDING_BIT} and {@link VK10#VK_IMAGE_CREATE_SPARSE_BINDING_BIT IMAGE_CREATE_SPARSE_BINDING_BIT} set in the {@code flags} member of the {@link VkBufferCreateInfo} and {@link VkImageCreateInfo} structures, respectively. Otherwise resource memory <b>can</b> be managed as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures">Sparse Resource Features</a>.</li>
  * <li>{@code sparseResidencyBuffer} &ndash; specifies whether the device <b>can</b> access partially resident buffers. If this feature is not enabled, buffers <b>must</b> not be created with {@link VK10#VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT BUFFER_CREATE_SPARSE_RESIDENCY_BIT} set in the {@code flags} member of the {@link VkBufferCreateInfo} structure.</li>
  * <li>{@code sparseResidencyImage2D} &ndash; specifies whether the device <b>can</b> access partially resident 2D images with 1 sample per pixel. If this feature is not enabled, images with an {@code imageType} of {@link VK10#VK_IMAGE_TYPE_2D IMAGE_TYPE_2D} and {@code samples} set to {@link VK10#VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT} <b>must</b> not be created with {@link VK10#VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT IMAGE_CREATE_SPARSE_RESIDENCY_BIT} set in the {@code flags} member of the {@link VkImageCreateInfo} structure.</li>
  * <li>{@code sparseResidencyImage3D} &ndash; specifies whether the device <b>can</b> access partially resident 3D images. If this feature is not enabled, images with an {@code imageType} of {@link VK10#VK_IMAGE_TYPE_3D IMAGE_TYPE_3D} <b>must</b> not be created with {@link VK10#VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT IMAGE_CREATE_SPARSE_RESIDENCY_BIT} set in the {@code flags} member of the {@link VkImageCreateInfo} structure.</li>
@@ -454,18 +454,14 @@ public class VkPhysicalDeviceFeatures extends Struct implements NativeResource {
         INHERITEDQUERIES = layout.offsetof(54);
     }
 
-    VkPhysicalDeviceFeatures(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDeviceFeatures} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceFeatures} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceFeatures(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -879,30 +875,31 @@ public class VkPhysicalDeviceFeatures extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceFeatures} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceFeatures} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceFeatures malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPhysicalDeviceFeatures.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceFeatures} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceFeatures} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceFeatures calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPhysicalDeviceFeatures.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceFeatures} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPhysicalDeviceFeatures} instance allocated with {@link BufferUtils}. */
     public static VkPhysicalDeviceFeatures create() {
-        return new VkPhysicalDeviceFeatures(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDeviceFeatures.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPhysicalDeviceFeatures} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceFeatures} instance for the specified memory address. */
     public static VkPhysicalDeviceFeatures create(long address) {
-        return new VkPhysicalDeviceFeatures(address, null);
+        return wrap(VkPhysicalDeviceFeatures.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceFeatures createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceFeatures.class, address);
     }
 
     /**
@@ -911,7 +908,7 @@ public class VkPhysicalDeviceFeatures extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceFeatures.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -920,7 +917,7 @@ public class VkPhysicalDeviceFeatures extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceFeatures.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -929,7 +926,8 @@ public class VkPhysicalDeviceFeatures extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceFeatures.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -939,43 +937,43 @@ public class VkPhysicalDeviceFeatures extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceFeatures.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceFeatures.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceFeatures} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPhysicalDeviceFeatures} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPhysicalDeviceFeatures mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPhysicalDeviceFeatures} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPhysicalDeviceFeatures} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPhysicalDeviceFeatures callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceFeatures} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPhysicalDeviceFeatures} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceFeatures mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPhysicalDeviceFeatures.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceFeatures} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPhysicalDeviceFeatures} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceFeatures callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPhysicalDeviceFeatures.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -1003,7 +1001,7 @@ public class VkPhysicalDeviceFeatures extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceFeatures.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -1013,240 +1011,242 @@ public class VkPhysicalDeviceFeatures extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceFeatures.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #robustBufferAccess}. */
-    public static int nrobustBufferAccess(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.ROBUSTBUFFERACCESS); }
+    public static int nrobustBufferAccess(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.ROBUSTBUFFERACCESS); }
     /** Unsafe version of {@link #fullDrawIndexUint32}. */
-    public static int nfullDrawIndexUint32(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.FULLDRAWINDEXUINT32); }
+    public static int nfullDrawIndexUint32(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.FULLDRAWINDEXUINT32); }
     /** Unsafe version of {@link #imageCubeArray}. */
-    public static int nimageCubeArray(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.IMAGECUBEARRAY); }
+    public static int nimageCubeArray(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.IMAGECUBEARRAY); }
     /** Unsafe version of {@link #independentBlend}. */
-    public static int nindependentBlend(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.INDEPENDENTBLEND); }
+    public static int nindependentBlend(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.INDEPENDENTBLEND); }
     /** Unsafe version of {@link #geometryShader}. */
-    public static int ngeometryShader(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.GEOMETRYSHADER); }
+    public static int ngeometryShader(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.GEOMETRYSHADER); }
     /** Unsafe version of {@link #tessellationShader}. */
-    public static int ntessellationShader(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.TESSELLATIONSHADER); }
+    public static int ntessellationShader(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.TESSELLATIONSHADER); }
     /** Unsafe version of {@link #sampleRateShading}. */
-    public static int nsampleRateShading(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SAMPLERATESHADING); }
+    public static int nsampleRateShading(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SAMPLERATESHADING); }
     /** Unsafe version of {@link #dualSrcBlend}. */
-    public static int ndualSrcBlend(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.DUALSRCBLEND); }
+    public static int ndualSrcBlend(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.DUALSRCBLEND); }
     /** Unsafe version of {@link #logicOp}. */
-    public static int nlogicOp(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.LOGICOP); }
+    public static int nlogicOp(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.LOGICOP); }
     /** Unsafe version of {@link #multiDrawIndirect}. */
-    public static int nmultiDrawIndirect(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.MULTIDRAWINDIRECT); }
+    public static int nmultiDrawIndirect(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.MULTIDRAWINDIRECT); }
     /** Unsafe version of {@link #drawIndirectFirstInstance}. */
-    public static int ndrawIndirectFirstInstance(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.DRAWINDIRECTFIRSTINSTANCE); }
+    public static int ndrawIndirectFirstInstance(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.DRAWINDIRECTFIRSTINSTANCE); }
     /** Unsafe version of {@link #depthClamp}. */
-    public static int ndepthClamp(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.DEPTHCLAMP); }
+    public static int ndepthClamp(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.DEPTHCLAMP); }
     /** Unsafe version of {@link #depthBiasClamp}. */
-    public static int ndepthBiasClamp(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.DEPTHBIASCLAMP); }
+    public static int ndepthBiasClamp(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.DEPTHBIASCLAMP); }
     /** Unsafe version of {@link #fillModeNonSolid}. */
-    public static int nfillModeNonSolid(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.FILLMODENONSOLID); }
+    public static int nfillModeNonSolid(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.FILLMODENONSOLID); }
     /** Unsafe version of {@link #depthBounds}. */
-    public static int ndepthBounds(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.DEPTHBOUNDS); }
+    public static int ndepthBounds(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.DEPTHBOUNDS); }
     /** Unsafe version of {@link #wideLines}. */
-    public static int nwideLines(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.WIDELINES); }
+    public static int nwideLines(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.WIDELINES); }
     /** Unsafe version of {@link #largePoints}. */
-    public static int nlargePoints(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.LARGEPOINTS); }
+    public static int nlargePoints(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.LARGEPOINTS); }
     /** Unsafe version of {@link #alphaToOne}. */
-    public static int nalphaToOne(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.ALPHATOONE); }
+    public static int nalphaToOne(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.ALPHATOONE); }
     /** Unsafe version of {@link #multiViewport}. */
-    public static int nmultiViewport(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.MULTIVIEWPORT); }
+    public static int nmultiViewport(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.MULTIVIEWPORT); }
     /** Unsafe version of {@link #samplerAnisotropy}. */
-    public static int nsamplerAnisotropy(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SAMPLERANISOTROPY); }
+    public static int nsamplerAnisotropy(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SAMPLERANISOTROPY); }
     /** Unsafe version of {@link #textureCompressionETC2}. */
-    public static int ntextureCompressionETC2(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONETC2); }
+    public static int ntextureCompressionETC2(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONETC2); }
     /** Unsafe version of {@link #textureCompressionASTC_LDR}. */
-    public static int ntextureCompressionASTC_LDR(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONASTC_LDR); }
+    public static int ntextureCompressionASTC_LDR(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONASTC_LDR); }
     /** Unsafe version of {@link #textureCompressionBC}. */
-    public static int ntextureCompressionBC(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONBC); }
+    public static int ntextureCompressionBC(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONBC); }
     /** Unsafe version of {@link #occlusionQueryPrecise}. */
-    public static int nocclusionQueryPrecise(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.OCCLUSIONQUERYPRECISE); }
+    public static int nocclusionQueryPrecise(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.OCCLUSIONQUERYPRECISE); }
     /** Unsafe version of {@link #pipelineStatisticsQuery}. */
-    public static int npipelineStatisticsQuery(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.PIPELINESTATISTICSQUERY); }
+    public static int npipelineStatisticsQuery(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.PIPELINESTATISTICSQUERY); }
     /** Unsafe version of {@link #vertexPipelineStoresAndAtomics}. */
-    public static int nvertexPipelineStoresAndAtomics(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.VERTEXPIPELINESTORESANDATOMICS); }
+    public static int nvertexPipelineStoresAndAtomics(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.VERTEXPIPELINESTORESANDATOMICS); }
     /** Unsafe version of {@link #fragmentStoresAndAtomics}. */
-    public static int nfragmentStoresAndAtomics(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.FRAGMENTSTORESANDATOMICS); }
+    public static int nfragmentStoresAndAtomics(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.FRAGMENTSTORESANDATOMICS); }
     /** Unsafe version of {@link #shaderTessellationAndGeometryPointSize}. */
-    public static int nshaderTessellationAndGeometryPointSize(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERTESSELLATIONANDGEOMETRYPOINTSIZE); }
+    public static int nshaderTessellationAndGeometryPointSize(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERTESSELLATIONANDGEOMETRYPOINTSIZE); }
     /** Unsafe version of {@link #shaderImageGatherExtended}. */
-    public static int nshaderImageGatherExtended(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERIMAGEGATHEREXTENDED); }
+    public static int nshaderImageGatherExtended(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERIMAGEGATHEREXTENDED); }
     /** Unsafe version of {@link #shaderStorageImageExtendedFormats}. */
-    public static int nshaderStorageImageExtendedFormats(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEEXTENDEDFORMATS); }
+    public static int nshaderStorageImageExtendedFormats(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEEXTENDEDFORMATS); }
     /** Unsafe version of {@link #shaderStorageImageMultisample}. */
-    public static int nshaderStorageImageMultisample(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEMULTISAMPLE); }
+    public static int nshaderStorageImageMultisample(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEMULTISAMPLE); }
     /** Unsafe version of {@link #shaderStorageImageReadWithoutFormat}. */
-    public static int nshaderStorageImageReadWithoutFormat(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEREADWITHOUTFORMAT); }
+    public static int nshaderStorageImageReadWithoutFormat(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEREADWITHOUTFORMAT); }
     /** Unsafe version of {@link #shaderStorageImageWriteWithoutFormat}. */
-    public static int nshaderStorageImageWriteWithoutFormat(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEWRITEWITHOUTFORMAT); }
+    public static int nshaderStorageImageWriteWithoutFormat(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEWRITEWITHOUTFORMAT); }
     /** Unsafe version of {@link #shaderUniformBufferArrayDynamicIndexing}. */
-    public static int nshaderUniformBufferArrayDynamicIndexing(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERUNIFORMBUFFERARRAYDYNAMICINDEXING); }
+    public static int nshaderUniformBufferArrayDynamicIndexing(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERUNIFORMBUFFERARRAYDYNAMICINDEXING); }
     /** Unsafe version of {@link #shaderSampledImageArrayDynamicIndexing}. */
-    public static int nshaderSampledImageArrayDynamicIndexing(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERSAMPLEDIMAGEARRAYDYNAMICINDEXING); }
+    public static int nshaderSampledImageArrayDynamicIndexing(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERSAMPLEDIMAGEARRAYDYNAMICINDEXING); }
     /** Unsafe version of {@link #shaderStorageBufferArrayDynamicIndexing}. */
-    public static int nshaderStorageBufferArrayDynamicIndexing(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEBUFFERARRAYDYNAMICINDEXING); }
+    public static int nshaderStorageBufferArrayDynamicIndexing(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEBUFFERARRAYDYNAMICINDEXING); }
     /** Unsafe version of {@link #shaderStorageImageArrayDynamicIndexing}. */
-    public static int nshaderStorageImageArrayDynamicIndexing(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEARRAYDYNAMICINDEXING); }
+    public static int nshaderStorageImageArrayDynamicIndexing(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEARRAYDYNAMICINDEXING); }
     /** Unsafe version of {@link #shaderClipDistance}. */
-    public static int nshaderClipDistance(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERCLIPDISTANCE); }
+    public static int nshaderClipDistance(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERCLIPDISTANCE); }
     /** Unsafe version of {@link #shaderCullDistance}. */
-    public static int nshaderCullDistance(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERCULLDISTANCE); }
+    public static int nshaderCullDistance(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERCULLDISTANCE); }
     /** Unsafe version of {@link #shaderFloat64}. */
-    public static int nshaderFloat64(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERFLOAT64); }
+    public static int nshaderFloat64(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERFLOAT64); }
     /** Unsafe version of {@link #shaderInt64}. */
-    public static int nshaderInt64(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERINT64); }
+    public static int nshaderInt64(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERINT64); }
     /** Unsafe version of {@link #shaderInt16}. */
-    public static int nshaderInt16(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERINT16); }
+    public static int nshaderInt16(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERINT16); }
     /** Unsafe version of {@link #shaderResourceResidency}. */
-    public static int nshaderResourceResidency(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERRESOURCERESIDENCY); }
+    public static int nshaderResourceResidency(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERRESOURCERESIDENCY); }
     /** Unsafe version of {@link #shaderResourceMinLod}. */
-    public static int nshaderResourceMinLod(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SHADERRESOURCEMINLOD); }
+    public static int nshaderResourceMinLod(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SHADERRESOURCEMINLOD); }
     /** Unsafe version of {@link #sparseBinding}. */
-    public static int nsparseBinding(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SPARSEBINDING); }
+    public static int nsparseBinding(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SPARSEBINDING); }
     /** Unsafe version of {@link #sparseResidencyBuffer}. */
-    public static int nsparseResidencyBuffer(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYBUFFER); }
+    public static int nsparseResidencyBuffer(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYBUFFER); }
     /** Unsafe version of {@link #sparseResidencyImage2D}. */
-    public static int nsparseResidencyImage2D(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYIMAGE2D); }
+    public static int nsparseResidencyImage2D(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYIMAGE2D); }
     /** Unsafe version of {@link #sparseResidencyImage3D}. */
-    public static int nsparseResidencyImage3D(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYIMAGE3D); }
+    public static int nsparseResidencyImage3D(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYIMAGE3D); }
     /** Unsafe version of {@link #sparseResidency2Samples}. */
-    public static int nsparseResidency2Samples(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY2SAMPLES); }
+    public static int nsparseResidency2Samples(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY2SAMPLES); }
     /** Unsafe version of {@link #sparseResidency4Samples}. */
-    public static int nsparseResidency4Samples(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY4SAMPLES); }
+    public static int nsparseResidency4Samples(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY4SAMPLES); }
     /** Unsafe version of {@link #sparseResidency8Samples}. */
-    public static int nsparseResidency8Samples(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY8SAMPLES); }
+    public static int nsparseResidency8Samples(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY8SAMPLES); }
     /** Unsafe version of {@link #sparseResidency16Samples}. */
-    public static int nsparseResidency16Samples(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY16SAMPLES); }
+    public static int nsparseResidency16Samples(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY16SAMPLES); }
     /** Unsafe version of {@link #sparseResidencyAliased}. */
-    public static int nsparseResidencyAliased(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYALIASED); }
+    public static int nsparseResidencyAliased(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYALIASED); }
     /** Unsafe version of {@link #variableMultisampleRate}. */
-    public static int nvariableMultisampleRate(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.VARIABLEMULTISAMPLERATE); }
+    public static int nvariableMultisampleRate(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.VARIABLEMULTISAMPLERATE); }
     /** Unsafe version of {@link #inheritedQueries}. */
-    public static int ninheritedQueries(long struct) { return memGetInt(struct + VkPhysicalDeviceFeatures.INHERITEDQUERIES); }
+    public static int ninheritedQueries(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceFeatures.INHERITEDQUERIES); }
 
     /** Unsafe version of {@link #robustBufferAccess(boolean) robustBufferAccess}. */
-    public static void nrobustBufferAccess(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.ROBUSTBUFFERACCESS, value); }
+    public static void nrobustBufferAccess(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.ROBUSTBUFFERACCESS, value); }
     /** Unsafe version of {@link #fullDrawIndexUint32(boolean) fullDrawIndexUint32}. */
-    public static void nfullDrawIndexUint32(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.FULLDRAWINDEXUINT32, value); }
+    public static void nfullDrawIndexUint32(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.FULLDRAWINDEXUINT32, value); }
     /** Unsafe version of {@link #imageCubeArray(boolean) imageCubeArray}. */
-    public static void nimageCubeArray(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.IMAGECUBEARRAY, value); }
+    public static void nimageCubeArray(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.IMAGECUBEARRAY, value); }
     /** Unsafe version of {@link #independentBlend(boolean) independentBlend}. */
-    public static void nindependentBlend(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.INDEPENDENTBLEND, value); }
+    public static void nindependentBlend(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.INDEPENDENTBLEND, value); }
     /** Unsafe version of {@link #geometryShader(boolean) geometryShader}. */
-    public static void ngeometryShader(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.GEOMETRYSHADER, value); }
+    public static void ngeometryShader(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.GEOMETRYSHADER, value); }
     /** Unsafe version of {@link #tessellationShader(boolean) tessellationShader}. */
-    public static void ntessellationShader(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.TESSELLATIONSHADER, value); }
+    public static void ntessellationShader(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.TESSELLATIONSHADER, value); }
     /** Unsafe version of {@link #sampleRateShading(boolean) sampleRateShading}. */
-    public static void nsampleRateShading(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SAMPLERATESHADING, value); }
+    public static void nsampleRateShading(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SAMPLERATESHADING, value); }
     /** Unsafe version of {@link #dualSrcBlend(boolean) dualSrcBlend}. */
-    public static void ndualSrcBlend(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.DUALSRCBLEND, value); }
+    public static void ndualSrcBlend(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.DUALSRCBLEND, value); }
     /** Unsafe version of {@link #logicOp(boolean) logicOp}. */
-    public static void nlogicOp(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.LOGICOP, value); }
+    public static void nlogicOp(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.LOGICOP, value); }
     /** Unsafe version of {@link #multiDrawIndirect(boolean) multiDrawIndirect}. */
-    public static void nmultiDrawIndirect(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.MULTIDRAWINDIRECT, value); }
+    public static void nmultiDrawIndirect(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.MULTIDRAWINDIRECT, value); }
     /** Unsafe version of {@link #drawIndirectFirstInstance(boolean) drawIndirectFirstInstance}. */
-    public static void ndrawIndirectFirstInstance(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.DRAWINDIRECTFIRSTINSTANCE, value); }
+    public static void ndrawIndirectFirstInstance(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.DRAWINDIRECTFIRSTINSTANCE, value); }
     /** Unsafe version of {@link #depthClamp(boolean) depthClamp}. */
-    public static void ndepthClamp(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.DEPTHCLAMP, value); }
+    public static void ndepthClamp(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.DEPTHCLAMP, value); }
     /** Unsafe version of {@link #depthBiasClamp(boolean) depthBiasClamp}. */
-    public static void ndepthBiasClamp(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.DEPTHBIASCLAMP, value); }
+    public static void ndepthBiasClamp(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.DEPTHBIASCLAMP, value); }
     /** Unsafe version of {@link #fillModeNonSolid(boolean) fillModeNonSolid}. */
-    public static void nfillModeNonSolid(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.FILLMODENONSOLID, value); }
+    public static void nfillModeNonSolid(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.FILLMODENONSOLID, value); }
     /** Unsafe version of {@link #depthBounds(boolean) depthBounds}. */
-    public static void ndepthBounds(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.DEPTHBOUNDS, value); }
+    public static void ndepthBounds(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.DEPTHBOUNDS, value); }
     /** Unsafe version of {@link #wideLines(boolean) wideLines}. */
-    public static void nwideLines(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.WIDELINES, value); }
+    public static void nwideLines(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.WIDELINES, value); }
     /** Unsafe version of {@link #largePoints(boolean) largePoints}. */
-    public static void nlargePoints(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.LARGEPOINTS, value); }
+    public static void nlargePoints(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.LARGEPOINTS, value); }
     /** Unsafe version of {@link #alphaToOne(boolean) alphaToOne}. */
-    public static void nalphaToOne(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.ALPHATOONE, value); }
+    public static void nalphaToOne(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.ALPHATOONE, value); }
     /** Unsafe version of {@link #multiViewport(boolean) multiViewport}. */
-    public static void nmultiViewport(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.MULTIVIEWPORT, value); }
+    public static void nmultiViewport(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.MULTIVIEWPORT, value); }
     /** Unsafe version of {@link #samplerAnisotropy(boolean) samplerAnisotropy}. */
-    public static void nsamplerAnisotropy(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SAMPLERANISOTROPY, value); }
+    public static void nsamplerAnisotropy(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SAMPLERANISOTROPY, value); }
     /** Unsafe version of {@link #textureCompressionETC2(boolean) textureCompressionETC2}. */
-    public static void ntextureCompressionETC2(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONETC2, value); }
+    public static void ntextureCompressionETC2(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONETC2, value); }
     /** Unsafe version of {@link #textureCompressionASTC_LDR(boolean) textureCompressionASTC_LDR}. */
-    public static void ntextureCompressionASTC_LDR(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONASTC_LDR, value); }
+    public static void ntextureCompressionASTC_LDR(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONASTC_LDR, value); }
     /** Unsafe version of {@link #textureCompressionBC(boolean) textureCompressionBC}. */
-    public static void ntextureCompressionBC(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONBC, value); }
+    public static void ntextureCompressionBC(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.TEXTURECOMPRESSIONBC, value); }
     /** Unsafe version of {@link #occlusionQueryPrecise(boolean) occlusionQueryPrecise}. */
-    public static void nocclusionQueryPrecise(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.OCCLUSIONQUERYPRECISE, value); }
+    public static void nocclusionQueryPrecise(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.OCCLUSIONQUERYPRECISE, value); }
     /** Unsafe version of {@link #pipelineStatisticsQuery(boolean) pipelineStatisticsQuery}. */
-    public static void npipelineStatisticsQuery(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.PIPELINESTATISTICSQUERY, value); }
+    public static void npipelineStatisticsQuery(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.PIPELINESTATISTICSQUERY, value); }
     /** Unsafe version of {@link #vertexPipelineStoresAndAtomics(boolean) vertexPipelineStoresAndAtomics}. */
-    public static void nvertexPipelineStoresAndAtomics(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.VERTEXPIPELINESTORESANDATOMICS, value); }
+    public static void nvertexPipelineStoresAndAtomics(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.VERTEXPIPELINESTORESANDATOMICS, value); }
     /** Unsafe version of {@link #fragmentStoresAndAtomics(boolean) fragmentStoresAndAtomics}. */
-    public static void nfragmentStoresAndAtomics(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.FRAGMENTSTORESANDATOMICS, value); }
+    public static void nfragmentStoresAndAtomics(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.FRAGMENTSTORESANDATOMICS, value); }
     /** Unsafe version of {@link #shaderTessellationAndGeometryPointSize(boolean) shaderTessellationAndGeometryPointSize}. */
-    public static void nshaderTessellationAndGeometryPointSize(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERTESSELLATIONANDGEOMETRYPOINTSIZE, value); }
+    public static void nshaderTessellationAndGeometryPointSize(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERTESSELLATIONANDGEOMETRYPOINTSIZE, value); }
     /** Unsafe version of {@link #shaderImageGatherExtended(boolean) shaderImageGatherExtended}. */
-    public static void nshaderImageGatherExtended(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERIMAGEGATHEREXTENDED, value); }
+    public static void nshaderImageGatherExtended(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERIMAGEGATHEREXTENDED, value); }
     /** Unsafe version of {@link #shaderStorageImageExtendedFormats(boolean) shaderStorageImageExtendedFormats}. */
-    public static void nshaderStorageImageExtendedFormats(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEEXTENDEDFORMATS, value); }
+    public static void nshaderStorageImageExtendedFormats(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEEXTENDEDFORMATS, value); }
     /** Unsafe version of {@link #shaderStorageImageMultisample(boolean) shaderStorageImageMultisample}. */
-    public static void nshaderStorageImageMultisample(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEMULTISAMPLE, value); }
+    public static void nshaderStorageImageMultisample(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEMULTISAMPLE, value); }
     /** Unsafe version of {@link #shaderStorageImageReadWithoutFormat(boolean) shaderStorageImageReadWithoutFormat}. */
-    public static void nshaderStorageImageReadWithoutFormat(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEREADWITHOUTFORMAT, value); }
+    public static void nshaderStorageImageReadWithoutFormat(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEREADWITHOUTFORMAT, value); }
     /** Unsafe version of {@link #shaderStorageImageWriteWithoutFormat(boolean) shaderStorageImageWriteWithoutFormat}. */
-    public static void nshaderStorageImageWriteWithoutFormat(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEWRITEWITHOUTFORMAT, value); }
+    public static void nshaderStorageImageWriteWithoutFormat(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEWRITEWITHOUTFORMAT, value); }
     /** Unsafe version of {@link #shaderUniformBufferArrayDynamicIndexing(boolean) shaderUniformBufferArrayDynamicIndexing}. */
-    public static void nshaderUniformBufferArrayDynamicIndexing(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERUNIFORMBUFFERARRAYDYNAMICINDEXING, value); }
+    public static void nshaderUniformBufferArrayDynamicIndexing(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERUNIFORMBUFFERARRAYDYNAMICINDEXING, value); }
     /** Unsafe version of {@link #shaderSampledImageArrayDynamicIndexing(boolean) shaderSampledImageArrayDynamicIndexing}. */
-    public static void nshaderSampledImageArrayDynamicIndexing(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERSAMPLEDIMAGEARRAYDYNAMICINDEXING, value); }
+    public static void nshaderSampledImageArrayDynamicIndexing(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERSAMPLEDIMAGEARRAYDYNAMICINDEXING, value); }
     /** Unsafe version of {@link #shaderStorageBufferArrayDynamicIndexing(boolean) shaderStorageBufferArrayDynamicIndexing}. */
-    public static void nshaderStorageBufferArrayDynamicIndexing(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEBUFFERARRAYDYNAMICINDEXING, value); }
+    public static void nshaderStorageBufferArrayDynamicIndexing(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEBUFFERARRAYDYNAMICINDEXING, value); }
     /** Unsafe version of {@link #shaderStorageImageArrayDynamicIndexing(boolean) shaderStorageImageArrayDynamicIndexing}. */
-    public static void nshaderStorageImageArrayDynamicIndexing(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEARRAYDYNAMICINDEXING, value); }
+    public static void nshaderStorageImageArrayDynamicIndexing(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERSTORAGEIMAGEARRAYDYNAMICINDEXING, value); }
     /** Unsafe version of {@link #shaderClipDistance(boolean) shaderClipDistance}. */
-    public static void nshaderClipDistance(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERCLIPDISTANCE, value); }
+    public static void nshaderClipDistance(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERCLIPDISTANCE, value); }
     /** Unsafe version of {@link #shaderCullDistance(boolean) shaderCullDistance}. */
-    public static void nshaderCullDistance(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERCULLDISTANCE, value); }
+    public static void nshaderCullDistance(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERCULLDISTANCE, value); }
     /** Unsafe version of {@link #shaderFloat64(boolean) shaderFloat64}. */
-    public static void nshaderFloat64(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERFLOAT64, value); }
+    public static void nshaderFloat64(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERFLOAT64, value); }
     /** Unsafe version of {@link #shaderInt64(boolean) shaderInt64}. */
-    public static void nshaderInt64(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERINT64, value); }
+    public static void nshaderInt64(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERINT64, value); }
     /** Unsafe version of {@link #shaderInt16(boolean) shaderInt16}. */
-    public static void nshaderInt16(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERINT16, value); }
+    public static void nshaderInt16(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERINT16, value); }
     /** Unsafe version of {@link #shaderResourceResidency(boolean) shaderResourceResidency}. */
-    public static void nshaderResourceResidency(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERRESOURCERESIDENCY, value); }
+    public static void nshaderResourceResidency(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERRESOURCERESIDENCY, value); }
     /** Unsafe version of {@link #shaderResourceMinLod(boolean) shaderResourceMinLod}. */
-    public static void nshaderResourceMinLod(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SHADERRESOURCEMINLOD, value); }
+    public static void nshaderResourceMinLod(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SHADERRESOURCEMINLOD, value); }
     /** Unsafe version of {@link #sparseBinding(boolean) sparseBinding}. */
-    public static void nsparseBinding(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SPARSEBINDING, value); }
+    public static void nsparseBinding(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SPARSEBINDING, value); }
     /** Unsafe version of {@link #sparseResidencyBuffer(boolean) sparseResidencyBuffer}. */
-    public static void nsparseResidencyBuffer(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYBUFFER, value); }
+    public static void nsparseResidencyBuffer(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYBUFFER, value); }
     /** Unsafe version of {@link #sparseResidencyImage2D(boolean) sparseResidencyImage2D}. */
-    public static void nsparseResidencyImage2D(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYIMAGE2D, value); }
+    public static void nsparseResidencyImage2D(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYIMAGE2D, value); }
     /** Unsafe version of {@link #sparseResidencyImage3D(boolean) sparseResidencyImage3D}. */
-    public static void nsparseResidencyImage3D(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYIMAGE3D, value); }
+    public static void nsparseResidencyImage3D(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYIMAGE3D, value); }
     /** Unsafe version of {@link #sparseResidency2Samples(boolean) sparseResidency2Samples}. */
-    public static void nsparseResidency2Samples(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY2SAMPLES, value); }
+    public static void nsparseResidency2Samples(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY2SAMPLES, value); }
     /** Unsafe version of {@link #sparseResidency4Samples(boolean) sparseResidency4Samples}. */
-    public static void nsparseResidency4Samples(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY4SAMPLES, value); }
+    public static void nsparseResidency4Samples(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY4SAMPLES, value); }
     /** Unsafe version of {@link #sparseResidency8Samples(boolean) sparseResidency8Samples}. */
-    public static void nsparseResidency8Samples(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY8SAMPLES, value); }
+    public static void nsparseResidency8Samples(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY8SAMPLES, value); }
     /** Unsafe version of {@link #sparseResidency16Samples(boolean) sparseResidency16Samples}. */
-    public static void nsparseResidency16Samples(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY16SAMPLES, value); }
+    public static void nsparseResidency16Samples(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCY16SAMPLES, value); }
     /** Unsafe version of {@link #sparseResidencyAliased(boolean) sparseResidencyAliased}. */
-    public static void nsparseResidencyAliased(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYALIASED, value); }
+    public static void nsparseResidencyAliased(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.SPARSERESIDENCYALIASED, value); }
     /** Unsafe version of {@link #variableMultisampleRate(boolean) variableMultisampleRate}. */
-    public static void nvariableMultisampleRate(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.VARIABLEMULTISAMPLERATE, value); }
+    public static void nvariableMultisampleRate(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.VARIABLEMULTISAMPLERATE, value); }
     /** Unsafe version of {@link #inheritedQueries(boolean) inheritedQueries}. */
-    public static void ninheritedQueries(long struct, int value) { memPutInt(struct + VkPhysicalDeviceFeatures.INHERITEDQUERIES, value); }
+    public static void ninheritedQueries(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceFeatures.INHERITEDQUERIES, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPhysicalDeviceFeatures} structs. */
     public static class Buffer extends StructBuffer<VkPhysicalDeviceFeatures, Buffer> implements NativeResource {
 
+        private static final VkPhysicalDeviceFeatures ELEMENT_FACTORY = VkPhysicalDeviceFeatures.create(-1L);
+
         /**
-         * Creates a new {@link VkPhysicalDeviceFeatures.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceFeatures.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -1272,18 +1272,8 @@ public class VkPhysicalDeviceFeatures extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDeviceFeatures newInstance(long address) {
-            return new VkPhysicalDeviceFeatures(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPhysicalDeviceFeatures getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code robustBufferAccess} field. */

@@ -99,18 +99,14 @@ public class NkConvertConfig extends Struct implements NativeResource {
         VERTEX_ALIGNMENT = layout.offsetof(9);
     }
 
-    NkConvertConfig(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link NkConvertConfig} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code NkConvertConfig} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public NkConvertConfig(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -214,30 +210,31 @@ public class NkConvertConfig extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link NkConvertConfig} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code NkConvertConfig} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static NkConvertConfig malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(NkConvertConfig.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link NkConvertConfig} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code NkConvertConfig} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static NkConvertConfig calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(NkConvertConfig.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link NkConvertConfig} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code NkConvertConfig} instance allocated with {@link BufferUtils}. */
     public static NkConvertConfig create() {
-        return new NkConvertConfig(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(NkConvertConfig.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link NkConvertConfig} instance for the specified memory address. */
+    /** Returns a new {@code NkConvertConfig} instance for the specified memory address. */
     public static NkConvertConfig create(long address) {
-        return new NkConvertConfig(address, null);
+        return wrap(NkConvertConfig.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkConvertConfig createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(NkConvertConfig.class, address);
     }
 
     /**
@@ -246,7 +243,7 @@ public class NkConvertConfig extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkConvertConfig.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -255,7 +252,7 @@ public class NkConvertConfig extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkConvertConfig.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -264,7 +261,8 @@ public class NkConvertConfig extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkConvertConfig.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -274,43 +272,43 @@ public class NkConvertConfig extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkConvertConfig.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkConvertConfig.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link NkConvertConfig} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code NkConvertConfig} instance allocated on the thread-local {@link MemoryStack}. */
     public static NkConvertConfig mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link NkConvertConfig} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code NkConvertConfig} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static NkConvertConfig callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link NkConvertConfig} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code NkConvertConfig} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static NkConvertConfig mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(NkConvertConfig.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link NkConvertConfig} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code NkConvertConfig} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static NkConvertConfig callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(NkConvertConfig.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -338,7 +336,7 @@ public class NkConvertConfig extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkConvertConfig.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -348,23 +346,23 @@ public class NkConvertConfig extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkConvertConfig.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #global_alpha}. */
-    public static float nglobal_alpha(long struct) { return memGetFloat(struct + NkConvertConfig.GLOBAL_ALPHA); }
+    public static float nglobal_alpha(long struct) { return UNSAFE.getFloat(null, struct + NkConvertConfig.GLOBAL_ALPHA); }
     /** Unsafe version of {@link #line_AA}. */
-    public static int nline_AA(long struct) { return memGetInt(struct + NkConvertConfig.LINE_AA); }
+    public static int nline_AA(long struct) { return UNSAFE.getInt(null, struct + NkConvertConfig.LINE_AA); }
     /** Unsafe version of {@link #shape_AA}. */
-    public static int nshape_AA(long struct) { return memGetInt(struct + NkConvertConfig.SHAPE_AA); }
+    public static int nshape_AA(long struct) { return UNSAFE.getInt(null, struct + NkConvertConfig.SHAPE_AA); }
     /** Unsafe version of {@link #circle_segment_count}. */
-    public static int ncircle_segment_count(long struct) { return memGetInt(struct + NkConvertConfig.CIRCLE_SEGMENT_COUNT); }
+    public static int ncircle_segment_count(long struct) { return UNSAFE.getInt(null, struct + NkConvertConfig.CIRCLE_SEGMENT_COUNT); }
     /** Unsafe version of {@link #arc_segment_count}. */
-    public static int narc_segment_count(long struct) { return memGetInt(struct + NkConvertConfig.ARC_SEGMENT_COUNT); }
+    public static int narc_segment_count(long struct) { return UNSAFE.getInt(null, struct + NkConvertConfig.ARC_SEGMENT_COUNT); }
     /** Unsafe version of {@link #curve_segment_count}. */
-    public static int ncurve_segment_count(long struct) { return memGetInt(struct + NkConvertConfig.CURVE_SEGMENT_COUNT); }
+    public static int ncurve_segment_count(long struct) { return UNSAFE.getInt(null, struct + NkConvertConfig.CURVE_SEGMENT_COUNT); }
     /** Unsafe version of {@link #null_texture}. */
     public static NkDrawNullTexture nnull_texture(long struct) { return NkDrawNullTexture.create(struct + NkConvertConfig.NULL_TEXTURE); }
     /** Unsafe version of {@link #vertex_layout}. */
@@ -375,17 +373,17 @@ public class NkConvertConfig extends Struct implements NativeResource {
     public static long nvertex_alignment(long struct) { return memGetAddress(struct + NkConvertConfig.VERTEX_ALIGNMENT); }
 
     /** Unsafe version of {@link #global_alpha(float) global_alpha}. */
-    public static void nglobal_alpha(long struct, float value) { memPutFloat(struct + NkConvertConfig.GLOBAL_ALPHA, value); }
+    public static void nglobal_alpha(long struct, float value) { UNSAFE.putFloat(null, struct + NkConvertConfig.GLOBAL_ALPHA, value); }
     /** Unsafe version of {@link #line_AA(int) line_AA}. */
-    public static void nline_AA(long struct, int value) { memPutInt(struct + NkConvertConfig.LINE_AA, value); }
+    public static void nline_AA(long struct, int value) { UNSAFE.putInt(null, struct + NkConvertConfig.LINE_AA, value); }
     /** Unsafe version of {@link #shape_AA(int) shape_AA}. */
-    public static void nshape_AA(long struct, int value) { memPutInt(struct + NkConvertConfig.SHAPE_AA, value); }
+    public static void nshape_AA(long struct, int value) { UNSAFE.putInt(null, struct + NkConvertConfig.SHAPE_AA, value); }
     /** Unsafe version of {@link #circle_segment_count(int) circle_segment_count}. */
-    public static void ncircle_segment_count(long struct, int value) { memPutInt(struct + NkConvertConfig.CIRCLE_SEGMENT_COUNT, value); }
+    public static void ncircle_segment_count(long struct, int value) { UNSAFE.putInt(null, struct + NkConvertConfig.CIRCLE_SEGMENT_COUNT, value); }
     /** Unsafe version of {@link #arc_segment_count(int) arc_segment_count}. */
-    public static void narc_segment_count(long struct, int value) { memPutInt(struct + NkConvertConfig.ARC_SEGMENT_COUNT, value); }
+    public static void narc_segment_count(long struct, int value) { UNSAFE.putInt(null, struct + NkConvertConfig.ARC_SEGMENT_COUNT, value); }
     /** Unsafe version of {@link #curve_segment_count(int) curve_segment_count}. */
-    public static void ncurve_segment_count(long struct, int value) { memPutInt(struct + NkConvertConfig.CURVE_SEGMENT_COUNT, value); }
+    public static void ncurve_segment_count(long struct, int value) { UNSAFE.putInt(null, struct + NkConvertConfig.CURVE_SEGMENT_COUNT, value); }
     /** Unsafe version of {@link #null_texture(NkDrawNullTexture) null_texture}. */
     public static void nnull_texture(long struct, NkDrawNullTexture value) { memCopy(value.address(), struct + NkConvertConfig.NULL_TEXTURE, NkDrawNullTexture.SIZEOF); }
     /** Unsafe version of {@link #vertex_layout(NkDrawVertexLayoutElement.Buffer) vertex_layout}. */
@@ -412,7 +410,7 @@ public class NkConvertConfig extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -421,8 +419,10 @@ public class NkConvertConfig extends Struct implements NativeResource {
     /** An array of {@link NkConvertConfig} structs. */
     public static class Buffer extends StructBuffer<NkConvertConfig, Buffer> implements NativeResource {
 
+        private static final NkConvertConfig ELEMENT_FACTORY = NkConvertConfig.create(-1L);
+
         /**
-         * Creates a new {@link NkConvertConfig.Buffer} instance backed by the specified container.
+         * Creates a new {@code NkConvertConfig.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -448,18 +448,8 @@ public class NkConvertConfig extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected NkConvertConfig newInstance(long address) {
-            return new NkConvertConfig(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected NkConvertConfig getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code global_alpha} field. */

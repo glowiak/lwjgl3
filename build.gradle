@@ -25,14 +25,14 @@ class Deployment {
 }
 
 Deployment deployment
-if ( hasProperty("release") ) {
+if (hasProperty("release")) {
     deployment = new Deployment(
         type: BuildType.RELEASE,
         repo: "https://oss.sonatype.org/service/local/staging/deploy/maven2/",
         user: sonatypeUsername,
         password: sonatypePassword
     )
-} else if ( hasProperty("snapshot") ) {
+} else if (hasProperty("snapshot")) {
     project.version += "-SNAPSHOT"
     deployment = new Deployment(
         type: BuildType.SNAPSHOT,
@@ -41,6 +41,7 @@ if ( hasProperty("release") ) {
         password: sonatypePassword
     )
 } else {
+    //project.version += "-LOCAL"
     deployment = new Deployment(
         type: BuildType.LOCAL,
         repo: repositories.mavenLocal().url
@@ -75,6 +76,16 @@ enum Artifacts {
         "A cross-platform, graphics API agnostic rendering library. It provides a high performance, low level abstraction for common platform graphics APIs like OpenGL, Direct3D and Apple Metal.",
         Platforms.ALL
     ),
+    /*BULLET(
+        "lwjgl-bullet", "LWJGL - Bullet bindings",
+        "Real-time collision detection and multi-physics simulation for VR, games, visual effects, robotics, machine learning etc.",
+        Platforms.ALL
+    ),*/
+    CUDA(
+        "lwjgl-cuda", "LWJGL - CUDA bindings",
+        "A parallel computing platform and programming model developed by NVIDIA for general computing on GPUs.",
+        Platforms.JAVA_ONLY
+    ),
     EGL(
         "lwjgl-egl", "LWJGL - EGL bindings",
         "An interface between Khronos rendering APIs such as OpenGL ES or OpenVG and the underlying native platform window system.",
@@ -95,6 +106,16 @@ enum Artifacts {
         "A general purpose malloc implementation that emphasizes fragmentation avoidance and scalable concurrency support.",
         Platforms.ALL
     ),
+    LIBDIVIDE(
+        "lwjgl-libdivide", "LWJGL - libdivide bindings",
+        "A library that replaces expensive integer divides with comparatively cheap multiplication and bitshifts.",
+        Platforms.ALL
+    ),
+    LLVM(
+        "lwjgl-llvm", "LWJGL - LLVM/Clang bindings",
+        "A collection of modular and reusable compiler and toolchain technologies.",
+        Platforms.ALL
+    ),
     LMDB(
         "lwjgl-lmdb", "LWJGL - LMDB bindings",
         "A compact, fast, powerful, and robust database that implements a simplified variant of the BerkeleyDB (BDB) API.",
@@ -103,6 +124,11 @@ enum Artifacts {
     LZ4(
         "lwjgl-lz4", "LWJGL - LZ4 bindings",
         "A lossless data compression algorithm that is focused on compression and decompression speed.",
+        Platforms.ALL
+    ),
+    MEOW(
+        "lwjgl-meow", "LWJGL - Meow hash bindings",
+        "An extremely fast non-cryptographic hash.",
         Platforms.ALL
     ),
     NANOVG(
@@ -147,7 +173,12 @@ enum Artifacts {
     ),
     OPENVR(
         "lwjgl-openvr", "LWJGL - OpenVR bindings",
-        "OpenVR is an API and runtime that allows access to VR hardware from multiple vendors without requiring that applications have specific knowledge of the hardware they are targeting.",
+        "An API and runtime that allows access to VR hardware from multiple vendors without requiring that applications have specific knowledge of the hardware they are targeting.",
+        Platforms.ALL
+    ),
+    OPUS(
+        "lwjgl-opus", "LWJGL - Opus bindings",
+        "A totally open, royalty-free, highly versatile audio codec.",
         Platforms.ALL
     ),
     OVR(
@@ -207,7 +238,7 @@ enum Artifacts {
     ),
     XXHASH(
         "lwjgl-xxhash", "LWJGL - xxHash bindings",
-        "An Extremely fast Hash algorithm, running at RAM speed limits.",
+        "An extremely fast hash algorithm, running at RAM speed limits.",
         Platforms.ALL
     ),
     YOGA(
@@ -217,7 +248,7 @@ enum Artifacts {
     ),
     ZSTD(
         "lwjgl-zstd", "LWJGL - Zstandard bindings",
-        "Zstandard (zstd) is a fast lossless compression algorithm, targeting real-time compression scenarios at zlib-level and better compression ratios.",
+        "A fast lossless compression algorithm, targeting real-time compression scenarios at zlib-level and better compression ratios.",
         Platforms.ALL
     )
 
@@ -249,11 +280,14 @@ enum Artifacts {
         return new File(directory("bin/RELEASE")).exists()
     }
 
-    Map<String, Object> artifactNotation(String classifier = null) {
-        if ( classifier == null )
-            return [file: new File("${path()}.jar"), name: artifact, type: "jar"]
-        else
-            return [file: new File("${path()}-${classifier}.jar"), name: artifact, type: "jar", classifier: classifier]
+    boolean hasArtifact(String classifier) {
+        return new File("${directory("bin/RELEASE")}/${artifact}-${classifier}.jar" as String).exists()
+    }
+
+    Map<String, ? extends Object> artifactNotation(String classifier = null) {
+        return classifier == null
+            ? [file: new File("${path()}.jar" as String), name: artifact, type: "jar"]
+            : [file: new File("${path()}-${classifier}.jar" as String), name: artifact, type: "jar", classifier: classifier]
     }
 }
 
@@ -294,12 +328,18 @@ artifacts {
     is going to alleviate the pain.
      */
     Artifacts.values().each { module ->
-        if ( module.active() ) {
+        if (module.active()) {
             archives module.artifactNotation()
-            archives module.artifactNotation("sources")
-            archives module.artifactNotation("javadoc")
+            if (deployment.type != BuildType.LOCAL || module.hasArtifact("sources")) {
+                archives module.artifactNotation("sources")
+            }
+            if (deployment.type != BuildType.LOCAL || module.hasArtifact("javadoc")) {
+                archives module.artifactNotation("javadoc")
+            }
             module.platforms.each {
-                archives module.artifactNotation("natives-${it.name}")
+                if (deployment.type != BuildType.LOCAL || module.hasArtifact("natives-${it.name}")) {
+                    archives module.artifactNotation("natives-${it.name}")
+                }
             }
         }
     }

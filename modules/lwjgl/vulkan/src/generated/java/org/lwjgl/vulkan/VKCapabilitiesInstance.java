@@ -46,6 +46,10 @@ public class VKCapabilitiesInstance {
         vkAcquireXlibDisplayEXT,
         vkGetRandROutputDisplayEXT;
 
+    // EXT_calibrated_timestamps
+    public final long
+        vkGetPhysicalDeviceCalibrateableTimeDomainsEXT;
+
     // EXT_debug_report
     public final long
         vkCreateDebugReportCallbackEXT,
@@ -65,6 +69,14 @@ public class VKCapabilitiesInstance {
     // EXT_display_surface_counter
     public final long
         vkGetPhysicalDeviceSurfaceCapabilities2EXT;
+
+    // EXT_full_screen_exclusive
+    public final long
+        vkGetPhysicalDeviceSurfacePresentModes2EXT;
+
+    // EXT_headless_surface
+    public final long
+        vkCreateHeadlessSurfaceEXT;
 
     // EXT_sample_locations
     public final long
@@ -149,6 +161,10 @@ public class VKCapabilitiesInstance {
     public final long
         vkCreateMacOSSurfaceMVK;
 
+    // NV_cooperative_matrix
+    public final long
+        vkGetPhysicalDeviceCooperativeMatrixPropertiesNV;
+
     // NV_external_memory_capabilities
     public final long
         vkGetPhysicalDeviceExternalImageFormatPropertiesNV;
@@ -174,8 +190,12 @@ public class VKCapabilitiesInstance {
     public final boolean VK_EXT_direct_mode_display;
     /** When true, {@link EXTDisplaySurfaceCounter} is supported. */
     public final boolean VK_EXT_display_surface_counter;
+    /** When true, {@link EXTHeadlessSurface} is supported. */
+    public final boolean VK_EXT_headless_surface;
     /** When true, {@link EXTSwapchainColorspace} is supported. */
     public final boolean VK_EXT_swapchain_colorspace;
+    /** When true, {@link EXTValidationFeatures} is supported. */
+    public final boolean VK_EXT_validation_features;
     /** When true, {@link EXTValidationFlags} is supported. */
     public final boolean VK_EXT_validation_flags;
     /** When true, {@link KHRDeviceGroupCreation} is supported. */
@@ -196,6 +216,8 @@ public class VKCapabilitiesInstance {
     public final boolean VK_KHR_get_surface_capabilities2;
     /** When true, {@link KHRSurface} is supported. */
     public final boolean VK_KHR_surface;
+    /** When true, {@link KHRSurfaceProtectedCapabilities} is supported. */
+    public final boolean VK_KHR_surface_protected_capabilities;
     /** When true, {@link KHRWaylandSurface} is supported. */
     public final boolean VK_KHR_wayland_surface;
     /** When true, {@link KHRWin32Surface} is supported. */
@@ -210,17 +232,21 @@ public class VKCapabilitiesInstance {
     VKCapabilitiesInstance(FunctionProvider provider, int apiVersion, Set<String> ext, Set<String> deviceExt) {
         this.apiVersion = apiVersion;
 
-        Map<String, Long> caps = new HashMap<>(73);
+        Map<String, Long> caps = new HashMap<>(77);
 
         Vulkan10 = VK10.checkCapsInstance(provider, caps, ext);
         Vulkan11 = VK11.checkCapsInstance(provider, caps, ext);
         VK_EXT_acquire_xlib_display = EXTAcquireXlibDisplay.checkCapsInstance(provider, caps, ext);
+        EXTCalibratedTimestamps.checkCapsInstance(provider, caps, deviceExt);
         VK_EXT_debug_report = EXTDebugReport.checkCapsInstance(provider, caps, ext);
         VK_EXT_debug_utils = EXTDebugUtils.checkCapsInstance(provider, caps, ext);
         VK_EXT_direct_mode_display = EXTDirectModeDisplay.checkCapsInstance(provider, caps, ext);
         VK_EXT_display_surface_counter = EXTDisplaySurfaceCounter.checkCapsInstance(provider, caps, ext);
+        EXTFullScreenExclusive.checkCapsInstance(provider, caps, deviceExt);
+        VK_EXT_headless_surface = EXTHeadlessSurface.checkCapsInstance(provider, caps, ext);
         EXTSampleLocations.checkCapsInstance(provider, caps, deviceExt);
         VK_EXT_swapchain_colorspace = ext.contains("VK_EXT_swapchain_colorspace");
+        VK_EXT_validation_features = ext.contains("VK_EXT_validation_features");
         VK_EXT_validation_flags = ext.contains("VK_EXT_validation_flags");
         KHRDeviceGroup.checkCapsInstance(provider, caps, deviceExt);
         VK_KHR_device_group_creation = KHRDeviceGroupCreation.checkCapsInstance(provider, caps, ext);
@@ -232,11 +258,13 @@ public class VKCapabilitiesInstance {
         VK_KHR_get_physical_device_properties2 = KHRGetPhysicalDeviceProperties2.checkCapsInstance(provider, caps, ext);
         VK_KHR_get_surface_capabilities2 = KHRGetSurfaceCapabilities2.checkCapsInstance(provider, caps, ext);
         VK_KHR_surface = KHRSurface.checkCapsInstance(provider, caps, ext);
+        VK_KHR_surface_protected_capabilities = ext.contains("VK_KHR_surface_protected_capabilities");
         KHRSwapchain.checkCapsInstance(provider, caps, deviceExt);
         VK_KHR_wayland_surface = KHRWaylandSurface.checkCapsInstance(provider, caps, ext);
         VK_KHR_win32_surface = KHRWin32Surface.checkCapsInstance(provider, caps, ext);
         VK_KHR_xlib_surface = KHRXlibSurface.checkCapsInstance(provider, caps, ext);
         VK_MVK_macos_surface = MVKMacosSurface.checkCapsInstance(provider, caps, ext);
+        NVCooperativeMatrix.checkCapsInstance(provider, caps, deviceExt);
         VK_NV_external_memory_capabilities = NVExternalMemoryCapabilities.checkCapsInstance(provider, caps, ext);
         NVXDeviceGeneratedCommands.checkCapsInstance(provider, caps, deviceExt);
 
@@ -265,6 +293,7 @@ public class VKCapabilitiesInstance {
         vkGetPhysicalDeviceExternalSemaphoreProperties = VK.get(caps, "vkGetPhysicalDeviceExternalSemaphoreProperties");
         vkAcquireXlibDisplayEXT = VK.get(caps, "vkAcquireXlibDisplayEXT");
         vkGetRandROutputDisplayEXT = VK.get(caps, "vkGetRandROutputDisplayEXT");
+        vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = VK.get(caps, "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT");
         vkCreateDebugReportCallbackEXT = VK.get(caps, "vkCreateDebugReportCallbackEXT");
         vkDestroyDebugReportCallbackEXT = VK.get(caps, "vkDestroyDebugReportCallbackEXT");
         vkDebugReportMessageEXT = VK.get(caps, "vkDebugReportMessageEXT");
@@ -273,6 +302,8 @@ public class VKCapabilitiesInstance {
         vkSubmitDebugUtilsMessageEXT = VK.get(caps, "vkSubmitDebugUtilsMessageEXT");
         vkReleaseDisplayEXT = VK.get(caps, "vkReleaseDisplayEXT");
         vkGetPhysicalDeviceSurfaceCapabilities2EXT = VK.get(caps, "vkGetPhysicalDeviceSurfaceCapabilities2EXT");
+        vkGetPhysicalDeviceSurfacePresentModes2EXT = VK.get(caps, "vkGetPhysicalDeviceSurfacePresentModes2EXT");
+        vkCreateHeadlessSurfaceEXT = VK.get(caps, "vkCreateHeadlessSurfaceEXT");
         vkGetPhysicalDeviceMultisamplePropertiesEXT = VK.get(caps, "vkGetPhysicalDeviceMultisamplePropertiesEXT");
         vkGetPhysicalDevicePresentRectanglesKHR = VK.get(caps, "vkGetPhysicalDevicePresentRectanglesKHR");
         vkEnumeratePhysicalDeviceGroupsKHR = VK.get(caps, "vkEnumeratePhysicalDeviceGroupsKHR");
@@ -311,6 +342,7 @@ public class VKCapabilitiesInstance {
         vkCreateXlibSurfaceKHR = VK.get(caps, "vkCreateXlibSurfaceKHR");
         vkGetPhysicalDeviceXlibPresentationSupportKHR = VK.get(caps, "vkGetPhysicalDeviceXlibPresentationSupportKHR");
         vkCreateMacOSSurfaceMVK = VK.get(caps, "vkCreateMacOSSurfaceMVK");
+        vkGetPhysicalDeviceCooperativeMatrixPropertiesNV = VK.get(caps, "vkGetPhysicalDeviceCooperativeMatrixPropertiesNV");
         vkGetPhysicalDeviceExternalImageFormatPropertiesNV = VK.get(caps, "vkGetPhysicalDeviceExternalImageFormatPropertiesNV");
         vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX = VK.get(caps, "vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX");
     }

@@ -25,6 +25,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <p>The sample locations in {@code pSampleLocations} specify {@code sampleLocationsPerPixel} number of sample locations for each pixel in the grid of the size specified in {@code sampleLocationGridSize}. The sample location for sample <code>i</code> at the pixel grid location <code>(x,y)</code> is taken from <code>pSampleLocations[(x + y <b> sampleLocationGridSize.width) </b> sampleLocationsPerPixel + i]</code>.</p>
  * 
+ * <p>If the render pass has a fragment density map, the implementation will choose the sample locations for the fragment and the contents of {@code pSampleLocations} <b>may</b> be ignored.</p>
+ * 
  * <h5>Valid Usage</h5>
  * 
  * <ul>
@@ -36,9 +38,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link EXTSampleLocations#VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT}</li>
- * <li>{@code sampleLocationsPerPixel} <b>must</b> be a valid {@code VkSampleCountFlagBits} value</li>
- * <li>{@code pSampleLocations} <b>must</b> be a valid pointer to an array of {@code sampleLocationsCount} {@link VkSampleLocationEXT} structures</li>
- * <li>{@code sampleLocationsCount} <b>must</b> be greater than 0</li>
+ * <li>If {@code sampleLocationsPerPixel} is not 0, {@code sampleLocationsPerPixel} <b>must</b> be a valid {@code VkSampleCountFlagBits} value</li>
+ * <li>If {@code sampleLocationsCount} is not 0, {@code pSampleLocations} <b>must</b> be a valid pointer to an array of {@code sampleLocationsCount} {@link VkSampleLocationEXT} structures</li>
  * </ul>
  * 
  * <h5>See Also</h5>
@@ -65,7 +66,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     VkSampleCountFlagBits sampleLocationsPerPixel;
  *     {@link VkExtent2D VkExtent2D} sampleLocationGridSize;
  *     uint32_t sampleLocationsCount;
- *     {@link VkSampleLocationEXT VkSampleLocationEXT const} * pSampleLocations;
+ *     {@link VkSampleLocationEXT VkSampleLocationEXT} const * pSampleLocations;
  * }</code></pre>
  */
 public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
@@ -106,18 +107,14 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
         PSAMPLELOCATIONS = layout.offsetof(5);
     }
 
-    VkSampleLocationsInfoEXT(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkSampleLocationsInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkSampleLocationsInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkSampleLocationsInfoEXT(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -140,6 +137,7 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
     @NativeType("uint32_t")
     public int sampleLocationsCount() { return nsampleLocationsCount(address()); }
     /** Returns a {@link VkSampleLocationEXT.Buffer} view of the struct array pointed to by the {@code pSampleLocations} field. */
+    @Nullable
     @NativeType("VkSampleLocationEXT const *")
     public VkSampleLocationEXT.Buffer pSampleLocations() { return npSampleLocations(address()); }
 
@@ -152,7 +150,7 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
     /** Copies the specified {@link VkExtent2D} to the {@code sampleLocationGridSize} field. */
     public VkSampleLocationsInfoEXT sampleLocationGridSize(VkExtent2D value) { nsampleLocationGridSize(address(), value); return this; }
     /** Sets the address of the specified {@link VkSampleLocationEXT.Buffer} to the {@code pSampleLocations} field. */
-    public VkSampleLocationsInfoEXT pSampleLocations(@NativeType("VkSampleLocationEXT const *") VkSampleLocationEXT.Buffer value) { npSampleLocations(address(), value); return this; }
+    public VkSampleLocationsInfoEXT pSampleLocations(@Nullable @NativeType("VkSampleLocationEXT const *") VkSampleLocationEXT.Buffer value) { npSampleLocations(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public VkSampleLocationsInfoEXT set(
@@ -160,7 +158,7 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
         long pNext,
         int sampleLocationsPerPixel,
         VkExtent2D sampleLocationGridSize,
-        VkSampleLocationEXT.Buffer pSampleLocations
+        @Nullable VkSampleLocationEXT.Buffer pSampleLocations
     ) {
         sType(sType);
         pNext(pNext);
@@ -185,30 +183,31 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSampleLocationsInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSampleLocationsInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkSampleLocationsInfoEXT malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkSampleLocationsInfoEXT.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkSampleLocationsInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSampleLocationsInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkSampleLocationsInfoEXT calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkSampleLocationsInfoEXT.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkSampleLocationsInfoEXT} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkSampleLocationsInfoEXT} instance allocated with {@link BufferUtils}. */
     public static VkSampleLocationsInfoEXT create() {
-        return new VkSampleLocationsInfoEXT(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkSampleLocationsInfoEXT.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkSampleLocationsInfoEXT} instance for the specified memory address. */
+    /** Returns a new {@code VkSampleLocationsInfoEXT} instance for the specified memory address. */
     public static VkSampleLocationsInfoEXT create(long address) {
-        return new VkSampleLocationsInfoEXT(address, null);
+        return wrap(VkSampleLocationsInfoEXT.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSampleLocationsInfoEXT createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkSampleLocationsInfoEXT.class, address);
     }
 
     /**
@@ -217,7 +216,7 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationsInfoEXT.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -226,7 +225,7 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationsInfoEXT.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -235,7 +234,8 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationsInfoEXT.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -245,43 +245,43 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationsInfoEXT.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSampleLocationsInfoEXT.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSampleLocationsInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkSampleLocationsInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkSampleLocationsInfoEXT mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkSampleLocationsInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkSampleLocationsInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkSampleLocationsInfoEXT callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkSampleLocationsInfoEXT} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkSampleLocationsInfoEXT} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSampleLocationsInfoEXT mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkSampleLocationsInfoEXT.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkSampleLocationsInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkSampleLocationsInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSampleLocationsInfoEXT callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkSampleLocationsInfoEXT.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -309,7 +309,7 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationsInfoEXT.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -319,36 +319,36 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationsInfoEXT.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkSampleLocationsInfoEXT.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkSampleLocationsInfoEXT.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkSampleLocationsInfoEXT.PNEXT); }
     /** Unsafe version of {@link #sampleLocationsPerPixel}. */
-    public static int nsampleLocationsPerPixel(long struct) { return memGetInt(struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONSPERPIXEL); }
+    public static int nsampleLocationsPerPixel(long struct) { return UNSAFE.getInt(null, struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONSPERPIXEL); }
     /** Unsafe version of {@link #sampleLocationGridSize}. */
     public static VkExtent2D nsampleLocationGridSize(long struct) { return VkExtent2D.create(struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONGRIDSIZE); }
     /** Unsafe version of {@link #sampleLocationsCount}. */
-    public static int nsampleLocationsCount(long struct) { return memGetInt(struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONSCOUNT); }
+    public static int nsampleLocationsCount(long struct) { return UNSAFE.getInt(null, struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONSCOUNT); }
     /** Unsafe version of {@link #pSampleLocations}. */
-    public static VkSampleLocationEXT.Buffer npSampleLocations(long struct) { return VkSampleLocationEXT.create(memGetAddress(struct + VkSampleLocationsInfoEXT.PSAMPLELOCATIONS), nsampleLocationsCount(struct)); }
+    @Nullable public static VkSampleLocationEXT.Buffer npSampleLocations(long struct) { return VkSampleLocationEXT.createSafe(memGetAddress(struct + VkSampleLocationsInfoEXT.PSAMPLELOCATIONS), nsampleLocationsCount(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkSampleLocationsInfoEXT.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkSampleLocationsInfoEXT.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkSampleLocationsInfoEXT.PNEXT, value); }
     /** Unsafe version of {@link #sampleLocationsPerPixel(int) sampleLocationsPerPixel}. */
-    public static void nsampleLocationsPerPixel(long struct, int value) { memPutInt(struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONSPERPIXEL, value); }
+    public static void nsampleLocationsPerPixel(long struct, int value) { UNSAFE.putInt(null, struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONSPERPIXEL, value); }
     /** Unsafe version of {@link #sampleLocationGridSize(VkExtent2D) sampleLocationGridSize}. */
     public static void nsampleLocationGridSize(long struct, VkExtent2D value) { memCopy(value.address(), struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONGRIDSIZE, VkExtent2D.SIZEOF); }
     /** Sets the specified value to the {@code sampleLocationsCount} field of the specified {@code struct}. */
-    public static void nsampleLocationsCount(long struct, int value) { memPutInt(struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONSCOUNT, value); }
+    public static void nsampleLocationsCount(long struct, int value) { UNSAFE.putInt(null, struct + VkSampleLocationsInfoEXT.SAMPLELOCATIONSCOUNT, value); }
     /** Unsafe version of {@link #pSampleLocations(VkSampleLocationEXT.Buffer) pSampleLocations}. */
-    public static void npSampleLocations(long struct, VkSampleLocationEXT.Buffer value) { memPutAddress(struct + VkSampleLocationsInfoEXT.PSAMPLELOCATIONS, value.address()); nsampleLocationsCount(struct, value.remaining()); }
+    public static void npSampleLocations(long struct, @Nullable VkSampleLocationEXT.Buffer value) { memPutAddress(struct + VkSampleLocationsInfoEXT.PSAMPLELOCATIONS, memAddressSafe(value)); nsampleLocationsCount(struct, value == null ? 0 : value.remaining()); }
 
     /**
      * Validates pointer members that should not be {@code NULL}.
@@ -356,7 +356,9 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
      * @param struct the struct to validate
      */
     public static void validate(long struct) {
-        check(memGetAddress(struct + VkSampleLocationsInfoEXT.PSAMPLELOCATIONS));
+        if (nsampleLocationsCount(struct) != 0) {
+            check(memGetAddress(struct + VkSampleLocationsInfoEXT.PSAMPLELOCATIONS));
+        }
     }
 
     /**
@@ -367,7 +369,7 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -376,8 +378,10 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
     /** An array of {@link VkSampleLocationsInfoEXT} structs. */
     public static class Buffer extends StructBuffer<VkSampleLocationsInfoEXT, Buffer> implements NativeResource {
 
+        private static final VkSampleLocationsInfoEXT ELEMENT_FACTORY = VkSampleLocationsInfoEXT.create(-1L);
+
         /**
-         * Creates a new {@link VkSampleLocationsInfoEXT.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkSampleLocationsInfoEXT.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -403,18 +407,8 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkSampleLocationsInfoEXT newInstance(long address) {
-            return new VkSampleLocationsInfoEXT(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkSampleLocationsInfoEXT getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */
@@ -434,6 +428,7 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
         @NativeType("uint32_t")
         public int sampleLocationsCount() { return VkSampleLocationsInfoEXT.nsampleLocationsCount(address()); }
         /** Returns a {@link VkSampleLocationEXT.Buffer} view of the struct array pointed to by the {@code pSampleLocations} field. */
+        @Nullable
         @NativeType("VkSampleLocationEXT const *")
         public VkSampleLocationEXT.Buffer pSampleLocations() { return VkSampleLocationsInfoEXT.npSampleLocations(address()); }
 
@@ -446,7 +441,7 @@ public class VkSampleLocationsInfoEXT extends Struct implements NativeResource {
         /** Copies the specified {@link VkExtent2D} to the {@code sampleLocationGridSize} field. */
         public VkSampleLocationsInfoEXT.Buffer sampleLocationGridSize(VkExtent2D value) { VkSampleLocationsInfoEXT.nsampleLocationGridSize(address(), value); return this; }
         /** Sets the address of the specified {@link VkSampleLocationEXT.Buffer} to the {@code pSampleLocations} field. */
-        public VkSampleLocationsInfoEXT.Buffer pSampleLocations(@NativeType("VkSampleLocationEXT const *") VkSampleLocationEXT.Buffer value) { VkSampleLocationsInfoEXT.npSampleLocations(address(), value); return this; }
+        public VkSampleLocationsInfoEXT.Buffer pSampleLocations(@Nullable @NativeType("VkSampleLocationEXT const *") VkSampleLocationEXT.Buffer value) { VkSampleLocationsInfoEXT.npSampleLocations(address(), value); return this; }
 
     }
 

@@ -31,7 +31,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
- * <li>{@code representativeFragmentTest} &ndash; indicates whether the implementation supports the representative fragment test. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-rep-frag-test">Representative Fragment Test</a>.</li>
+ * <li>{@code representativeFragmentTest} &ndash; indicates whether the implementation supports the representative fragment test. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-rep-frag-test">Representative Fragment Test</a>.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -72,18 +72,14 @@ public class VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV extends Struct
         REPRESENTATIVEFRAGMENTTEST = layout.offsetof(2);
     }
 
-    VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -133,30 +129,31 @@ public class VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV extends Struct
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated with {@link BufferUtils}. */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV create() {
-        return new VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance for the specified memory address. */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV create(long address) {
-        return new VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(address, null);
+        return wrap(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.class, address);
     }
 
     /**
@@ -165,7 +162,7 @@ public class VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV extends Struct
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -174,7 +171,7 @@ public class VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV extends Struct
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -183,7 +180,8 @@ public class VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV extends Struct
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -193,43 +191,43 @@ public class VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV extends Struct
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -257,7 +255,7 @@ public class VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV extends Struct
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -267,32 +265,34 @@ public class VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV extends Struct
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.PNEXT); }
     /** Unsafe version of {@link #representativeFragmentTest}. */
-    public static int nrepresentativeFragmentTest(long struct) { return memGetInt(struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.REPRESENTATIVEFRAGMENTTEST); }
+    public static int nrepresentativeFragmentTest(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.REPRESENTATIVEFRAGMENTTEST); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.PNEXT, value); }
     /** Unsafe version of {@link #representativeFragmentTest(boolean) representativeFragmentTest}. */
-    public static void nrepresentativeFragmentTest(long struct, int value) { memPutInt(struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.REPRESENTATIVEFRAGMENTTEST, value); }
+    public static void nrepresentativeFragmentTest(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.REPRESENTATIVEFRAGMENTTEST, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV} structs. */
     public static class Buffer extends StructBuffer<VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV, Buffer> implements NativeResource {
 
+        private static final VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV ELEMENT_FACTORY = VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.create(-1L);
+
         /**
-         * Creates a new {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -318,18 +318,8 @@ public class VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV extends Struct
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV newInstance(long address) {
-            return new VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

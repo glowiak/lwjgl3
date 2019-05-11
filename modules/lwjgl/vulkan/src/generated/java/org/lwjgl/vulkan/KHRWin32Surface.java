@@ -94,7 +94,7 @@ public class KHRWin32Surface {
             VkWin32SurfaceCreateInfoKHR.validate(pCreateInfo);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, instance.address(), pCreateInfo, pAllocator, pSurface);
+        return callPPPPI(instance.address(), pCreateInfo, pAllocator, pSurface, __functionAddress);
     }
 
     /**
@@ -140,7 +140,7 @@ public class KHRWin32Surface {
      *
      * @param instance    the instance to associate the surface with.
      * @param pCreateInfo a pointer to an instance of the {@link VkWin32SurfaceCreateInfoKHR} structure containing parameters affecting the creation of the surface object.
-     * @param pAllocator  the allocator used for host memory allocated for the surface object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
+     * @param pAllocator  the allocator used for host memory allocated for the surface object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
      * @param pSurface    points to a {@code VkSurfaceKHR} handle in which the created surface object is returned.
      */
     @NativeType("VkResult")
@@ -172,7 +172,7 @@ public class KHRWin32Surface {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code queueFamilyIndex} <b>must</b> be less than {@code pQueueFamilyPropertyCount} returned by {@link VK10#vkGetPhysicalDeviceQueueFamilyProperties GetPhysicalDeviceQueueFamilyProperties} for the given {@code physicalDevice}</li>
+     * <li>{@code queueFamilyIndex} <b>must</b> be less than {@code pQueueFamilyPropertyCount} returned by {@code vkGetPhysicalDeviceQueueFamilyProperties} for the given {@code physicalDevice}</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -190,7 +190,7 @@ public class KHRWin32Surface {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, physicalDevice.address(), queueFamilyIndex) != 0;
+        return callPI(physicalDevice.address(), queueFamilyIndex, __functionAddress) != 0;
     }
 
     /** Array version of: {@link #vkCreateWin32SurfaceKHR CreateWin32SurfaceKHR} */
@@ -203,7 +203,7 @@ public class KHRWin32Surface {
             VkWin32SurfaceCreateInfoKHR.validate(pCreateInfo.address());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, instance.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pSurface);
+        return callPPPPI(instance.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pSurface, __functionAddress);
     }
 
 }

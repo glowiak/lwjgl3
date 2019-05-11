@@ -24,14 +24,14 @@ import static org.lwjgl.system.MemoryStack.*;
  * <ul>
  * <li>The {@code queueFamilyIndex} member of each element of {@code pQueueCreateInfos} <b>must</b> be unique within {@code pQueueCreateInfos}, except that two members can share the same {@code queueFamilyIndex} if one is a protected-capable queue and one is not a protected-capable queue.</li>
  * <li>If the {@code pNext} chain includes a {@link VkPhysicalDeviceFeatures2} structure, then {@code pEnabledFeatures} <b>must</b> be {@code NULL}</li>
- * <li>{@code ppEnabledExtensionNames} <b>must</b> not contain {@link AMDNegativeViewportHeight}</li>
+ * <li>{@code ppEnabledExtensionNames} <b>must</b> not contain {@link AMDNegativeViewportHeight VK_AMD_negative_viewport_height}</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link VK10#VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO STRUCTURE_TYPE_DEVICE_CREATE_INFO}</li>
- * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkDeviceGroupDeviceCreateInfo}, {@link VkPhysicalDevice16BitStorageFeatures}, {@link VkPhysicalDevice8BitStorageFeaturesKHR}, {@link VkPhysicalDeviceASTCDecodeFeaturesEXT}, {@link VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT}, {@link VkPhysicalDeviceComputeShaderDerivativesFeaturesNV}, {@link VkPhysicalDeviceConditionalRenderingFeaturesEXT}, {@link VkPhysicalDeviceCornerSampledImageFeaturesNV}, {@link VkPhysicalDeviceDescriptorIndexingFeaturesEXT}, {@link VkPhysicalDeviceExclusiveScissorFeaturesNV}, {@link VkPhysicalDeviceFeatures2}, {@link VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV}, {@link VkPhysicalDeviceInlineUniformBlockFeaturesEXT}, {@link VkPhysicalDeviceMeshShaderFeaturesNV}, {@link VkPhysicalDeviceMultiviewFeatures}, {@link VkPhysicalDeviceProtectedMemoryFeatures}, {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV}, {@link VkPhysicalDeviceSamplerYcbcrConversionFeatures}, {@link VkPhysicalDeviceShaderAtomicInt64FeaturesKHR}, {@link VkPhysicalDeviceShaderDrawParameterFeatures}, {@link VkPhysicalDeviceShaderImageFootprintFeaturesNV}, {@link VkPhysicalDeviceShadingRateImageFeaturesNV}, {@link VkPhysicalDeviceVariablePointerFeatures}, {@link VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT}, or {@link VkPhysicalDeviceVulkanMemoryModelFeaturesKHR}</li>
+ * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkDeviceGroupDeviceCreateInfo}, {@link VkDeviceMemoryOverallocationCreateInfoAMD}, {@link VkPhysicalDevice16BitStorageFeatures}, {@link VkPhysicalDevice8BitStorageFeaturesKHR}, {@link VkPhysicalDeviceASTCDecodeFeaturesEXT}, {@link VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT}, {@link VkPhysicalDeviceBufferDeviceAddressFeaturesEXT}, {@link VkPhysicalDeviceComputeShaderDerivativesFeaturesNV}, {@link VkPhysicalDeviceConditionalRenderingFeaturesEXT}, {@link VkPhysicalDeviceCooperativeMatrixFeaturesNV}, {@link VkPhysicalDeviceCornerSampledImageFeaturesNV}, {@link VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV}, {@link VkPhysicalDeviceDepthClipEnableFeaturesEXT}, {@link VkPhysicalDeviceDescriptorIndexingFeaturesEXT}, {@link VkPhysicalDeviceExclusiveScissorFeaturesNV}, {@link VkPhysicalDeviceFeatures2}, {@link VkPhysicalDeviceFloat16Int8FeaturesKHR}, {@link VkPhysicalDeviceFragmentDensityMapFeaturesEXT}, {@link VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV}, {@link VkPhysicalDeviceHostQueryResetFeaturesEXT}, {@link VkPhysicalDeviceInlineUniformBlockFeaturesEXT}, {@link VkPhysicalDeviceMemoryPriorityFeaturesEXT}, {@link VkPhysicalDeviceMeshShaderFeaturesNV}, {@link VkPhysicalDeviceMultiviewFeatures}, {@link VkPhysicalDeviceProtectedMemoryFeatures}, {@link VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV}, {@link VkPhysicalDeviceSamplerYcbcrConversionFeatures}, {@link VkPhysicalDeviceScalarBlockLayoutFeaturesEXT}, {@link VkPhysicalDeviceShaderAtomicInt64FeaturesKHR}, {@link VkPhysicalDeviceShaderDrawParametersFeatures}, {@link VkPhysicalDeviceShaderImageFootprintFeaturesNV}, {@link VkPhysicalDeviceShadingRateImageFeaturesNV}, {@link VkPhysicalDeviceTransformFeedbackFeaturesEXT}, {@link VkPhysicalDeviceVariablePointersFeatures}, {@link VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT}, {@link VkPhysicalDeviceVulkanMemoryModelFeaturesKHR}, or {@link VkPhysicalDeviceYcbcrImageArraysFeaturesEXT}</li>
  * <li>Each {@code sType} member in the {@code pNext} chain <b>must</b> be unique</li>
  * <li>{@code flags} <b>must</b> be 0</li>
  * <li>{@code pQueueCreateInfos} <b>must</b> be a valid pointer to an array of {@code queueCreateInfoCount} valid {@link VkDeviceQueueCreateInfo} structures</li>
@@ -51,13 +51,13 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
  * <li>{@code flags} &ndash; reserved for future use.</li>
- * <li>{@code queueCreateInfoCount} &ndash; the unsigned integer size of the {@code pQueueCreateInfos} array. Refer to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-queue-creation">Queue Creation</a> section below for further details.</li>
- * <li>{@code pQueueCreateInfos} &ndash; a pointer to an array of {@link VkDeviceQueueCreateInfo} structures describing the queues that are requested to be created along with the logical device. Refer to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-queue-creation">Queue Creation</a> section below for further details.</li>
+ * <li>{@code queueCreateInfoCount} &ndash; the unsigned integer size of the {@code pQueueCreateInfos} array. Refer to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-queue-creation">Queue Creation</a> section below for further details.</li>
+ * <li>{@code pQueueCreateInfos} &ndash; a pointer to an array of {@link VkDeviceQueueCreateInfo} structures describing the queues that are requested to be created along with the logical device. Refer to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-queue-creation">Queue Creation</a> section below for further details.</li>
  * <li>{@code enabledLayerCount} &ndash; deprecated and ignored.</li>
- * <li>{@code ppEnabledLayerNames} &ndash; deprecated and ignored. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extended-functionality-device-layer-deprecation">Device Layer Deprecation</a>.</li>
+ * <li>{@code ppEnabledLayerNames} &ndash; deprecated and ignored. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation">Device Layer Deprecation</a>.</li>
  * <li>{@code enabledExtensionCount} &ndash; the number of device extensions to enable.</li>
- * <li>{@code ppEnabledExtensionNames} &ndash; a pointer to an array of {@code enabledExtensionCount} null-terminated UTF-8 strings containing the names of extensions to enable for the created device. See the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extended-functionality-extensions">Extensions</a> section for further details.</li>
- * <li>{@code pEnabledFeatures} &ndash; {@code NULL} or a pointer to a {@link VkPhysicalDeviceFeatures} structure that contains boolean indicators of all the features to be enabled. Refer to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features">Features</a> section for further details.</li>
+ * <li>{@code ppEnabledExtensionNames} &ndash; a pointer to an array of {@code enabledExtensionCount} null-terminated UTF-8 strings containing the names of extensions to enable for the created device. See the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-extensions">Extensions</a> section for further details.</li>
+ * <li>{@code pEnabledFeatures} &ndash; {@code NULL} or a pointer to a {@link VkPhysicalDeviceFeatures} structure that contains boolean indicators of all the features to be enabled. Refer to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features">Features</a> section for further details.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -68,12 +68,12 @@ import static org.lwjgl.system.MemoryStack.*;
  *     void const * pNext;
  *     VkDeviceCreateFlags flags;
  *     uint32_t queueCreateInfoCount;
- *     {@link VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo const} * pQueueCreateInfos;
+ *     {@link VkDeviceQueueCreateInfo VkDeviceQueueCreateInfo} const * pQueueCreateInfos;
  *     uint32_t enabledLayerCount;
  *     char const * const * ppEnabledLayerNames;
  *     uint32_t enabledExtensionCount;
  *     char const * const * ppEnabledExtensionNames;
- *     {@link VkPhysicalDeviceFeatures VkPhysicalDeviceFeatures const} * pEnabledFeatures;
+ *     {@link VkPhysicalDeviceFeatures VkPhysicalDeviceFeatures} const * pEnabledFeatures;
  * }</code></pre>
  */
 public class VkDeviceCreateInfo extends Struct implements NativeResource {
@@ -126,18 +126,14 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
         PENABLEDFEATURES = layout.offsetof(9);
     }
 
-    VkDeviceCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkDeviceCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkDeviceCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkDeviceCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -227,30 +223,31 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDeviceCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDeviceCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkDeviceCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkDeviceCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkDeviceCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDeviceCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkDeviceCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkDeviceCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkDeviceCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkDeviceCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkDeviceCreateInfo create() {
-        return new VkDeviceCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkDeviceCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkDeviceCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkDeviceCreateInfo} instance for the specified memory address. */
     public static VkDeviceCreateInfo create(long address) {
-        return new VkDeviceCreateInfo(address, null);
+        return wrap(VkDeviceCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDeviceCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkDeviceCreateInfo.class, address);
     }
 
     /**
@@ -259,7 +256,7 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkDeviceCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -268,7 +265,7 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkDeviceCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -277,7 +274,8 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkDeviceCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -287,43 +285,43 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkDeviceCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDeviceCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDeviceCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkDeviceCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkDeviceCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkDeviceCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkDeviceCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkDeviceCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkDeviceCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkDeviceCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDeviceCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkDeviceCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkDeviceCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkDeviceCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDeviceCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkDeviceCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -351,7 +349,7 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkDeviceCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -361,48 +359,48 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkDeviceCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkDeviceCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkDeviceCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkDeviceCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkDeviceCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkDeviceCreateInfo.FLAGS); }
     /** Unsafe version of {@link #queueCreateInfoCount}. */
-    public static int nqueueCreateInfoCount(long struct) { return memGetInt(struct + VkDeviceCreateInfo.QUEUECREATEINFOCOUNT); }
+    public static int nqueueCreateInfoCount(long struct) { return UNSAFE.getInt(null, struct + VkDeviceCreateInfo.QUEUECREATEINFOCOUNT); }
     /** Unsafe version of {@link #pQueueCreateInfos}. */
     public static VkDeviceQueueCreateInfo.Buffer npQueueCreateInfos(long struct) { return VkDeviceQueueCreateInfo.create(memGetAddress(struct + VkDeviceCreateInfo.PQUEUECREATEINFOS), nqueueCreateInfoCount(struct)); }
     /** Unsafe version of {@link #enabledLayerCount}. */
-    public static int nenabledLayerCount(long struct) { return memGetInt(struct + VkDeviceCreateInfo.ENABLEDLAYERCOUNT); }
+    public static int nenabledLayerCount(long struct) { return UNSAFE.getInt(null, struct + VkDeviceCreateInfo.ENABLEDLAYERCOUNT); }
     /** Unsafe version of {@link #ppEnabledLayerNames() ppEnabledLayerNames}. */
     @Nullable public static PointerBuffer nppEnabledLayerNames(long struct) { return memPointerBufferSafe(memGetAddress(struct + VkDeviceCreateInfo.PPENABLEDLAYERNAMES), nenabledLayerCount(struct)); }
     /** Unsafe version of {@link #enabledExtensionCount}. */
-    public static int nenabledExtensionCount(long struct) { return memGetInt(struct + VkDeviceCreateInfo.ENABLEDEXTENSIONCOUNT); }
+    public static int nenabledExtensionCount(long struct) { return UNSAFE.getInt(null, struct + VkDeviceCreateInfo.ENABLEDEXTENSIONCOUNT); }
     /** Unsafe version of {@link #ppEnabledExtensionNames() ppEnabledExtensionNames}. */
     @Nullable public static PointerBuffer nppEnabledExtensionNames(long struct) { return memPointerBufferSafe(memGetAddress(struct + VkDeviceCreateInfo.PPENABLEDEXTENSIONNAMES), nenabledExtensionCount(struct)); }
     /** Unsafe version of {@link #pEnabledFeatures}. */
     @Nullable public static VkPhysicalDeviceFeatures npEnabledFeatures(long struct) { return VkPhysicalDeviceFeatures.createSafe(memGetAddress(struct + VkDeviceCreateInfo.PENABLEDFEATURES)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkDeviceCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkDeviceCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkDeviceCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkDeviceCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkDeviceCreateInfo.FLAGS, value); }
     /** Sets the specified value to the {@code queueCreateInfoCount} field of the specified {@code struct}. */
-    public static void nqueueCreateInfoCount(long struct, int value) { memPutInt(struct + VkDeviceCreateInfo.QUEUECREATEINFOCOUNT, value); }
+    public static void nqueueCreateInfoCount(long struct, int value) { UNSAFE.putInt(null, struct + VkDeviceCreateInfo.QUEUECREATEINFOCOUNT, value); }
     /** Unsafe version of {@link #pQueueCreateInfos(VkDeviceQueueCreateInfo.Buffer) pQueueCreateInfos}. */
     public static void npQueueCreateInfos(long struct, VkDeviceQueueCreateInfo.Buffer value) { memPutAddress(struct + VkDeviceCreateInfo.PQUEUECREATEINFOS, value.address()); nqueueCreateInfoCount(struct, value.remaining()); }
     /** Sets the specified value to the {@code enabledLayerCount} field of the specified {@code struct}. */
-    public static void nenabledLayerCount(long struct, int value) { memPutInt(struct + VkDeviceCreateInfo.ENABLEDLAYERCOUNT, value); }
+    public static void nenabledLayerCount(long struct, int value) { UNSAFE.putInt(null, struct + VkDeviceCreateInfo.ENABLEDLAYERCOUNT, value); }
     /** Unsafe version of {@link #ppEnabledLayerNames(PointerBuffer) ppEnabledLayerNames}. */
     public static void nppEnabledLayerNames(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + VkDeviceCreateInfo.PPENABLEDLAYERNAMES, memAddressSafe(value)); nenabledLayerCount(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code enabledExtensionCount} field of the specified {@code struct}. */
-    public static void nenabledExtensionCount(long struct, int value) { memPutInt(struct + VkDeviceCreateInfo.ENABLEDEXTENSIONCOUNT, value); }
+    public static void nenabledExtensionCount(long struct, int value) { UNSAFE.putInt(null, struct + VkDeviceCreateInfo.ENABLEDEXTENSIONCOUNT, value); }
     /** Unsafe version of {@link #ppEnabledExtensionNames(PointerBuffer) ppEnabledExtensionNames}. */
     public static void nppEnabledExtensionNames(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + VkDeviceCreateInfo.PPENABLEDEXTENSIONNAMES, memAddressSafe(value)); nenabledExtensionCount(struct, value == null ? 0 : value.remaining()); }
     /** Unsafe version of {@link #pEnabledFeatures(VkPhysicalDeviceFeatures) pEnabledFeatures}. */
@@ -434,7 +432,7 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -443,8 +441,10 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
     /** An array of {@link VkDeviceCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkDeviceCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkDeviceCreateInfo ELEMENT_FACTORY = VkDeviceCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkDeviceCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkDeviceCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -470,18 +470,8 @@ public class VkDeviceCreateInfo extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkDeviceCreateInfo newInstance(long address) {
-            return new VkDeviceCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkDeviceCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

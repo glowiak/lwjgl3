@@ -49,21 +49,23 @@ internal open class AutoSizeTransform(
                 "${bufferParam.name}.remaining()"
         }
 
+        val type = param.nativeType
+
         var relaxedCast = relaxedCast
 
         val factor = param.get<AutoSize>().factor
         if (applyFactor && factor != null) {
-            if (param.nativeType.isPointer) {
+            if (type.isPointer || type.mapping === PrimitiveMapping.LONG) {
                 expression = "Integer.toUnsignedLong($expression)"
                 relaxedCast = true
             }
             expression = factor.scale(expression)
         }
 
-        if (param.nativeType is PointerType<*>)
+        if (type is PointerType<*>)
             expression = "memAddress${if (bufferParam has nullable) "Safe" else ""}(${bufferParam.name}) + $expression"
-        else if ((param.nativeType.mapping as PrimitiveMapping).bytes.let { if (relaxedCast) it < 4 else it != 4 })
-            expression = "(${param.nativeType.javaMethodType})${if (expression.contains(' ')) "($expression)" else expression}"
+        else if ((type.mapping as PrimitiveMapping).bytes.let { if (relaxedCast) it < 4 else it != 4 })
+            expression = "(${type.javaMethodType})${if (expression.contains(' ')) "($expression)" else expression}"
 
         return expression
     }
@@ -78,11 +80,13 @@ private class AutoSizeBytesTransform(
     val byteShift: String
 ) : AutoSizeTransform(bufferParam, relaxedCast) {
     override fun transformCall(param: Parameter, original: String): String {
+        val type = param.nativeType
+
         var expression = if (bufferParam has nullable)
             "remainingSafe(${bufferParam.name})"
         else
             "${bufferParam.name}.remaining()"
-        if (param.nativeType.isPointer) {
+        if (type.isPointer || type.mapping === PrimitiveMapping.LONG) {
             expression = "Integer.toUnsignedLong($expression)"
         }
         val factor = param.get<AutoSize>().factor
@@ -104,15 +108,15 @@ private class AutoSizeBytesTransform(
                 }
             } catch(e: NumberFormatException) {
                 // non-numeric expressions
-                expression = if (param.nativeType.mapping.let { it === PrimitiveMapping.POINTER || it === PrimitiveMapping.LONG })
+                expression = if (type.mapping.let { it === PrimitiveMapping.POINTER || it === PrimitiveMapping.LONG })
                     "($expression << $byteShift) ${factor.operator} ${factor.expression}"
                 else
-                    "(${param.nativeType.javaMethodType})(((long)$expression << $byteShift) ${factor.operator} ${factor.expression})"
+                    "(${type.javaMethodType})(((long)$expression << $byteShift) ${factor.operator} ${factor.expression})"
             }
         }
 
-        if ((param.nativeType.mapping as PrimitiveMapping).bytes.let { if (relaxedCast) it < 4 else it != 4 })
-            expression = "(${param.nativeType.javaMethodType})($expression)"
+        if ((type.mapping as PrimitiveMapping).bytes.let { if (relaxedCast) it < 4 else it != 4 })
+            expression = "(${type.javaMethodType})($expression)"
 
         return expression
     }
@@ -121,10 +125,7 @@ private class AutoSizeBytesTransform(
 internal open class AutoSizeCharSequenceTransform(private val bufferParam: Parameter) : FunctionTransform<Parameter> {
     override fun transformDeclaration(param: Parameter, original: String): String? = null // Remove the parameter
     override fun transformCall(param: Parameter, original: String): String {
-        var expression = if (bufferParam has nullable)
-            "remainingSafe(${bufferParam.name}Encoded)"
-        else
-            "${bufferParam.name}Encoded.remaining()"
+        var expression = "${bufferParam.name}EncodedLength"
 
         param.get<AutoSize>().factor.let {
             if (it != null)
@@ -132,12 +133,17 @@ internal open class AutoSizeCharSequenceTransform(private val bufferParam: Param
         }
 
         if (param.nativeType is PointerType<*>)
-            expression = "memAddress${if (bufferParam has nullable) "Safe" else ""}(${bufferParam.name}Encoded) + $expression"
+            expression = "${bufferParam.name}Encoded + $expression"
         else if ((param.nativeType.mapping as PrimitiveMapping).bytes < 4)
             expression = "(${param.nativeType.javaMethodType})($expression)"
 
         return expression
     }
+}
+
+internal object RawPointerTransform : FunctionTransform<Parameter>, SkipCheckFunctionTransform {
+    override fun transformDeclaration(param: Parameter, original: String) = "long ${param.name}"
+    override fun transformCall(param: Parameter, original: String) = param.name
 }
 
 internal class AutoTypeParamTransform(private val autoType: String) : FunctionTransform<Parameter> {
@@ -165,21 +171,25 @@ internal class CharSequenceTransform(
     private val nullTerminated: Boolean
 ) : FunctionTransform<Parameter>, StackFunctionTransform<Parameter> {
     override fun transformDeclaration(param: Parameter, original: String) = "CharSequence ${param.name}"
-    override fun transformCall(param: Parameter, original: String) = if (param.has<Nullable>())
-        "memAddressSafe(${param.name}Encoded)"
-    else
-        "memAddress(${param.name}Encoded)"
-
+    override fun transformCall(param: Parameter, original: String) = "${param.name}Encoded"
     override fun setupStack(func: Func, qtype: Parameter, writer: PrintWriter) {
-        writer.print("$t$t${t}ByteBuffer ${qtype.name}Encoded = stack.")
+        writer.print(
+            if (nullTerminated)
+                "$t$t$t"
+            else
+                "$t$t${t}int ${qtype.name}EncodedLength = "
+        )
+        writer.print("stack.n")
         writer.print((qtype.nativeType as CharSequenceType).charMapping.charset)
         if (qtype.has(nullable)) {
             writer.print("Safe")
         }
-        writer.print("(${qtype.name}")
-        if (!nullTerminated)
-            writer.print(", false")
-        writer.println(");")
+        writer.println("(${qtype.name}, $nullTerminated);")
+        if (qtype.has<Nullable>()) {
+            writer.println("$t$t${t}long ${qtype.name}Encoded = ${qtype.name} == null ? NULL : stack.getPointerAddress();")
+        } else {
+            writer.println("$t$t${t}long ${qtype.name}Encoded = stack.getPointerAddress();")
+        }
     }
 }
 
@@ -257,7 +267,7 @@ internal class VectorValueTransform(
     override fun transformCall(param: Parameter, original: String) = "memAddress(${param.name})" // Replace with stack buffer
     override fun setupStack(func: Func, qtype: Parameter, writer: PrintWriter) {
         writer.print("$t$t$t${paramType.box}Buffer ${qtype.name} = stack.${elementType}s(${newName}0")
-        for (i in 1..(size - 1))
+        for (i in 1 until size)
             writer.print(", $newName$i")
         writer.println(");")
     }

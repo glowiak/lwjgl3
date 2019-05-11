@@ -16,7 +16,7 @@ import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
- * This extension provides new entry points to query device features, device properties, and format properties in a way that can be easily extended by other extensions, without introducing any further entry points. The Vulkan 1.0 feature/limit/formatproperty structures do not include {@code sType}/{@code pNext} members. This extension wraps them in new structures with {@code sType}/{@code pNext} members, so an application can query a chain of feature/limit/formatproperty structures by constructing the chain and letting the implementation fill them in. A new command is added for each ftext:vkGetPhysicalDevice* command in core Vulkan 1.0. The new feature structure (and a chain of extension structures) can also be passed in to device creation to enable features.
+ * This extension provides new entry points to query device features, device properties, and format properties in a way that can be easily extended by other extensions, without introducing any further entry points. The Vulkan 1.0 feature/limit/formatproperty structures do not include {@code sType}/{@code pNext} members. This extension wraps them in new structures with {@code sType}/{@code pNext} members, so an application can query a chain of feature/limit/formatproperty structures by constructing the chain and letting the implementation fill them in. A new command is added for each {@code vkGetPhysicalDevice*} command in core Vulkan 1.0. The new feature structure (and a chain of extension structures) can also be passed in to device creation to enable features.
  * 
  * <p>This extension also allows applications to use the physical-device components of device extensions before {@link VK10#vkCreateDevice CreateDevice} is called.</p>
  * 
@@ -87,7 +87,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Deprecation state</b></dt>
  * <dd><ul>
- * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
+ * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
@@ -168,7 +168,7 @@ public class KHRGetPhysicalDeviceProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, physicalDevice.address(), pFeatures);
+        callPPV(physicalDevice.address(), pFeatures, __functionAddress);
     }
 
     /**
@@ -189,7 +189,7 @@ public class KHRGetPhysicalDeviceProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, physicalDevice.address(), pProperties);
+        callPPV(physicalDevice.address(), pProperties, __functionAddress);
     }
 
     /**
@@ -210,7 +210,7 @@ public class KHRGetPhysicalDeviceProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, physicalDevice.address(), format, pFormatProperties);
+        callPPV(physicalDevice.address(), format, pFormatProperties, __functionAddress);
     }
 
     /**
@@ -232,7 +232,7 @@ public class KHRGetPhysicalDeviceProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, physicalDevice.address(), pImageFormatInfo, pImageFormatProperties);
+        return callPPPI(physicalDevice.address(), pImageFormatInfo, pImageFormatProperties, __functionAddress);
     }
 
     /**
@@ -259,7 +259,7 @@ public class KHRGetPhysicalDeviceProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, physicalDevice.address(), pQueueFamilyPropertyCount, pQueueFamilyProperties);
+        callPPPV(physicalDevice.address(), pQueueFamilyPropertyCount, pQueueFamilyProperties, __functionAddress);
     }
 
     /**
@@ -285,7 +285,7 @@ public class KHRGetPhysicalDeviceProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, physicalDevice.address(), pMemoryProperties);
+        callPPV(physicalDevice.address(), pMemoryProperties, __functionAddress);
     }
 
     /**
@@ -310,7 +310,7 @@ public class KHRGetPhysicalDeviceProperties2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPPV(__functionAddress, physicalDevice.address(), pFormatInfo, pPropertyCount, pProperties);
+        callPPPPV(physicalDevice.address(), pFormatInfo, pPropertyCount, pProperties, __functionAddress);
     }
 
     /**
@@ -337,7 +337,7 @@ public class KHRGetPhysicalDeviceProperties2 {
             check(pQueueFamilyPropertyCount, 1);
             checkSafe(pQueueFamilyProperties, pQueueFamilyPropertyCount[0]);
         }
-        callPPPV(__functionAddress, physicalDevice.address(), pQueueFamilyPropertyCount, memAddressSafe(pQueueFamilyProperties));
+        callPPPV(physicalDevice.address(), pQueueFamilyPropertyCount, memAddressSafe(pQueueFamilyProperties), __functionAddress);
     }
 
     /** Array version of: {@link #vkGetPhysicalDeviceSparseImageFormatProperties2KHR GetPhysicalDeviceSparseImageFormatProperties2KHR} */
@@ -348,7 +348,7 @@ public class KHRGetPhysicalDeviceProperties2 {
             check(pPropertyCount, 1);
             checkSafe(pProperties, pPropertyCount[0]);
         }
-        callPPPPV(__functionAddress, physicalDevice.address(), pFormatInfo.address(), pPropertyCount, memAddressSafe(pProperties));
+        callPPPPV(physicalDevice.address(), pFormatInfo.address(), pPropertyCount, memAddressSafe(pProperties), __functionAddress);
     }
 
 }

@@ -20,7 +20,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>Description</h5>
  * 
- * <p>If the {@link VkPhysicalDeviceProtectedMemoryFeatures} structure is included in the {@code pNext} chain of flink:VkPhysicalDeviceFeatures2, it is filled with a value indicating whether the feature is supported.</p>
+ * <p>If the {@link VkPhysicalDeviceProtectedMemoryFeatures} structure is included in the {@code pNext} chain of {@link VkPhysicalDeviceFeatures2}, it is filled with a value indicating whether the feature is supported.</p>
  * 
  * <h5>Valid Usage (Implicit)</h5>
  * 
@@ -72,18 +72,14 @@ public class VkPhysicalDeviceProtectedMemoryFeatures extends Struct implements N
         PROTECTEDMEMORY = layout.offsetof(2);
     }
 
-    VkPhysicalDeviceProtectedMemoryFeatures(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDeviceProtectedMemoryFeatures} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceProtectedMemoryFeatures} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceProtectedMemoryFeatures(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -133,30 +129,31 @@ public class VkPhysicalDeviceProtectedMemoryFeatures extends Struct implements N
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceProtectedMemoryFeatures} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceProtectedMemoryFeatures} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceProtectedMemoryFeatures malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPhysicalDeviceProtectedMemoryFeatures.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceProtectedMemoryFeatures} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceProtectedMemoryFeatures} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceProtectedMemoryFeatures calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPhysicalDeviceProtectedMemoryFeatures.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceProtectedMemoryFeatures} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPhysicalDeviceProtectedMemoryFeatures} instance allocated with {@link BufferUtils}. */
     public static VkPhysicalDeviceProtectedMemoryFeatures create() {
-        return new VkPhysicalDeviceProtectedMemoryFeatures(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDeviceProtectedMemoryFeatures.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPhysicalDeviceProtectedMemoryFeatures} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceProtectedMemoryFeatures} instance for the specified memory address. */
     public static VkPhysicalDeviceProtectedMemoryFeatures create(long address) {
-        return new VkPhysicalDeviceProtectedMemoryFeatures(address, null);
+        return wrap(VkPhysicalDeviceProtectedMemoryFeatures.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceProtectedMemoryFeatures createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceProtectedMemoryFeatures.class, address);
     }
 
     /**
@@ -165,7 +162,7 @@ public class VkPhysicalDeviceProtectedMemoryFeatures extends Struct implements N
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProtectedMemoryFeatures.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -174,7 +171,7 @@ public class VkPhysicalDeviceProtectedMemoryFeatures extends Struct implements N
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProtectedMemoryFeatures.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -183,7 +180,8 @@ public class VkPhysicalDeviceProtectedMemoryFeatures extends Struct implements N
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProtectedMemoryFeatures.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -193,43 +191,43 @@ public class VkPhysicalDeviceProtectedMemoryFeatures extends Struct implements N
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProtectedMemoryFeatures.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceProtectedMemoryFeatures.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceProtectedMemoryFeatures} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPhysicalDeviceProtectedMemoryFeatures} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPhysicalDeviceProtectedMemoryFeatures mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPhysicalDeviceProtectedMemoryFeatures} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPhysicalDeviceProtectedMemoryFeatures} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPhysicalDeviceProtectedMemoryFeatures callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceProtectedMemoryFeatures} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPhysicalDeviceProtectedMemoryFeatures} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceProtectedMemoryFeatures mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPhysicalDeviceProtectedMemoryFeatures.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceProtectedMemoryFeatures} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPhysicalDeviceProtectedMemoryFeatures} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceProtectedMemoryFeatures callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPhysicalDeviceProtectedMemoryFeatures.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -257,7 +255,7 @@ public class VkPhysicalDeviceProtectedMemoryFeatures extends Struct implements N
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProtectedMemoryFeatures.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -267,32 +265,34 @@ public class VkPhysicalDeviceProtectedMemoryFeatures extends Struct implements N
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProtectedMemoryFeatures.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPhysicalDeviceProtectedMemoryFeatures.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceProtectedMemoryFeatures.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPhysicalDeviceProtectedMemoryFeatures.PNEXT); }
     /** Unsafe version of {@link #protectedMemory}. */
-    public static int nprotectedMemory(long struct) { return memGetInt(struct + VkPhysicalDeviceProtectedMemoryFeatures.PROTECTEDMEMORY); }
+    public static int nprotectedMemory(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceProtectedMemoryFeatures.PROTECTEDMEMORY); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPhysicalDeviceProtectedMemoryFeatures.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceProtectedMemoryFeatures.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPhysicalDeviceProtectedMemoryFeatures.PNEXT, value); }
     /** Unsafe version of {@link #protectedMemory(boolean) protectedMemory}. */
-    public static void nprotectedMemory(long struct, int value) { memPutInt(struct + VkPhysicalDeviceProtectedMemoryFeatures.PROTECTEDMEMORY, value); }
+    public static void nprotectedMemory(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceProtectedMemoryFeatures.PROTECTEDMEMORY, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPhysicalDeviceProtectedMemoryFeatures} structs. */
     public static class Buffer extends StructBuffer<VkPhysicalDeviceProtectedMemoryFeatures, Buffer> implements NativeResource {
 
+        private static final VkPhysicalDeviceProtectedMemoryFeatures ELEMENT_FACTORY = VkPhysicalDeviceProtectedMemoryFeatures.create(-1L);
+
         /**
-         * Creates a new {@link VkPhysicalDeviceProtectedMemoryFeatures.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceProtectedMemoryFeatures.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -318,18 +318,8 @@ public class VkPhysicalDeviceProtectedMemoryFeatures extends Struct implements N
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDeviceProtectedMemoryFeatures newInstance(long address) {
-            return new VkPhysicalDeviceProtectedMemoryFeatures(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPhysicalDeviceProtectedMemoryFeatures getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

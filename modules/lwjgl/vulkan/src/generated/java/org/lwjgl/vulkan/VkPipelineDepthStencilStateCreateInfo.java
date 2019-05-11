@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-depthBounds">depth bounds testing</a> feature is not enabled, {@code depthBoundsTestEnable} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-depthBounds">depth bounds testing</a> feature is not enabled, {@code depthBoundsTestEnable} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -45,14 +45,14 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
  * <li>{@code flags} &ndash; reserved for future use.</li>
- * <li>{@code depthTestEnable} &ndash; controls whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-depth">depth testing</a> is enabled.</li>
- * <li>{@code depthWriteEnable} &ndash; controls whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-depth-write">depth writes</a> are enabled when {@code depthTestEnable} is {@link VK10#VK_TRUE TRUE}. Depth writes are always disabled when {@code depthTestEnable} is {@link VK10#VK_FALSE FALSE}.</li>
- * <li>{@code depthCompareOp} &ndash; the comparison operator used in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-depth">depth test</a>.</li>
- * <li>{@code depthBoundsTestEnable} &ndash; controls whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-dbt">depth bounds testing</a> is enabled.</li>
- * <li>{@code stencilTestEnable} &ndash; controls whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-stencil">stencil testing</a> is enabled.</li>
- * <li>{@code front} &ndash; {@code front} and {@code back} control the parameters of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-stencil">stencil test</a>.</li>
+ * <li>{@code depthTestEnable} &ndash; controls whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-depth">depth testing</a> is enabled.</li>
+ * <li>{@code depthWriteEnable} &ndash; controls whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-depth-write">depth writes</a> are enabled when {@code depthTestEnable} is {@link VK10#VK_TRUE TRUE}. Depth writes are always disabled when {@code depthTestEnable} is {@link VK10#VK_FALSE FALSE}.</li>
+ * <li>{@code depthCompareOp} &ndash; the comparison operator used in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-depth">depth test</a>.</li>
+ * <li>{@code depthBoundsTestEnable} &ndash; controls whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-dbt">depth bounds testing</a> is enabled.</li>
+ * <li>{@code stencilTestEnable} &ndash; controls whether <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-stencil">stencil testing</a> is enabled.</li>
+ * <li>{@code front} &ndash; {@code front} and {@code back} control the parameters of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-stencil">stencil test</a>.</li>
  * <li>{@code back} &ndash; see {@code front}</li>
- * <li>{@code minDepthBounds} &ndash; {@code minDepthBounds} and {@code maxDepthBounds} define the range of values used in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-dbt">depth bounds test</a>.</li>
+ * <li>{@code minDepthBounds} &ndash; {@code minDepthBounds} and {@code maxDepthBounds} define the range of values used in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-dbt">depth bounds test</a>.</li>
  * <li>{@code maxDepthBounds} &ndash; see {@code minDepthBounds}</li>
  * </ul>
  * 
@@ -130,18 +130,14 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
         MAXDEPTHBOUNDS = layout.offsetof(11);
     }
 
-    VkPipelineDepthStencilStateCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPipelineDepthStencilStateCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPipelineDepthStencilStateCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPipelineDepthStencilStateCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -254,30 +250,31 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineDepthStencilStateCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineDepthStencilStateCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPipelineDepthStencilStateCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPipelineDepthStencilStateCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineDepthStencilStateCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineDepthStencilStateCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPipelineDepthStencilStateCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPipelineDepthStencilStateCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineDepthStencilStateCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPipelineDepthStencilStateCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkPipelineDepthStencilStateCreateInfo create() {
-        return new VkPipelineDepthStencilStateCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPipelineDepthStencilStateCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPipelineDepthStencilStateCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkPipelineDepthStencilStateCreateInfo} instance for the specified memory address. */
     public static VkPipelineDepthStencilStateCreateInfo create(long address) {
-        return new VkPipelineDepthStencilStateCreateInfo(address, null);
+        return wrap(VkPipelineDepthStencilStateCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineDepthStencilStateCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPipelineDepthStencilStateCreateInfo.class, address);
     }
 
     /**
@@ -286,7 +283,7 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
      * @param capacity the buffer capacity
      */
     public static VkPipelineDepthStencilStateCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -295,7 +292,7 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
      * @param capacity the buffer capacity
      */
     public static VkPipelineDepthStencilStateCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -304,7 +301,8 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
      * @param capacity the buffer capacity
      */
     public static VkPipelineDepthStencilStateCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -314,43 +312,43 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
      * @param capacity the buffer capacity
      */
     public static VkPipelineDepthStencilStateCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineDepthStencilStateCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineDepthStencilStateCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPipelineDepthStencilStateCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPipelineDepthStencilStateCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPipelineDepthStencilStateCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPipelineDepthStencilStateCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPipelineDepthStencilStateCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPipelineDepthStencilStateCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPipelineDepthStencilStateCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineDepthStencilStateCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPipelineDepthStencilStateCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPipelineDepthStencilStateCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPipelineDepthStencilStateCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineDepthStencilStateCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPipelineDepthStencilStateCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -378,7 +376,7 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
      * @param capacity the buffer capacity
      */
     public static VkPipelineDepthStencilStateCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -388,68 +386,70 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
      * @param capacity the buffer capacity
      */
     public static VkPipelineDepthStencilStateCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPipelineDepthStencilStateCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDepthStencilStateCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPipelineDepthStencilStateCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkPipelineDepthStencilStateCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDepthStencilStateCreateInfo.FLAGS); }
     /** Unsafe version of {@link #depthTestEnable}. */
-    public static int ndepthTestEnable(long struct) { return memGetInt(struct + VkPipelineDepthStencilStateCreateInfo.DEPTHTESTENABLE); }
+    public static int ndepthTestEnable(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDepthStencilStateCreateInfo.DEPTHTESTENABLE); }
     /** Unsafe version of {@link #depthWriteEnable}. */
-    public static int ndepthWriteEnable(long struct) { return memGetInt(struct + VkPipelineDepthStencilStateCreateInfo.DEPTHWRITEENABLE); }
+    public static int ndepthWriteEnable(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDepthStencilStateCreateInfo.DEPTHWRITEENABLE); }
     /** Unsafe version of {@link #depthCompareOp}. */
-    public static int ndepthCompareOp(long struct) { return memGetInt(struct + VkPipelineDepthStencilStateCreateInfo.DEPTHCOMPAREOP); }
+    public static int ndepthCompareOp(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDepthStencilStateCreateInfo.DEPTHCOMPAREOP); }
     /** Unsafe version of {@link #depthBoundsTestEnable}. */
-    public static int ndepthBoundsTestEnable(long struct) { return memGetInt(struct + VkPipelineDepthStencilStateCreateInfo.DEPTHBOUNDSTESTENABLE); }
+    public static int ndepthBoundsTestEnable(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDepthStencilStateCreateInfo.DEPTHBOUNDSTESTENABLE); }
     /** Unsafe version of {@link #stencilTestEnable}. */
-    public static int nstencilTestEnable(long struct) { return memGetInt(struct + VkPipelineDepthStencilStateCreateInfo.STENCILTESTENABLE); }
+    public static int nstencilTestEnable(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDepthStencilStateCreateInfo.STENCILTESTENABLE); }
     /** Unsafe version of {@link #front}. */
     public static VkStencilOpState nfront(long struct) { return VkStencilOpState.create(struct + VkPipelineDepthStencilStateCreateInfo.FRONT); }
     /** Unsafe version of {@link #back}. */
     public static VkStencilOpState nback(long struct) { return VkStencilOpState.create(struct + VkPipelineDepthStencilStateCreateInfo.BACK); }
     /** Unsafe version of {@link #minDepthBounds}. */
-    public static float nminDepthBounds(long struct) { return memGetFloat(struct + VkPipelineDepthStencilStateCreateInfo.MINDEPTHBOUNDS); }
+    public static float nminDepthBounds(long struct) { return UNSAFE.getFloat(null, struct + VkPipelineDepthStencilStateCreateInfo.MINDEPTHBOUNDS); }
     /** Unsafe version of {@link #maxDepthBounds}. */
-    public static float nmaxDepthBounds(long struct) { return memGetFloat(struct + VkPipelineDepthStencilStateCreateInfo.MAXDEPTHBOUNDS); }
+    public static float nmaxDepthBounds(long struct) { return UNSAFE.getFloat(null, struct + VkPipelineDepthStencilStateCreateInfo.MAXDEPTHBOUNDS); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPipelineDepthStencilStateCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDepthStencilStateCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPipelineDepthStencilStateCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkPipelineDepthStencilStateCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDepthStencilStateCreateInfo.FLAGS, value); }
     /** Unsafe version of {@link #depthTestEnable(boolean) depthTestEnable}. */
-    public static void ndepthTestEnable(long struct, int value) { memPutInt(struct + VkPipelineDepthStencilStateCreateInfo.DEPTHTESTENABLE, value); }
+    public static void ndepthTestEnable(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDepthStencilStateCreateInfo.DEPTHTESTENABLE, value); }
     /** Unsafe version of {@link #depthWriteEnable(boolean) depthWriteEnable}. */
-    public static void ndepthWriteEnable(long struct, int value) { memPutInt(struct + VkPipelineDepthStencilStateCreateInfo.DEPTHWRITEENABLE, value); }
+    public static void ndepthWriteEnable(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDepthStencilStateCreateInfo.DEPTHWRITEENABLE, value); }
     /** Unsafe version of {@link #depthCompareOp(int) depthCompareOp}. */
-    public static void ndepthCompareOp(long struct, int value) { memPutInt(struct + VkPipelineDepthStencilStateCreateInfo.DEPTHCOMPAREOP, value); }
+    public static void ndepthCompareOp(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDepthStencilStateCreateInfo.DEPTHCOMPAREOP, value); }
     /** Unsafe version of {@link #depthBoundsTestEnable(boolean) depthBoundsTestEnable}. */
-    public static void ndepthBoundsTestEnable(long struct, int value) { memPutInt(struct + VkPipelineDepthStencilStateCreateInfo.DEPTHBOUNDSTESTENABLE, value); }
+    public static void ndepthBoundsTestEnable(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDepthStencilStateCreateInfo.DEPTHBOUNDSTESTENABLE, value); }
     /** Unsafe version of {@link #stencilTestEnable(boolean) stencilTestEnable}. */
-    public static void nstencilTestEnable(long struct, int value) { memPutInt(struct + VkPipelineDepthStencilStateCreateInfo.STENCILTESTENABLE, value); }
+    public static void nstencilTestEnable(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDepthStencilStateCreateInfo.STENCILTESTENABLE, value); }
     /** Unsafe version of {@link #front(VkStencilOpState) front}. */
     public static void nfront(long struct, VkStencilOpState value) { memCopy(value.address(), struct + VkPipelineDepthStencilStateCreateInfo.FRONT, VkStencilOpState.SIZEOF); }
     /** Unsafe version of {@link #back(VkStencilOpState) back}. */
     public static void nback(long struct, VkStencilOpState value) { memCopy(value.address(), struct + VkPipelineDepthStencilStateCreateInfo.BACK, VkStencilOpState.SIZEOF); }
     /** Unsafe version of {@link #minDepthBounds(float) minDepthBounds}. */
-    public static void nminDepthBounds(long struct, float value) { memPutFloat(struct + VkPipelineDepthStencilStateCreateInfo.MINDEPTHBOUNDS, value); }
+    public static void nminDepthBounds(long struct, float value) { UNSAFE.putFloat(null, struct + VkPipelineDepthStencilStateCreateInfo.MINDEPTHBOUNDS, value); }
     /** Unsafe version of {@link #maxDepthBounds(float) maxDepthBounds}. */
-    public static void nmaxDepthBounds(long struct, float value) { memPutFloat(struct + VkPipelineDepthStencilStateCreateInfo.MAXDEPTHBOUNDS, value); }
+    public static void nmaxDepthBounds(long struct, float value) { UNSAFE.putFloat(null, struct + VkPipelineDepthStencilStateCreateInfo.MAXDEPTHBOUNDS, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPipelineDepthStencilStateCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkPipelineDepthStencilStateCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkPipelineDepthStencilStateCreateInfo ELEMENT_FACTORY = VkPipelineDepthStencilStateCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkPipelineDepthStencilStateCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPipelineDepthStencilStateCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -475,18 +475,8 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPipelineDepthStencilStateCreateInfo newInstance(long address) {
-            return new VkPipelineDepthStencilStateCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPipelineDepthStencilStateCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

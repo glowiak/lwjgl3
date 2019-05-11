@@ -49,71 +49,71 @@ val OES_texture_border_clamp = "OESTextureBorderClamp".nativeClassGLES("OES_text
         "TexParameterIivOES",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        SingleValue("param")..Check(1)..GLint.const.p.IN("params", "")
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        SingleValue("param")..Check(1)..GLint.const.p("params", "")
     )
 
     void(
         "TexParameterIuivOES",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        SingleValue("param")..Check(1)..GLuint.const.p.IN("params", "")
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        SingleValue("param")..Check(1)..GLuint.const.p("params", "")
     )
 
     void(
         "GetTexParameterIivOES",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        ReturnParam..Check(1)..GLint.p.OUT("params", "")
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        ReturnParam..Check(1)..GLint.p("params", "")
     )
 
     void(
         "GetTexParameterIuivOES",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        ReturnParam..Check(1)..GLuint.p.OUT("params", "")
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        ReturnParam..Check(1)..GLuint.p("params", "")
     )
 
     void(
         "SamplerParameterIivOES",
         "",
 
-        GLuint.IN("sampler", ""),
-        GLenum.IN("pname", ""),
-        SingleValue("param")..Check(1)..GLint.const.p.IN("params", "")
+        GLuint("sampler", ""),
+        GLenum("pname", ""),
+        SingleValue("param")..Check(1)..GLint.const.p("params", "")
     )
 
     void(
         "SamplerParameterIuivOES",
         "",
 
-        GLuint.IN("sampler", ""),
-        GLenum.IN("pname", ""),
-        SingleValue("param")..Check(1)..GLuint.const.p.IN("params", "")
+        GLuint("sampler", ""),
+        GLenum("pname", ""),
+        SingleValue("param")..Check(1)..GLuint.const.p("params", "")
     )
 
     void(
         "GetSamplerParameterIivOES",
         "",
 
-        GLuint.IN("sampler", ""),
-        GLenum.IN("pname", ""),
-        ReturnParam..Check(1)..GLint.p.OUT("params", "")
+        GLuint("sampler", ""),
+        GLenum("pname", ""),
+        ReturnParam..Check(1)..GLint.p("params", "")
     )
 
     void(
         "GetSamplerParameterIuivOES",
         "",
 
-        GLuint.IN("sampler", ""),
-        GLenum.IN("pname", ""),
-        ReturnParam..Check(1)..GLuint.p.OUT("params", "")
+        GLuint("sampler", ""),
+        GLenum("pname", ""),
+        ReturnParam..Check(1)..GLuint.p("params", "")
     )
 }

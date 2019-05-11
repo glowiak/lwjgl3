@@ -36,7 +36,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
  * <li>{@code flags} &ndash; a bitmask of {@code VkCommandPoolCreateFlagBits} indicating usage behavior for the pool and command buffers allocated from it.</li>
- * <li>{@code queueFamilyIndex} &ndash; designates a queue family as described in section <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-queueprops">Queue Family Properties</a>. All command buffers allocated from this command pool <b>must</b> be submitted on queues from the same queue family.</li>
+ * <li>{@code queueFamilyIndex} &ndash; designates a queue family as described in section <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-queueprops">Queue Family Properties</a>. All command buffers allocated from this command pool <b>must</b> be submitted on queues from the same queue family.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -81,18 +81,14 @@ public class VkCommandPoolCreateInfo extends Struct implements NativeResource {
         QUEUEFAMILYINDEX = layout.offsetof(3);
     }
 
-    VkCommandPoolCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkCommandPoolCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkCommandPoolCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkCommandPoolCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -149,30 +145,31 @@ public class VkCommandPoolCreateInfo extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCommandPoolCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCommandPoolCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkCommandPoolCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkCommandPoolCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkCommandPoolCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCommandPoolCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkCommandPoolCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkCommandPoolCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkCommandPoolCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkCommandPoolCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkCommandPoolCreateInfo create() {
-        return new VkCommandPoolCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkCommandPoolCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkCommandPoolCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkCommandPoolCreateInfo} instance for the specified memory address. */
     public static VkCommandPoolCreateInfo create(long address) {
-        return new VkCommandPoolCreateInfo(address, null);
+        return wrap(VkCommandPoolCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCommandPoolCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkCommandPoolCreateInfo.class, address);
     }
 
     /**
@@ -181,7 +178,7 @@ public class VkCommandPoolCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCommandPoolCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -190,7 +187,7 @@ public class VkCommandPoolCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCommandPoolCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -199,7 +196,8 @@ public class VkCommandPoolCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCommandPoolCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -209,43 +207,43 @@ public class VkCommandPoolCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCommandPoolCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCommandPoolCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCommandPoolCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkCommandPoolCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkCommandPoolCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkCommandPoolCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkCommandPoolCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkCommandPoolCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkCommandPoolCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkCommandPoolCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCommandPoolCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkCommandPoolCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkCommandPoolCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkCommandPoolCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCommandPoolCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkCommandPoolCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -273,7 +271,7 @@ public class VkCommandPoolCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCommandPoolCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -283,36 +281,38 @@ public class VkCommandPoolCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCommandPoolCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkCommandPoolCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkCommandPoolCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkCommandPoolCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkCommandPoolCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkCommandPoolCreateInfo.FLAGS); }
     /** Unsafe version of {@link #queueFamilyIndex}. */
-    public static int nqueueFamilyIndex(long struct) { return memGetInt(struct + VkCommandPoolCreateInfo.QUEUEFAMILYINDEX); }
+    public static int nqueueFamilyIndex(long struct) { return UNSAFE.getInt(null, struct + VkCommandPoolCreateInfo.QUEUEFAMILYINDEX); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkCommandPoolCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkCommandPoolCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkCommandPoolCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkCommandPoolCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkCommandPoolCreateInfo.FLAGS, value); }
     /** Unsafe version of {@link #queueFamilyIndex(int) queueFamilyIndex}. */
-    public static void nqueueFamilyIndex(long struct, int value) { memPutInt(struct + VkCommandPoolCreateInfo.QUEUEFAMILYINDEX, value); }
+    public static void nqueueFamilyIndex(long struct, int value) { UNSAFE.putInt(null, struct + VkCommandPoolCreateInfo.QUEUEFAMILYINDEX, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkCommandPoolCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkCommandPoolCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkCommandPoolCreateInfo ELEMENT_FACTORY = VkCommandPoolCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkCommandPoolCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkCommandPoolCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -338,18 +338,8 @@ public class VkCommandPoolCreateInfo extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkCommandPoolCreateInfo newInstance(long address) {
-            return new VkCommandPoolCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkCommandPoolCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

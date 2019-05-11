@@ -71,18 +71,14 @@ public class STBTTBitmap extends Struct implements NativeResource {
         PIXELS = layout.offsetof(3);
     }
 
-    STBTTBitmap(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link STBTTBitmap} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code STBTTBitmap} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public STBTTBitmap(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -140,30 +136,31 @@ public class STBTTBitmap extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link STBTTBitmap} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code STBTTBitmap} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static STBTTBitmap malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(STBTTBitmap.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link STBTTBitmap} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code STBTTBitmap} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static STBTTBitmap calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(STBTTBitmap.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link STBTTBitmap} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code STBTTBitmap} instance allocated with {@link BufferUtils}. */
     public static STBTTBitmap create() {
-        return new STBTTBitmap(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(STBTTBitmap.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link STBTTBitmap} instance for the specified memory address. */
+    /** Returns a new {@code STBTTBitmap} instance for the specified memory address. */
     public static STBTTBitmap create(long address) {
-        return new STBTTBitmap(address, null);
+        return wrap(STBTTBitmap.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static STBTTBitmap createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(STBTTBitmap.class, address);
     }
 
     /**
@@ -172,7 +169,7 @@ public class STBTTBitmap extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBTTBitmap.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -181,7 +178,7 @@ public class STBTTBitmap extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBTTBitmap.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -190,7 +187,8 @@ public class STBTTBitmap extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBTTBitmap.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -200,43 +198,43 @@ public class STBTTBitmap extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBTTBitmap.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static STBTTBitmap.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link STBTTBitmap} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code STBTTBitmap} instance allocated on the thread-local {@link MemoryStack}. */
     public static STBTTBitmap mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link STBTTBitmap} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code STBTTBitmap} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static STBTTBitmap callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link STBTTBitmap} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code STBTTBitmap} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static STBTTBitmap mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(STBTTBitmap.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link STBTTBitmap} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code STBTTBitmap} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static STBTTBitmap callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(STBTTBitmap.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -264,7 +262,7 @@ public class STBTTBitmap extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBTTBitmap.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -274,26 +272,26 @@ public class STBTTBitmap extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static STBTTBitmap.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #w}. */
-    public static int nw(long struct) { return memGetInt(struct + STBTTBitmap.W); }
+    public static int nw(long struct) { return UNSAFE.getInt(null, struct + STBTTBitmap.W); }
     /** Unsafe version of {@link #h}. */
-    public static int nh(long struct) { return memGetInt(struct + STBTTBitmap.H); }
+    public static int nh(long struct) { return UNSAFE.getInt(null, struct + STBTTBitmap.H); }
     /** Unsafe version of {@link #stride}. */
-    public static int nstride(long struct) { return memGetInt(struct + STBTTBitmap.STRIDE); }
+    public static int nstride(long struct) { return UNSAFE.getInt(null, struct + STBTTBitmap.STRIDE); }
     /** Unsafe version of {@link #pixels(int) pixels}. */
     public static ByteBuffer npixels(long struct, int capacity) { return memByteBuffer(memGetAddress(struct + STBTTBitmap.PIXELS), capacity); }
 
     /** Unsafe version of {@link #w(int) w}. */
-    public static void nw(long struct, int value) { memPutInt(struct + STBTTBitmap.W, value); }
+    public static void nw(long struct, int value) { UNSAFE.putInt(null, struct + STBTTBitmap.W, value); }
     /** Unsafe version of {@link #h(int) h}. */
-    public static void nh(long struct, int value) { memPutInt(struct + STBTTBitmap.H, value); }
+    public static void nh(long struct, int value) { UNSAFE.putInt(null, struct + STBTTBitmap.H, value); }
     /** Unsafe version of {@link #stride(int) stride}. */
-    public static void nstride(long struct, int value) { memPutInt(struct + STBTTBitmap.STRIDE, value); }
+    public static void nstride(long struct, int value) { UNSAFE.putInt(null, struct + STBTTBitmap.STRIDE, value); }
     /** Unsafe version of {@link #pixels(ByteBuffer) pixels}. */
     public static void npixels(long struct, ByteBuffer value) { memPutAddress(struct + STBTTBitmap.PIXELS, memAddress(value)); }
 
@@ -314,7 +312,7 @@ public class STBTTBitmap extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -323,8 +321,10 @@ public class STBTTBitmap extends Struct implements NativeResource {
     /** An array of {@link STBTTBitmap} structs. */
     public static class Buffer extends StructBuffer<STBTTBitmap, Buffer> implements NativeResource {
 
+        private static final STBTTBitmap ELEMENT_FACTORY = STBTTBitmap.create(-1L);
+
         /**
-         * Creates a new {@link STBTTBitmap.Buffer} instance backed by the specified container.
+         * Creates a new {@code STBTTBitmap.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -350,18 +350,8 @@ public class STBTTBitmap extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected STBTTBitmap newInstance(long address) {
-            return new STBTTBitmap(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected STBTTBitmap getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code w} field. */

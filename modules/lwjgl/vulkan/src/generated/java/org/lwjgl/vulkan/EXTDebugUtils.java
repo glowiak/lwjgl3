@@ -305,7 +305,7 @@ public class EXTDebugUtils {
      * <li>{@link #VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT} specifies the most verbose output indicating all diagnostic messages from the Vulkan loader, layers, and drivers should be captured.</li>
      * <li>{@link #VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT} specifies an informational message such as resource details that may be handy when debugging an application.</li>
      * <li>{@link #VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT} specifies use of Vulkan that <b>may</b> expose an app bug. Such cases may not be immediately harmful, such as a fragment shader outputting to a location with no attachment. Other cases <b>may</b> point to behavior that is almost certainly bad when unintended such as using an image whose memory has not been filled. In general if you see a warning but you know that the behavior is intended/desired, then simply ignore the warning.</li>
-     * <li>{@link #VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT} specifies that an error that may cause undefined results, including an application crash.</li>
+     * <li>{@link #VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT} specifies that the application has violated a valid usage condition of the specification.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
@@ -371,7 +371,7 @@ public class EXTDebugUtils {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, device.address(), pNameInfo);
+        return callPPI(device.address(), pNameInfo, __functionAddress);
     }
 
     /**
@@ -383,6 +383,13 @@ public class EXTDebugUtils {
      * VkResult vkSetDebugUtilsObjectNameEXT(
      *     VkDevice                                    device,
      *     const VkDebugUtilsObjectNameInfoEXT*        pNameInfo);</code></pre>
+     * 
+     * <h5>Valid Usage</h5>
+     * 
+     * <ul>
+     * <li>{@code pNameInfo}-&gt;{@code objectType} <b>must</b> not be {@link VK10#VK_OBJECT_TYPE_UNKNOWN OBJECT_TYPE_UNKNOWN}</li>
+     * <li>{@code pNameInfo}-&gt;{@code objectHandle} <b>must</b> not be {@link VK10#VK_NULL_HANDLE NULL_HANDLE}</li>
+     * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -432,7 +439,7 @@ public class EXTDebugUtils {
             check(__functionAddress);
             VkDebugUtilsObjectTagInfoEXT.validate(pTagInfo);
         }
-        return callPPI(__functionAddress, device.address(), pTagInfo);
+        return callPPI(device.address(), pTagInfo, __functionAddress);
     }
 
     /**
@@ -493,7 +500,7 @@ public class EXTDebugUtils {
             check(__functionAddress);
             VkDebugUtilsLabelEXT.validate(pLabelInfo);
         }
-        callPPV(__functionAddress, queue.address(), pLabelInfo);
+        callPPV(queue.address(), pLabelInfo, __functionAddress);
     }
 
     /**
@@ -518,7 +525,7 @@ public class EXTDebugUtils {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>-</td><td>-</td><td>Any</td><td>-</td></tr></tbody>
      * </table>
      * 
@@ -553,7 +560,7 @@ public class EXTDebugUtils {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>There <b>must</b> be an outstanding {@link #vkQueueBeginDebugUtilsLabelEXT QueueBeginDebugUtilsLabelEXT} command prior to the {@link #vkQueueEndDebugUtilsLabelEXT QueueEndDebugUtilsLabelEXT} on the queue</li>
+     * <li>There <b>must</b> be an outstanding {@code vkQueueBeginDebugUtilsLabelEXT} command prior to the {@code vkQueueEndDebugUtilsLabelEXT} on the queue</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -565,7 +572,7 @@ public class EXTDebugUtils {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>-</td><td>-</td><td>Any</td><td>-</td></tr></tbody>
      * </table>
      *
@@ -576,7 +583,7 @@ public class EXTDebugUtils {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, queue.address());
+        callPV(queue.address(), __functionAddress);
     }
 
     // --- [ vkQueueInsertDebugUtilsLabelEXT ] ---
@@ -588,7 +595,7 @@ public class EXTDebugUtils {
             check(__functionAddress);
             VkDebugUtilsLabelEXT.validate(pLabelInfo);
         }
-        callPPV(__functionAddress, queue.address(), pLabelInfo);
+        callPPV(queue.address(), pLabelInfo, __functionAddress);
     }
 
     /**
@@ -613,7 +620,7 @@ public class EXTDebugUtils {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>-</td><td>-</td><td>Any</td><td>-</td></tr></tbody>
      * </table>
      * 
@@ -637,7 +644,7 @@ public class EXTDebugUtils {
             check(__functionAddress);
             VkDebugUtilsLabelEXT.validate(pLabelInfo);
         }
-        callPPV(__functionAddress, commandBuffer.address(), pLabelInfo);
+        callPPV(commandBuffer.address(), pLabelInfo, __functionAddress);
     }
 
     /**
@@ -657,7 +664,7 @@ public class EXTDebugUtils {
      * <ul>
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
      * <li>{@code pLabelInfo} <b>must</b> be a valid pointer to a valid {@link VkDebugUtilsLabelEXT} structure</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
      * </ul>
      * 
@@ -670,7 +677,7 @@ public class EXTDebugUtils {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute</td><td></td></tr></tbody>
      * </table>
      * 
@@ -705,15 +712,15 @@ public class EXTDebugUtils {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>There <b>must</b> be an outstanding {@link #vkCmdBeginDebugUtilsLabelEXT CmdBeginDebugUtilsLabelEXT} command prior to the {@link #vkCmdEndDebugUtilsLabelEXT CmdEndDebugUtilsLabelEXT} on the queue that {@code commandBuffer} is submitted to</li>
-     * <li>If {@code commandBuffer} is a secondary command buffer, there <b>must</b> be an outstanding {@link #vkCmdBeginDebugUtilsLabelEXT CmdBeginDebugUtilsLabelEXT} command recorded to {@code commandBuffer} that has not previously been ended by a call to {@link #vkCmdEndDebugUtilsLabelEXT CmdEndDebugUtilsLabelEXT}.</li>
+     * <li>There <b>must</b> be an outstanding {@code vkCmdBeginDebugUtilsLabelEXT} command prior to the {@code vkCmdEndDebugUtilsLabelEXT} on the queue that {@code commandBuffer} is submitted to</li>
+     * <li>If {@code commandBuffer} is a secondary command buffer, there <b>must</b> be an outstanding {@code vkCmdBeginDebugUtilsLabelEXT} command recorded to {@code commandBuffer} that has not previously been ended by a call to {@code vkCmdEndDebugUtilsLabelEXT}.</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
      * <ul>
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
      * </ul>
      * 
@@ -726,7 +733,7 @@ public class EXTDebugUtils {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute</td><td></td></tr></tbody>
      * </table>
      *
@@ -737,7 +744,7 @@ public class EXTDebugUtils {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, commandBuffer.address());
+        callPV(commandBuffer.address(), __functionAddress);
     }
 
     // --- [ vkCmdInsertDebugUtilsLabelEXT ] ---
@@ -749,7 +756,7 @@ public class EXTDebugUtils {
             check(__functionAddress);
             VkDebugUtilsLabelEXT.validate(pLabelInfo);
         }
-        callPPV(__functionAddress, commandBuffer.address(), pLabelInfo);
+        callPPV(commandBuffer.address(), pLabelInfo, __functionAddress);
     }
 
     /**
@@ -769,7 +776,7 @@ public class EXTDebugUtils {
      * <ul>
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
      * <li>{@code pLabelInfo} <b>must</b> be a valid pointer to a valid {@link VkDebugUtilsLabelEXT} structure</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
      * </ul>
      * 
@@ -782,7 +789,7 @@ public class EXTDebugUtils {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute</td><td></td></tr></tbody>
      * </table>
      * 
@@ -806,7 +813,7 @@ public class EXTDebugUtils {
             VkDebugUtilsMessengerCreateInfoEXT.validate(pCreateInfo);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, instance.address(), pCreateInfo, pAllocator, pMessenger);
+        return callPPPPI(instance.address(), pCreateInfo, pAllocator, pMessenger, __functionAddress);
     }
 
     /**
@@ -845,13 +852,15 @@ public class EXTDebugUtils {
      * </ul></dd>
      * </dl>
      * 
+     * <p>The application <b>must</b> ensure that {@link #vkCreateDebugUtilsMessengerEXT CreateDebugUtilsMessengerEXT} is not executed in parallel with any Vulkan command that is also called with {@code instance} or child of {@code instance} as the dispatchable argument.</p>
+     * 
      * <h5>See Also</h5>
      * 
      * <p>{@link VkAllocationCallbacks}, {@link VkDebugUtilsMessengerCreateInfoEXT}</p>
      *
      * @param instance    the instance the messenger will be used with.
      * @param pCreateInfo points to a {@link VkDebugUtilsMessengerCreateInfoEXT} structure which contains the callback pointer as well as defines the conditions under which this messenger will trigger the callback.
-     * @param pAllocator  controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator  controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pMessenger  a pointer to record the {@code VkDebugUtilsMessengerEXT} object created.
      */
     @NativeType("VkResult")
@@ -871,7 +880,7 @@ public class EXTDebugUtils {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, instance.address(), messenger, pAllocator);
+        callPJPV(instance.address(), messenger, pAllocator, __functionAddress);
     }
 
     /**
@@ -909,13 +918,15 @@ public class EXTDebugUtils {
      * <li>Host access to {@code messenger} <b>must</b> be externally synchronized</li>
      * </ul>
      * 
+     * <p>The application <b>must</b> ensure that {@link #vkDestroyDebugUtilsMessengerEXT DestroyDebugUtilsMessengerEXT} is not executed in parallel with any Vulkan command that is also called with {@code instance} or child of {@code instance} as the dispatchable argument.</p>
+     * 
      * <h5>See Also</h5>
      * 
      * <p>{@link VkAllocationCallbacks}</p>
      *
      * @param instance   the instance where the callback was created.
-     * @param messenger  the {@code VkDebugUtilsMessengerEXT} object to destroy. {@code messenger} is an externally synchronized object and <b>must</b> not be used on more than one thread at a time. This means that {@link #vkDestroyDebugUtilsMessengerEXT DestroyDebugUtilsMessengerEXT} <b>must</b> not be called when a callback is active.
-     * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param messenger  the {@code VkDebugUtilsMessengerEXT} object to destroy. {@code messenger} is an externally synchronized object and <b>must</b> not be used on more than one thread at a time. This means that {@code vkDestroyDebugUtilsMessengerEXT} <b>must</b> not be called when a callback is active.
+     * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
     public static void vkDestroyDebugUtilsMessengerEXT(VkInstance instance, @NativeType("VkDebugUtilsMessengerEXT") long messenger, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroyDebugUtilsMessengerEXT(instance, messenger, memAddressSafe(pAllocator));
@@ -930,7 +941,7 @@ public class EXTDebugUtils {
             check(__functionAddress);
             VkDebugUtilsMessengerCallbackDataEXT.validate(pCallbackData);
         }
-        callPPV(__functionAddress, instance.address(), messageSeverity, messageTypes, pCallbackData);
+        callPPV(instance.address(), messageSeverity, messageTypes, pCallbackData, __functionAddress);
     }
 
     /**
@@ -950,6 +961,12 @@ public class EXTDebugUtils {
      * <h5>Description</h5>
      * 
      * <p>The call will propagate through the layers and generate callback(s) as indicated by the message's flags. The parameters are passed on to the callback in addition to the {@code pUserData} value that was defined at the time the messenger was registered.</p>
+     * 
+     * <h5>Valid Usage</h5>
+     * 
+     * <ul>
+     * <li>{@code objectType} member of each element of {@code pCallbackData}-&gt;{@code pObjects} <b>must</b> not be {@link VK10#VK_OBJECT_TYPE_UNKNOWN OBJECT_TYPE_UNKNOWN}</li>
+     * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -984,7 +1001,7 @@ public class EXTDebugUtils {
             VkDebugUtilsMessengerCreateInfoEXT.validate(pCreateInfo.address());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, instance.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pMessenger);
+        return callPPPPI(instance.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pMessenger, __functionAddress);
     }
 
 }

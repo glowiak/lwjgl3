@@ -12,13 +12,21 @@ class CallbackFunction internal constructor(
     nativeType: String,
     val returns: NativeType,
     vararg val signature: Parameter
-) : GeneratorTarget(module, className) {
+) : GeneratorTargetNative(module, className) {
+
+    init {
+        if (!skipNative && signature.singleOrNull { it.has<UserData>() } == null) {
+            throw IllegalArgumentException("Callbacks with struct-by-value results or parameters must specify the user data parameter. [$className, module: ${module.java}]")
+        }
+    }
+
+    private val javaSignature = signature.asSequence().filter { !it.has<UserData>() }
 
     internal var functionDoc: (CallbackFunction) -> String = { "" }
     var additionalCode = ""
 
     internal fun nativeType(name: String, separator: String = ", ", prefix: String = "", postfix: String = "") =
-        "${returns.name} (*$name) (${signature.asSequence()
+        "${returns.name} (*$name) (${if (signature.isEmpty()) "void" else signature.asSequence()
             .joinToString(separator, prefix = prefix, postfix = postfix) { param ->
                 param.toNativeType(null).let {
                     if (it.endsWith('*')) {
@@ -31,36 +39,38 @@ class CallbackFunction internal constructor(
         })"
 
     internal val nativeType = if (nativeType === ANONYMOUS)
-        "${returns.name} (*) (${
-        signature.asSequence().joinToString(", ") { it.toNativeType(null) }
+        "${returns.name} (*) (${if (signature.isEmpty()) "void" else signature.asSequence()
+            .joinToString(", ") { it.toNativeType(null) }
         })"
     else
         nativeType
 
     private val NativeType.dyncall
         get() = when (this) {
-            is PointerType<*>   -> 'p'
-            is PrimitiveType -> when (mapping) {
+            is PointerType<*> -> 'p'
+            is PrimitiveType  -> when (mapping) {
                 PrimitiveMapping.BOOLEAN -> 'B'
                 PrimitiveMapping.BYTE    -> 'c'
                 PrimitiveMapping.SHORT   -> 's'
                 PrimitiveMapping.BOOLEAN4,
                 PrimitiveMapping.INT     -> 'i'
                 PrimitiveMapping.LONG    -> 'l'
+                PrimitiveMapping.CLONG   -> 'j'
                 PrimitiveMapping.POINTER -> 'p'
                 PrimitiveMapping.FLOAT   -> 'f'
                 PrimitiveMapping.DOUBLE  -> 'd'
                 else                     -> throw IllegalArgumentException("Unsupported callback native type: $this")
             }
-            else             -> if (mapping === TypeMapping.VOID) 'v' else throw IllegalArgumentException("Unsupported callback native type: $this")
+            is StructType     -> 'p'
+            else              -> if (mapping === TypeMapping.VOID) 'v' else throw IllegalArgumentException("Unsupported callback native type: $this")
         }
 
     private val NativeType.argType
-        get() = when {
-            this.isPointer                       -> "Pointer"
-            mapping === PrimitiveMapping.BOOLEAN -> "Bool"
-            mapping === PrimitiveMapping.LONG    -> "LongLong"
-            else                                 -> (mapping as PrimitiveMapping).javaMethodName.upperCaseFirst
+        get() = if (isPointer) "Pointer" else when (mapping) {
+            PrimitiveMapping.BOOLEAN -> "Bool"
+            PrimitiveMapping.LONG    -> "LongLong"
+            PrimitiveMapping.CLONG   -> "Long"
+            else                     -> (mapping as PrimitiveMapping).javaMethodName.upperCaseFirst
         }
 
     private fun PrintWriter.generateDocumentation(isClass: Boolean) {
@@ -106,8 +116,14 @@ import static org.lwjgl.system.MemoryUtil.*;
         preamble.printJava(this)
 
         generateDocumentation(true)
-        print("""${access.modifier}abstract class $className extends Callback implements ${className}I {
+        println("""${access.modifier}abstract class $className extends Callback implements ${className}I {""")
+        if (!skipNative) {
+            println("""
+    public static final long DELEGATE = getDelegate();
 
+    private static native long getDelegate();""")
+        }
+        print("""
     /**
      * Creates a {@code $className} instance from the specified function pointer.
      *
@@ -137,7 +153,7 @@ import static org.lwjgl.system.MemoryUtil.*;
         super(SIGNATURE);
     }
 
-    private $className(long functionPointer) {
+    $className(long functionPointer) {
         super(functionPointer);
     }
 """)
@@ -158,10 +174,14 @@ import static org.lwjgl.system.MemoryUtil.*;
         }
 
         @Override
-        public ${returns.nativeMethodType} invoke(${signature.asSequence().joinToString(", ") {
-            "${if (it.nativeType.mapping == PrimitiveMapping.BOOLEAN4) "boolean" else it.nativeType.nativeMethodType} ${it.name}"
-        }}) {
-            ${if (returns.mapping != TypeMapping.VOID) "return " else ""}delegate.invoke(${signature.asSequence().map { it.name }.joinToString(", ")});
+        public ${returns.nativeMethodType} invoke(${javaSignature.joinToString(", ") {
+                "${if (it.nativeType.mapping == PrimitiveMapping.BOOLEAN4) "boolean"
+                else if (it.nativeType is StructType)
+                    it.nativeType.definition.className
+                else
+                    it.nativeType.nativeMethodType} ${it.name}"
+            }}) {
+            ${if (returns.mapping != TypeMapping.VOID) "return " else ""}delegate.invoke(${javaSignature.map { it.name }.joinToString(", ")});
         }
 
     }
@@ -173,17 +193,17 @@ import static org.lwjgl.system.MemoryUtil.*;
         print(HEADER)
         println("package $packageName;\n")
 
-        print("""import org.lwjgl.system.*;
+        println("import org.lwjgl.system.*;\n")
+        if (signature.isNotEmpty()) {
+            println("import static org.lwjgl.system.dyncall.DynCallback.*;\n")
+        }
 
-import static org.lwjgl.system.dyncall.DynCallback.*;
-
-""")
         generateDocumentation(false)
         print("""@FunctionalInterface
 @NativeType("$nativeType")
 ${access.modifier}interface ${className}I extends CallbackI.${returns.jniSignature} {
 
-    String SIGNATURE = ${"\"(${signature.asSequence().map { it.nativeType.dyncall }.joinToString("")})${returns.dyncall}\"".let {
+    String SIGNATURE = ${"\"(${javaSignature.map { it.nativeType.dyncall }.joinToString("")})${returns.dyncall}\"".let {
             if (module.callingConvention === CallingConvention.STDCALL) "Callback.__stdcall($it)" else it
         }};
 
@@ -195,11 +215,10 @@ ${access.modifier}interface ${className}I extends CallbackI.${returns.jniSignatu
         """)
         if (returns.mapping != TypeMapping.VOID)
             print("return ")
-        print("""invoke(
-${signature.asSequence().map {
-            "$t$t${t}dcbArg${it.nativeType.argType}(args)${if (it.nativeType.mapping === PrimitiveMapping.BOOLEAN4) " != 0" else ""}"
-        }.joinToString(",\n")}
-        );
+        print("""invoke(${if (javaSignature.none()) "" else javaSignature.joinToString(",\n", prefix = "\n", postfix = "\n$t$t") {
+            val arg = "dcbArg${it.nativeType.argType}(args)${if (it.nativeType.mapping === PrimitiveMapping.BOOLEAN4) " != 0" else ""}"
+            "$t$t$t${if (it.nativeType is StructType) "${it.nativeType.definition.className}.create($arg)" else arg}"
+        }});
     }
 """)
         val doc = functionDoc(this@CallbackFunction)
@@ -208,11 +227,40 @@ ${signature.asSequence().map {
             print(doc)
         }
         print("""
-    ${returns.annotate(returns.nativeMethodType)} invoke(${signature.asSequence().joinToString(", ") {
-            "${it.nativeType.annotate(if (it.nativeType.mapping == PrimitiveMapping.BOOLEAN4) "boolean" else it.nativeType.nativeMethodType)} ${it.name}"
+    ${returns.annotate(returns.nativeMethodType)} invoke(${javaSignature.joinToString(", ") {
+            "${it.nativeType.annotate(if (it.nativeType.mapping == PrimitiveMapping.BOOLEAN4) "boolean" else if (it.nativeType is StructType) it.nativeType.definition.className else it.nativeType.nativeMethodType)} ${it.name}"
         }});
 
 }""")
+    }
+
+    override val skipNative: Boolean
+        get() = returns !is StructType && signature.none { it.nativeType is StructType }
+
+    override fun PrintWriter.generateNative() {
+        print(HEADER)
+        preamble.printNative(this)
+
+        println(
+            """
+static ${returns.jniFunctionType} delegate(${signature.asSequence().joinToString(", ") {
+    "${it.nativeType.name} ${it.name}"
+}}) {
+    ${if (returns.mapping === TypeMapping.VOID) "" else "return "}((${returns.name} (*)(${javaSignature.joinToString(", ") {
+        "${it.toNativeType(null)}${if (it.nativeType is StructType) " *" else ""}"
+    }}))(uintptr_t)${signature.single { it.has<UserData>() }.name})(${javaSignature.joinToString(", ") {
+        "${if (it.nativeType is StructType) "&" else ""}${it.name}"
+    }});
+}
+
+EXTERN_C_ENTER
+
+JNIEXPORT jlong JNICALL Java_${nativeFileNameJNI}_getDelegate(JNIEnv *$JNIENV, jclass clazz) {
+    UNUSED_PARAMS($JNIENV, clazz)
+    return (intptr_t)delegate;
+}
+
+EXTERN_C_EXIT""")
     }
 
 }

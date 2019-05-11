@@ -27,17 +27,12 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <p>A callback may be called from multiple threads simultaneously (if the application is making Vulkan calls from multiple threads).</p>
  * 
- * <h5>Valid Usage</h5>
- * 
- * <ul>
- * <li>{@code pfnCallback} <b>must</b> be a valid {@link VkDebugReportCallbackEXT}</li>
- * </ul>
- * 
  * <h5>Valid Usage (Implicit)</h5>
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link EXTDebugReport#VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT}</li>
  * <li>{@code flags} <b>must</b> be a valid combination of {@code VkDebugReportFlagBitsEXT} values</li>
+ * <li>{@code pfnCallback} <b>must</b> be a valid {@link VkDebugReportCallbackEXT} value</li>
  * </ul>
  * 
  * <h5>See Also</h5>
@@ -100,18 +95,14 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
         PUSERDATA = layout.offsetof(4);
     }
 
-    VkDebugReportCallbackCreateInfoEXT(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkDebugReportCallbackCreateInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkDebugReportCallbackCreateInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkDebugReportCallbackCreateInfoEXT(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -175,30 +166,31 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDebugReportCallbackCreateInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDebugReportCallbackCreateInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkDebugReportCallbackCreateInfoEXT malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkDebugReportCallbackCreateInfoEXT.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkDebugReportCallbackCreateInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDebugReportCallbackCreateInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkDebugReportCallbackCreateInfoEXT calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkDebugReportCallbackCreateInfoEXT.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkDebugReportCallbackCreateInfoEXT} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkDebugReportCallbackCreateInfoEXT} instance allocated with {@link BufferUtils}. */
     public static VkDebugReportCallbackCreateInfoEXT create() {
-        return new VkDebugReportCallbackCreateInfoEXT(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkDebugReportCallbackCreateInfoEXT.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkDebugReportCallbackCreateInfoEXT} instance for the specified memory address. */
+    /** Returns a new {@code VkDebugReportCallbackCreateInfoEXT} instance for the specified memory address. */
     public static VkDebugReportCallbackCreateInfoEXT create(long address) {
-        return new VkDebugReportCallbackCreateInfoEXT(address, null);
+        return wrap(VkDebugReportCallbackCreateInfoEXT.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDebugReportCallbackCreateInfoEXT createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkDebugReportCallbackCreateInfoEXT.class, address);
     }
 
     /**
@@ -207,7 +199,7 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkDebugReportCallbackCreateInfoEXT.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -216,7 +208,7 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkDebugReportCallbackCreateInfoEXT.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -225,7 +217,8 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkDebugReportCallbackCreateInfoEXT.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -235,43 +228,43 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkDebugReportCallbackCreateInfoEXT.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDebugReportCallbackCreateInfoEXT.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDebugReportCallbackCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkDebugReportCallbackCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkDebugReportCallbackCreateInfoEXT mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkDebugReportCallbackCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkDebugReportCallbackCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkDebugReportCallbackCreateInfoEXT callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkDebugReportCallbackCreateInfoEXT} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkDebugReportCallbackCreateInfoEXT} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDebugReportCallbackCreateInfoEXT mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkDebugReportCallbackCreateInfoEXT.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkDebugReportCallbackCreateInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkDebugReportCallbackCreateInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDebugReportCallbackCreateInfoEXT callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkDebugReportCallbackCreateInfoEXT.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -299,7 +292,7 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkDebugReportCallbackCreateInfoEXT.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -309,28 +302,28 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
      * @param capacity the buffer capacity
      */
     public static VkDebugReportCallbackCreateInfoEXT.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkDebugReportCallbackCreateInfoEXT.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkDebugReportCallbackCreateInfoEXT.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkDebugReportCallbackCreateInfoEXT.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkDebugReportCallbackCreateInfoEXT.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkDebugReportCallbackCreateInfoEXT.FLAGS); }
     /** Unsafe version of {@link #pfnCallback}. */
     public static VkDebugReportCallbackEXT npfnCallback(long struct) { return VkDebugReportCallbackEXT.create(memGetAddress(struct + VkDebugReportCallbackCreateInfoEXT.PFNCALLBACK)); }
     /** Unsafe version of {@link #pUserData}. */
     public static long npUserData(long struct) { return memGetAddress(struct + VkDebugReportCallbackCreateInfoEXT.PUSERDATA); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkDebugReportCallbackCreateInfoEXT.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkDebugReportCallbackCreateInfoEXT.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkDebugReportCallbackCreateInfoEXT.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkDebugReportCallbackCreateInfoEXT.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkDebugReportCallbackCreateInfoEXT.FLAGS, value); }
     /** Unsafe version of {@link #pfnCallback(VkDebugReportCallbackEXTI) pfnCallback}. */
     public static void npfnCallback(long struct, VkDebugReportCallbackEXTI value) { memPutAddress(struct + VkDebugReportCallbackCreateInfoEXT.PFNCALLBACK, value.address()); }
     /** Unsafe version of {@link #pUserData(long) pUserData}. */
@@ -353,7 +346,7 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -362,8 +355,10 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
     /** An array of {@link VkDebugReportCallbackCreateInfoEXT} structs. */
     public static class Buffer extends StructBuffer<VkDebugReportCallbackCreateInfoEXT, Buffer> implements NativeResource {
 
+        private static final VkDebugReportCallbackCreateInfoEXT ELEMENT_FACTORY = VkDebugReportCallbackCreateInfoEXT.create(-1L);
+
         /**
-         * Creates a new {@link VkDebugReportCallbackCreateInfoEXT.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkDebugReportCallbackCreateInfoEXT.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -389,18 +384,8 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkDebugReportCallbackCreateInfoEXT newInstance(long address) {
-            return new VkDebugReportCallbackCreateInfoEXT(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkDebugReportCallbackCreateInfoEXT getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

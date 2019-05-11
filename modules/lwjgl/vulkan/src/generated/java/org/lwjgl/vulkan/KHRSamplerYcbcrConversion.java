@@ -41,7 +41,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Deprecation state</b></dt>
  * <dd><ul>
- * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
+ * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
@@ -305,7 +305,7 @@ public class KHRSamplerYcbcrConversion {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo, pAllocator, pYcbcrConversion);
+        return callPPPPI(device.address(), pCreateInfo, pAllocator, pYcbcrConversion, __functionAddress);
     }
 
     /**
@@ -313,7 +313,7 @@ public class KHRSamplerYcbcrConversion {
      *
      * @param device           the logical device that creates the sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion.
      * @param pCreateInfo      a pointer to an instance of the {@link VkSamplerYcbcrConversionCreateInfo} specifying the requested sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion.
-     * @param pAllocator       controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator       controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pYcbcrConversion points to a {@code VkSamplerYcbcrConversion} handle in which the resulting sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion is returned.
      */
     @NativeType("VkResult")
@@ -333,7 +333,7 @@ public class KHRSamplerYcbcrConversion {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, device.address(), ycbcrConversion, pAllocator);
+        callPJPV(device.address(), ycbcrConversion, pAllocator, __functionAddress);
     }
 
     /**
@@ -341,7 +341,7 @@ public class KHRSamplerYcbcrConversion {
      *
      * @param device          the logical device that destroys the Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion.
      * @param ycbcrConversion the conversion to destroy.
-     * @param pAllocator      controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator      controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
     public static void vkDestroySamplerYcbcrConversionKHR(VkDevice device, @NativeType("VkSamplerYcbcrConversion") long ycbcrConversion, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroySamplerYcbcrConversionKHR(device, ycbcrConversion, memAddressSafe(pAllocator));
@@ -356,7 +356,7 @@ public class KHRSamplerYcbcrConversion {
             check(pYcbcrConversion, 1);
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pYcbcrConversion);
+        return callPPPPI(device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pYcbcrConversion, __functionAddress);
     }
 
 }

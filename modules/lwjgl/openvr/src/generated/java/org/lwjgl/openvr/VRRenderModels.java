@@ -32,7 +32,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, pchRenderModelName, ppRenderModel);
+        return callPPI(pchRenderModelName, ppRenderModel, __functionAddress);
     }
 
     /**
@@ -65,8 +65,9 @@ public class VRRenderModels {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            return nVRRenderModels_LoadRenderModel_Async(memAddress(pchRenderModelNameEncoded), memAddress(ppRenderModel));
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_LoadRenderModel_Async(pchRenderModelNameEncoded, memAddress(ppRenderModel));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -80,7 +81,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, pRenderModel);
+        callPV(pRenderModel, __functionAddress);
     }
 
     /** Frees a previously returned render model It is safe to call this on a null ptr. */
@@ -96,7 +97,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, textureId, ppTexture);
+        return callPI(textureId, ppTexture, __functionAddress);
     }
 
     /** Loads and returns a texture for use in the application. */
@@ -116,7 +117,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, pTexture);
+        callPV(pTexture, __functionAddress);
     }
 
     /** Frees a previously returned texture. It is safe to call this on a null ptr. */
@@ -133,7 +134,7 @@ public class VRRenderModels {
             check(__functionAddress);
             check(pD3D11Device);
         }
-        return callPPI(__functionAddress, textureId, pD3D11Device, ppD3D11Texture2D);
+        return callPPI(textureId, pD3D11Device, ppD3D11Texture2D, __functionAddress);
     }
 
     /** Creates a D3D11 texture and loads data into it. */
@@ -155,7 +156,7 @@ public class VRRenderModels {
             check(__functionAddress);
             check(pDstTexture);
         }
-        return callPI(__functionAddress, textureId, pDstTexture);
+        return callPI(textureId, pDstTexture, __functionAddress);
     }
 
     // --- [ VRRenderModels_FreeTextureD3D11 ] ---
@@ -167,7 +168,7 @@ public class VRRenderModels {
             check(__functionAddress);
             check(pD3D11Texture2D);
         }
-        callPV(__functionAddress, pD3D11Texture2D);
+        callPV(pD3D11Texture2D, __functionAddress);
     }
 
     // --- [ VRRenderModels_GetRenderModelName ] ---
@@ -178,7 +179,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, unRenderModelIndex, pchRenderModelName, unRenderModelNameLen);
+        return callPI(unRenderModelIndex, pchRenderModelName, unRenderModelNameLen, __functionAddress);
     }
 
     /**
@@ -228,7 +229,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, pchRenderModelName);
+        return callPI(pchRenderModelName, __functionAddress);
     }
 
     /**
@@ -253,8 +254,9 @@ public class VRRenderModels {
     public static int VRRenderModels_GetComponentCount(@NativeType("char const *") CharSequence pchRenderModelName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            return nVRRenderModels_GetComponentCount(memAddress(pchRenderModelNameEncoded));
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_GetComponentCount(pchRenderModelNameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -268,7 +270,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, pchRenderModelName, unComponentIndex, pchComponentName, unComponentNameLen);
+        return callPPI(pchRenderModelName, unComponentIndex, pchComponentName, unComponentNameLen, __functionAddress);
     }
 
     /**
@@ -293,8 +295,9 @@ public class VRRenderModels {
     public static int VRRenderModels_GetComponentName(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unComponentIndex, @Nullable @NativeType("char *") ByteBuffer pchComponentName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            return nVRRenderModels_GetComponentName(memAddress(pchRenderModelNameEncoded), unComponentIndex, memAddressSafe(pchComponentName), remainingSafe(pchComponentName));
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_GetComponentName(pchRenderModelNameEncoded, unComponentIndex, memAddressSafe(pchComponentName), remainingSafe(pchComponentName));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -309,9 +312,10 @@ public class VRRenderModels {
     public static String VRRenderModels_GetComponentName(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unComponentIndex, @NativeType("uint32_t") int unComponentNameLen) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
             ByteBuffer pchComponentName = stack.malloc(unComponentNameLen);
-            int __result = nVRRenderModels_GetComponentName(memAddress(pchRenderModelNameEncoded), unComponentIndex, memAddress(pchComponentName), unComponentNameLen);
+            int __result = nVRRenderModels_GetComponentName(pchRenderModelNameEncoded, unComponentIndex, memAddress(pchComponentName), unComponentNameLen);
             return memASCII(pchComponentName, __result - 1);
         } finally {
             stack.setPointer(stackPointer);
@@ -326,7 +330,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPJ(__functionAddress, pchRenderModelName, pchComponentName);
+        return callPPJ(pchRenderModelName, pchComponentName, __functionAddress);
     }
 
     /**
@@ -368,9 +372,11 @@ public class VRRenderModels {
     public static long VRRenderModels_GetComponentButtonMask(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            ByteBuffer pchComponentNameEncoded = stack.ASCII(pchComponentName);
-            return nVRRenderModels_GetComponentButtonMask(memAddress(pchRenderModelNameEncoded), memAddress(pchComponentNameEncoded));
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            stack.nASCII(pchComponentName, true);
+            long pchComponentNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_GetComponentButtonMask(pchRenderModelNameEncoded, pchComponentNameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -384,7 +390,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, pchRenderModelName, pchComponentName, pchComponentRenderModelName, unComponentRenderModelNameLen);
+        return callPPPI(pchRenderModelName, pchComponentName, pchComponentRenderModelName, unComponentRenderModelNameLen, __functionAddress);
     }
 
     /**
@@ -408,9 +414,11 @@ public class VRRenderModels {
     public static int VRRenderModels_GetComponentRenderModelName(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName, @Nullable @NativeType("char *") ByteBuffer pchComponentRenderModelName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            ByteBuffer pchComponentNameEncoded = stack.ASCII(pchComponentName);
-            return nVRRenderModels_GetComponentRenderModelName(memAddress(pchRenderModelNameEncoded), memAddress(pchComponentNameEncoded), memAddressSafe(pchComponentRenderModelName), remainingSafe(pchComponentRenderModelName));
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            stack.nASCII(pchComponentName, true);
+            long pchComponentNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_GetComponentRenderModelName(pchRenderModelNameEncoded, pchComponentNameEncoded, memAddressSafe(pchComponentRenderModelName), remainingSafe(pchComponentRenderModelName));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -424,10 +432,12 @@ public class VRRenderModels {
     public static String VRRenderModels_GetComponentRenderModelName(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName, @NativeType("uint32_t") int unComponentRenderModelNameLen) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            ByteBuffer pchComponentNameEncoded = stack.ASCII(pchComponentName);
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            stack.nASCII(pchComponentName, true);
+            long pchComponentNameEncoded = stack.getPointerAddress();
             ByteBuffer pchComponentRenderModelName = stack.malloc(unComponentRenderModelNameLen);
-            int __result = nVRRenderModels_GetComponentRenderModelName(memAddress(pchRenderModelNameEncoded), memAddress(pchComponentNameEncoded), memAddress(pchComponentRenderModelName), unComponentRenderModelNameLen);
+            int __result = nVRRenderModels_GetComponentRenderModelName(pchRenderModelNameEncoded, pchComponentNameEncoded, memAddress(pchComponentRenderModelName), unComponentRenderModelNameLen);
             return memASCII(pchComponentRenderModelName, __result - 1);
         } finally {
             stack.setPointer(stackPointer);
@@ -437,12 +447,12 @@ public class VRRenderModels {
     // --- [ VRRenderModels_GetComponentStateForDevicePath ] ---
 
     /** Unsafe version of: {@link #VRRenderModels_GetComponentStateForDevicePath GetComponentStateForDevicePath} */
-    public static int nVRRenderModels_GetComponentStateForDevicePath(long pchRenderModelName, long pchComponentName, long devicePath, long pState, long pComponentState) {
+    public static boolean nVRRenderModels_GetComponentStateForDevicePath(long pchRenderModelName, long pchComponentName, long devicePath, long pState, long pComponentState) {
         long __functionAddress = OpenVR.VRRenderModels.GetComponentStateForDevicePath;
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPJPPI(__functionAddress, pchRenderModelName, pchComponentName, devicePath, pState, pComponentState);
+        return callPPJPPZ(pchRenderModelName, pchComponentName, devicePath, pState, pComponentState, __functionAddress);
     }
 
     /**
@@ -450,8 +460,8 @@ public class VRRenderModels {
      *         return true Note: For dynamic objects, visibility may be dynamic. (I.e., true/false will be returned based on controller state and controller mode
      *         state).
      */
-    @NativeType("uint32_t")
-    public static int VRRenderModels_GetComponentStateForDevicePath(@NativeType("char const *") ByteBuffer pchRenderModelName, @NativeType("char const *") ByteBuffer pchComponentName, @NativeType("VRInputValueHandle_t") long devicePath, @NativeType("RenderModel_ControllerMode_State_t const *") RenderModelControllerModeState pState, @NativeType("RenderModel_ComponentState_t *") RenderModelComponentState pComponentState) {
+    @NativeType("bool")
+    public static boolean VRRenderModels_GetComponentStateForDevicePath(@NativeType("char const *") ByteBuffer pchRenderModelName, @NativeType("char const *") ByteBuffer pchComponentName, @NativeType("VRInputValueHandle_t") long devicePath, @NativeType("RenderModel_ControllerMode_State_t const *") RenderModelControllerModeState pState, @NativeType("RenderModel_ComponentState_t *") RenderModelComponentState pComponentState) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
             checkNT1(pchComponentName);
@@ -464,13 +474,15 @@ public class VRRenderModels {
      *         return true Note: For dynamic objects, visibility may be dynamic. (I.e., true/false will be returned based on controller state and controller mode
      *         state).
      */
-    @NativeType("uint32_t")
-    public static int VRRenderModels_GetComponentStateForDevicePath(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName, @NativeType("VRInputValueHandle_t") long devicePath, @NativeType("RenderModel_ControllerMode_State_t const *") RenderModelControllerModeState pState, @NativeType("RenderModel_ComponentState_t *") RenderModelComponentState pComponentState) {
+    @NativeType("bool")
+    public static boolean VRRenderModels_GetComponentStateForDevicePath(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName, @NativeType("VRInputValueHandle_t") long devicePath, @NativeType("RenderModel_ControllerMode_State_t const *") RenderModelControllerModeState pState, @NativeType("RenderModel_ComponentState_t *") RenderModelComponentState pComponentState) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            ByteBuffer pchComponentNameEncoded = stack.ASCII(pchComponentName);
-            return nVRRenderModels_GetComponentStateForDevicePath(memAddress(pchRenderModelNameEncoded), memAddress(pchComponentNameEncoded), devicePath, pState.address(), pComponentState.address());
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            stack.nASCII(pchComponentName, true);
+            long pchComponentNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_GetComponentStateForDevicePath(pchRenderModelNameEncoded, pchComponentNameEncoded, devicePath, pState.address(), pComponentState.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -484,7 +496,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPPPZ(__functionAddress, pchRenderModelName, pchComponentName, pControllerState, pState, pComponentState);
+        return callPPPPPZ(pchRenderModelName, pchComponentName, pControllerState, pState, pComponentState, __functionAddress);
     }
 
     /**
@@ -508,9 +520,11 @@ public class VRRenderModels {
     public static boolean VRRenderModels_GetComponentState(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName, @NativeType("VRControllerState_t const *") VRControllerState pControllerState, @NativeType("RenderModel_ControllerMode_State_t const *") RenderModelControllerModeState pState, @NativeType("RenderModel_ComponentState_t *") RenderModelComponentState pComponentState) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            ByteBuffer pchComponentNameEncoded = stack.ASCII(pchComponentName);
-            return nVRRenderModels_GetComponentState(memAddress(pchRenderModelNameEncoded), memAddress(pchComponentNameEncoded), pControllerState.address(), pState.address(), pComponentState.address());
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            stack.nASCII(pchComponentName, true);
+            long pchComponentNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_GetComponentState(pchRenderModelNameEncoded, pchComponentNameEncoded, pControllerState.address(), pState.address(), pComponentState.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -524,7 +538,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPZ(__functionAddress, pchRenderModelName, pchComponentName);
+        return callPPZ(pchRenderModelName, pchComponentName, __functionAddress);
     }
 
     /** Returns true if the render model has a component with the specified name. */
@@ -542,9 +556,11 @@ public class VRRenderModels {
     public static boolean VRRenderModels_RenderModelHasComponent(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            ByteBuffer pchComponentNameEncoded = stack.ASCII(pchComponentName);
-            return nVRRenderModels_RenderModelHasComponent(memAddress(pchRenderModelNameEncoded), memAddress(pchComponentNameEncoded));
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            stack.nASCII(pchComponentName, true);
+            long pchComponentNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_RenderModelHasComponent(pchRenderModelNameEncoded, pchComponentNameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -558,7 +574,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, pchRenderModelName, pchThumbnailURL, unThumbnailURLLen, peError);
+        return callPPPI(pchRenderModelName, pchThumbnailURL, unThumbnailURLLen, peError, __functionAddress);
     }
 
     /** Returns the URL of the thumbnail image for this rendermodel. */
@@ -579,8 +595,9 @@ public class VRRenderModels {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            return nVRRenderModels_GetRenderModelThumbnailURL(memAddress(pchRenderModelNameEncoded), memAddressSafe(pchThumbnailURL), remainingSafe(pchThumbnailURL), memAddress(peError));
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_GetRenderModelThumbnailURL(pchRenderModelNameEncoded, memAddressSafe(pchThumbnailURL), remainingSafe(pchThumbnailURL), memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -594,9 +611,10 @@ public class VRRenderModels {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
             ByteBuffer pchThumbnailURL = stack.malloc(unThumbnailURLLen);
-            int __result = nVRRenderModels_GetRenderModelThumbnailURL(memAddress(pchRenderModelNameEncoded), memAddress(pchThumbnailURL), unThumbnailURLLen, memAddress(peError));
+            int __result = nVRRenderModels_GetRenderModelThumbnailURL(pchRenderModelNameEncoded, memAddress(pchThumbnailURL), unThumbnailURLLen, memAddress(peError));
             return memASCII(pchThumbnailURL, __result - 1);
         } finally {
             stack.setPointer(stackPointer);
@@ -611,7 +629,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, pchRenderModelName, pchOriginalPath, unOriginalPathLen, peError);
+        return callPPPI(pchRenderModelName, pchOriginalPath, unOriginalPathLen, peError, __functionAddress);
     }
 
     /**
@@ -638,8 +656,9 @@ public class VRRenderModels {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
-            return nVRRenderModels_GetRenderModelOriginalPath(memAddress(pchRenderModelNameEncoded), memAddressSafe(pchOriginalPath), remainingSafe(pchOriginalPath), memAddress(peError));
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
+            return nVRRenderModels_GetRenderModelOriginalPath(pchRenderModelNameEncoded, memAddressSafe(pchOriginalPath), remainingSafe(pchOriginalPath), memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -656,9 +675,10 @@ public class VRRenderModels {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
+            stack.nASCII(pchRenderModelName, true);
+            long pchRenderModelNameEncoded = stack.getPointerAddress();
             ByteBuffer pchOriginalPath = stack.malloc(unOriginalPathLen);
-            int __result = nVRRenderModels_GetRenderModelOriginalPath(memAddress(pchRenderModelNameEncoded), memAddress(pchOriginalPath), unOriginalPathLen, memAddress(peError));
+            int __result = nVRRenderModels_GetRenderModelOriginalPath(pchRenderModelNameEncoded, memAddress(pchOriginalPath), unOriginalPathLen, memAddress(peError));
             return memASCII(pchOriginalPath, __result - 1);
         } finally {
             stack.setPointer(stackPointer);
@@ -673,7 +693,7 @@ public class VRRenderModels {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callP(__functionAddress, error);
+        return callP(error, __functionAddress);
     }
 
     /** Returns a string for a render model error. */

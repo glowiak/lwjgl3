@@ -19,34 +19,34 @@ val QCOM_extended_get2 = "QCOMExtendedGet2".nativeClassGLES("QCOM_extended_get2"
         "ExtGetShadersQCOM",
         "",
 
-        nullable..GLuint.p.OUT("shaders", ""),
-        AutoSize("shaders")..GLint.IN("maxShaders", ""),
-        nullable..Check(1)..GLint.p.OUT("numShaders", "")
+        nullable..GLuint.p("shaders", ""),
+        AutoSize("shaders")..GLint("maxShaders", ""),
+        nullable..Check(1)..GLint.p("numShaders", "")
     )
 
     void(
         "ExtGetProgramsQCOM",
         "",
 
-        nullable..GLuint.p.OUT("programs", ""),
-        AutoSize("programs")..GLint.IN("maxPrograms", ""),
-        nullable..Check(1)..GLint.p.OUT("numPrograms", "")
+        nullable..GLuint.p("programs", ""),
+        AutoSize("programs")..GLint("maxPrograms", ""),
+        nullable..Check(1)..GLint.p("numPrograms", "")
     )
 
     GLboolean(
         "ExtIsProgramBinaryQCOM",
         "",
 
-        GLuint.IN("program", "")
+        GLuint("program", "")
     )
 
     void(
         "ExtGetProgramBinarySourceQCOM",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("shadertype", ""),
-        Unsafe..GLcharUTF8.p.OUT("source", ""),
-        nullable..Check(1)..GLint.p.OUT("length", "")
+        GLuint("program", ""),
+        GLenum("shadertype", ""),
+        Unsafe..GLcharUTF8.p("source", ""),
+        nullable..Check(1)..GLint.p("length", "")
     )
 }

@@ -42,7 +42,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
  * <li>{@code waitSemaphoreCount} &ndash; the number of semaphores upon which to wait before executing the sparse binding operations for the batch.</li>
- * <li>{@code pWaitSemaphores} &ndash; a pointer to an array of semaphores upon which to wait on before the sparse binding operations for this batch begin execution. If semaphores to wait on are provided, they define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-waiting">semaphore wait operation</a>.</li>
+ * <li>{@code pWaitSemaphores} &ndash; a pointer to an array of semaphores upon which to wait on before the sparse binding operations for this batch begin execution. If semaphores to wait on are provided, they define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-waiting">semaphore wait operation</a>.</li>
  * <li>{@code bufferBindCount} &ndash; the number of sparse buffer bindings to perform in the batch.</li>
  * <li>{@code pBufferBinds} &ndash; a pointer to an array of {@link VkSparseBufferMemoryBindInfo} structures.</li>
  * <li>{@code imageOpaqueBindCount} &ndash; the number of opaque sparse image bindings to perform.</li>
@@ -50,7 +50,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code imageBindCount} &ndash; the number of sparse image bindings to perform.</li>
  * <li>{@code pImageBinds} &ndash; a pointer to an array of {@link VkSparseImageMemoryBindInfo} structures, indicating sparse image bindings to perform.</li>
  * <li>{@code signalSemaphoreCount} &ndash; the number of semaphores to be signaled once the sparse binding operations specified by the structure have completed execution.</li>
- * <li>{@code pSignalSemaphores} &ndash; a pointer to an array of semaphores which will be signaled when the sparse binding operations for this batch have completed execution. If semaphores to be signaled are provided, they define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-signaling">semaphore signal operation</a>.</li>
+ * <li>{@code pSignalSemaphores} &ndash; a pointer to an array of semaphores which will be signaled when the sparse binding operations for this batch have completed execution. If semaphores to be signaled are provided, they define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-signaling">semaphore signal operation</a>.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -62,11 +62,11 @@ import static org.lwjgl.system.MemoryStack.*;
  *     uint32_t waitSemaphoreCount;
  *     VkSemaphore const * pWaitSemaphores;
  *     uint32_t bufferBindCount;
- *     {@link VkSparseBufferMemoryBindInfo VkSparseBufferMemoryBindInfo const} * pBufferBinds;
+ *     {@link VkSparseBufferMemoryBindInfo VkSparseBufferMemoryBindInfo} const * pBufferBinds;
  *     uint32_t imageOpaqueBindCount;
- *     {@link VkSparseImageOpaqueMemoryBindInfo VkSparseImageOpaqueMemoryBindInfo const} * pImageOpaqueBinds;
+ *     {@link VkSparseImageOpaqueMemoryBindInfo VkSparseImageOpaqueMemoryBindInfo} const * pImageOpaqueBinds;
  *     uint32_t imageBindCount;
- *     {@link VkSparseImageMemoryBindInfo VkSparseImageMemoryBindInfo const} * pImageBinds;
+ *     {@link VkSparseImageMemoryBindInfo VkSparseImageMemoryBindInfo} const * pImageBinds;
  *     uint32_t signalSemaphoreCount;
  *     VkSemaphore const * pSignalSemaphores;
  * }</code></pre>
@@ -127,18 +127,14 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
         PSIGNALSEMAPHORES = layout.offsetof(11);
     }
 
-    VkBindSparseInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkBindSparseInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkBindSparseInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkBindSparseInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -236,30 +232,31 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkBindSparseInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkBindSparseInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkBindSparseInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkBindSparseInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkBindSparseInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkBindSparseInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkBindSparseInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkBindSparseInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkBindSparseInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkBindSparseInfo} instance allocated with {@link BufferUtils}. */
     public static VkBindSparseInfo create() {
-        return new VkBindSparseInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkBindSparseInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkBindSparseInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkBindSparseInfo} instance for the specified memory address. */
     public static VkBindSparseInfo create(long address) {
-        return new VkBindSparseInfo(address, null);
+        return wrap(VkBindSparseInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkBindSparseInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkBindSparseInfo.class, address);
     }
 
     /**
@@ -268,7 +265,7 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindSparseInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -277,7 +274,7 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindSparseInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -286,7 +283,8 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindSparseInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -296,43 +294,43 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindSparseInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkBindSparseInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkBindSparseInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkBindSparseInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkBindSparseInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkBindSparseInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkBindSparseInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkBindSparseInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkBindSparseInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkBindSparseInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkBindSparseInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkBindSparseInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkBindSparseInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkBindSparseInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkBindSparseInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkBindSparseInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -360,7 +358,7 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindSparseInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -370,58 +368,58 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBindSparseInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkBindSparseInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkBindSparseInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkBindSparseInfo.PNEXT); }
     /** Unsafe version of {@link #waitSemaphoreCount}. */
-    public static int nwaitSemaphoreCount(long struct) { return memGetInt(struct + VkBindSparseInfo.WAITSEMAPHORECOUNT); }
+    public static int nwaitSemaphoreCount(long struct) { return UNSAFE.getInt(null, struct + VkBindSparseInfo.WAITSEMAPHORECOUNT); }
     /** Unsafe version of {@link #pWaitSemaphores() pWaitSemaphores}. */
     @Nullable public static LongBuffer npWaitSemaphores(long struct) { return memLongBufferSafe(memGetAddress(struct + VkBindSparseInfo.PWAITSEMAPHORES), nwaitSemaphoreCount(struct)); }
     /** Unsafe version of {@link #bufferBindCount}. */
-    public static int nbufferBindCount(long struct) { return memGetInt(struct + VkBindSparseInfo.BUFFERBINDCOUNT); }
+    public static int nbufferBindCount(long struct) { return UNSAFE.getInt(null, struct + VkBindSparseInfo.BUFFERBINDCOUNT); }
     /** Unsafe version of {@link #pBufferBinds}. */
     @Nullable public static VkSparseBufferMemoryBindInfo.Buffer npBufferBinds(long struct) { return VkSparseBufferMemoryBindInfo.createSafe(memGetAddress(struct + VkBindSparseInfo.PBUFFERBINDS), nbufferBindCount(struct)); }
     /** Unsafe version of {@link #imageOpaqueBindCount}. */
-    public static int nimageOpaqueBindCount(long struct) { return memGetInt(struct + VkBindSparseInfo.IMAGEOPAQUEBINDCOUNT); }
+    public static int nimageOpaqueBindCount(long struct) { return UNSAFE.getInt(null, struct + VkBindSparseInfo.IMAGEOPAQUEBINDCOUNT); }
     /** Unsafe version of {@link #pImageOpaqueBinds}. */
     @Nullable public static VkSparseImageOpaqueMemoryBindInfo.Buffer npImageOpaqueBinds(long struct) { return VkSparseImageOpaqueMemoryBindInfo.createSafe(memGetAddress(struct + VkBindSparseInfo.PIMAGEOPAQUEBINDS), nimageOpaqueBindCount(struct)); }
     /** Unsafe version of {@link #imageBindCount}. */
-    public static int nimageBindCount(long struct) { return memGetInt(struct + VkBindSparseInfo.IMAGEBINDCOUNT); }
+    public static int nimageBindCount(long struct) { return UNSAFE.getInt(null, struct + VkBindSparseInfo.IMAGEBINDCOUNT); }
     /** Unsafe version of {@link #pImageBinds}. */
     @Nullable public static VkSparseImageMemoryBindInfo.Buffer npImageBinds(long struct) { return VkSparseImageMemoryBindInfo.createSafe(memGetAddress(struct + VkBindSparseInfo.PIMAGEBINDS), nimageBindCount(struct)); }
     /** Unsafe version of {@link #signalSemaphoreCount}. */
-    public static int nsignalSemaphoreCount(long struct) { return memGetInt(struct + VkBindSparseInfo.SIGNALSEMAPHORECOUNT); }
+    public static int nsignalSemaphoreCount(long struct) { return UNSAFE.getInt(null, struct + VkBindSparseInfo.SIGNALSEMAPHORECOUNT); }
     /** Unsafe version of {@link #pSignalSemaphores() pSignalSemaphores}. */
     @Nullable public static LongBuffer npSignalSemaphores(long struct) { return memLongBufferSafe(memGetAddress(struct + VkBindSparseInfo.PSIGNALSEMAPHORES), nsignalSemaphoreCount(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkBindSparseInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkBindSparseInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkBindSparseInfo.PNEXT, value); }
     /** Sets the specified value to the {@code waitSemaphoreCount} field of the specified {@code struct}. */
-    public static void nwaitSemaphoreCount(long struct, int value) { memPutInt(struct + VkBindSparseInfo.WAITSEMAPHORECOUNT, value); }
+    public static void nwaitSemaphoreCount(long struct, int value) { UNSAFE.putInt(null, struct + VkBindSparseInfo.WAITSEMAPHORECOUNT, value); }
     /** Unsafe version of {@link #pWaitSemaphores(LongBuffer) pWaitSemaphores}. */
     public static void npWaitSemaphores(long struct, @Nullable LongBuffer value) { memPutAddress(struct + VkBindSparseInfo.PWAITSEMAPHORES, memAddressSafe(value)); nwaitSemaphoreCount(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code bufferBindCount} field of the specified {@code struct}. */
-    public static void nbufferBindCount(long struct, int value) { memPutInt(struct + VkBindSparseInfo.BUFFERBINDCOUNT, value); }
+    public static void nbufferBindCount(long struct, int value) { UNSAFE.putInt(null, struct + VkBindSparseInfo.BUFFERBINDCOUNT, value); }
     /** Unsafe version of {@link #pBufferBinds(VkSparseBufferMemoryBindInfo.Buffer) pBufferBinds}. */
     public static void npBufferBinds(long struct, @Nullable VkSparseBufferMemoryBindInfo.Buffer value) { memPutAddress(struct + VkBindSparseInfo.PBUFFERBINDS, memAddressSafe(value)); nbufferBindCount(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code imageOpaqueBindCount} field of the specified {@code struct}. */
-    public static void nimageOpaqueBindCount(long struct, int value) { memPutInt(struct + VkBindSparseInfo.IMAGEOPAQUEBINDCOUNT, value); }
+    public static void nimageOpaqueBindCount(long struct, int value) { UNSAFE.putInt(null, struct + VkBindSparseInfo.IMAGEOPAQUEBINDCOUNT, value); }
     /** Unsafe version of {@link #pImageOpaqueBinds(VkSparseImageOpaqueMemoryBindInfo.Buffer) pImageOpaqueBinds}. */
     public static void npImageOpaqueBinds(long struct, @Nullable VkSparseImageOpaqueMemoryBindInfo.Buffer value) { memPutAddress(struct + VkBindSparseInfo.PIMAGEOPAQUEBINDS, memAddressSafe(value)); nimageOpaqueBindCount(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code imageBindCount} field of the specified {@code struct}. */
-    public static void nimageBindCount(long struct, int value) { memPutInt(struct + VkBindSparseInfo.IMAGEBINDCOUNT, value); }
+    public static void nimageBindCount(long struct, int value) { UNSAFE.putInt(null, struct + VkBindSparseInfo.IMAGEBINDCOUNT, value); }
     /** Unsafe version of {@link #pImageBinds(VkSparseImageMemoryBindInfo.Buffer) pImageBinds}. */
     public static void npImageBinds(long struct, @Nullable VkSparseImageMemoryBindInfo.Buffer value) { memPutAddress(struct + VkBindSparseInfo.PIMAGEBINDS, memAddressSafe(value)); nimageBindCount(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code signalSemaphoreCount} field of the specified {@code struct}. */
-    public static void nsignalSemaphoreCount(long struct, int value) { memPutInt(struct + VkBindSparseInfo.SIGNALSEMAPHORECOUNT, value); }
+    public static void nsignalSemaphoreCount(long struct, int value) { UNSAFE.putInt(null, struct + VkBindSparseInfo.SIGNALSEMAPHORECOUNT, value); }
     /** Unsafe version of {@link #pSignalSemaphores(LongBuffer) pSignalSemaphores}. */
     public static void npSignalSemaphores(long struct, @Nullable LongBuffer value) { memPutAddress(struct + VkBindSparseInfo.PSIGNALSEMAPHORES, memAddressSafe(value)); nsignalSemaphoreCount(struct, value == null ? 0 : value.remaining()); }
 
@@ -465,7 +463,7 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -474,8 +472,10 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
     /** An array of {@link VkBindSparseInfo} structs. */
     public static class Buffer extends StructBuffer<VkBindSparseInfo, Buffer> implements NativeResource {
 
+        private static final VkBindSparseInfo ELEMENT_FACTORY = VkBindSparseInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkBindSparseInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkBindSparseInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -501,18 +501,8 @@ public class VkBindSparseInfo extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkBindSparseInfo newInstance(long address) {
-            return new VkBindSparseInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkBindSparseInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

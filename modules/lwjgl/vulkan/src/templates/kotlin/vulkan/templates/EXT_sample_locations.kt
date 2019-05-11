@@ -33,6 +33,7 @@ val EXT_sample_locations = "EXTSampleLocations".nativeClassVK("EXT_sample_locati
             <dt><b>Extension and Version Dependencies</b></dt>
             <dd><ul>
                 <li>Requires Vulkan 1.0</li>
+                <li>Requires {@link KHRGetPhysicalDeviceProperties2 VK_KHR_get_physical_device_properties2}</li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -98,7 +99,7 @@ val EXT_sample_locations = "EXTSampleLocations".nativeClassVK("EXT_sample_locati
         <h5>C Specification</h5>
         The custom sample locations used for rasterization when ##VkPipelineSampleLocationsStateCreateInfoEXT{@code ::sampleLocationsEnable} is #TRUE are specified by the ##VkPipelineSampleLocationsStateCreateInfoEXT{@code ::sampleLocationsInfo} property of the bound graphics pipeline, if the pipeline was not created with #DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT enabled.
 
-        Otherwise, the sample locations used for rasterization are set by calling #CmdSetSampleLocationsEXT():
+        Otherwise, the sample locations used for rasterization are set by calling {@code vkCmdSetSampleLocationsEXT}:
 
         <pre><code>
 ￿void vkCmdSetSampleLocationsEXT(
@@ -116,7 +117,7 @@ val EXT_sample_locations = "EXTSampleLocations".nativeClassVK("EXT_sample_locati
         <ul>
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
             <li>{@code pSampleLocationsInfo} <b>must</b> be a valid pointer to a valid ##VkSampleLocationsInfoEXT structure</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics operations</li>
         </ul>
 
@@ -128,7 +129,7 @@ val EXT_sample_locations = "EXTSampleLocations".nativeClassVK("EXT_sample_locati
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics</td><td></td></tr></tbody>
         </table>
 
@@ -136,8 +137,8 @@ val EXT_sample_locations = "EXTSampleLocations".nativeClassVK("EXT_sample_locati
         ##VkSampleLocationsInfoEXT
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command will be recorded."),
-        VkSampleLocationsInfoEXT.const.p.IN("pSampleLocationsInfo", "the sample locations state to set.")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command will be recorded."),
+        VkSampleLocationsInfoEXT.const.p("pSampleLocationsInfo", "the sample locations state to set.")
     )
 
     void(
@@ -146,7 +147,7 @@ val EXT_sample_locations = "EXTSampleLocations".nativeClassVK("EXT_sample_locati
         Report sample count specific multisampling capabilities of a physical device.
 
         <h5>C Specification</h5>
-        In addition to the minimum capabilities described in the previous section (<a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#features-limits">Limits</a>), implementations <b>may</b> support additional multisampling capabilities specific to a particular sample count.
+        In addition to the minimum capabilities described for (<a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#limits">Limits</a>) above, implementations <b>may</b> support additional multisampling capabilities specific to a particular sample count.
 
         To query additional sample count specific multisampling capabilities, call:
 
@@ -167,8 +168,8 @@ val EXT_sample_locations = "EXTSampleLocations".nativeClassVK("EXT_sample_locati
         ##VkMultisamplePropertiesEXT
         """,
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device from which to query the additional multisampling capabilities."),
-        VkSampleCountFlagBits.IN("samples", "the sample count to query the capabilities for."),
-        VkMultisamplePropertiesEXT.p.OUT("pMultisampleProperties", "a pointer to a structure of type ##VkMultisamplePropertiesEXT, in which information about the additional multisampling capabilities specific to the sample count is returned.")
+        VkPhysicalDevice("physicalDevice", "the physical device from which to query the additional multisampling capabilities."),
+        VkSampleCountFlagBits("samples", "the sample count to query the capabilities for."),
+        VkMultisamplePropertiesEXT.p("pMultisampleProperties", "a pointer to a structure of type ##VkMultisamplePropertiesEXT, in which information about the additional multisampling capabilities specific to the sample count is returned.")
     )
 }

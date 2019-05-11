@@ -992,8 +992,9 @@ public class GL20C extends GL15C {
     public static int glGetUniformLocation(@NativeType("GLuint") int program, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nglGetUniformLocation(program, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nglGetUniformLocation(program, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2000,8 +2001,9 @@ public class GL20C extends GL15C {
     public static void glBindAttribLocation(@NativeType("GLuint") int program, @NativeType("GLuint") int index, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            nglBindAttribLocation(program, index, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nglBindAttribLocation(program, index, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2114,8 +2116,9 @@ public class GL20C extends GL15C {
     public static int glGetAttribLocation(@NativeType("GLuint") int program, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nglGetAttribLocation(program, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nglGetAttribLocation(program, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2345,7 +2348,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             checkSafe(length, strings.remaining());
         }
-        callPPV(__functionAddress, shader, strings.remaining(), memAddress(strings), length);
+        callPPV(shader, strings.remaining(), memAddress(strings), length, __functionAddress);
     }
 
     /**
@@ -2358,7 +2361,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length, value);
+        callPV(location, value.length, value, __functionAddress);
     }
 
     /**
@@ -2371,7 +2374,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 1, value);
+        callPV(location, value.length >> 1, value, __functionAddress);
     }
 
     /**
@@ -2384,7 +2387,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 3, value);
+        callPV(location, value.length / 3, value, __functionAddress);
     }
 
     /**
@@ -2397,7 +2400,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 2, value);
+        callPV(location, value.length >> 2, value, __functionAddress);
     }
 
     /**
@@ -2410,7 +2413,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length, value);
+        callPV(location, value.length, value, __functionAddress);
     }
 
     /**
@@ -2423,7 +2426,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 1, value);
+        callPV(location, value.length >> 1, value, __functionAddress);
     }
 
     /**
@@ -2436,7 +2439,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 3, value);
+        callPV(location, value.length / 3, value, __functionAddress);
     }
 
     /**
@@ -2449,7 +2452,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 2, value);
+        callPV(location, value.length >> 2, value, __functionAddress);
     }
 
     /**
@@ -2462,7 +2465,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 2, transpose, value);
+        callPV(location, value.length >> 2, transpose, value, __functionAddress);
     }
 
     /**
@@ -2475,7 +2478,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 9, transpose, value);
+        callPV(location, value.length / 9, transpose, value, __functionAddress);
     }
 
     /**
@@ -2488,7 +2491,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 4, transpose, value);
+        callPV(location, value.length >> 4, transpose, value, __functionAddress);
     }
 
     /**
@@ -2502,7 +2505,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, shader, pname, params);
+        callPV(shader, pname, params, __functionAddress);
     }
 
     /**
@@ -2516,7 +2519,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, program, pname, params);
+        callPV(program, pname, params, __functionAddress);
     }
 
     /**
@@ -2530,7 +2533,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, shader, infoLog.remaining(), length, memAddress(infoLog));
+        callPPV(shader, infoLog.remaining(), length, memAddress(infoLog), __functionAddress);
     }
 
     /**
@@ -2544,7 +2547,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, program, infoLog.remaining(), length, memAddress(infoLog));
+        callPPV(program, infoLog.remaining(), length, memAddress(infoLog), __functionAddress);
     }
 
     /**
@@ -2558,7 +2561,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             checkSafe(count, 1);
         }
-        callPPV(__functionAddress, program, shaders.length, count, shaders);
+        callPPV(program, shaders.length, count, shaders, __functionAddress);
     }
 
     /**
@@ -2574,7 +2577,7 @@ public class GL20C extends GL15C {
             check(size, 1);
             check(type, 1);
         }
-        callPPPPV(__functionAddress, program, index, name.remaining(), length, size, type, memAddress(name));
+        callPPPPV(program, index, name.remaining(), length, size, type, memAddress(name), __functionAddress);
     }
 
     /**
@@ -2588,7 +2591,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, program, location, params);
+        callPV(program, location, params, __functionAddress);
     }
 
     /**
@@ -2602,7 +2605,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, program, location, params);
+        callPV(program, location, params, __functionAddress);
     }
 
     /**
@@ -2616,7 +2619,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, shader, source.remaining(), length, memAddress(source));
+        callPPV(shader, source.remaining(), length, memAddress(source), __functionAddress);
     }
 
     /**
@@ -2630,7 +2633,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 1);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2644,7 +2647,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 1);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2658,7 +2661,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 1);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2672,7 +2675,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 2);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2686,7 +2689,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 2);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2700,7 +2703,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 2);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2714,7 +2717,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 3);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2728,7 +2731,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 3);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2742,7 +2745,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 3);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2756,7 +2759,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2770,7 +2773,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2784,7 +2787,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2798,7 +2801,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2812,7 +2815,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2826,7 +2829,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2840,7 +2843,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2854,7 +2857,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2868,7 +2871,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2882,7 +2885,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2898,7 +2901,7 @@ public class GL20C extends GL15C {
             check(size, 1);
             check(type, 1);
         }
-        callPPPPV(__functionAddress, program, index, name.remaining(), length, size, type, memAddress(name));
+        callPPPPV(program, index, name.remaining(), length, size, type, memAddress(name), __functionAddress);
     }
 
     /**
@@ -2912,7 +2915,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, index, pname, params);
+        callPV(index, pname, params, __functionAddress);
     }
 
     /**
@@ -2926,7 +2929,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(params, 4);
         }
-        callPV(__functionAddress, index, pname, params);
+        callPV(index, pname, params, __functionAddress);
     }
 
     /**
@@ -2940,7 +2943,7 @@ public class GL20C extends GL15C {
             check(__functionAddress);
             check(params, 4);
         }
-        callPV(__functionAddress, index, pname, params);
+        callPV(index, pname, params, __functionAddress);
     }
 
     /**
@@ -2953,7 +2956,7 @@ public class GL20C extends GL15C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, bufs.length, bufs);
+        callPV(bufs.length, bufs, __functionAddress);
     }
 
 }

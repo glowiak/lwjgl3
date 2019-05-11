@@ -162,148 +162,148 @@ val EXT_framebuffer_object = "EXTFramebufferObject".nativeClassGL("EXT_framebuff
         "IsRenderbufferEXT",
         "",
 
-        GLuint.IN("renderbuffer", "")
+        GLuint("renderbuffer", "")
     )
 
     void(
         "BindRenderbufferEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLuint.IN("renderbuffer", "")
+        GLenum("target", ""),
+        GLuint("renderbuffer", "")
     )
 
     void(
         "DeleteRenderbuffersEXT",
         "",
 
-        AutoSize("renderbuffers")..GLsizei.IN("n", ""),
-        SingleValue("renderbuffer")..GLuint.const.p.IN("renderbuffers", "")
+        AutoSize("renderbuffers")..GLsizei("n", ""),
+        SingleValue("renderbuffer")..GLuint.const.p("renderbuffers", "")
     )
 
     void(
         "GenRenderbuffersEXT",
         "",
 
-        AutoSize("renderbuffers")..GLsizei.IN("n", ""),
-        ReturnParam..GLuint.p.OUT("renderbuffers", "")
+        AutoSize("renderbuffers")..GLsizei("n", ""),
+        ReturnParam..GLuint.p("renderbuffers", "")
     )
 
     void(
         "RenderbufferStorageEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", "")
+        GLenum("target", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", "")
     )
 
     void(
         "GetRenderbufferParameterivEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     GLboolean(
         "IsFramebufferEXT",
         "",
 
-        GLuint.IN("framebuffer", "")
+        GLuint("framebuffer", "")
     )
 
     void(
         "BindFramebufferEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLuint.IN("framebuffer", "")
+        GLenum("target", ""),
+        GLuint("framebuffer", "")
     )
 
     void(
         "DeleteFramebuffersEXT",
         "",
 
-        AutoSize("framebuffers")..GLsizei.IN("n", ""),
-        SingleValue("framebuffer")..GLuint.const.p.IN("framebuffers", "")
+        AutoSize("framebuffers")..GLsizei("n", ""),
+        SingleValue("framebuffer")..GLuint.const.p("framebuffers", "")
     )
 
     void(
         "GenFramebuffersEXT",
         "",
 
-        AutoSize("framebuffers")..GLsizei.IN("n", ""),
-        ReturnParam..GLuint.p.OUT("framebuffers", "")
+        AutoSize("framebuffers")..GLsizei("n", ""),
+        ReturnParam..GLuint.p("framebuffers", "")
     )
 
     GLenum(
         "CheckFramebufferStatusEXT",
         "",
 
-        GLenum.IN("target", "")
+        GLenum("target", "")
     )
 
     void(
         "FramebufferTexture1DEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("textarget", ""),
-        GLuint.IN("texture", ""),
-        GLint.IN("level", "")
+        GLenum("target", ""),
+        GLenum("attachment", ""),
+        GLenum("textarget", ""),
+        GLuint("texture", ""),
+        GLint("level", "")
     )
 
     void(
         "FramebufferTexture2DEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("textarget", ""),
-        GLuint.IN("texture", ""),
-        GLint.IN("level", "")
+        GLenum("target", ""),
+        GLenum("attachment", ""),
+        GLenum("textarget", ""),
+        GLuint("texture", ""),
+        GLint("level", "")
     )
 
     void(
         "FramebufferTexture3DEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("textarget", ""),
-        GLuint.IN("texture", ""),
-        GLint.IN("level", ""),
-        GLint.IN("zoffset", "")
+        GLenum("target", ""),
+        GLenum("attachment", ""),
+        GLenum("textarget", ""),
+        GLuint("texture", ""),
+        GLint("level", ""),
+        GLint("zoffset", "")
     )
 
     void(
         "FramebufferRenderbufferEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("renderbuffertarget", ""),
-        GLuint.IN("renderbuffer", "")
+        GLenum("target", ""),
+        GLenum("attachment", ""),
+        GLenum("renderbuffertarget", ""),
+        GLuint("renderbuffer", "")
     )
 
     void(
         "GetFramebufferAttachmentParameterivEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLenum("target", ""),
+        GLenum("attachment", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     void(
         "GenerateMipmapEXT",
         "",
 
-        GLenum.IN("target", "")
+        GLenum("target", "")
     )
 }

@@ -59,18 +59,14 @@ public class VkRect2D extends Struct implements NativeResource {
         EXTENT = layout.offsetof(1);
     }
 
-    VkRect2D(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkRect2D} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkRect2D} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkRect2D(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -115,30 +111,31 @@ public class VkRect2D extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkRect2D} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkRect2D} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkRect2D malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkRect2D.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkRect2D} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkRect2D} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkRect2D calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkRect2D.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkRect2D} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkRect2D} instance allocated with {@link BufferUtils}. */
     public static VkRect2D create() {
-        return new VkRect2D(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkRect2D.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkRect2D} instance for the specified memory address. */
+    /** Returns a new {@code VkRect2D} instance for the specified memory address. */
     public static VkRect2D create(long address) {
-        return new VkRect2D(address, null);
+        return wrap(VkRect2D.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkRect2D createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkRect2D.class, address);
     }
 
     /**
@@ -147,7 +144,7 @@ public class VkRect2D extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkRect2D.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -156,7 +153,7 @@ public class VkRect2D extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkRect2D.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -165,7 +162,8 @@ public class VkRect2D extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkRect2D.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -175,43 +173,43 @@ public class VkRect2D extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkRect2D.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkRect2D.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkRect2D} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkRect2D} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkRect2D mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkRect2D} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkRect2D} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkRect2D callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkRect2D} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkRect2D} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkRect2D mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkRect2D.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkRect2D} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkRect2D} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkRect2D callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkRect2D.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -239,7 +237,7 @@ public class VkRect2D extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkRect2D.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -249,7 +247,7 @@ public class VkRect2D extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkRect2D.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -269,8 +267,10 @@ public class VkRect2D extends Struct implements NativeResource {
     /** An array of {@link VkRect2D} structs. */
     public static class Buffer extends StructBuffer<VkRect2D, Buffer> implements NativeResource {
 
+        private static final VkRect2D ELEMENT_FACTORY = VkRect2D.create(-1L);
+
         /**
-         * Creates a new {@link VkRect2D.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkRect2D.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -296,18 +296,8 @@ public class VkRect2D extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkRect2D newInstance(long address) {
-            return new VkRect2D(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkRect2D getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link VkOffset2D} view of the {@code offset} field. */

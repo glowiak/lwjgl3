@@ -27,29 +27,29 @@ val OES_vertex_array_object = "OESVertexArrayObject".nativeClassGLES("OES_vertex
         "BindVertexArrayOES",
         "",
 
-        GLuint.IN("array", "")
+        GLuint("array", "")
     )
 
     void(
         "DeleteVertexArraysOES",
         "",
 
-        AutoSize("arrays")..GLsizei.IN("n", ""),
-        SingleValue("array")..GLuint.const.p.IN("arrays", "")
+        AutoSize("arrays")..GLsizei("n", ""),
+        SingleValue("array")..GLuint.const.p("arrays", "")
     )
 
     void(
         "GenVertexArraysOES",
         "",
 
-        AutoSize("arrays")..GLsizei.IN("n", ""),
-        ReturnParam..Check(1)..GLuint.p.OUT("arrays", "")
+        AutoSize("arrays")..GLsizei("n", ""),
+        ReturnParam..Check(1)..GLuint.p("arrays", "")
     )
 
     GLboolean(
         "IsVertexArrayOES",
         "",
 
-        GLuint.IN("array", "")
+        GLuint("array", "")
     )
 }

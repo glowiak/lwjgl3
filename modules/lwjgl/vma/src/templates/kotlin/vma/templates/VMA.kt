@@ -8,7 +8,7 @@ import org.lwjgl.generator.*
 import vma.*
 import vulkan.*
 
-val VMA = "Vma".nativeClass(Module.VMA, "Vma", prefix = "VMA", library = VMA_LIBRARY) {
+val VMA = "Vma".nativeClass(Module.VMA, "Vma", prefix = "VMA") {
     nativeDirective(
         """#include "lwjgl_malloc.h"
 DISABLE_WARNINGS()
@@ -16,6 +16,7 @@ DISABLE_WARNINGS()
 #define VMA_STATIC_VULKAN_FUNCTIONS 0
 #define VMA_SYSTEM_ALIGNED_MALLOC(size, alignment) org_lwjgl_aligned_alloc((alignment), (size))
 #define VMA_SYSTEM_FREE(ptr) org_lwjgl_aligned_free(ptr)
+#define VMA_DEDICATED_ALLOCATION 1
 #include "vk_mem_alloc.h"
 ENABLE_WARNINGS()"""
     )
@@ -84,10 +85,14 @@ vmaDestroyAllocator(allocator);"""
         resource is one of the key features of this library. You can use it by filling appropriate members of VmaAllocationCreateInfo structure, as described
         below. You can also combine multiple methods.
         ${ol(
-            "If you just want to find memory type index that meets your requirements, you can use function #FindMemoryTypeIndex().",
+            """
+            If you just want to find memory type index that meets your requirements, you can use function: #FindMemoryTypeIndex(),
+            #FindMemoryTypeIndexForBufferInfo(), #FindMemoryTypeIndexForImageInfo().
+            """,
             """
             If you want to allocate a region of device memory without association with any specific image or buffer, you can use function #AllocateMemory().
-            Usage of this function is not recommended and usually not needed.
+            Usage of this function is not recommended and usually not needed. #AllocateMemoryPages() function is also provided for creating multiple
+            allocations at once, which may be useful for sparse binding.
             """,
             """
             If you already have a buffer or an image created, you want to allocate memory for it and then you will bind it yourself, you can use function
@@ -95,7 +100,7 @@ vmaDestroyAllocator(allocator);"""
             """,
             """
             If you want to create a buffer or an image, allocate memory for it and bind them together, all in one call, you can use function #CreateBuffer(),
-            #CreateImage(). This is the recommended way to use this library.
+            #CreateImage(). This is the easiest and recommended way to use this library.
             """
         )}
         When using 3. or 4., the library internally queries Vulkan for memory types supported for that buffer or image (function
@@ -172,6 +177,21 @@ vmaCreateBuffer(allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullpt
         members of ##VmaAllocationCreateInfo structure are ignored. Memory type is selected explicitly when creating the pool and then used to make all the
         allocations from that pool. For further details, see Custom Memory Pools below.
 
+        <h4>Dedicated allocations</h4>
+
+        Memory for allocations is reserved out of larger block of {@code VkDeviceMemory} allocated from Vulkan internally. That's the main feature of this
+        whole library. You can still request a separate memory block to be created for an allocation, just like you would do in a trivial solution without
+        using any allocator. In that case, a buffer or image is always bound to that memory at offset 0. This is called a "dedicated allocation". You can
+        explicitly request it by using flag #ALLOCATION_CREATE_DEDICATED_MEMORY_BIT. The library can also internally decide to use dedicated allocation in some
+        cases, e.g.:
+
+        ${ul(
+            "When the size of the allocation is large.",
+            """
+            When {@code VK_KHR_dedicated_allocation} extension is enabled and it reports that dedicated allocation is required or recommended for the resource.
+            """,
+            "When allocation of next big memory block fails due to not enough device memory, but allocation with the exact requested size succeeds."
+        )}
 
         <h3>Memory mapping</h3>
 
@@ -186,8 +206,8 @@ vmaCreateBuffer(allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullpt
 
         The library provides following functions for mapping of a specific {@code VmaAllocation}: #MapMemory(), #UnmapMemory(). They are safer and more
         convenient to use than standard Vulkan functions. You can map an allocation multiple times simultaneously - mapping is reference-counted internally.
-        You can also map different allocations simultaneously regardless of whether they use the same {@code VkDeviceMemory} block. They way it's implemented
-        is that the library always maps entire memory block, not just region of the allocation. For further details, see description of #MapMemory() function.
+        You can also map different allocations simultaneously regardless of whether they use the same {@code VkDeviceMemory} block. The way it's implemented is
+        that the library always maps entire memory block, not just region of the allocation. For further details, see description of #MapMemory() function.
         Example:
 
         ${codeBlock("""
@@ -200,7 +220,7 @@ struct ConstantBuffer
 ConstantBuffer constantBufferData;
 
 VmaAllocator allocator;
-VmaBuffer constantBuffer;
+VkBuffer constantBuffer;
 VmaAllocation constantBufferAllocation;
 
 // You can map and fill your buffer using following code:
@@ -209,6 +229,14 @@ void* mappedData;
 vmaMapMemory(allocator, constantBufferAllocation, &mappedData);
 memcpy(mappedData, &constantBufferData, sizeof(constantBufferData));
 vmaUnmapMemory(allocator, constantBufferAllocation);""")}
+
+        When mapping, you may see a warning from Vulkan validation layer similar to this one:
+
+        <i>Mapping an image with layout {@code VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL} can result in undefined behavior if this memory is used by the
+        device. Only {@code GENERAL} or {@code PREINITIALIZED} should be used.</i>
+
+        It happens because the library maps entire {@code VkDeviceMemory} block, where different types of images and buffers may end up together, especially on
+        GPUs with unified memory like Intel. You can safely ignore it if you are sure you access only memory of the intended object that you wanted to map.
 
         <h4>Persistently mapped memory</h4>
 
@@ -242,6 +270,10 @@ memcpy(allocInfo.pMappedData, &constantBufferData, sizeof(constantBufferData));"
             migrated by WDDM to system RAM, which degrades performance. It doesn't matter if that particular memory block is actually used by the command
             buffer being submitted.
             """,
+            """
+            On Mac/MoltenVK there is a known bug - <a href="https://github.com/KhronosGroup/MoltenVK/issues/175">Issue \#175</a> which requires unmapping
+            before GPU can see updated texture.
+            """,
             "Keeping many large memory blocks mapped may impact performance or stability of some debugging tools."
         )}
 
@@ -249,26 +281,18 @@ memcpy(allocInfo.pMappedData, &constantBufferData, sizeof(constantBufferData));"
   
         Memory in Vulkan doesn't need to be unmapped before using it on GPU, but unless a memory types has {@code VK_MEMORY_PROPERTY_HOST_COHERENT_BIT} flag
         set, you need to manually invalidate cache before reading of mapped pointer using function {@code vkInvalidateMappedMemoryRanges()} and flush cache
-        after writing to mapped pointer using function {@code vkFlushMappedMemoryRanges()}. Example:
+        after writing to mapped pointer. Vulkan provides following functions for this purpose {@code vkFlushMappedMemoryRangs()},
+        {@code vkInvalidateMappedMemoryRanges()}, but this library provides more convenient functions that refer to given allocation object:
+        #FlushAllocation(), #InvalidateAllocation().
 
-        ${codeBlock("""
-memcpy(allocInfo.pMappedData, &constantBufferData, sizeof(constantBufferData));
+        Regions of memory specified for flush/invalidate must be aligned to {@code VkPhysicalDeviceLimits::nonCoherentAtomSize}. This is automatically ensured
+        by the library. In any memory type that is {@code HOST_VISIBLE} but not {@code HOST_COHERENT}, all allocations within blocks are aligned to this value,
+        so their offsets are always multiply of {@code nonCoherentAtomSize} and two different allocations never share same "line" of this size.
 
-VkMemoryPropertyFlags memFlags;
-vmaGetMemoryTypeProperties(allocator, allocInfo.memoryType, &memFlags);
-if((memFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) == 0)
-{
-    VkMappedMemoryRange memRange = { VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE };
-    memRange.memory = allocInfo.deviceMemory;
-    memRange.offset = allocInfo.offset;
-    memRange.size   = allocInfo.size;
-    vkFlushMappedMemoryRanges(device, 1, &memRange);
-}""")}
+        Please note that memory allocated with #MEMORY_USAGE_CPU_ONLY is guaranteed to be {@code HOST_COHERENT}.
 
-        Please note that memory allocated with #MEMORY_USAGE_CPU_ONLY is guaranteed to be host coherent.
-
-        Also, Windows drivers from all 3 PC GPU vendors (AMD, Intel, NVIDIA) currently provide {@code VK_MEMORY_PROPERTY_HOST_COHERENT_BIT} flag on all memory
-        types that are {@code VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT}, so on this platform you may not need to bother.
+        Also, Windows drivers from all 3 PC GPU vendors (AMD, Intel, NVIDIA) currently provide {@code HOST_COHERENT} flag on all memory types that are
+        {@code HOST_VISIBLE}, so on this platform you may not need to bother.
 
         <h4>Finding out if memory is mappable</h4>
 
@@ -287,6 +311,7 @@ bufCreateInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANS
 
 VmaAllocationCreateInfo allocCreateInfo = {};
 allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+allocCreateInfo.preferredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
 
 VkBuffer buf;
 VmaAllocation alloc;
@@ -358,7 +383,7 @@ else
             "Call #CreatePool() to obtain {@code VmaPool} handle.",
             """
             When making an allocation, set ##VmaAllocationCreateInfo{@code ::pool} to this handle. You don't need to specify any other parameters of this
-            structure, like usage.
+            structure, like {@code usage}.
             """
         )}
         Example:
@@ -424,19 +449,302 @@ poolCreateInfo.memoryTypeIndex = memTypeIndex;
             "##VmaAllocationCreateInfo: You don't need to pass same parameters. Fill only {@code pool} member. Other members are ignored anyway."
         )}
 
+        <h4>Linear allocation algorithm</h4>
+
+        Each Vulkan memory block managed by this library has accompanying metadata that keeps track of used and unused regions. By default, the metadata
+        structure and algorithm tries to find best place for new allocations among free regions to optimize memory usage. This way you can allocate and free
+        objects in any order.
+
+        Sometimes there is a need to use simpler, linear allocation algorithm. You can create custom pool that uses such algorithm by adding flag
+        #POOL_CREATE_LINEAR_ALGORITHM_BIT to ##VmaPoolCreateInfo{@code ::flags} while creating {@code VmaPool} object. Then an alternative metadata management
+        is used. It always creates new allocations after last one and doesn't reuse free regions after allocations freed in the middle. It results in better
+        allocation performance and less memory consumed by metadata.
+
+        With this one flag, you can create a custom pool that can be used in many ways: free-at-once, stack, double stack, and ring buffer. See below for
+        details.
+
+        <h5>Free-at-once</h5>
+
+        In a pool that uses linear algorithm, you still need to free all the allocations individually, e.g. by using #FreeMemory() or #DestroyBuffer(). You can
+        free them in any order. New allocations are always made after last one - free space in the middle is not reused. However, when you release all the
+        allocation and the pool becomes empty, allocation starts from the beginning again. This way you can use linear algorithm to speed up creation of
+        allocations that you are going to release all at once.
+
+        This mode is also available for pools created with ##VmaPoolCreateInfo{@code ::maxBlockCount} value that allows multiple memory blocks.
+
+        <h5>Stack</h5>
+
+        When you free an allocation that was created last, its space can be reused. Thanks to this, if you always release allocations in the order opposite to
+        their creation (LIFO - Last In First Out), you can achieve behavior of a stack.
+
+        This mode is also available for pools created with ##VmaPoolCreateInfo{@code ::maxBlockCount} value that allows multiple memory blocks.
+
+        <h5>Double stack</h5>
+
+        The space reserved by a custom pool with linear algorithm may be used by two stacks:
+        ${ul(
+            "First, default one, growing up from offset 0.",
+            "Second, \"upper\" one, growing down from the end towards lower offsets."
+        )}
+
+        To make allocation from upper stack, add flag #ALLOCATION_CREATE_UPPER_ADDRESS_BIT to ##VmaAllocationCreateInfo{@code ::flags}.
+
+        Double stack is available only in pools with one memory block - ##VmaPoolCreateInfo{@code ::maxBlockCount} must be 1. Otherwise behavior is undefined.
+
+        When the two stacks' ends meet so there is not enough space between them for a new allocation, such allocation fails with usual
+        {@code VK_ERROR_OUT_OF_DEVICE_MEMORY} error.
+
+        <h5>Ring buffer</h5>
+
+        When you free some allocations from the beginning and there is not enough free space for a new one at the end of a pool, allocator's "cursor" wraps
+        around to the beginning and starts allocation there. Thanks to this, if you always release allocations in the same order as you created them (FIFO -
+        First In First Out), you can achieve behavior of a ring buffer / queue.
+
+        Pools with linear algorithm support lost allocations when used as ring buffer. If there is not enough free space for a new allocation, but existing
+        allocations from the front of the queue can become lost, they become lost and the allocation succeeds.
+
+        Ring buffer is available only in pools with one memory block - ##VmaPoolCreateInfo{@code ::maxBlockCount} must be 1. Otherwise behavior is undefined.
+
+        <h4>Buddy allocation algorithm</h4>
+
+        There is another allocation algorithm that can be used with custom pools, called "buddy". Its internal data structure is based on a tree of blocks,
+        each having size that is a power of two and a half of its parent's size. When you want to allocate memory of certain size, a free node in the tree is
+        located. If it's too large, it is recursively split into two halves (called "buddies"). However, if requested allocation size is not a power of two,
+        the size of a tree node is aligned up to the nearest power of two and the remaining space is wasted. When two buddy nodes become free, they are merged
+        back into one larger node.
+
+        The advantage of buddy allocation algorithm over default algorithm is faster allocation and deallocation, as well as smaller external fragmentation.
+        The disadvantage is more wasted space (internal fragmentation).
+
+        For more information, please read <a href="https://en.wikipedia.org/wiki/Buddy_memory_allocation">"Buddy memory allocation" on Wikipedia</a> or other
+        sources that describe this concept in general.
+
+        To use buddy allocation algorithm with a custom pool, add flag #POOL_CREATE_BUDDY_ALGORITHM_BIT to ##VmaPoolCreateInfo{@code ::flags} while creating
+        {@code VmaPool} object.
+
+        Several limitations apply to pools that use buddy algorithm:
+
+        ${ul(
+            """
+            It is recommended to use ##VmaPoolCreateInfo{@code ::blockSize} that is a power of two. Otherwise, only largest power of two smaller than the size
+            is used for allocations. The remaining space always stays unused.
+            """,
+            "Margins and corruption detection don't work in such pools.",
+            "Lost allocations don't work in such pools. You can use them, but they never become lost. Support may be added in the future.",
+            "Defragmentation doesn't work with allocations made from such pool."
+        )}
+
         <h3>Defragmentation</h3>
 
-        Interleaved allocations and deallocations of many objects of varying size can cause fragmentation, which can lead to a situation where the library is
-        unable to find a continuous range of free memory for a new allocation despite there is enough free space, just scattered across many small free ranges
-        between existing allocations.
+        Interleaved allocations and deallocations of many objects of varying size cause fragmentation over time, which can lead to a situation where the
+        library is unable to find a continuous range of free memory for a new allocation despite there is enough free space, just scattered across many small
+        free ranges between existing allocations.
 
-        To mitigate this problem, you can use #Defragment(). Given set of allocations, this function can move them to compact used memory, ensure more
-        continuous free space and possibly also free some {@code VkDeviceMemory}. It can work only on allocations made from memory type that is
-        {@code HOST_VISIBLE}. Allocations are modified to point to the new {@code VkDeviceMemory} and offset. Data in this memory is also {@code memmove}-ed to
-        the new place. However, if you have images or buffers bound to these allocations (and you certainly do), you need to destroy, recreate, and bind them
-        to the new place in memory.
+        To mitigate this problem, you can use defragmentation feature: ##VmaDefragmentationInfo2, #DefragmentationBegin(), #DefragmentationEnd(). Given set of
+        allocations, this function can move them to compact used memory, ensure more continuous free space and possibly also free some {@code VkDeviceMemory}
+        blocks.
 
-        For further details and example code, see documentation of function #Defragment().
+        What the defragmentation does is:
+
+        ${ul(
+            """
+            Updates {@code VmaAllocation} objects to point to new {@code VkDeviceMemory} and offset. After allocation has been moved, its
+            ##VmaAllocationInfo{@code ::deviceMemory} and/or {@code VmaAllocationInfo::offset} changes. You must query them again using #GetAllocationInfo() if
+            you need them.
+            """,
+            "Moves actual data in memory."
+        )}
+
+        What it doesn't do, so you need to do it yourself:
+
+        ${ul(
+            """
+            Recreate buffers and images that were bound to allocations that were defragmented and bind them with their new places in memory. You must use
+            {@code vkDestroyBuffer()}, {@code vkDestroyImage()}, {@code vkCreateBuffer()}, {@code vkCreateImage()} for that purpose and NOT #DestroyBuffer(),
+            #DestroyImage(), #CreateBuffer(), #CreateImage(), because you don't need to destroy or create allocation objects!
+            """,
+            "Recreate views and update descriptors that point to these buffers and images."
+        )}
+
+        <h4>Defragmenting CPU memory</h4>
+
+        Following example demonstrates how you can run defragmentation on CPU. Only allocations created in memory types that are {@code HOST_VISIBLE} can be
+        defragmented. Others are ignored.
+
+        The way it works is:
+
+        ${ul(
+            "It temporarily maps entire memory blocks when necessary.",
+            "It moves data using {@code memmove()} function."
+        )}
+
+        ${codeBlock("""
+// Given following variables already initialized:
+VkDevice device;
+VmaAllocator allocator;
+std::vector<VkBuffer> buffers;
+std::vector<VmaAllocation> allocations;
+
+
+const uint32_t allocCount = (uint32_t)allocations.size();
+std::vector<VkBool32> allocationsChanged(allocCount);
+
+VmaDefragmentationInfo2 defragInfo = {};
+defragInfo.allocationCount = allocCount;
+defragInfo.pAllocations = allocations.data();
+defragInfo.pAllocationsChanged = allocationsChanged.data();
+defragInfo.maxCpuBytesToMove = VK_WHOLE_SIZE; // No limit.
+defragInfo.maxCpuAllocationsToMove = UINT32_MAX; // No limit.
+
+VmaDefragmentationContext defragCtx;
+vmaDefragmentationBegin(allocator, &defragInfo, nullptr, &defragCtx);
+vmaDefragmentationEnd(allocator, defragCtx);
+
+for(uint32_t i = 0; i < allocCount; ++i)
+{
+    if(allocationsChanged[i])
+    {
+        // Destroy buffer that is immutably bound to memory region which is no longer valid.
+        vkDestroyBuffer(device, buffers[i], nullptr);
+
+        // Create new buffer with same parameters.
+        VkBufferCreateInfo bufferInfo = ...;
+        vkCreateBuffer(device, &bufferInfo, nullptr, &buffers[i]);
+
+        // You can make dummy call to vkGetBufferMemoryRequirements here to silence validation layer warning.
+
+        // Bind new buffer to new memory region. Data contained in it is already moved.
+        VmaAllocationInfo allocInfo;
+        vmaGetAllocationInfo(allocator, allocations[i], &allocInfo);
+        vkBindBufferMemory(device, buffers[i], allocInfo.deviceMemory, allocInfo.offset);
+    }
+}""")}
+
+        Setting ##VmaDefragmentationInfo2{@code ::pAllocationsChanged} is optional. This output array tells whether particular allocation in
+        {@code VmaDefragmentationInfo2::pAllocations} at the same index has been modified during defragmentation. You can pass null, but you then need to query
+        every allocation passed to defragmentation for new parameters using #GetAllocationInfo() if you might need to recreate and rebind a buffer or image
+        associated with it.
+
+        If you use {@code Custom memory pools}, you can fill {@code VmaDefragmentationInfo2::poolCount} and {@code VmaDefragmentationInfo2::pPools} instead of
+        {@code VmaDefragmentationInfo2::allocationCount} and {@code VmaDefragmentationInfo2::pAllocations} to defragment all allocations in given pools. You
+        cannot use {@code VmaDefragmentationInfo2::pAllocationsChanged} in that case. You can also combine both methods.
+
+        <h4>Defragmenting GPU memory</h4>
+
+        It is also possible to defragment allocations created in memory types that are not {@code HOST_VISIBLE}. To do that, you need to pass a command buffer
+        that meets requirements as described in {@code VmaDefragmentationInfo2::commandBuffer}. The way it works is:
+
+        ${ul(
+            "It creates temporary buffers and binds them to entire memory blocks when necessary.",
+            "It issues {@code vkCmdCopyBuffer()} to passed command buffer."
+        )}
+
+        Example:
+
+        ${codeBlock("""
+// Given following variables already initialized:
+VkDevice device;
+VmaAllocator allocator;
+VkCommandBuffer commandBuffer;
+std::vector<VkBuffer> buffers;
+std::vector<VmaAllocation> allocations;
+
+
+const uint32_t allocCount = (uint32_t)allocations.size();
+std::vector<VkBool32> allocationsChanged(allocCount);
+
+VkCommandBufferBeginInfo cmdBufBeginInfo = ...;
+vkBeginCommandBuffer(commandBuffer, &cmdBufBeginInfo);
+
+VmaDefragmentationInfo2 defragInfo = {};
+defragInfo.allocationCount = allocCount;
+defragInfo.pAllocations = allocations.data();
+defragInfo.pAllocationsChanged = allocationsChanged.data();
+defragInfo.maxGpuBytesToMove = VK_WHOLE_SIZE; // Notice it's "GPU" this time.
+defragInfo.maxGpuAllocationsToMove = UINT32_MAX; // Notice it's "GPU" this time.
+defragInfo.commandBuffer = commandBuffer;
+
+VmaDefragmentationContext defragCtx;
+vmaDefragmentationBegin(allocator, &defragInfo, nullptr, &defragCtx);
+
+vkEndCommandBuffer(commandBuffer);
+
+// Submit commandBuffer.
+// Wait for a fence that ensures commandBuffer execution finished.
+
+vmaDefragmentationEnd(allocator, defragCtx);
+
+for(uint32_t i = 0; i < allocCount; ++i)
+{
+    if(allocationsChanged[i])
+    {
+        // Destroy buffer that is immutably bound to memory region which is no longer valid.
+        vkDestroyBuffer(device, buffers[i], nullptr);
+
+        // Create new buffer with same parameters.
+        VkBufferCreateInfo bufferInfo = ...;
+        vkCreateBuffer(device, &bufferInfo, nullptr, &buffers[i]);
+
+        // You can make dummy call to vkGetBufferMemoryRequirements here to silence validation layer warning.
+
+        // Bind new buffer to new memory region. Data contained in it is already moved.
+        VmaAllocationInfo allocInfo;
+        vmaGetAllocationInfo(allocator, allocations[i], &allocInfo);
+        vkBindBufferMemory(device, buffers[i], allocInfo.deviceMemory, allocInfo.offset);
+    }
+}""")}
+
+        You can combine these two methods by specifying non-zero {@code maxGpu*} as well as {@code maxCpu*} parameters. The library automatically chooses best
+        method to defragment each memory pool.
+
+        You may try not to block your entire program to wait until defragmentation finishes, but do it in the background, as long as you carefully fullfill
+        requirements described in function #DefragmentationBegin().
+
+        <h4>Additional notes</h4>
+
+        It is only legal to defragment allocations bound to:
+        ${ul(
+            "buffers",
+            """
+            images created with {@code VK_IMAGE_CREATE_ALIAS_BIT}, {@code VK_IMAGE_TILING_LINEAR}, and being currently in {@code VK_IMAGE_LAYOUT_GENERAL} or
+            {@code VK_IMAGE_LAYOUT_PREINITIALIZED}.
+            """
+        )}
+
+        Defragmentation of images created with {@code VK_IMAGE_TILING_OPTIMAL} or in any other layout may give undefined results.
+
+        If you defragment allocations bound to images, new images to be bound to new memory region after defragmentation should be created with
+        {@code VK_IMAGE_LAYOUT_PREINITIALIZED} and then transitioned to their original layout from before defragmentation if needed using an image memory
+        barrier.
+
+        While using defragmentation, you may experience validation layer warnings, which you just need to ignore.
+
+        Please don't expect memory to be fully compacted after defragmentation. Algorithms inside are based on some heuristics that try to maximize number of
+        Vulkan memory blocks to make totally empty to release them, as well as to maximize continuous empty space inside remaining blocks, while minimizing the
+        number and size of allocations that need to be moved. Some fragmentation may still remain - this is normal.
+
+        <h4>Writing custom defragmentation algorithm</h4>
+
+        If you want to implement your own, custom defragmentation algorithm, there is infrastructure prepared for that, but it is not exposed through the
+        library API - you need to hack its source code.
+
+        Here are steps needed to do this:
+
+        ${ul(
+            """
+            Main thing you need to do is to define your own class derived from base abstract class {@code VmaDefragmentationAlgorithm} and implement your
+            version of its pure virtual methods. See definition and comments of this class for details.
+            """,
+            """
+            Your code needs to interact with device memory block metadata. If you need more access to its data than it's provided by its public interface,
+            declare your new class as a friend class e.g. in class {@code VmaBlockMetadata_Generic}.
+            """,
+            """
+            If you want to create a flag that would enable your algorithm or pass some additional flags to configure it, add them to
+            {@code VmaDefragmentationFlagBits} and use them in {@code VmaDefragmentationInfo2::flags}.
+            """,
+            "Modify function {@code VmaBlockVectorDefragmentationContext::Begin} to create object of your new class whenever needed."
+        )}
 
         <h3>Lost allocations</h3>
 
@@ -525,6 +833,13 @@ void MyBuffer::EnsureBuffer()
 
         You can call function #MakePoolAllocationsLost() to set all eligible allocations in a specified custom pool to lost state. Allocations that have been
         "touched" in current frame or ##VmaPoolCreateInfo{@code ::frameInUseCount} frames back cannot become lost.
+
+        <b>Q: Can I touch allocation that cannot become lost?</b>
+
+        Yes, although it has no visible effect. Calls to #GetAllocationInfo() and #TouchAllocation() update last use frame index also for allocations that
+        cannot become lost, but the only way to observe it is to dump internal allocator state using #BuildStatsString(). You can use this feature for
+        debugging purposes to explicitly mark allocations that you use in current frame and then analyze JSON dump to see for how long each allocation stays
+        unused.
 
         <h3>Statistics</h3>
 
@@ -623,7 +938,112 @@ printf("Image name: %s\n", imageName);""")}
 
         That string is also printed in JSON report created by #BuildStatsString().
 
+        <h3>Debugging incorrect memory usage</h3>
+
+        If you suspect a bug with memory usage, like usage of uninitialized memory or memory being overwritten out of bounds of an allocation, you can use
+        debug features of this library to verify this.
+
+        <h4>Memory initialization</h4>
+
+        If you experience a bug with incorrect and nondeterministic data in your program and you suspect uninitialized memory to be used, you can enable
+        automatic memory initialization to verify this. To do it, define macro {@code VMA_DEBUG_INITIALIZE_ALLOCATIONS} to 1.
+
+        It makes memory of all new allocations initialized to bit pattern {@code 0xDCDCDCDC}. Before an allocation is destroyed, its memory is filled with bit
+        pattern {@code 0xEFEFEFEF}. Memory is automatically mapped and unmapped if necessary.
+
+        If you find these values while debugging your program, good chances are that you incorrectly read Vulkan memory that is allocated but not initialized,
+        or already freed, respectively.
+
+        Memory initialization works only with memory types that are {@code HOST_VISIBLE}. It works also with dedicated allocations. It doesn't work with
+        allocations created with #ALLOCATION_CREATE_CAN_BECOME_LOST_BIT flag, as they cannot be mapped.
+
+        <h4>Margins</h4>
+
+        By default, allocations are laid out in memory blocks next to each other if possible (considering required alignment, {@code bufferImageGranularity},
+        and {@code nonCoherentAtomSize}).
+
+        Define macro {@code VMA_DEBUG_MARGIN} to some non-zero value (e.g. 16) to enforce specified number of bytes as a margin before and after every
+        allocation.
+
+        If your bug goes away after enabling margins, it means it may be caused by memory being overwritten outside of allocation boundaries. It is not 100%
+        certain though. Change in application behavior may also be caused by different order and distribution of allocations across memory blocks after margins
+        are applied.
+
+        The margin is applied also before first and after last allocation in a block. It may occur only once between two adjacent allocations.
+
+        Margins work with all types of memory.
+
+        Margin is applied only to allocations made out of memory blocks and not to dedicated allocations, which have their own memory block of specific size.
+        It is thus not applied to allocations made using #ALLOCATION_CREATE_DEDICATED_MEMORY_BIT flag or those automatically decided to put into dedicated
+        allocations, e.g. due to its large size or recommended by {@code VK_KHR_dedicated_allocation} extension. Margins are also not active in custom pools
+        created with #POOL_CREATE_BUDDY_ALGORITHM_BIT flag.
+
+        Margins appear in JSON dump as part of free space.
+
+        Note that enabling margins increases memory usage and fragmentation.
+
+        <h4>Corruption detection</h4>
+
+        You can additionally define macro {@code VMA_DEBUG_DETECT_CORRUPTION} to 1 to enable validation of contents of the margins.
+
+        When this feature is enabled, number of bytes specified as {@code VMA_DEBUG_MARGIN} (it must be multiple of 4) before and after every allocation is
+        filled with a magic number. This idea is also know as "canary". Memory is automatically mapped and unmapped if necessary.
+
+        This number is validated automatically when the allocation is destroyed. If it's not equal to the expected value, {@code VMA_ASSERT()} is executed. It
+        clearly means that either CPU or GPU overwritten the memory outside of boundaries of the allocation, which indicates a serious bug.
+
+        You can also explicitly request checking margins of all allocations in all memory blocks that belong to specified memory types by using function
+        #CheckCorruption(), or in memory blocks that belong to specified custom pool, by using function #CheckPoolCorruption().
+
+        Margin validation (corruption detection) works only for memory types that are {@code HOST_VISIBLE} and {@code HOST_COHERENT}.
+
+        <h3>Record and replay</h3>
+
+        <h4>Introduction</h4>
+
+        While using the library, sequence of calls to its functions together with their parameters can be recorded to a file and later replayed using
+        standalone player application. It can be useful to:
+
+        ${ul(
+            "Test correctness - check if same sequence of calls will not cause crash or failures on a target platform.",
+            "Gather statistics - see number of allocations, peak memory usage, number of calls etc.",
+            "Benchmark performance - see how much time it takes to replay the whole sequence."
+        )}
+
+        <h4>Usage</h4>
+
+        <b>To record sequence of calls to a file:</b> Fill in ##VmaAllocatorCreateInfo{@code ::pRecordSettings} member while creating {@code VmaAllocator}
+        object. File is opened and written during whole lifetime of the allocator.
+
+        <b>To replay file:</b> Use {@code VmaReplay} - standalone command-line program. Precompiled binary can be found in "bin" directory. Its source can be
+        found in "src/VmaReplay" directory. Its project is generated by Premake. Command line syntax is printed when the program is launched without parameters.
+        Basic usage:
+
+        ${codeBlock("""
+VmaReplay.exe MyRecording.csv""")}
+
+        <b>Documentation of file format</b> can be found in file: "docs/Recording file format.md". It's a human-readable, text file in CSV format (Comma
+        Separated Values).
+
+        <h4>Additional considerations</h4>
+
+        ${ul(
+            """
+            Replaying file that was recorded on a different GPU (with different parameters like {@code bufferImageGranularity}, {@code nonCoherentAtomSize},
+            and especially different set of memory heaps and types) may give different performance and memory usage results, as well as issue some warnings and
+            errors.
+            """,
+            """
+            Current implementation of recording in VMA, as well as {@code VmaReplay} application, is coded and tested only on Windows. Inclusion of recording
+            code is driven by {@code VMA_RECORDING_ENABLED} macro. Support for other platforms should be easy to add. Contributions are welcomed.
+            """,
+            "Currently calls to #Defragment() function are not recorded."
+        )}
+
         <h3>Recommended usage patterns</h3>
+
+        See also slides from talk: <a href="https://www.gdcvault.com/play/1025458/Advanced-Graphics-Techniques-Tutorial-New">Sawicki, Adam. Advanced Graphics
+        Techniques Tutorial: Memory management in Vulkan and DX12. Game Developers Conference, 2018</a>
 
         <h4>Simple patterns</h4>
 
@@ -659,8 +1079,8 @@ printf("Image name: %s\n", imageName);""")}
         <b>What to do:</b> Create them using #MEMORY_USAGE_CPU_TO_GPU. You can map it and write to it directly on CPU, as well as read from it on GPU.
 
         This is a more complex situation. Different solutions are possible, and the best one depends on specific GPU type, but you can use this simple approach
-        for the start. Prefer to write to such resource sequentially (e.g. using {@code memcpy}). Don't perform random access or any reads from it, as it may
-        be very slow.
+        for the start. Prefer to write to such resource sequentially (e.g. using {@code memcpy}). Don't perform random access or any reads from it on CPU, as
+        it may be very slow.
 
         <h5>Readback</h5>
 
@@ -674,8 +1094,8 @@ printf("Image name: %s\n", imageName);""")}
 
         You can support integrated graphics (like Intel HD Graphics, AMD APU) better by detecting it in Vulkan. To do it, call
         {@code vkGetPhysicalDeviceProperties()}, inspect {@code VkPhysicalDeviceProperties::deviceType} and look for
-        {@code VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU}. When you find it, you can assume that memory is unified and all memory types are equally fast to access
-        from GPU, regardless of {@code VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT}.
+        {@code VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU}. When you find it, you can assume that memory is unified and all memory types are comparably fast to
+        access from GPU, regardless of {@code VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT}.
 
         You can then sum up sizes of all available memory heaps and treat them as useful for your GPU resources, instead of only {@code DEVICE_LOCAL} ones. You
         can also prefer to create your resources in memory types that are {@code HOST_VISIBLE} to map them directly instead of submitting explicit transfer
@@ -698,7 +1118,7 @@ printf("Image name: %s\n", imageName);""")}
         general recommendations:
 
         ${ul(
-            "On integrated graphics use (2) or (3) to avoid unnecesary time and memory overhead related to using a second copy.",
+            "On integrated graphics use (2) or (3) to avoid unnecesary time and memory overhead related to using a second copy and making transfer.",
             """
             For small resources (e.g. constant buffers) use (2). Discrete AMD cards have special 256 MiB pool of video memory that is directly mappable. Even
             if the resource ends up in system memory, its data may be cached on GPU after first fetch over PCIe bus.
@@ -739,8 +1159,14 @@ printf("Image name: %s\n", imageName);""")}
 
         <h4>Device heap memory limit</h4>
 
-        If you want to test how your program behaves with limited amount of Vulkan device memory available without switching your graphics card to one that
-        really has smaller VRAM, you can use a feature of this library intended for this purpose. To do it, fill optional member
+        When device memory of certain heap runs out of free space, new allocations may fail (returning error code) or they may succeed, silently pushing some
+        existing memory blocks from GPU VRAM to system RAM (which degrades performance). This behavior is implementation-dependant - it depends on GPU vendor
+        and graphics driver.
+
+        On AMD cards it can be controlled while creating Vulkan device object by using {@code VK_AMD_memory_allocation_behavior} extension, if available.
+
+        Alternatively, if you want to test how your program behaves with limited amount of Vulkan devicememory available without switching your graphics card
+        to one that really has smaller VRAM, you can use a feature of this library intended for this purpose. To do it, fill optional member
         ##VmaAllocatorCreateInfo{@code ::pHeapSizeLimit}.
 
         <h3>VK_KHR_dedicated_allocation</h3>
@@ -808,6 +1234,34 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
             """
         )}
 
+        <h4>Validation layer warnings</h4>
+
+        When using this library, you can meet following types of warnings issued by Vulkan validation layer. They don't necessarily indicate a bug, so you may
+        need to just ignore them.
+
+        ${ul(
+            """
+            <i>{@code vkBindBufferMemory()}: Binding memory to buffer {@code 0xeb8e4} but {@code vkGetBufferMemoryRequirements()} has not been called on that
+            buffer.</i>
+
+            It happens when {@code VK_KHR_dedicated_allocation} extension is enabled. {@code vkGetBufferMemoryRequirements2KHR} function is used instead, while
+            validation layer seems to be unaware of it.
+            """,
+            """
+            <i>Mapping an image with layout {@code VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL} can result in undefined behavior if this memory is used by
+            the device. Only {@code GENERAL} or {@code PREINITIALIZED} should be used.</i>
+
+            It happens when you map a buffer or image, because the library maps entire {@code VkDeviceMemory} block, where different types of images and
+            buffers may end up together, especially on GPUs with unified memory like Intel.
+            """,
+            """
+            <i>Non-linear image {@code 0xebc91} is aliased with linear buffer {@code 0xeb8e4} which may indicate a bug.</i>
+
+            It happens when you use lost allocations, and a new image or buffer is created in place of an existing object that became lost. It may happen also
+            when you use defragmentation.
+            """
+        )}
+
         <h4>Allocation algorithm</h4>
         
         The library uses following algorithm for allocation, in order:
@@ -830,12 +1284,50 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         Features deliberately excluded from the scope of this library:
         ${ul(
             """
-            Data transfer - issuing commands that transfer data between buffers or images, any usage of {@code VkCommandList} or {@code VkCommandQueue} and
-            related synchronization is responsibility of the user.
+            Data transfer. Uploading (streaming) and downloading data of buffers and images between CPU and GPU memory and related synchronization is
+            responsibility of the user.
             """,
-            "Support for any programming languages other than C/C++. Bindings to other languages are welcomed as external projects."
+            """
+            Defining some "texture" object that would automatically stream its data from a staging copy in CPU memory to GPU memory would rather be a feature
+            of another, higher-level library implemented on top of VMA.
+            """,
+            """
+            Allocations for imported/exported external memory. They tend to require explicit memory type index and dedicated allocation anyway, so they don't
+            interact with main features of this library. Such special purpose allocations should be made manually, using {@code vkCreateBuffer()} and
+            {@code vkAllocateMemory()}.
+            """,
+            """
+            Recreation of buffers and images. Although the library has functions for buffer and image creation (#CreateBuffer(), #CreateImage()), you need to
+            recreate these objects yourself after defragmentation. That's because the big structures {@code VkBufferCreateInfo}, {@code VkImageCreateInfo} are
+            not stored in {@code VmaAllocation} object.
+            """,
+            """
+            Handling CPU memory allocation failures. When dynamically creating small C++ objects in CPU memory (not Vulkan memory), allocation failures are not
+            checked and handled gracefully, because that would complicate code significantly and is usually not needed in desktop PC applications anyway.
+            """,
+            """
+            Code free of any compiler warnings. Maintaining the library to compile and work correctly on so many different platforms is hard enough. Being free
+            of any warnings, on any version of any compiler, is simply not feasible.
+            """,
+            """
+            This is a C++ library with C interface. Bindings or ports to any other programming languages are welcomed as external projects and are not going to
+            be included into this repository.
+            """
         )}
         """
+
+    EnumConstant(
+        "Flags to be used in ##VmaRecordSettings{@code ::flags}.",
+
+        "RECORD_FLUSH_AFTER_CALL_BIT".enum(
+            """
+            Enables flush after recording every function call.
+
+            Enable it if you expect your application to crash, which may leave recording file truncated. It may degrade performance though.
+            """,
+            0x00000001
+        )
+    )
 
     EnumConstant(
         "Flags for created {@code VmaAllocator}. ({@code VmaAllocatorCreateFlagBits})",
@@ -893,36 +1385,33 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
                 "Resources written and read by device, e.g. images used as attachments.",
                 """
                 Resources transferred from host once (immutable) or infrequently and read by device multiple times, e.g. textures to be sampled, vertex
-                buffers, uniform (constant) buffers, and majority of other types of resources used by device.
+                buffers, uniform (constant) buffers, and majority of other types of resources used on GPU.
                 """
             )}
             Allocation may still end up in {@code HOST_VISIBLE} memory on some implementations. In such case, you are free to map it. You can use
             #ALLOCATION_CREATE_MAPPED_BIT with this usage type.
-            """,
-            "2"
+            """
         ),
         "MEMORY_USAGE_CPU_ONLY".enum(
             """
             Memory will be mappable on host.
 
-            It usually means CPU (system) memory. Resources created in this pool may still be accessible to the device, but access to them can be slower.
-            Guarantees to be {@code HOST_VISIBLE} and {@code HOST_COHERENT}. CPU read may be uncached. It is roughly equivalent of
-            {@code D3D12_HEAP_TYPE_UPLOAD}.
+            It usually means CPU (system) memory. Guarantees to be {@code HOST_VISIBLE} and {@code HOST_COHERENT}. CPU access is typically uncached. Writes may
+            be write-combined. Resources created in this pool may still be accessible to the device, but access to them can be slow. It is roughly equivalent
+            of {@code D3D12_HEAP_TYPE_UPLOAD}.
 
             Usage: Staging copy of resources used as transfer source.
-            """,
-            "1"
+            """
         ),
         "MEMORY_USAGE_CPU_TO_GPU".enum(
             """
             Memory that is both mappable on host (guarantees to be {@code HOST_VISIBLE}) and preferably fast to access by GPU.
 
-            CPU reads may be uncached and very slow.
+            CPU access is typically uncached. Writes may be write-combined.
 
             Usage: Resources written frequently by host (dynamic), read by device. E.g. textures, vertex buffers, uniform buffers updated every frame or every
             draw call.
-            """,
-            "3"
+            """
         ),
         "MEMORY_USAGE_GPU_TO_CPU".enum(
             """
@@ -938,8 +1427,7 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
                 detection.
                 """
             )}
-            """,
-            "4"
+            """
         )
     )
 
@@ -952,12 +1440,9 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
 
             Use it for special, big resources, like fullscreen images used as attachments.
 
-            This flag must also be used for host visible resources that you want to map simultaneously because otherwise they might end up as regions of the
-            same {@code VkDeviceMemory}, while mapping same {@code VkDeviceMemory} multiple times simultaneously is illegal.
-
             You should not use this flag if ##VmaAllocationCreateInfo{@code ::pool} is not null.
             """,
-            0x00000001
+            "0x00000001"
         ),
         "ALLOCATION_CREATE_NEVER_ALLOCATE_BIT".enum(
             """
@@ -969,7 +1454,7 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
 
             If ##VmaAllocationCreateInfo{@code ::pool} is not null, this flag is implied and ignored.
             """,
-            0x00000002
+            "0x00000002"
         ),
         "ALLOCATION_CREATE_MAPPED_BIT".enum(
             """
@@ -983,7 +1468,7 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
 
             You should not use this flag together with #ALLOCATION_CREATE_CAN_BECOME_LOST_BIT.
             """,
-            0x00000004
+            "0x00000004"
         ),
         "ALLOCATION_CREATE_CAN_BECOME_LOST_BIT".enum(
             """
@@ -996,7 +1481,7 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
 
             You should not use this flag together with #ALLOCATION_CREATE_MAPPED_BIT.
             """,
-            0x00000008
+            "0x00000008"
         ),
         "ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT".enum(
             """
@@ -1004,7 +1489,7 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
 
             For details about supporting lost allocations, see Lost Allocations chapter of User Guide on Main Page.
             """,
-            0x00000010
+            "0x00000010"
         ),
         "ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT".enum(
             """
@@ -1012,7 +1497,50 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
             local copy of the string is made and stored in allocation's {@code pUserData}. The string is automatically freed together with the allocation. It
             is also used in #BuildStatsString().
             """,
-            0x00000020
+            "0x00000020"
+        ),
+        "ALLOCATION_CREATE_UPPER_ADDRESS_BIT".enum(
+            """
+            Allocation will be created from upper stack in a double stack pool.
+
+            This flag is only allowed for custom pools created with #POOL_CREATE_LINEAR_ALGORITHM_BIT flag.
+            """,
+            "0x00000040"
+        ),
+        "ALLOCATION_CREATE_DONT_BIND_BIT".enum(
+            """
+            Create both buffer/image and allocation, but don't bind them together.
+
+            It is useful when you want to bind yourself to do some more advanced binding, e.g. using some extensions. The flag is meaningful only with
+            functions that bind by default: #CreateBuffer(), #CreateImage(). Otherwise it is ignored.
+            """,
+            "0x00000080"
+        ),
+        "ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT".enum("Allocation strategy that chooses smallest possible free range for the allocation.", "0x00010000"),
+        "ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT".enum("Allocation strategy that chooses biggest possible free range for the allocation.", "0x00020000"),
+        "ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT".enum(
+            """
+            Allocation strategy that chooses first suitable free range for the allocation.
+
+            "First" doesn't necessarily means the one with smallest offset in memory, but rather the one that is easiest and fastest to find.
+            """,
+            "0x00040000"
+        ),
+        "ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT".enum(
+            "Allocation strategy that tries to minimize memory usage.",
+            "VMA_ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT"
+        ),
+        "ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT".enum(
+            "Allocation strategy that tries to minimize allocation time.",
+            "VMA_ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT"
+        ),
+        "ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT".enum(
+            "Allocation strategy that tries to minimize memory fragmentation.",
+            "VMA_ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT"
+        ),
+        "ALLOCATION_CREATE_STRATEGY_MASK".enum(
+            "A bit mask to extract only {@code STRATEGY} bits from entire set of flags.",
+            "VMA_ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT | VMA_ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT | VMA_ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT"
         )
     )
 
@@ -1024,7 +1552,7 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
             Use this flag if you always allocate only buffers and linear images or only optimal images out of this pool and so Buffer-Image Granularity can be
             ignored.
 
-            This is no optional optimization flag.
+            This is an optional optimization flag.
 
             If you always allocate using #CreateBuffer(), #CreateImage(), #AllocateMemoryForBuffer(), then you don't need to use it because allocator knows
             exact type of your allocations so it can handle Buffer-Image Granularity in the optimal way.
@@ -1032,9 +1560,36 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
             If you also allocate using #AllocateMemoryForImage() or #AllocateMemory(), exact type of such allocations is not known, so allocator must be
             conservative in handling Buffer-Image Granularity, which can lead to suboptimal allocation (wasted memory). In that case, if you can make sure you
             always allocate only buffers and linear images or only optimal images out of this pool, use this flag to make allocator disregard Buffer-Image
-            Granularity and so make allocations more optimal.
+            Granularity and so make allocations faster and more optimal.
             """,
             0x00000002
+        ),
+        "POOL_CREATE_LINEAR_ALGORITHM_BIT".enum(
+            """
+            Enables alternative, linear allocation algorithm in this pool.
+
+            Specify this flag to enable linear allocation algorithm, which always creates new allocations after last one and doesn't reuse space from
+            allocations freed in between. It trades memory consumption for simplified algorithm and data structure, which has better performance and uses less
+            memory for metadata.
+
+            By using this flag, you can achieve behavior of free-at-once, stack, ring buffer, and double stack.
+
+            When using this flag, you must specify ##VmaPoolCreateInfo{@code ::maxBlockCount == 1} (or 0 for default).
+            """,
+            0x00000004
+        ),
+        "POOL_CREATE_BUDDY_ALGORITHM_BIT".enum(
+            """
+            Enables alternative, buddy allocation algorithm in this pool.
+
+            It operates on a tree of blocks, each having size that is a power of two and a half of its parent's size. Comparing to default algorithm, this one
+            provides faster allocation and deallocation and decreased external fragmentation, at the expense of more memory wasted (internal fragmentation).
+            """,
+            0x00000008
+        ),
+        "POOL_CREATE_ALGORITHM_MASK".enum(
+            "Bit mask to extract only {@code ALGORITHM} bits from entire set of flags.",
+            "VMA_POOL_CREATE_LINEAR_ALGORITHM_BIT | VMA_POOL_CREATE_BUDDY_ALGORITHM_BIT"
         )
     )
 
@@ -1046,15 +1601,15 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         LWJGL: Use ##VmaVulkanFunctions{@code ::set(VkInstance, VkDevice)} to populate the ##VmaAllocatorCreateInfo{@code ::pVulkanFunctions} struct.
         """,
 
-        VmaAllocatorCreateInfo.const.p.IN("pCreateInfo", ""),
-        Check(1)..VmaAllocator.p.OUT("pAllocator", "")
+        VmaAllocatorCreateInfo.const.p("pCreateInfo", ""),
+        Check(1)..VmaAllocator.p("pAllocator", "")
     )
 
     void(
         "DestroyAllocator",
         "Destroys allocator object.",
 
-        VmaAllocator.IN("allocator", "")
+        VmaAllocator("allocator", "")
     )
 
     void(
@@ -1064,8 +1619,8 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         own.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        Check(1)..VkPhysicalDeviceProperties.const.p.p.IN("ppPhysicalDeviceProperties", "")
+        VmaAllocator("allocator", ""),
+        Check(1)..VkPhysicalDeviceProperties.const.p.p("ppPhysicalDeviceProperties", "")
     )
 
     void(
@@ -1075,8 +1630,8 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         your own.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        Check(1)..VkPhysicalDeviceMemoryProperties.const.p.p.IN("ppPhysicalDeviceMemoryProperties", "")
+        VmaAllocator("allocator", ""),
+        Check(1)..VkPhysicalDeviceMemoryProperties.const.p.p("ppPhysicalDeviceMemoryProperties", "")
     )
 
     void(
@@ -1087,9 +1642,9 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         This is just a convenience function. Same information can be obtained using #GetMemoryProperties().
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        uint32_t.IN("memoryTypeIndex", ""),
-        Check(1)..VkMemoryPropertyFlags.p.OUT("pFlags", "")
+        VmaAllocator("allocator", ""),
+        uint32_t("memoryTypeIndex", ""),
+        Check(1)..VkMemoryPropertyFlags.p("pFlags", "")
     )
 
     void(
@@ -1101,33 +1656,33 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         inform the allocator when a new frame begins. Allocations queried using #GetAllocationInfo() cannot become lost in the current frame.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        uint32_t.IN("frameIndex", "")
+        VmaAllocator("allocator", ""),
+        uint32_t("frameIndex", "")
     )
 
     void(
         "CalculateStats",
         "Retrieves statistics from current state of the Allocator.",
 
-        VmaAllocator.IN("allocator", ""),
-        VmaStats.p.OUT("pStats", "")
+        VmaAllocator("allocator", ""),
+        VmaStats.p("pStats", "")
     )
 
     void(
         "BuildStatsString",
         "Builds and returns statistics as string in JSON format.",
 
-        VmaAllocator.IN("allocator", ""),
-        Check(1)..charASCII.p.p.OUT("ppStatsString", "must be freed using #FreeStatsString() function"),
-        VkBool32.IN("detailedMap", "")
+        VmaAllocator("allocator", ""),
+        Check(1)..charASCII.p.p("ppStatsString", "must be freed using #FreeStatsString() function"),
+        VkBool32("detailedMap", "")
     )
 
     void(
         "FreeStatsString",
         "",
 
-        VmaAllocator.IN("allocator", ""),
-        charASCII.p.IN("pStatsString", "")
+        VmaAllocator("allocator", ""),
+        charASCII.p("pStatsString", "")
     )
 
     VkResult(
@@ -1144,10 +1699,10 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         )}
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        uint32_t.IN("memoryTypeBits", ""),
-        VmaAllocationCreateInfo.const.p.IN("pAllocationCreateInfo", ""),
-        Check(1)..uint32_t.p.OUT("pMemoryTypeIndex", ""),
+        VmaAllocator("allocator", ""),
+        uint32_t("memoryTypeBits", ""),
+        VmaAllocationCreateInfo.const.p("pAllocationCreateInfo", ""),
+        Check(1)..uint32_t.p("pMemoryTypeIndex", ""),
 
         returnDoc =
         """
@@ -1175,10 +1730,10 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         )}
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VkBufferCreateInfo.const.p.IN("pBufferCreateInfo", ""),
-        VmaAllocationCreateInfo.const.p.IN("pAllocationCreateInfo", ""),
-        Check(1)..uint32_t.p.OUT("pMemoryTypeIndex", "")
+        VmaAllocator("allocator", ""),
+        VkBufferCreateInfo.const.p("pBufferCreateInfo", ""),
+        VmaAllocationCreateInfo.const.p("pAllocationCreateInfo", ""),
+        Check(1)..uint32_t.p("pMemoryTypeIndex", "")
     )
 
     VkResult(
@@ -1197,48 +1752,74 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         )}
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VkImageCreateInfo.const.p.IN("pImageCreateInfo", ""),
-        VmaAllocationCreateInfo.const.p.IN("pAllocationCreateInfo", ""),
-        Check(1)..uint32_t.p.OUT("pMemoryTypeIndex", "")
+        VmaAllocator("allocator", ""),
+        VkImageCreateInfo.const.p("pImageCreateInfo", ""),
+        VmaAllocationCreateInfo.const.p("pAllocationCreateInfo", ""),
+        Check(1)..uint32_t.p("pMemoryTypeIndex", "")
     )
 
     VkResult(
         "CreatePool",
         "Allocates Vulkan device memory and creates {@code VmaPool} object.",
 
-        VmaAllocator.IN("allocator", "Allocator object"),
-        VmaPoolCreateInfo.const.p.IN("pCreateInfo", "parameters of pool to create"),
-        Check(1)..VmaPool.p.OUT("pPool", "handle to created pool")
+        VmaAllocator("allocator", "Allocator object"),
+        VmaPoolCreateInfo.const.p("pCreateInfo", "parameters of pool to create"),
+        Check(1)..VmaPool.p("pPool", "handle to created pool")
     )
 
     void(
         "DestroyPool",
         "Destroys {@code VmaPool} object and frees Vulkan device memory.",
 
-        VmaAllocator.IN("allocator", ""),
-        VmaPool.IN("pool", "")
+        VmaAllocator("allocator", ""),
+        VmaPool("pool", "")
     )
 
     void(
         "GetPoolStats",
         "Retrieves statistics of existing VmaPool object.",
 
-        VmaAllocator.IN("allocator", "Allocator object"),
-        VmaPool.IN("pool", "pool object"),
-        VmaPoolStats.p.OUT("pPoolStats", "statistics of specified pool")
+        VmaAllocator("allocator", "Allocator object"),
+        VmaPool("pool", "pool object"),
+        VmaPoolStats.p("pPoolStats", "statistics of specified pool")
     )
 
     void(
         "MakePoolAllocationsLost",
         "Marks all allocations in given pool as lost if they are not used in current frame or ##VmaPoolCreateInfo{@code ::frameInUseCount} back from now.",
 
-        VmaAllocator.IN("allocator", "Allocator object"),
-        VmaPool.IN("pool", "pool"),
-        ReturnParam..nullable..Check(1)..size_t.p.OUT(
+        VmaAllocator("allocator", "Allocator object"),
+        VmaPool("pool", "pool"),
+        ReturnParam..nullable..Check(1)..size_t.p(
             "pLostAllocationCount",
             "number of allocations marked as lost. Optional - pass null if you don't need this information."
         )
+    )
+
+    VkResult(
+        "CheckPoolCorruption",
+        """
+        Checks magic number in margins around all allocations in given memory pool in search for corruptions.
+
+        Corruption detection is enabled only when {@code VMA_DEBUG_DETECT_CORRUPTION} macro is defined to nonzero, {@code VMA_DEBUG_MARGIN} is defined to
+        nonzero and the pool is created in memory type that is {@code HOST_VISIBLE} and {@code HOST_COHERENT}.
+        """,
+        VmaAllocator("allocator", ""),
+        VmaPool("pool", ""),
+
+        returnDoc =
+        """
+        possible return values:
+        ${ul(
+            "{@code VK_ERROR_FEATURE_NOT_PRESENT} - corruption detection is not enabled for specified pool.",
+            "{@code VK_SUCCESS} - corruption detection has been performed and succeeded.",
+            """
+            {@code VK_ERROR_VALIDATION_FAILED_EXT} - corruption detection has been performed and found memory corruptions around one of the allocations.
+            {@code VMA_ASSERT} is also fired in that case.
+            """,
+            "Other value: Error returned by Vulkan, e.g. memory mapping failure."
+        )}
+        """
     )
 
     VkResult(
@@ -1246,18 +1827,45 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         """
         General purpose memory allocation.
 
-        You should free the memory using #FreeMemory().
+        You should free the memory using #FreeMemory() or #FreeMemoryPages().
 
         It is recommended to use #AllocateMemoryForBuffer(), #AllocateMemoryForImage(), #CreateBuffer(), #CreateImage() instead whenever possible.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VkMemoryRequirements.const.p.IN("pVkMemoryRequirements", ""),
-        VmaAllocationCreateInfo.const.p.IN("pCreateInfo", ""),
-        Check(1)..VmaAllocation.p.OUT("pAllocation", "handle to allocated memory"),
-        nullable..VmaAllocationInfo.p.OUT(
+        VmaAllocator("allocator", ""),
+        VkMemoryRequirements.const.p("pVkMemoryRequirements", ""),
+        VmaAllocationCreateInfo.const.p("pCreateInfo", ""),
+        Check(1)..VmaAllocation.p("pAllocation", "handle to allocated memory"),
+        nullable..VmaAllocationInfo.p(
             "pAllocationInfo",
             "information about allocated memory. Optional. It can be later fetched using function #GetAllocationInfo()."
+        )
+    )
+
+    VkResult(
+        "AllocateMemoryPages",
+        """
+        General purpose memory allocation for multiple allocation objects at once.
+
+        You should free the memory using #FreeMemory() or #FreeMemoryPages().
+
+        Word "pages" is just a suggestion to use this function to allocate pieces of memory needed for sparse binding. It is just a general purpose allocation
+        function able to make multiple allocations at once. It may be internally optimized to be more efficient than calling #AllocateMemory()
+        {@code allocationCount} times.
+
+        All allocations are made using same parameters. All of them are created out of the same memory pool and type. If any allocation fails, all allocations
+        already made within this function call are also freed, so that when returned result is not {@code VK_SUCCESS}, {@code pAllocation} array is always
+        entirely filled with {@code VK_NULL_HANDLE}.
+        """,
+
+        VmaAllocator("allocator", "allocator object"),
+        VkMemoryRequirements.const.p("pVkMemoryRequirements", "memory requirements for each allocation"),
+        VmaAllocationCreateInfo.const.p("pCreateInfo", "creation parameters for each alloction"),
+        AutoSize("pAllocations", "pAllocationInfo")..size_t("allocationCount", "number of allocations to make"),
+        Check(1)..VmaAllocation.p("pAllocations", "pointer to array that will be filled with handles to created allocations"),
+        nullable..VmaAllocationInfo.p(
+            "pAllocationInfo",
+            "pointer to array that will be filled with parameters of created allocations. Optional."
         )
     )
 
@@ -1269,11 +1877,11 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         You should free the memory using #FreeMemory().
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VkBuffer.IN("buffer", ""),
-        VmaAllocationCreateInfo.const.p.IN("pCreateInfo", ""),
-        Check(1)..VmaAllocation.p.OUT("pAllocation", "handle to allocated memory"),
-        nullable..VmaAllocationInfo.p.OUT(
+        VmaAllocator("allocator", ""),
+        VkBuffer("buffer", ""),
+        VmaAllocationCreateInfo.const.p("pCreateInfo", ""),
+        Check(1)..VmaAllocation.p("pAllocation", "handle to allocated memory"),
+        nullable..VmaAllocationInfo.p(
             "pAllocationInfo",
             "information about allocated memory. Optional. It can be later fetched using function #GetAllocationInfo()."
         )
@@ -1283,11 +1891,11 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         "AllocateMemoryForImage",
         "Function similar to #AllocateMemoryForBuffer().",
 
-        VmaAllocator.IN("allocator", ""),
-        VkImage.IN("image", ""),
-        VmaAllocationCreateInfo.const.p.IN("pCreateInfo", ""),
-        Check(1)..VmaAllocation.p.OUT("pAllocation", "handle to allocated memory"),
-        nullable..VmaAllocationInfo.p.OUT(
+        VmaAllocator("allocator", ""),
+        VkImage("image", ""),
+        VmaAllocationCreateInfo.const.p("pCreateInfo", ""),
+        Check(1)..VmaAllocation.p("pAllocation", "handle to allocated memory"),
+        nullable..VmaAllocationInfo.p(
             "pAllocationInfo",
             "information about allocated memory. Optional. It can be later fetched using function #GetAllocationInfo()."
         )
@@ -1295,10 +1903,64 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
 
     void(
         "FreeMemory",
-        "Frees memory previously allocated using #AllocateMemory(), #AllocateMemoryForBuffer(), or #AllocateMemoryForImage().",
+        """
+        Frees memory previously allocated using #AllocateMemory(), #AllocateMemoryForBuffer(), or #AllocateMemoryForImage().
 
-        VmaAllocator.IN("allocator", ""),
-        VmaAllocation.IN("allocation", "")
+        Passing {@code VK_NULL_HANDLE} as {@code allocation} is valid. Such function call is just skipped.
+        """,
+
+        VmaAllocator("allocator", ""),
+        nullable..VmaAllocation("allocation", "")
+    )
+
+    void(
+        "FreeMemoryPages",
+        """
+        Frees memory and destroys multiple allocations.
+
+        Word "pages" is just a suggestion to use this function to free pieces of memory used for sparse binding. It is just a general purpose function to free
+        memory and destroy allocations made using e.g. #AllocateMemory(), #AllocateMemoryPages() and other functions. It may be internally optimized to be more
+        efficient than calling #FreeMemory() {@code allocationCount} times.
+
+        Allocations in {@code pAllocations} array can come from any memory pools and types. Passing {@code VK_NULL_HANDLE} as elements of {@code pAllocations}
+        array is valid. Such entries are just skipped.
+        """,
+
+        VmaAllocator("allocator", ""),
+        AutoSize("pAllocations")..size_t("allocationCount", ""),
+        VmaAllocation.p("pAllocations", "")
+    )
+
+    VkResult(
+        "ResizeAllocation",
+        """
+        Tries to resize an allocation in place, if there is enough free memory after it.
+
+        Tries to change allocation's size without moving or reallocating it. You can both shrink and grow allocation size. When growing, it succeeds only when
+        the allocation belongs to a memory block with enough free space after it.
+
+        After successful call to this function, ##VmaAllocationInfo{@code ::size} of this allocation changes. All other parameters stay the same: memory pool
+        and type, alignment, offset, mapped pointer.
+
+        ${ul(
+            "Calling this function on allocation that is in lost state fails with result {@code VK_ERROR_VALIDATION_FAILED_EXT}.",
+            "Calling this function with {@code newSize} same as current allocation size does nothing and returns {@code VK_SUCCESS}.",
+            """
+            Resizing dedicated allocations, as well as allocations created in pools that use linear or buddy algorithm, is not supported. The function returns
+            {@code VK_ERROR_FEATURE_NOT_PRESENT} in such cases. Support may be added in the future.
+            """
+        )}
+        """,
+
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", ""),
+        VkDeviceSize("newSize", ""),
+
+        returnDoc =
+        """
+        {@code VK_SUCCESS} if allocation's size has been successfully changed. Returns {@code VK_ERROR_OUT_OF_POOL_MEMORY} if allocation's size could not be
+        changed.
+        """
     )
 
     void(
@@ -1322,9 +1984,9 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         )}
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VmaAllocation.IN("allocation", ""),
-        VmaAllocationInfo.p.OUT("pAllocationInfo", "")
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", ""),
+        VmaAllocationInfo.p("pAllocationInfo", "")
     )
 
     VkBool32(
@@ -1342,8 +2004,8 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         If the allocation has been created without #ALLOCATION_CREATE_CAN_BECOME_LOST_BIT flag, this function always returns {@code VK_TRUE}.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VmaAllocation.IN("allocation", "")
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", "")
     )
 
     void(
@@ -1360,9 +2022,9 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         however you want - e.g. as a pointer, ordinal number or some handle to you own data.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VmaAllocation.IN("allocation", ""),
-        opaque_p.IN("pUserData", "")
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", ""),
+        opaque_p("pUserData", "")
     )
 
     void(
@@ -1378,8 +2040,8 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         into a real, non-empty allocation.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        Check(1)..VmaAllocation.p.OUT("pAllocation", "")
+        VmaAllocator("allocator", ""),
+        Check(1)..VmaAllocation.p("pAllocation", "")
     )
 
     VkResult(
@@ -1411,9 +2073,9 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         mapped.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VmaAllocation.IN("allocation", ""),
-        Check(1)..void.p.p.OUT("ppData", "")
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", ""),
+        Check(1)..void.p.p("ppData", "")
     )
 
     void(
@@ -1424,13 +2086,151 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         For details, see description of {@code vmaMapMemory()}.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VmaAllocation.IN("allocation", "")
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", "")
+    )
+
+    void(
+        "FlushAllocation",
+        """
+        Flushes memory of given allocation.
+
+        Calls {@code vkFlushMappedMemoryRanges()} for memory associated with given range of given allocation.
+
+        ${ul(
+            "{@code offset} must be relative to the beginning of allocation.",
+            "{@code size} can be {@code VK_WHOLE_SIZE}. It means all memory from {@code offset} the the end of given allocation.",
+            "{@code offset} and {@code size} don't have to be aligned. They are internally rounded down/up to multiply of {@code nonCoherentAtomSize}.",
+            "If {@code size} is 0, this call is ignored.",
+            "If memory type that the {@code allocation} belongs to is not {@code HOST_VISIBLE} or it is {@code HOST_COHERENT}, this call is ignored."
+        )}
+
+        Warning! {@code offset} and {@code size} are relative to the contents of given {@code allocation}. If you mean whole allocation, you can pass 0 and
+        {@code VK_WHOLE_SIZE}, respectively. Do not pass allocation's offset as {@code offset}!!!
+        """,
+
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", ""),
+        VkDeviceSize("offset", ""),
+        VkDeviceSize("size", "")
+    )
+
+    void(
+        "InvalidateAllocation",
+        """
+        Invalidates memory of given allocation.
+
+        Calls {@code vkInvalidateMappedMemoryRanges()} for memory associated with given range of given allocation.
+
+        ${ul(
+            "{@code offset} must be relative to the beginning of allocation.",
+            "{@code size} can be {@code VK_WHOLE_SIZE}. It means all memory from {@code offset} the the end of given allocation.",
+            "{@code offset} and {@code size} don't have to be aligned. They are internally rounded down/up to multiply of {@code nonCoherentAtomSize}.",
+            "If {@code size} is 0, this call is ignored.",
+            "If memory type that the {@code allocation} belongs to is not {@code HOST_VISIBLE} or it is {@code HOST_COHERENT}, this call is ignored."
+        )}
+
+        Warning! {@code offset} and {@code size} are relative to the contents of given {@code allocation}. If you mean whole allocation, you can pass 0 and
+        {@code VK_WHOLE_SIZE}, respectively. Do not pass allocation's offset as {@code offset}!!!
+        """,
+
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", ""),
+        VkDeviceSize("offset", ""),
+        VkDeviceSize("size", "")
+    )
+
+    VkResult(
+        "CheckCorruption",
+        """
+        Checks magic number in margins around all allocations in given memory types (in both default and custom pools) in search for corruptions.
+
+        Corruption detection is enabled only when {@code VMA_DEBUG_DETECT_CORRUPTION} macro is defined to nonzero, {@code VMA_DEBUG_MARGIN} is defined to
+        nonzero and only for memory types that are {@code HOST_VISIBLE} and {@code HOST_COHERENT}.
+        """,
+
+        VmaAllocator("allocator", ""),
+        uint32_t("memoryTypeBits", "bit mask, where each bit set means that a memory type with that index should be checked"),
+
+        returnDoc =
+        """
+        possible return values:
+        ${ul(
+            "{@code VK_ERROR_FEATURE_NOT_PRESENT} - corruption detection is not enabled for any of specified memory types.",
+            "{@code VK_SUCCESS} - corruption detection has been performed and succeeded.",
+            """
+            {@code VK_ERROR_VALIDATION_FAILED_EXT} - corruption detection has been performed and found memory corruptions around one of the allocations.
+            {@code VMA_ASSERT} is also fired in that case.
+            """,
+            "Other value: Error returned by Vulkan, e.g. memory mapping failure."
+        )}
+        """
+    )
+
+    VkResult(
+        "DefragmentationBegin",
+        """
+        Begins defragmentation process.
+
+        Use this function instead of old, deprecated #Defragment().
+
+        Warning! Between the call to #DefragmentationBegin() and #DefragmentationEnd():
+
+        ${ul(
+            """
+            You should not use any of allocations passed as {@code pInfo->pAllocations} or any allocations that belong to pools passed as
+            {@code pInfo->pPools}, including calling #GetAllocationInfo(), #TouchAllocation(), or access their data.
+            """,
+            """
+            Some mutexes protecting internal data structures may be locked, so trying to make or free any allocations, bind buffers or images, map memory, or
+            launch another simultaneous defragmentation in between may cause stall (when done on another thread) or deadlock (when done on the same thread),
+            unless you are 100% sure that defragmented allocations are in different pools.
+            """,
+            """
+            Information returned via {@code pStats} and {@code pInfo->pAllocationsChanged} are undefined. They become valid after call to
+            #DefragmentationEnd().
+            """,
+            """
+            If {@code pInfo->commandBuffer} is not null, you must submit that command buffer and make sure it finished execution before calling
+            #DefragmentationEnd().
+            """
+        )}
+        """,
+
+        VmaAllocator("allocator", "allocator object"),
+        VmaDefragmentationInfo2.const.p("pInfo", "structure filled with parameters of defragmentation"),
+        nullable..VmaDefragmentationStats.p(
+            "pStats",
+            "Optional. Statistics of defragmentation. You can pass null if you are not interested in this information."
+        ),
+        Check(1)..VmaDefragmentationContext.p("pContext", "context object that must be passed to #DefragmentationEnd() to finish defragmentation"),
+
+        returnDoc =
+        """
+        {@code VK_SUCCESS} and {@code *pContext == null} if defragmentation finished within this function call. {@code VK_NOT_READY} and
+        {@code *pContext != null} if defragmentation has been started and you need to call #DefragmentationEnd() to finish it. Negative value in case of error.
+        """
+    )
+
+    VkResult(
+        "DefragmentationEnd",
+        """
+        Ends defragmentation process.
+
+        Use this function to finish defragmentation started by #DefragmentationBegin(). It is safe to pass {@code context == null}. The function then does
+        nothing.
+        """,
+
+        VmaAllocator("allocator", "allocator object"),
+        nullable..VmaDefragmentationContext("context", "")
     )
 
     VkResult(
         "Defragment",
         """
+        Deprecated: This is a part of the old interface. It is recommended to use structure ##VmaDefragmentationInfo2 and function #DefragmentationBegin()
+        instead.
+
         Compacts memory by moving allocations.
 
         This function works by moving allocations to different places (different {@code VkDeviceMemory} objects and/or different offsets) in order to optimize
@@ -1438,12 +2238,16 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
         rules:
         ${ul(
             """
-            Only allocations made in memory types that have {@code VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT} flag can be compacted. You may pass other allocations
-            but it makes no sense - these will never be moved.
+            Only allocations made in memory types that have {@code VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT} and {@code VK_MEMORY_PROPERTY_HOST_COHERENT_BIT} flags
+            can be compacted. You may pass other allocations but it makes no sense - these will never be moved.
             """,
-            "You may pass allocations made with #ALLOCATION_CREATE_DEDICATED_MEMORY_BIT but it makes no sense - they will never be moved.",
             """
-            Both allocations made with or without #ALLOCATION_CREATE_MAPPED_BIT  flag can be compacted. If not persistently mapped, memory will be mapped
+            Custom pools created with #POOL_CREATE_LINEAR_ALGORITHM_BIT or #POOL_CREATE_BUDDY_ALGORITHM_BIT flag are not defragmented. Allocations passed to
+            this function that come from such pools are ignored.
+            """,
+            "Allocations created with #ALLOCATION_CREATE_DEDICATED_MEMORY_BIT or created as dedicated allocations for any other reason are also ignored.",
+            """
+            Both allocations made with or without #ALLOCATION_CREATE_MAPPED_BIT flag can be compacted. If not persistently mapped, memory will be mapped
             temporarily inside this function if needed.
             """,
             "You must not pass same {@code VmaAllocation} object multiple times in {@code pAllocations} array."
@@ -1451,71 +2255,29 @@ vkBindBufferMemory(): Binding memory to buffer 0x33 but vkGetBufferMemoryRequire
 
         The function also frees empty {@code VkDeviceMemory} blocks.
 
-        After allocation has been moved, its ##VmaAllocationInfo{@code ::deviceMemory} and/or ##VmaAllocationInfo{@code ::offset} changes. You must query them
-        again using #GetAllocationInfo() if you need them.
-
-        If an allocation has been moved, data in memory is copied to new place automatically, but if it was bound to a buffer or an image, you must destroy
-        that object yourself, create new one and bind it to the new memory pointed by the allocation. You must use {@code vkDestroyBuffer()},
-        {@code vkDestroyImage()}, {@code vkCreateBuffer()}, {@code vkCreateImage()} for that purpose and NOT #DestroyBuffer(), #DestroyImage(),
-        #CreateBuffer(), #CreateImage()! Example:
-        ${codeBlock("""
-VkDevice device = ...;
-VmaAllocator allocator = ...;
-std::vector<VkBuffer> buffers = ...;
-std::vector<VmaAllocation> allocations = ...;
-
-std::vector<VkBool32> allocationsChanged(allocations.size());
-vmaDefragment(allocator, allocations.data(), allocations.size(), allocationsChanged.data(), nullptr, nullptr);
-
-for(size_t i = 0; i < allocations.size(); ++i)
-{
-    if(allocationsChanged[i])
-    {
-        VmaAllocationInfo allocInfo;
-        vmaGetAllocationInfo(allocator, allocations[i], &allocInfo);
-
-        vkDestroyBuffer(device, buffers[i], nullptr);
-
-        VkBufferCreateInfo bufferInfo = ...;
-        vkCreateBuffer(device, &bufferInfo, nullptr, &buffers[i]);
-
-        // You can make dummy call to vkGetBufferMemoryRequirements here to silence validation layer warning.
-
-        vkBindBufferMemory(device, buffers[i], allocInfo.deviceMemory, allocInfo.offset);
-    }
-}""")}
-
-        Note: Please don't expect memory to be fully compacted after this call. Algorithms inside are based on some heuristics that try to maximize number of
-        Vulkan memory blocks to make totally empty to release them, as well as to maximimze continuous empty space inside remaining blocks, while minimizing
-        the number and size of data that needs to be moved. Some fragmentation still remains after this call. This is normal.
-
-        Warning: This function is not 100% correct according to Vulkan specification. Use it at your own risk. That's because Vulkan doesn't guarantee that
-        memory requirements (size and alignment) for a new buffer or image are consistent. They may be different even for subsequent calls with the same
-        parameters. It really does happen on some platforms, especially with images.
-
-        Warning: This function may be time-consuming, so you shouldn't call it too often (like every frame or after every resource creation/destruction). You
-        can call it on special occasions (like when reloading a game level or when you just destroyed a lot of objects).
+        Warning: This function may be time-consuming, so you shouldn't call it too often (like after every resource creation/destruction). You
+        can call it on special occasions (like when reloading a game level or when you just destroyed a lot of objects). Calling it every frame may be OK, but
+        you should measure that on your platform.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VmaAllocation.p.OUT("pAllocations", "array of allocations that can be moved during this compaction"),
-        AutoSize("pAllocations", "pAllocationsChanged")..size_t.IN("allocationCount", "number of elements in {@code pAllocations} and {@code pAllocationsChanged} arrays"),
-        nullable..VkBool32.p.OUT(
+        VmaAllocator("allocator", ""),
+        VmaAllocation.p("pAllocations", "array of allocations that can be moved during this compaction"),
+        AutoSize("pAllocations", "pAllocationsChanged")..size_t("allocationCount", "number of elements in {@code pAllocations} and {@code pAllocationsChanged} arrays"),
+        nullable..VkBool32.p(
             "pAllocationsChanged",
             """
             array of boolean values that will indicate whether matching allocation in {@code pAllocations} array has been moved. This parameter is optional.
             Pass null if you don't need this information.
             """
         ),
-        nullable..VmaDefragmentationInfo.const.p.IN("pDefragmentationInfo", "configuration parameters. Optional - pass null to use default values."),
-        nullable..VmaDefragmentationStats.p.OUT(
+        nullable..VmaDefragmentationInfo.const.p("pDefragmentationInfo", "configuration parameters. Optional - pass null to use default values."),
+        nullable..VmaDefragmentationStats.p(
             "pDefragmentationStats",
             "statistics returned by the function. Optional - pass null if you don't need this information."
         ),
         returnDoc =
         """
-        {@code VK_SUCCESS} if completed, {@code VK_INCOMPLETE} if succeeded but didn't make all possible optimizations because limits specified in
-        {@code pDefragmentationInfo} have been reached, negative error code in case of error.
+        {@code VK_SUCCESS} if completed, negative error code in case of error.
         """
     )
 
@@ -1532,9 +2294,9 @@ for(size_t i = 0; i < allocations.size(); ++i)
         It is recommended to use function #CreateBuffer() instead of this one.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VmaAllocation.IN("allocation", ""),
-        VkBuffer.IN("buffer", "")
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", ""),
+        VkBuffer("buffer", "")
     )
 
     VkResult(
@@ -1550,9 +2312,9 @@ for(size_t i = 0; i < allocations.size(); ++i)
         It is recommended to use function vmaCreateImage() instead of this one.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VmaAllocation.IN("allocation", ""),
-        VkImage.IN("image", "")
+        VmaAllocator("allocator", ""),
+        VmaAllocation("allocation", ""),
+        VkImage("image", "")
     )
 
     VkResult(
@@ -1576,12 +2338,12 @@ for(size_t i = 0; i < allocations.size(); ++i)
         buffer, just like when using #ALLOCATION_CREATE_DEDICATED_MEMORY_BIT.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VkBufferCreateInfo.const.p.IN("pBufferCreateInfo", ""),
-        VmaAllocationCreateInfo.const.p.IN("pAllocationCreateInfo", ""),
-        Check(1)..VkBuffer.p.OUT("pBuffer", "buffer that was created"),
-        Check(1)..VmaAllocation.p.OUT("pAllocation", "allocation that was created"),
-        nullable..VmaAllocationInfo.p.OUT(
+        VmaAllocator("allocator", ""),
+        VkBufferCreateInfo.const.p("pBufferCreateInfo", ""),
+        VmaAllocationCreateInfo.const.p("pAllocationCreateInfo", ""),
+        Check(1)..VkBuffer.p("pBuffer", "buffer that was created"),
+        Check(1)..VmaAllocation.p("pAllocation", "allocation that was created"),
+        nullable..VmaAllocationInfo.p(
             "pAllocationInfo",
             "information about allocated memory. Optional. It can be later fetched using function #GetAllocationInfo()."
         )
@@ -1600,21 +2362,21 @@ vmaFreeMemory(allocator, allocation);""")}
         It it safe to pass null as buffer and/or allocation.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VkBuffer.IN("buffer", ""),
-        VmaAllocation.IN("allocation", "")
+        VmaAllocator("allocator", ""),
+        VkBuffer("buffer", ""),
+        VmaAllocation("allocation", "")
     )
 
     VkResult(
         "CreateImage",
         "Function similar to #CreateBuffer().",
 
-        VmaAllocator.IN("allocator", ""),
-        VkImageCreateInfo.const.p.IN("pImageCreateInfo", ""),
-        VmaAllocationCreateInfo.const.p.IN("pAllocationCreateInfo", ""),
-        Check(1)..VkImage.p.OUT("pImage", "image that was created"),
-        Check(1)..VmaAllocation.p.OUT("pAllocation", "allocation that was created"),
-        nullable..VmaAllocationInfo.p.OUT(
+        VmaAllocator("allocator", ""),
+        VkImageCreateInfo.const.p("pImageCreateInfo", ""),
+        VmaAllocationCreateInfo.const.p("pAllocationCreateInfo", ""),
+        Check(1)..VkImage.p("pImage", "image that was created"),
+        Check(1)..VmaAllocation.p("pAllocation", "allocation that was created"),
+        nullable..VmaAllocationInfo.p(
             "pAllocationInfo",
             "information about allocated memory. Optional. It can be later fetched using function #GetAllocationInfo()."
         )
@@ -1633,8 +2395,8 @@ vmaFreeMemory(allocator, allocation);""")}
         It it safe to pass null as image and/or allocation.
         """,
 
-        VmaAllocator.IN("allocator", ""),
-        VkImage.IN("image", ""),
-        VmaAllocation.IN("allocation", "")
+        VmaAllocator("allocator", ""),
+        VkImage("image", ""),
+        VmaAllocation("allocation", "")
     )
 }

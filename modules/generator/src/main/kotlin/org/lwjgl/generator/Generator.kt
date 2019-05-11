@@ -31,92 +31,13 @@ import java.util.function.*
     - Target source (Java)  -> <module>/src/generated/java/opengl/org/lwjgl/opengl/ARBImaging.java
     - Target source (C)     -> <module>/src/generated/c/opengl/org_lwjgl_opengl_ARBImaging.c
 */
-
-enum class Module(
-    val key: String,
-    val packageName: String,
-    internal val callingConvention: CallingConvention = CallingConvention.DEFAULT,
-    internal val arrayOverloads: Boolean = true
-) {
-    CORE("core", "org.lwjgl.system"),
-    CORE_DYNCALL("core.dyncall", "org.lwjgl.system.dyncall"),
-    CORE_JNI("core.jni", "org.lwjgl.system.jni"),
-    CORE_LIBC("core.libc", "org.lwjgl.system.libc"),
-    CORE_LINUX("core.linux", "org.lwjgl.system.linux"),
-    CORE_MACOS("core.macos", "org.lwjgl.system.macosx"),
-    CORE_WINDOWS("core.windows", "org.lwjgl.system.windows", CallingConvention.STDCALL),
-
-    ASSIMP("binding.assimp", "org.lwjgl.assimp"),
-    BGFX("binding.bgfx", "org.lwjgl.bgfx"),
-    EGL("binding.egl", "org.lwjgl.egl", CallingConvention.STDCALL),
-    GLFW("binding.glfw", "org.lwjgl.glfw"),
-    JAWT("binding.jawt", "org.lwjgl.system.jawt", CallingConvention.STDCALL),
-    JEMALLOC("binding.jemalloc", "org.lwjgl.system.jemalloc"),
-    LMDB("binding.lmdb", "org.lwjgl.util.lmdb"),
-    LZ4("binding.lz4", "org.lwjgl.util.lz4", arrayOverloads = false),
-    NANOVG("binding.nanovg", "org.lwjgl.nanovg"),
-    NFD("binding.nfd", "org.lwjgl.util.nfd"),
-    NUKLEAR("binding.nuklear", "org.lwjgl.nuklear"),
-    ODBC("binding.odbc", "org.lwjgl.odbc", CallingConvention.STDCALL, arrayOverloads = false),
-    OPENAL("binding.openal", "org.lwjgl.openal"),
-    OPENCL("binding.opencl", "org.lwjgl.opencl", CallingConvention.STDCALL),
-    OPENGL("binding.opengl", "org.lwjgl.opengl", CallingConvention.STDCALL),
-    OPENGLES("binding.opengles", "org.lwjgl.opengles", CallingConvention.STDCALL),
-    OPENVR("binding.openvr", "org.lwjgl.openvr", CallingConvention.STDCALL, arrayOverloads = false),
-    OVR("binding.ovr", "org.lwjgl.ovr"),
-    PAR("binding.par", "org.lwjgl.util.par"),
-    REMOTERY("binding.remotery", "org.lwjgl.util.remotery", arrayOverloads = false),
-    RPMALLOC("binding.rpmalloc", "org.lwjgl.system.rpmalloc", arrayOverloads = false),
-    SSE("binding.sse", "org.lwjgl.util.simd"),
-    STB("binding.stb", "org.lwjgl.stb"),
-    TINYEXR("binding.tinyexr", "org.lwjgl.util.tinyexr", arrayOverloads = false),
-    TINYFD("binding.tinyfd", "org.lwjgl.util.tinyfd"),
-    TOOTLE("binding.tootle", "org.lwjgl.util.tootle", arrayOverloads = false),
-    VMA("binding.vma", "org.lwjgl.util.vma", arrayOverloads = false),
-    VULKAN("binding.vulkan", "org.lwjgl.vulkan", CallingConvention.STDCALL),
-    XXHASH("binding.xxhash", "org.lwjgl.util.xxhash"),
-    YOGA("binding.yoga", "org.lwjgl.util.yoga", arrayOverloads = false),
-    ZSTD("binding.zstd", "org.lwjgl.util.zstd", arrayOverloads = false);
-
-    companion object {
-        internal val CHECKS = !System.getProperty("binding.DISABLE_CHECKS", "false")!!.toBoolean()
-    }
-
-    val enabled
-        get() = key.startsWith("core") || System.getProperty(key, "false")!!.toBoolean()
-
-    internal val java
-        get() = name.let {
-            if (it.startsWith("CORE_")) {
-                "core"
-            } else {
-                it.toLowerCase()
-            }
-        }
-
-    internal val packageKotlin
-        get() = name.let {
-            if (it.startsWith("CORE_")) {
-                this.key
-            } else {
-                it.toLowerCase()
-            }
-        }
-
-    @Suppress("LeakingThis")
-    private val CALLBACK_RECEIVER = ANONYMOUS.nativeClass(this)
-
-    fun callback(init: NativeClass.() -> CallbackType) = CALLBACK_RECEIVER.init()
-}
-
-fun String.dependsOn(vararg modules: Module): String? = if (modules.any { it.enabled }) this else null
-
 fun main(args: Array<String>) {
     if (args.isEmpty())
         throw IllegalArgumentException("Module root path not specified")
 
-    if (!Files.isDirectory(Paths.get(args[0])))
-            throw IllegalArgumentException("Invalid module root path: ${args[0]}")
+    if (!Files.isDirectory(Paths.get(args[0]))) {
+        throw IllegalArgumentException("Invalid module root path: ${args[0]}")
+    }
 
     Generator(args[0]).apply {
         // We discover templates reflectively.
@@ -138,7 +59,7 @@ fun main(args: Array<String>) {
                     pool.submit {
                         try {
                             this.generateModule(it)
-                        } catch(t: Throwable) {
+                        } catch (t: Throwable) {
                             errors.incrementAndGet()
                             t.printStackTrace()
                         }
@@ -158,7 +79,7 @@ fun main(args: Array<String>) {
                     pool.submit {
                         try {
                             work()
-                        } catch(t: Throwable) {
+                        } catch (t: Throwable) {
                             errors.incrementAndGet()
                             t.printStackTrace()
                         }
@@ -229,70 +150,6 @@ class Generator(private val moduleRoot: String) {
                 customClasses.add(customClass)
             return customClass
         }
-
-        fun registerLibraryInit(module: Module, className: String, libraryName: String, setupAllocator: Boolean = false, cpp: Boolean = false) {
-            if (!module.enabled)
-                return
-
-            Generator.register(object : GeneratorTargetNative(module, className) {
-                init {
-                    this.access = Access.INTERNAL
-                    this.cpp = cpp
-                    this.documentation = "Initializes the $libraryName shared library."
-                    javaImport("org.lwjgl.system.*")
-                    if (setupAllocator)
-                        javaImport("static org.lwjgl.system.MemoryUtil.*")
-                    nativeDirective("""#define LWJGL_MALLOC_LIB $nativeFileNameJNI
-#include "lwjgl_malloc.h"""")
-                }
-
-                override fun PrintWriter.generateJava() {
-                    generateJavaPreamble()
-                    println(
-                        """${access.modifier}final class $className {
-
-    static {
-        String libName = Platform.mapLibraryNameBundled("lwjgl_$libraryName");
-        Library.loadSystem(System::load, System::loadLibrary, $className.class, libName);${if (setupAllocator) """
-
-        MemoryAllocator allocator = getAllocator(Configuration.DEBUG_MEMORY_ALLOCATOR_INTERNAL.get(true));
-        setupMalloc(
-            allocator.getMalloc(),
-            allocator.getCalloc(),
-            allocator.getRealloc(),
-            allocator.getFree(),
-            allocator.getAlignedAlloc(),
-            allocator.getAlignedFree()
-        );""" else ""}
-    }
-
-    private $className() {
-    }
-
-    static void initialize() {
-        // intentionally empty to trigger static initializer
-    }${if (setupAllocator) """
-
-    private static native void setupMalloc(
-        long malloc,
-        long calloc,
-        long realloc,
-        long free,
-        long aligned_alloc,
-        long aligned_free
-    );""" else ""}
-
-}""")
-                }
-
-                override val skipNative
-                    get() = !setupAllocator
-
-                override fun PrintWriter.generateNative() {
-                    generateNativePreamble()
-                }
-            })
-        }
     }
 
     private val GENERATOR_LAST_MODIFIED = sequenceOf(
@@ -301,7 +158,7 @@ class Generator(private val moduleRoot: String) {
     ).fold(0L, ::max)
 
     private fun methodFilter(method: Method, javaClass: Class<*>) =
-        // static
+    // static
         method.modifiers and Modifier.STATIC != 0 &&
         // returns NativeClass
         method.returnType === javaClass &&
@@ -474,10 +331,11 @@ class Generator(private val moduleRoot: String) {
 
 private val moduleLastModifiedMap: MutableMap<Module, Long> = ConcurrentHashMap()
 
-internal val Path.lastModified get() = if (Files.isRegularFile(this))
-    Files.getLastModifiedTime(this).toMillis()
-else
-    0L
+internal val Path.lastModified
+    get() = if (Files.isRegularFile(this))
+        Files.getLastModifiedTime(this).toMillis()
+    else
+        0L
 
 private val KOTLIN_PATH_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.kt")
 
@@ -572,7 +430,8 @@ internal inline fun <T> Array<out T>.forEachWithMore(apply: (T, Boolean) -> Unit
 }
 
 /** Returns true if the collection was empty. */
-internal fun <T> Collection<T>.forEachWithMore(moreOverride: Boolean = false, apply: (T, Boolean) -> Unit): Boolean = this.asSequence().forEachWithMore(moreOverride, apply)
+internal fun <T> Collection<T>.forEachWithMore(moreOverride: Boolean = false, apply: (T, Boolean) -> Unit): Boolean =
+    this.asSequence().forEachWithMore(moreOverride, apply)
 
 /** Returns true if the sequence was empty. */
 internal fun <T> Sequence<T>.forEachWithMore(moreOverride: Boolean = false, apply: (T, Boolean) -> Unit): Boolean {

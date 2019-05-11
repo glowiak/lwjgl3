@@ -59,18 +59,14 @@ public class HmdQuaternionf extends Struct implements NativeResource {
         Z = layout.offsetof(3);
     }
 
-    HmdQuaternionf(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link HmdQuaternionf} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code HmdQuaternionf} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public HmdQuaternionf(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -123,30 +119,31 @@ public class HmdQuaternionf extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link HmdQuaternionf} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code HmdQuaternionf} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static HmdQuaternionf malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(HmdQuaternionf.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link HmdQuaternionf} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code HmdQuaternionf} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static HmdQuaternionf calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(HmdQuaternionf.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link HmdQuaternionf} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code HmdQuaternionf} instance allocated with {@link BufferUtils}. */
     public static HmdQuaternionf create() {
-        return new HmdQuaternionf(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(HmdQuaternionf.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link HmdQuaternionf} instance for the specified memory address. */
+    /** Returns a new {@code HmdQuaternionf} instance for the specified memory address. */
     public static HmdQuaternionf create(long address) {
-        return new HmdQuaternionf(address, null);
+        return wrap(HmdQuaternionf.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static HmdQuaternionf createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(HmdQuaternionf.class, address);
     }
 
     /**
@@ -155,7 +152,7 @@ public class HmdQuaternionf extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static HmdQuaternionf.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -164,7 +161,7 @@ public class HmdQuaternionf extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static HmdQuaternionf.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -173,7 +170,8 @@ public class HmdQuaternionf extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static HmdQuaternionf.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -183,43 +181,43 @@ public class HmdQuaternionf extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static HmdQuaternionf.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static HmdQuaternionf.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link HmdQuaternionf} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code HmdQuaternionf} instance allocated on the thread-local {@link MemoryStack}. */
     public static HmdQuaternionf mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link HmdQuaternionf} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code HmdQuaternionf} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static HmdQuaternionf callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link HmdQuaternionf} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code HmdQuaternionf} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static HmdQuaternionf mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(HmdQuaternionf.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link HmdQuaternionf} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code HmdQuaternionf} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static HmdQuaternionf callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(HmdQuaternionf.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -247,7 +245,7 @@ public class HmdQuaternionf extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static HmdQuaternionf.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -257,36 +255,38 @@ public class HmdQuaternionf extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static HmdQuaternionf.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #w}. */
-    public static float nw(long struct) { return memGetFloat(struct + HmdQuaternionf.W); }
+    public static float nw(long struct) { return UNSAFE.getFloat(null, struct + HmdQuaternionf.W); }
     /** Unsafe version of {@link #x}. */
-    public static float nx(long struct) { return memGetFloat(struct + HmdQuaternionf.X); }
+    public static float nx(long struct) { return UNSAFE.getFloat(null, struct + HmdQuaternionf.X); }
     /** Unsafe version of {@link #y}. */
-    public static float ny(long struct) { return memGetFloat(struct + HmdQuaternionf.Y); }
+    public static float ny(long struct) { return UNSAFE.getFloat(null, struct + HmdQuaternionf.Y); }
     /** Unsafe version of {@link #z}. */
-    public static float nz(long struct) { return memGetFloat(struct + HmdQuaternionf.Z); }
+    public static float nz(long struct) { return UNSAFE.getFloat(null, struct + HmdQuaternionf.Z); }
 
     /** Unsafe version of {@link #w(float) w}. */
-    public static void nw(long struct, float value) { memPutFloat(struct + HmdQuaternionf.W, value); }
+    public static void nw(long struct, float value) { UNSAFE.putFloat(null, struct + HmdQuaternionf.W, value); }
     /** Unsafe version of {@link #x(float) x}. */
-    public static void nx(long struct, float value) { memPutFloat(struct + HmdQuaternionf.X, value); }
+    public static void nx(long struct, float value) { UNSAFE.putFloat(null, struct + HmdQuaternionf.X, value); }
     /** Unsafe version of {@link #y(float) y}. */
-    public static void ny(long struct, float value) { memPutFloat(struct + HmdQuaternionf.Y, value); }
+    public static void ny(long struct, float value) { UNSAFE.putFloat(null, struct + HmdQuaternionf.Y, value); }
     /** Unsafe version of {@link #z(float) z}. */
-    public static void nz(long struct, float value) { memPutFloat(struct + HmdQuaternionf.Z, value); }
+    public static void nz(long struct, float value) { UNSAFE.putFloat(null, struct + HmdQuaternionf.Z, value); }
 
     // -----------------------------------
 
     /** An array of {@link HmdQuaternionf} structs. */
     public static class Buffer extends StructBuffer<HmdQuaternionf, Buffer> implements NativeResource {
 
+        private static final HmdQuaternionf ELEMENT_FACTORY = HmdQuaternionf.create(-1L);
+
         /**
-         * Creates a new {@link HmdQuaternionf.Buffer} instance backed by the specified container.
+         * Creates a new {@code HmdQuaternionf.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -312,18 +312,8 @@ public class HmdQuaternionf extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected HmdQuaternionf newInstance(long address) {
-            return new HmdQuaternionf(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected HmdQuaternionf getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code w} field. */

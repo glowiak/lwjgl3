@@ -12,6 +12,8 @@ import org.lwjgl.system.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
+ * Instances of this class may be passed to the {@link ZSTDCustomMem} struct.
+ * 
  * <h3>Type</h3>
  * 
  * <pre><code>
@@ -51,7 +53,7 @@ public abstract class ZSTDAllocFunction extends Callback implements ZSTDAllocFun
         super(SIGNATURE);
     }
 
-    private ZSTDAllocFunction(long functionPointer) {
+    ZSTDAllocFunction(long functionPointer) {
         super(functionPointer);
     }
 

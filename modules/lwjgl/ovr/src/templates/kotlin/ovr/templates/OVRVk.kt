@@ -8,7 +8,7 @@ import org.lwjgl.generator.*
 import ovr.*
 import vulkan.*
 
-val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMethod = "ovr_", prefixConstant = "ovr", library = OVR_LIBRARY) {
+val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMethod = "ovr_", prefixConstant = "ovr") {
     includeOVRCAPI_VK()
     javaImport("org.lwjgl.vulkan.*")
 
@@ -19,7 +19,7 @@ val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMeth
         This class contains Vulkan specific functionality.
         """
 
-    val session = ovrSession.IN("session", "an {@code ovrSession} previously returned by #Create()")
+    val session = ovrSession("session", "an {@code ovrSession} previously returned by #Create()")
 
     val GetInstanceExtensionsVk = ovrResult(
         "GetInstanceExtensionsVk",
@@ -51,12 +51,12 @@ val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMeth
  [...]""")}
         """,
 
-        ovrGraphicsLuid.IN("luid", "specifies the {@code luid} for the relevant GPU, which is returned from #Create()."),
-        charASCII.p.OUT(
+        ovrGraphicsLuid("luid", "specifies the {@code luid} for the relevant GPU, which is returned from #Create()."),
+        charASCII.p(
             "extensionNames",
             "a character buffer which will receive a list of extension name strings, separated by a single space char between each extension"
         ),
-        AutoSize("extensionNames")..Check(1)..uint32_t.p.INOUT(
+        AutoSize("extensionNames")..Check(1)..uint32_t.p(
             "inoutExtensionNamesSize",
             """
             indicates on input the capacity of {@code extensionNames} in chars. On output it returns the number of characters written to
@@ -109,9 +109,9 @@ val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMeth
         """,
 
         session,
-        ovrGraphicsLuid.IN("luid", "the {@code luid} returned from #Create()"),
-        VkInstance.IN("instance", "a {@code VkInstance} to search for matching {@code luids} in"),
-        Check(1)..VkPhysicalDevice.p.OUT("out_physicalDevice", "returns the {@code VkPhysicalDevice} matching the instance and {@code luid}"),
+        ovrGraphicsLuid("luid", "the {@code luid} returned from #Create()"),
+        VkInstance("instance", "a {@code VkInstance} to search for matching {@code luids} in"),
+        Check(1)..VkPhysicalDevice.p("out_physicalDevice", "returns the {@code VkPhysicalDevice} matching the instance and {@code luid}"),
 
         returnDoc = "an {@code ovrResult} indicating success or failure. In the case of failure, use #GetLastErrorInfo() to get more information."
     )
@@ -132,7 +132,7 @@ val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMeth
         """,
 
         session,
-        VkQueue.IN("queue", "a {@code VkQueue} to add a {@code VkFence} operation to and wait on"),
+        VkQueue("queue", "a {@code VkQueue} to add a {@code VkFence} operation to and wait on"),
 
         returnDoc = "an {@code ovrResult} indicating success or failure. In the case of failure, use #GetLastErrorInfo() to get more information."
     )
@@ -158,9 +158,9 @@ val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMeth
         """,
 
         session,
-        VkDevice.IN("device", "the application's {@code VkDevice} to create resources with"),
-        ovrTextureSwapChainDesc.const.p.IN("desc", "specifies requested texture properties. See notes for more info about texture format."),
-        Check(1)..ovrTextureSwapChain.p.OUT(
+        VkDevice("device", "the application's {@code VkDevice} to create resources with"),
+        ovrTextureSwapChainDesc.const.p("desc", "specifies requested texture properties. See notes for more info about texture format."),
+        Check(1)..ovrTextureSwapChain.p(
             "out_TextureSwapChain",
             """
             returns the created {@code ovrTextureSwapChain}, which will be valid upon a successful return value, else it will be #NULL. This texture chain must
@@ -176,15 +176,15 @@ val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMeth
         "Gets a specific {@code VkImage} within the chain.",
 
         session,
-        ovrTextureSwapChain.IN("chain", "an {@code ovrTextureSwapChain} previously returned by #CreateTextureSwapChainVk()"),
-        int.IN(
+        ovrTextureSwapChain("chain", "an {@code ovrTextureSwapChain} previously returned by #CreateTextureSwapChainVk()"),
+        int(
             "index",
             """
             the index within the chain to retrieve. Must be between 0 and length (see #GetTextureSwapChainLength()), or may pass -1 to get the buffer at the
             {@code CurrentIndex} location (saving a call to #GetTextureSwapChainCurrentIndex()).
             """
         ),
-        Check(1)..VkImage.p.OUT("out_Image", ""),
+        Check(1)..VkImage.p("out_Image", ""),
 
         returnDoc = "an {@code ovrResult} indicating success or failure. In the case of failure, use #GetLastErrorInfo() to get more information."
     )
@@ -211,9 +211,9 @@ val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMeth
         """,
 
         session,
-        VkDevice.IN("device", "the {@code VkDevice} to create resources with"),
-        ovrMirrorTextureDesc.const.p.IN("desc", "specifies requested texture properties. See notes for more info about texture format."),
-        Check(1)..ovrMirrorTexture.p.OUT(
+        VkDevice("device", "the {@code VkDevice} to create resources with"),
+        ovrMirrorTextureDesc.const.p("desc", "specifies requested texture properties. See notes for more info about texture format."),
+        Check(1)..ovrMirrorTexture.p(
             "out_MirrorTexture",
             """
             returns the created {@code ovrMirrorTexture}, which will be valid upon a successful return value, else it will be #NULL. This texture must be
@@ -229,8 +229,8 @@ val OVRVk = "OVRVk".dependsOn(Module.VULKAN)?.nativeClass(Module.OVR, prefixMeth
         "Gets the underlying mirror {@code VkImage}.",
 
         session,
-        ovrMirrorTexture.IN("mirrorTexture", "an {@code ovrMirrorTexture} previously returned by #CreateMirrorTextureWithOptionsVk()"),
-        Check(1)..VkImage.p.OUT("out_Image", "returns the {@code VkImage} pointer retrieved"),
+        ovrMirrorTexture("mirrorTexture", "an {@code ovrMirrorTexture} previously returned by #CreateMirrorTextureWithOptionsVk()"),
+        Check(1)..VkImage.p("out_Image", "returns the {@code VkImage} pointer retrieved"),
 
         returnDoc = "an {@code ovrResult} indicating success or failure. In the case of failure, use #GetLastErrorInfo() to get more information."
     )

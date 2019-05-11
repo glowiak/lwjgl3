@@ -9,9 +9,11 @@ import javax.annotation.*;
 
 import java.nio.*;
 
+import org.lwjgl.*;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.*;
 
 /**
  * structure describing capabilities of a surface for shared presentation.
@@ -39,7 +41,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     VkImageUsageFlags sharedPresentSupportedUsageFlags;
  * }</code></pre>
  */
-public class VkSharedPresentSurfaceCapabilitiesKHR extends Struct {
+public class VkSharedPresentSurfaceCapabilitiesKHR extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
@@ -68,18 +70,14 @@ public class VkSharedPresentSurfaceCapabilitiesKHR extends Struct {
         SHAREDPRESENTSUPPORTEDUSAGEFLAGS = layout.offsetof(2);
     }
 
-    VkSharedPresentSurfaceCapabilitiesKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkSharedPresentSurfaceCapabilitiesKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkSharedPresentSurfaceCapabilitiesKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkSharedPresentSurfaceCapabilitiesKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -125,15 +123,59 @@ public class VkSharedPresentSurfaceCapabilitiesKHR extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSharedPresentSurfaceCapabilitiesKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkSharedPresentSurfaceCapabilitiesKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    public static VkSharedPresentSurfaceCapabilitiesKHR malloc() {
+        return wrap(VkSharedPresentSurfaceCapabilitiesKHR.class, nmemAllocChecked(SIZEOF));
+    }
+
+    /** Returns a new {@code VkSharedPresentSurfaceCapabilitiesKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    public static VkSharedPresentSurfaceCapabilitiesKHR calloc() {
+        return wrap(VkSharedPresentSurfaceCapabilitiesKHR.class, nmemCallocChecked(1, SIZEOF));
+    }
+
+    /** Returns a new {@code VkSharedPresentSurfaceCapabilitiesKHR} instance allocated with {@link BufferUtils}. */
+    public static VkSharedPresentSurfaceCapabilitiesKHR create() {
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkSharedPresentSurfaceCapabilitiesKHR.class, memAddress(container), container);
+    }
+
+    /** Returns a new {@code VkSharedPresentSurfaceCapabilitiesKHR} instance for the specified memory address. */
     public static VkSharedPresentSurfaceCapabilitiesKHR create(long address) {
-        return new VkSharedPresentSurfaceCapabilitiesKHR(address, null);
+        return wrap(VkSharedPresentSurfaceCapabilitiesKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSharedPresentSurfaceCapabilitiesKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkSharedPresentSurfaceCapabilitiesKHR.class, address);
+    }
+
+    /**
+     * Returns a new {@link VkSharedPresentSurfaceCapabilitiesKHR.Buffer} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkSharedPresentSurfaceCapabilitiesKHR.Buffer malloc(int capacity) {
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
+    }
+
+    /**
+     * Returns a new {@link VkSharedPresentSurfaceCapabilitiesKHR.Buffer} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkSharedPresentSurfaceCapabilitiesKHR.Buffer calloc(int capacity) {
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
+    }
+
+    /**
+     * Returns a new {@link VkSharedPresentSurfaceCapabilitiesKHR.Buffer} instance allocated with {@link BufferUtils}.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkSharedPresentSurfaceCapabilitiesKHR.Buffer create(int capacity) {
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -143,36 +185,106 @@ public class VkSharedPresentSurfaceCapabilitiesKHR extends Struct {
      * @param capacity the buffer capacity
      */
     public static VkSharedPresentSurfaceCapabilitiesKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSharedPresentSurfaceCapabilitiesKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
+    }
+
+    // -----------------------------------
+
+    /** Returns a new {@code VkSharedPresentSurfaceCapabilitiesKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    public static VkSharedPresentSurfaceCapabilitiesKHR mallocStack() {
+        return mallocStack(stackGet());
+    }
+
+    /** Returns a new {@code VkSharedPresentSurfaceCapabilitiesKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    public static VkSharedPresentSurfaceCapabilitiesKHR callocStack() {
+        return callocStack(stackGet());
+    }
+
+    /**
+     * Returns a new {@code VkSharedPresentSurfaceCapabilitiesKHR} instance allocated on the specified {@link MemoryStack}.
+     *
+     * @param stack the stack from which to allocate
+     */
+    public static VkSharedPresentSurfaceCapabilitiesKHR mallocStack(MemoryStack stack) {
+        return wrap(VkSharedPresentSurfaceCapabilitiesKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
+    }
+
+    /**
+     * Returns a new {@code VkSharedPresentSurfaceCapabilitiesKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     *
+     * @param stack the stack from which to allocate
+     */
+    public static VkSharedPresentSurfaceCapabilitiesKHR callocStack(MemoryStack stack) {
+        return wrap(VkSharedPresentSurfaceCapabilitiesKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
+    }
+
+    /**
+     * Returns a new {@link VkSharedPresentSurfaceCapabilitiesKHR.Buffer} instance allocated on the thread-local {@link MemoryStack}.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkSharedPresentSurfaceCapabilitiesKHR.Buffer mallocStack(int capacity) {
+        return mallocStack(capacity, stackGet());
+    }
+
+    /**
+     * Returns a new {@link VkSharedPresentSurfaceCapabilitiesKHR.Buffer} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkSharedPresentSurfaceCapabilitiesKHR.Buffer callocStack(int capacity) {
+        return callocStack(capacity, stackGet());
+    }
+
+    /**
+     * Returns a new {@link VkSharedPresentSurfaceCapabilitiesKHR.Buffer} instance allocated on the specified {@link MemoryStack}.
+     *
+     * @param stack the stack from which to allocate
+     * @param capacity the buffer capacity
+     */
+    public static VkSharedPresentSurfaceCapabilitiesKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+    }
+
+    /**
+     * Returns a new {@link VkSharedPresentSurfaceCapabilitiesKHR.Buffer} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     *
+     * @param stack the stack from which to allocate
+     * @param capacity the buffer capacity
+     */
+    public static VkSharedPresentSurfaceCapabilitiesKHR.Buffer callocStack(int capacity, MemoryStack stack) {
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkSharedPresentSurfaceCapabilitiesKHR.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkSharedPresentSurfaceCapabilitiesKHR.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkSharedPresentSurfaceCapabilitiesKHR.PNEXT); }
     /** Unsafe version of {@link #sharedPresentSupportedUsageFlags}. */
-    public static int nsharedPresentSupportedUsageFlags(long struct) { return memGetInt(struct + VkSharedPresentSurfaceCapabilitiesKHR.SHAREDPRESENTSUPPORTEDUSAGEFLAGS); }
+    public static int nsharedPresentSupportedUsageFlags(long struct) { return UNSAFE.getInt(null, struct + VkSharedPresentSurfaceCapabilitiesKHR.SHAREDPRESENTSUPPORTEDUSAGEFLAGS); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkSharedPresentSurfaceCapabilitiesKHR.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkSharedPresentSurfaceCapabilitiesKHR.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkSharedPresentSurfaceCapabilitiesKHR.PNEXT, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkSharedPresentSurfaceCapabilitiesKHR} structs. */
-    public static class Buffer extends StructBuffer<VkSharedPresentSurfaceCapabilitiesKHR, Buffer> {
+    public static class Buffer extends StructBuffer<VkSharedPresentSurfaceCapabilitiesKHR, Buffer> implements NativeResource {
+
+        private static final VkSharedPresentSurfaceCapabilitiesKHR ELEMENT_FACTORY = VkSharedPresentSurfaceCapabilitiesKHR.create(-1L);
 
         /**
-         * Creates a new {@link VkSharedPresentSurfaceCapabilitiesKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkSharedPresentSurfaceCapabilitiesKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -198,18 +310,8 @@ public class VkSharedPresentSurfaceCapabilitiesKHR extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkSharedPresentSurfaceCapabilitiesKHR newInstance(long address) {
-            return new VkSharedPresentSurfaceCapabilitiesKHR(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkSharedPresentSurfaceCapabilitiesKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

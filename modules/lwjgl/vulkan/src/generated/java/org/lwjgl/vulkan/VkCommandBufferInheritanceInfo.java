@@ -21,9 +21,9 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-inheritedQueries">inherited queries</a> feature is not enabled, {@code occlusionQueryEnable} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-inheritedQueries">inherited queries</a> feature is enabled, {@code queryFlags} <b>must</b> be a valid combination of {@code VkQueryControlFlagBits} values</li>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-pipelineStatisticsQuery">pipeline statistics queries</a> feature is not enabled, {@code pipelineStatistics} <b>must</b> be 0</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-inheritedQueries">inherited queries</a> feature is not enabled, {@code occlusionQueryEnable} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-inheritedQueries">inherited queries</a> feature is enabled, {@code queryFlags} <b>must</b> be a valid combination of {@code VkQueryControlFlagBits} values</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-pipelineStatisticsQuery">pipeline statistics queries</a> feature is not enabled, {@code pipelineStatistics} <b>must</b> be 0</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -43,7 +43,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <ul>
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
- * <li>{@code renderPass} &ndash; a {@code VkRenderPass} object defining which render passes the {@code VkCommandBuffer} will be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with and <b>can</b> be executed within. If the {@code VkCommandBuffer} will not be executed within a render pass instance, {@code renderPass} is ignored.</li>
+ * <li>{@code renderPass} &ndash; a {@code VkRenderPass} object defining which render passes the {@code VkCommandBuffer} will be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with and <b>can</b> be executed within. If the {@code VkCommandBuffer} will not be executed within a render pass instance, {@code renderPass} is ignored.</li>
  * <li>{@code subpass} &ndash; the index of the subpass within the render pass instance that the {@code VkCommandBuffer} will be executed within. If the {@code VkCommandBuffer} will not be executed within a render pass instance, {@code subpass} is ignored.</li>
  * <li>{@code framebuffer} &ndash; optionally refers to the {@code VkFramebuffer} object that the {@code VkCommandBuffer} will be rendering to if it is executed within a render pass instance. It <b>can</b> be {@link VK10#VK_NULL_HANDLE NULL_HANDLE} if the framebuffer is not known, or if the {@code VkCommandBuffer} will not be executed within a render pass instance.
  * 
@@ -114,18 +114,14 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
         PIPELINESTATISTICS = layout.offsetof(7);
     }
 
-    VkCommandBufferInheritanceInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkCommandBufferInheritanceInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkCommandBufferInheritanceInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkCommandBufferInheritanceInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -210,30 +206,31 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCommandBufferInheritanceInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCommandBufferInheritanceInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkCommandBufferInheritanceInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkCommandBufferInheritanceInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkCommandBufferInheritanceInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCommandBufferInheritanceInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkCommandBufferInheritanceInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkCommandBufferInheritanceInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkCommandBufferInheritanceInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkCommandBufferInheritanceInfo} instance allocated with {@link BufferUtils}. */
     public static VkCommandBufferInheritanceInfo create() {
-        return new VkCommandBufferInheritanceInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkCommandBufferInheritanceInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkCommandBufferInheritanceInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkCommandBufferInheritanceInfo} instance for the specified memory address. */
     public static VkCommandBufferInheritanceInfo create(long address) {
-        return new VkCommandBufferInheritanceInfo(address, null);
+        return wrap(VkCommandBufferInheritanceInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCommandBufferInheritanceInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkCommandBufferInheritanceInfo.class, address);
     }
 
     /**
@@ -242,7 +239,7 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkCommandBufferInheritanceInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -251,7 +248,7 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkCommandBufferInheritanceInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -260,7 +257,8 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkCommandBufferInheritanceInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -270,43 +268,43 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkCommandBufferInheritanceInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCommandBufferInheritanceInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCommandBufferInheritanceInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkCommandBufferInheritanceInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkCommandBufferInheritanceInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkCommandBufferInheritanceInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkCommandBufferInheritanceInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkCommandBufferInheritanceInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkCommandBufferInheritanceInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkCommandBufferInheritanceInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCommandBufferInheritanceInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkCommandBufferInheritanceInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkCommandBufferInheritanceInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkCommandBufferInheritanceInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCommandBufferInheritanceInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkCommandBufferInheritanceInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -334,7 +332,7 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkCommandBufferInheritanceInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -344,52 +342,54 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkCommandBufferInheritanceInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkCommandBufferInheritanceInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkCommandBufferInheritanceInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkCommandBufferInheritanceInfo.PNEXT); }
     /** Unsafe version of {@link #renderPass}. */
-    public static long nrenderPass(long struct) { return memGetLong(struct + VkCommandBufferInheritanceInfo.RENDERPASS); }
+    public static long nrenderPass(long struct) { return UNSAFE.getLong(null, struct + VkCommandBufferInheritanceInfo.RENDERPASS); }
     /** Unsafe version of {@link #subpass}. */
-    public static int nsubpass(long struct) { return memGetInt(struct + VkCommandBufferInheritanceInfo.SUBPASS); }
+    public static int nsubpass(long struct) { return UNSAFE.getInt(null, struct + VkCommandBufferInheritanceInfo.SUBPASS); }
     /** Unsafe version of {@link #framebuffer}. */
-    public static long nframebuffer(long struct) { return memGetLong(struct + VkCommandBufferInheritanceInfo.FRAMEBUFFER); }
+    public static long nframebuffer(long struct) { return UNSAFE.getLong(null, struct + VkCommandBufferInheritanceInfo.FRAMEBUFFER); }
     /** Unsafe version of {@link #occlusionQueryEnable}. */
-    public static int nocclusionQueryEnable(long struct) { return memGetInt(struct + VkCommandBufferInheritanceInfo.OCCLUSIONQUERYENABLE); }
+    public static int nocclusionQueryEnable(long struct) { return UNSAFE.getInt(null, struct + VkCommandBufferInheritanceInfo.OCCLUSIONQUERYENABLE); }
     /** Unsafe version of {@link #queryFlags}. */
-    public static int nqueryFlags(long struct) { return memGetInt(struct + VkCommandBufferInheritanceInfo.QUERYFLAGS); }
+    public static int nqueryFlags(long struct) { return UNSAFE.getInt(null, struct + VkCommandBufferInheritanceInfo.QUERYFLAGS); }
     /** Unsafe version of {@link #pipelineStatistics}. */
-    public static int npipelineStatistics(long struct) { return memGetInt(struct + VkCommandBufferInheritanceInfo.PIPELINESTATISTICS); }
+    public static int npipelineStatistics(long struct) { return UNSAFE.getInt(null, struct + VkCommandBufferInheritanceInfo.PIPELINESTATISTICS); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkCommandBufferInheritanceInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkCommandBufferInheritanceInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkCommandBufferInheritanceInfo.PNEXT, value); }
     /** Unsafe version of {@link #renderPass(long) renderPass}. */
-    public static void nrenderPass(long struct, long value) { memPutLong(struct + VkCommandBufferInheritanceInfo.RENDERPASS, value); }
+    public static void nrenderPass(long struct, long value) { UNSAFE.putLong(null, struct + VkCommandBufferInheritanceInfo.RENDERPASS, value); }
     /** Unsafe version of {@link #subpass(int) subpass}. */
-    public static void nsubpass(long struct, int value) { memPutInt(struct + VkCommandBufferInheritanceInfo.SUBPASS, value); }
+    public static void nsubpass(long struct, int value) { UNSAFE.putInt(null, struct + VkCommandBufferInheritanceInfo.SUBPASS, value); }
     /** Unsafe version of {@link #framebuffer(long) framebuffer}. */
-    public static void nframebuffer(long struct, long value) { memPutLong(struct + VkCommandBufferInheritanceInfo.FRAMEBUFFER, value); }
+    public static void nframebuffer(long struct, long value) { UNSAFE.putLong(null, struct + VkCommandBufferInheritanceInfo.FRAMEBUFFER, value); }
     /** Unsafe version of {@link #occlusionQueryEnable(boolean) occlusionQueryEnable}. */
-    public static void nocclusionQueryEnable(long struct, int value) { memPutInt(struct + VkCommandBufferInheritanceInfo.OCCLUSIONQUERYENABLE, value); }
+    public static void nocclusionQueryEnable(long struct, int value) { UNSAFE.putInt(null, struct + VkCommandBufferInheritanceInfo.OCCLUSIONQUERYENABLE, value); }
     /** Unsafe version of {@link #queryFlags(int) queryFlags}. */
-    public static void nqueryFlags(long struct, int value) { memPutInt(struct + VkCommandBufferInheritanceInfo.QUERYFLAGS, value); }
+    public static void nqueryFlags(long struct, int value) { UNSAFE.putInt(null, struct + VkCommandBufferInheritanceInfo.QUERYFLAGS, value); }
     /** Unsafe version of {@link #pipelineStatistics(int) pipelineStatistics}. */
-    public static void npipelineStatistics(long struct, int value) { memPutInt(struct + VkCommandBufferInheritanceInfo.PIPELINESTATISTICS, value); }
+    public static void npipelineStatistics(long struct, int value) { UNSAFE.putInt(null, struct + VkCommandBufferInheritanceInfo.PIPELINESTATISTICS, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkCommandBufferInheritanceInfo} structs. */
     public static class Buffer extends StructBuffer<VkCommandBufferInheritanceInfo, Buffer> implements NativeResource {
 
+        private static final VkCommandBufferInheritanceInfo ELEMENT_FACTORY = VkCommandBufferInheritanceInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkCommandBufferInheritanceInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkCommandBufferInheritanceInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -415,18 +415,8 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkCommandBufferInheritanceInfo newInstance(long address) {
-            return new VkCommandBufferInheritanceInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkCommandBufferInheritanceInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

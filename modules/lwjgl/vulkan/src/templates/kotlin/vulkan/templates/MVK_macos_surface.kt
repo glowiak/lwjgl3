@@ -11,7 +11,7 @@ import vulkan.*
 val MVK_macos_surface = "MVKMacosSurface".nativeClassVK("MVK_macos_surface", type = "instance", postfix = MVK) {
     documentation =
         """
-        The {@code VK_MVK_macos_surface} extension is an instance extension. It provides a mechanism to create a {@code VkSurfaceKHR} object (defined by the {@link KHRSurface VK_KHR_surface} extension) that refers to an {@code NSView}, the native surface type of macOS, which is underpinned by a {@code CAMetalLayer}, to support rendering to the surface using Apple's Metal framework.
+        The {@code VK_MVK_macos_surface} extension is an instance extension. It provides a mechanism to create a {@code VkSurfaceKHR} object (defined by the {@link KHRSurface VK_KHR_surface} extension) that refers to an {@code NSView}, the native surface type of macOS, which is underpinned by a dlink:CAMetalLayer, to support rendering to the surface using Apple's Metal framework.
 
         <dl>
             <dt><b>Name String</b></dt>
@@ -110,9 +110,9 @@ val MVK_macos_surface = "MVKMacosSurface".nativeClassVK("MVK_macos_surface", typ
         ##VkAllocationCallbacks, ##VkMacOSSurfaceCreateInfoMVK
         """,
 
-        VkInstance.IN("instance", "the instance with which to associate the surface."),
-        VkMacOSSurfaceCreateInfoMVK.const.p.IN("pCreateInfo", "a pointer to an instance of the ##VkMacOSSurfaceCreateInfoMVK structure containing parameters affecting the creation of the surface object."),
-        nullable..VkAllocationCallbacks.const.p.IN("pAllocator", "the allocator used for host memory allocated for the surface object when there is no more specific allocator available (see <a target=\"_blank\" href=\"https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\\#memory-allocation\">Memory Allocation</a>)."),
-        Check(1)..VkSurfaceKHR.p.OUT("pSurface", "points to a {@code VkSurfaceKHR} handle in which the created surface object is returned.")
+        VkInstance("instance", "the instance with which to associate the surface."),
+        VkMacOSSurfaceCreateInfoMVK.const.p("pCreateInfo", "a pointer to an instance of the ##VkMacOSSurfaceCreateInfoMVK structure containing parameters affecting the creation of the surface object."),
+        nullable..VkAllocationCallbacks.const.p("pAllocator", "the allocator used for host memory allocated for the surface object when there is no more specific allocator available (see <a target=\"_blank\" href=\"https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\\#memory-allocation\">Memory Allocation</a>)."),
+        Check(1)..VkSurfaceKHR.p("pSurface", "points to a {@code VkSurfaceKHR} handle in which the created surface object is returned.")
     )
 }

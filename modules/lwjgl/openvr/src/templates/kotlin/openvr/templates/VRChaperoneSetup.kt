@@ -10,7 +10,6 @@ import openvr.*
 val VRChaperoneSetup = "VRChaperoneSetup".nativeClass(
     Module.OPENVR,
     prefixMethod = "VRChaperoneSetup_",
-    library = OPENVR_LIBRARY,
     binding = OPENVR_FNTABLE_BINDING
 ) {
     documentation =
@@ -23,7 +22,7 @@ val VRChaperoneSetup = "VRChaperoneSetup".nativeClass(
         "CommitWorkingCopy",
         "Saves the current working copy to disk.",
 
-        EChaperoneConfigFile.IN("configFile", "", "EChaperoneConfigFile_\\w+")
+        EChaperoneConfigFile("configFile", "", "EChaperoneConfigFile_\\w+")
     )
 
     void(
@@ -43,8 +42,8 @@ val VRChaperoneSetup = "VRChaperoneSetup".nativeClass(
         of the Play Area.
         """,
 
-        Check(1)..float.p.OUT("pSizeX", ""),
-        Check(1)..float.p.OUT("pSizeZ", "")
+        Check(1)..float.p("pSizeX", ""),
+        Check(1)..float.p("pSizeZ", "")
     )
 
     bool(
@@ -56,128 +55,107 @@ val VRChaperoneSetup = "VRChaperoneSetup".nativeClass(
         2 sides are parallel to the Z axis. Height of every corner is 0Y (on the floor).
         """,
 
-        HmdQuad_t.p.OUT("rect", "")
+        HmdQuad_t.p("rect", "")
     )
 
     bool(
         "GetWorkingCollisionBoundsInfo",
         "Returns the number of Quads if the buffer points to null. Otherwise it returns Quads into the buffer up to the max specified from the working copy.",
 
-        nullable..HmdQuad_t.p.OUT("pQuadsBuffer", ""),
-        AutoSize("pQuadsBuffer")..Check(1)..uint32_t.p.INOUT("punQuadsCount", "")
+        nullable..HmdQuad_t.p("pQuadsBuffer", ""),
+        AutoSize("pQuadsBuffer")..Check(1)..uint32_t.p("punQuadsCount", "")
     )
 
     bool(
         "GetLiveCollisionBoundsInfo",
         "Returns the number of Quads if the buffer points to null. Otherwise it returns Quads into the buffer up to the max specified.",
 
-        nullable..HmdQuad_t.p.OUT("pQuadsBuffer", ""),
-        AutoSize("pQuadsBuffer")..Check(1)..uint32_t.p.INOUT("punQuadsCount", "")
+        nullable..HmdQuad_t.p("pQuadsBuffer", ""),
+        AutoSize("pQuadsBuffer")..Check(1)..uint32_t.p("punQuadsCount", "")
     )
 
     bool(
         "GetWorkingSeatedZeroPoseToRawTrackingPose",
         "Returns the preferred seated position from the working copy.",
 
-        HmdMatrix34_t.p.OUT("pmatSeatedZeroPoseToRawTrackingPose", "")
+        HmdMatrix34_t.p("pmatSeatedZeroPoseToRawTrackingPose", "")
     )
 
     bool(
         "GetWorkingStandingZeroPoseToRawTrackingPose",
         "Returns the standing origin from the working copy.",
 
-        HmdMatrix34_t.p.OUT("pmatStandingZeroPoseToRawTrackingPose", "")
+        HmdMatrix34_t.p("pmatStandingZeroPoseToRawTrackingPose", "")
     )
 
     void(
         "SetWorkingPlayAreaSize",
         "Sets the Play Area in the working copy.",
 
-        float.IN("sizeX", ""),
-        float.IN("sizeZ", "")
+        float("sizeX", ""),
+        float("sizeZ", "")
     )
 
     void(
         "SetWorkingCollisionBoundsInfo",
         "Sets the Collision Bounds in the working copy.",
 
-        HmdQuad_t.p.IN("pQuadsBuffer", ""),
-        AutoSize("pQuadsBuffer")..uint32_t.IN("unQuadsCount", "")
+        HmdQuad_t.p("pQuadsBuffer", ""),
+        AutoSize("pQuadsBuffer")..uint32_t("unQuadsCount", "")
+    )
+
+    void(
+        "SetWorkingPerimeter",
+        "Sets the Collision Bounds in the working copy",
+
+        HmdVector2_t.p("pPointBuffer", ""),
+        AutoSize("pPointBuffer")..uint32_t("unPointCount", "")
     )
 
     void(
         "SetWorkingSeatedZeroPoseToRawTrackingPose",
         "Sets the preferred seated position in the working copy.",
 
-        HmdMatrix34_t.const.p.IN("pMatSeatedZeroPoseToRawTrackingPose", "")
+        HmdMatrix34_t.const.p("pMatSeatedZeroPoseToRawTrackingPose", "")
     )
 
     void(
         "SetWorkingStandingZeroPoseToRawTrackingPose",
         "Sets the preferred standing position in the working copy.",
 
-        HmdMatrix34_t.const.p.IN("pMatStandingZeroPoseToRawTrackingPose", "")
+        HmdMatrix34_t.const.p("pMatStandingZeroPoseToRawTrackingPose", "")
     )
 
     void(
         "ReloadFromDisk",
         "Tear everything down and reload it from the file on disk.",
 
-        EChaperoneConfigFile.IN("configFile", "", "EChaperoneConfigFile_\\w+")
+        EChaperoneConfigFile("configFile", "", "EChaperoneConfigFile_\\w+")
     )
 
     bool(
         "GetLiveSeatedZeroPoseToRawTrackingPose",
         "Returns the preferred seated position.",
 
-        HmdMatrix34_t.p.OUT("pmatSeatedZeroPoseToRawTrackingPose", "")
-    )
-
-    void(
-        "SetWorkingCollisionBoundsTagsInfo",
-        "",
-
-        uint8_t.p.IN("pTagsBuffer", ""),
-        AutoSize("pTagsBuffer")..uint32_t.IN("unTagCount", "")
-    )
-
-    bool(
-        "GetLiveCollisionBoundsTagsInfo",
-        "",
-
-        nullable..uint8_t.p.OUT("pTagsBuffer", ""),
-        AutoSize("pTagsBuffer")..Check(1)..uint32_t.p.INOUT("punTagCount", "")
-    )
-
-    bool(
-        "SetWorkingPhysicalBoundsInfo",
-        "",
-
-        HmdQuad_t.p.IN("pQuadsBuffer", ""),
-        AutoSize("pQuadsBuffer")..uint32_t.IN("unQuadsCount", "")
-    )
-
-    bool(
-        "GetLivePhysicalBoundsInfo",
-        "",
-
-        nullable..HmdQuad_t.p.OUT("pQuadsBuffer", ""),
-        AutoSize("pQuadsBuffer")..Check(1)..uint32_t.p.INOUT("punQuadsCount", "")
+        HmdMatrix34_t.p("pmatSeatedZeroPoseToRawTrackingPose", "")
     )
 
     bool(
         "ExportLiveToBuffer",
         "",
 
-        nullable..char.p.OUT("pBuffer", ""),
-        AutoSize("pBuffer")..Check(1)..uint32_t.p.INOUT("pnBufferLength", "")
+        nullable..char.p("pBuffer", ""),
+        AutoSize("pBuffer")..Check(1)..uint32_t.p("pnBufferLength", "")
     )
 
     bool(
         "ImportFromBufferToWorking",
         "",
 
-        Unsafe..char.const.p.IN("pBuffer", ""),
-        uint32_t.IN("nImportFlags", "")
+        Unsafe..char.const.p("pBuffer", ""),
+        uint32_t("nImportFlags", "")
     )
+
+    void("ShowWorkingSetPreview", "Shows the chaperone data in the working set to preview in the compositor.", void())
+    void("HideWorkingSetPreview", "Hides the chaperone data in the working set to preview in the compositor (if it was visible).", void())
 }

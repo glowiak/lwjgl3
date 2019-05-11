@@ -35,6 +35,7 @@ import static org.lwjgl.bgfx.BGFX.BGFX_TOPOLOGY_COUNT;
  * <li>{@code waitSubmit} &ndash; time spent waiting for submit thread to advance to next frame</li>
  * <li>{@code numDraw} &ndash; number of draw calls submitted</li>
  * <li>{@code numCompute} &ndash; number of compute calls submitted</li>
+ * <li>{@code numBlit} &ndash; number of blit calls submitted</li>
  * <li>{@code maxGpuLatency} &ndash; GPU driver latency</li>
  * <li>{@code numDynamicIndexBuffers} &ndash; number of used dynamic index buffers</li>
  * <li>{@code numDynamicVertexBuffers} &ndash; number of used dynamic vertex buffers</li>
@@ -60,7 +61,7 @@ import static org.lwjgl.bgfx.BGFX.BGFX_TOPOLOGY_COUNT;
  * <li>{@code textHeight} &ndash; debug text height in characters</li>
  * <li>{@code numViews} &ndash; number of view stats</li>
  * <li>{@code viewStats} &ndash; array of view stats</li>
- * <li>{@code numEncoder} &ndash; number of encoders used during frame</li>
+ * <li>{@code numEncoders} &ndash; number of encoders used during frame</li>
  * <li>{@code encoderStats} &ndash; array of encoder stats</li>
  * </ul>
  * 
@@ -79,6 +80,7 @@ import static org.lwjgl.bgfx.BGFX.BGFX_TOPOLOGY_COUNT;
  *     int64_t waitSubmit;
  *     uint32_t numDraw;
  *     uint32_t numCompute;
+ *     uint32_t numBlit;
  *     uint32_t maxGpuLatency;
  *     uint16_t numDynamicIndexBuffers;
  *     uint16_t numDynamicVertexBuffers;
@@ -104,7 +106,7 @@ import static org.lwjgl.bgfx.BGFX.BGFX_TOPOLOGY_COUNT;
  *     uint16_t textHeight;
  *     uint16_t numViews;
  *     {@link BGFXViewStats bgfx_view_stats_t} * viewStats;
- *     uint16_t numEncoder;
+ *     uint16_t numEncoders;
  *     {@link BGFXEncoderStats bgfx_encoder_stats_t} * encoderStats;
  * }</code></pre>
  */
@@ -130,6 +132,7 @@ public class BGFXStats extends Struct {
         WAITSUBMIT,
         NUMDRAW,
         NUMCOMPUTE,
+        NUMBLIT,
         MAXGPULATENCY,
         NUMDYNAMICINDEXBUFFERS,
         NUMDYNAMICVERTEXBUFFERS,
@@ -155,7 +158,7 @@ public class BGFXStats extends Struct {
         TEXTHEIGHT,
         NUMVIEWS,
         VIEWSTATS,
-        NUMENCODER,
+        NUMENCODERS,
         ENCODERSTATS;
 
     static {
@@ -169,6 +172,7 @@ public class BGFXStats extends Struct {
             __member(8),
             __member(8),
             __member(8),
+            __member(4),
             __member(4),
             __member(4),
             __member(4),
@@ -214,47 +218,44 @@ public class BGFXStats extends Struct {
         WAITSUBMIT = layout.offsetof(8);
         NUMDRAW = layout.offsetof(9);
         NUMCOMPUTE = layout.offsetof(10);
-        MAXGPULATENCY = layout.offsetof(11);
-        NUMDYNAMICINDEXBUFFERS = layout.offsetof(12);
-        NUMDYNAMICVERTEXBUFFERS = layout.offsetof(13);
-        NUMFRAMEBUFFERS = layout.offsetof(14);
-        NUMINDEXBUFFERS = layout.offsetof(15);
-        NUMOCCLUSIONQUERIES = layout.offsetof(16);
-        NUMPROGRAMS = layout.offsetof(17);
-        NUMSHADERS = layout.offsetof(18);
-        NUMTEXTURES = layout.offsetof(19);
-        NUMUNIFORMS = layout.offsetof(20);
-        NUMVERTEXBUFFERS = layout.offsetof(21);
-        NUMVERTEXDECLS = layout.offsetof(22);
-        TEXTUREMEMORYUSED = layout.offsetof(23);
-        RTMEMORYUSED = layout.offsetof(24);
-        TRANSIENTVBUSED = layout.offsetof(25);
-        TRANSIENTIBUSED = layout.offsetof(26);
-        NUMPRIMS = layout.offsetof(27);
-        GPUMEMORYMAX = layout.offsetof(28);
-        GPUMEMORYUSED = layout.offsetof(29);
-        WIDTH = layout.offsetof(30);
-        HEIGHT = layout.offsetof(31);
-        TEXTWIDTH = layout.offsetof(32);
-        TEXTHEIGHT = layout.offsetof(33);
-        NUMVIEWS = layout.offsetof(34);
-        VIEWSTATS = layout.offsetof(35);
-        NUMENCODER = layout.offsetof(36);
-        ENCODERSTATS = layout.offsetof(37);
-    }
-
-    BGFXStats(long address, @Nullable ByteBuffer container) {
-        super(address, container);
+        NUMBLIT = layout.offsetof(11);
+        MAXGPULATENCY = layout.offsetof(12);
+        NUMDYNAMICINDEXBUFFERS = layout.offsetof(13);
+        NUMDYNAMICVERTEXBUFFERS = layout.offsetof(14);
+        NUMFRAMEBUFFERS = layout.offsetof(15);
+        NUMINDEXBUFFERS = layout.offsetof(16);
+        NUMOCCLUSIONQUERIES = layout.offsetof(17);
+        NUMPROGRAMS = layout.offsetof(18);
+        NUMSHADERS = layout.offsetof(19);
+        NUMTEXTURES = layout.offsetof(20);
+        NUMUNIFORMS = layout.offsetof(21);
+        NUMVERTEXBUFFERS = layout.offsetof(22);
+        NUMVERTEXDECLS = layout.offsetof(23);
+        TEXTUREMEMORYUSED = layout.offsetof(24);
+        RTMEMORYUSED = layout.offsetof(25);
+        TRANSIENTVBUSED = layout.offsetof(26);
+        TRANSIENTIBUSED = layout.offsetof(27);
+        NUMPRIMS = layout.offsetof(28);
+        GPUMEMORYMAX = layout.offsetof(29);
+        GPUMEMORYUSED = layout.offsetof(30);
+        WIDTH = layout.offsetof(31);
+        HEIGHT = layout.offsetof(32);
+        TEXTWIDTH = layout.offsetof(33);
+        TEXTHEIGHT = layout.offsetof(34);
+        NUMVIEWS = layout.offsetof(35);
+        VIEWSTATS = layout.offsetof(36);
+        NUMENCODERS = layout.offsetof(37);
+        ENCODERSTATS = layout.offsetof(38);
     }
 
     /**
-     * Creates a {@link BGFXStats} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code BGFXStats} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public BGFXStats(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -293,6 +294,9 @@ public class BGFXStats extends Struct {
     /** Returns the value of the {@code numCompute} field. */
     @NativeType("uint32_t")
     public int numCompute() { return nnumCompute(address()); }
+    /** Returns the value of the {@code numBlit} field. */
+    @NativeType("uint32_t")
+    public int numBlit() { return nnumBlit(address()); }
     /** Returns the value of the {@code maxGpuLatency} field. */
     @NativeType("uint32_t")
     public int maxGpuLatency() { return nmaxGpuLatency(address()); }
@@ -371,24 +375,24 @@ public class BGFXStats extends Struct {
     /** Returns a {@link BGFXViewStats.Buffer} view of the struct array pointed to by the {@code viewStats} field. */
     @NativeType("bgfx_view_stats_t *")
     public BGFXViewStats.Buffer viewStats() { return nviewStats(address()); }
-    /** Returns the value of the {@code numEncoder} field. */
+    /** Returns the value of the {@code numEncoders} field. */
     @NativeType("uint16_t")
-    public short numEncoder() { return nnumEncoder(address()); }
+    public short numEncoders() { return nnumEncoders(address()); }
     /** Returns a {@link BGFXEncoderStats.Buffer} view of the struct array pointed to by the {@code encoderStats} field. */
     @NativeType("bgfx_encoder_stats_t *")
     public BGFXEncoderStats.Buffer encoderStats() { return nencoderStats(address()); }
 
     // -----------------------------------
 
-    /** Returns a new {@link BGFXStats} instance for the specified memory address. */
+    /** Returns a new {@code BGFXStats} instance for the specified memory address. */
     public static BGFXStats create(long address) {
-        return new BGFXStats(address, null);
+        return wrap(BGFXStats.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static BGFXStats createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(BGFXStats.class, address);
     }
 
     /**
@@ -398,105 +402,109 @@ public class BGFXStats extends Struct {
      * @param capacity the buffer capacity
      */
     public static BGFXStats.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static BGFXStats.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #cpuTimeFrame}. */
-    public static long ncpuTimeFrame(long struct) { return memGetLong(struct + BGFXStats.CPUTIMEFRAME); }
+    public static long ncpuTimeFrame(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.CPUTIMEFRAME); }
     /** Unsafe version of {@link #cpuTimeBegin}. */
-    public static long ncpuTimeBegin(long struct) { return memGetLong(struct + BGFXStats.CPUTIMEBEGIN); }
+    public static long ncpuTimeBegin(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.CPUTIMEBEGIN); }
     /** Unsafe version of {@link #cpuTimeEnd}. */
-    public static long ncpuTimeEnd(long struct) { return memGetLong(struct + BGFXStats.CPUTIMEEND); }
+    public static long ncpuTimeEnd(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.CPUTIMEEND); }
     /** Unsafe version of {@link #cpuTimerFreq}. */
-    public static long ncpuTimerFreq(long struct) { return memGetLong(struct + BGFXStats.CPUTIMERFREQ); }
+    public static long ncpuTimerFreq(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.CPUTIMERFREQ); }
     /** Unsafe version of {@link #gpuTimeBegin}. */
-    public static long ngpuTimeBegin(long struct) { return memGetLong(struct + BGFXStats.GPUTIMEBEGIN); }
+    public static long ngpuTimeBegin(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.GPUTIMEBEGIN); }
     /** Unsafe version of {@link #gpuTimeEnd}. */
-    public static long ngpuTimeEnd(long struct) { return memGetLong(struct + BGFXStats.GPUTIMEEND); }
+    public static long ngpuTimeEnd(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.GPUTIMEEND); }
     /** Unsafe version of {@link #gpuTimerFreq}. */
-    public static long ngpuTimerFreq(long struct) { return memGetLong(struct + BGFXStats.GPUTIMERFREQ); }
+    public static long ngpuTimerFreq(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.GPUTIMERFREQ); }
     /** Unsafe version of {@link #waitRender}. */
-    public static long nwaitRender(long struct) { return memGetLong(struct + BGFXStats.WAITRENDER); }
+    public static long nwaitRender(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.WAITRENDER); }
     /** Unsafe version of {@link #waitSubmit}. */
-    public static long nwaitSubmit(long struct) { return memGetLong(struct + BGFXStats.WAITSUBMIT); }
+    public static long nwaitSubmit(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.WAITSUBMIT); }
     /** Unsafe version of {@link #numDraw}. */
-    public static int nnumDraw(long struct) { return memGetInt(struct + BGFXStats.NUMDRAW); }
+    public static int nnumDraw(long struct) { return UNSAFE.getInt(null, struct + BGFXStats.NUMDRAW); }
     /** Unsafe version of {@link #numCompute}. */
-    public static int nnumCompute(long struct) { return memGetInt(struct + BGFXStats.NUMCOMPUTE); }
+    public static int nnumCompute(long struct) { return UNSAFE.getInt(null, struct + BGFXStats.NUMCOMPUTE); }
+    /** Unsafe version of {@link #numBlit}. */
+    public static int nnumBlit(long struct) { return UNSAFE.getInt(null, struct + BGFXStats.NUMBLIT); }
     /** Unsafe version of {@link #maxGpuLatency}. */
-    public static int nmaxGpuLatency(long struct) { return memGetInt(struct + BGFXStats.MAXGPULATENCY); }
+    public static int nmaxGpuLatency(long struct) { return UNSAFE.getInt(null, struct + BGFXStats.MAXGPULATENCY); }
     /** Unsafe version of {@link #numDynamicIndexBuffers}. */
-    public static short nnumDynamicIndexBuffers(long struct) { return memGetShort(struct + BGFXStats.NUMDYNAMICINDEXBUFFERS); }
+    public static short nnumDynamicIndexBuffers(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMDYNAMICINDEXBUFFERS); }
     /** Unsafe version of {@link #numDynamicVertexBuffers}. */
-    public static short nnumDynamicVertexBuffers(long struct) { return memGetShort(struct + BGFXStats.NUMDYNAMICVERTEXBUFFERS); }
+    public static short nnumDynamicVertexBuffers(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMDYNAMICVERTEXBUFFERS); }
     /** Unsafe version of {@link #numFrameBuffers}. */
-    public static short nnumFrameBuffers(long struct) { return memGetShort(struct + BGFXStats.NUMFRAMEBUFFERS); }
+    public static short nnumFrameBuffers(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMFRAMEBUFFERS); }
     /** Unsafe version of {@link #numIndexBuffers}. */
-    public static short nnumIndexBuffers(long struct) { return memGetShort(struct + BGFXStats.NUMINDEXBUFFERS); }
+    public static short nnumIndexBuffers(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMINDEXBUFFERS); }
     /** Unsafe version of {@link #numOcclusionQueries}. */
-    public static short nnumOcclusionQueries(long struct) { return memGetShort(struct + BGFXStats.NUMOCCLUSIONQUERIES); }
+    public static short nnumOcclusionQueries(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMOCCLUSIONQUERIES); }
     /** Unsafe version of {@link #numPrograms}. */
-    public static short nnumPrograms(long struct) { return memGetShort(struct + BGFXStats.NUMPROGRAMS); }
+    public static short nnumPrograms(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMPROGRAMS); }
     /** Unsafe version of {@link #numShaders}. */
-    public static short nnumShaders(long struct) { return memGetShort(struct + BGFXStats.NUMSHADERS); }
+    public static short nnumShaders(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMSHADERS); }
     /** Unsafe version of {@link #numTextures}. */
-    public static short nnumTextures(long struct) { return memGetShort(struct + BGFXStats.NUMTEXTURES); }
+    public static short nnumTextures(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMTEXTURES); }
     /** Unsafe version of {@link #numUniforms}. */
-    public static short nnumUniforms(long struct) { return memGetShort(struct + BGFXStats.NUMUNIFORMS); }
+    public static short nnumUniforms(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMUNIFORMS); }
     /** Unsafe version of {@link #numVertexBuffers}. */
-    public static short nnumVertexBuffers(long struct) { return memGetShort(struct + BGFXStats.NUMVERTEXBUFFERS); }
+    public static short nnumVertexBuffers(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMVERTEXBUFFERS); }
     /** Unsafe version of {@link #numVertexDecls}. */
-    public static short nnumVertexDecls(long struct) { return memGetShort(struct + BGFXStats.NUMVERTEXDECLS); }
+    public static short nnumVertexDecls(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMVERTEXDECLS); }
     /** Unsafe version of {@link #textureMemoryUsed}. */
-    public static long ntextureMemoryUsed(long struct) { return memGetLong(struct + BGFXStats.TEXTUREMEMORYUSED); }
+    public static long ntextureMemoryUsed(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.TEXTUREMEMORYUSED); }
     /** Unsafe version of {@link #rtMemoryUsed}. */
-    public static long nrtMemoryUsed(long struct) { return memGetLong(struct + BGFXStats.RTMEMORYUSED); }
+    public static long nrtMemoryUsed(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.RTMEMORYUSED); }
     /** Unsafe version of {@link #transientVbUsed}. */
-    public static int ntransientVbUsed(long struct) { return memGetInt(struct + BGFXStats.TRANSIENTVBUSED); }
+    public static int ntransientVbUsed(long struct) { return UNSAFE.getInt(null, struct + BGFXStats.TRANSIENTVBUSED); }
     /** Unsafe version of {@link #transientIbUsed}. */
-    public static int ntransientIbUsed(long struct) { return memGetInt(struct + BGFXStats.TRANSIENTIBUSED); }
+    public static int ntransientIbUsed(long struct) { return UNSAFE.getInt(null, struct + BGFXStats.TRANSIENTIBUSED); }
     /** Unsafe version of {@link #numPrims}. */
     public static IntBuffer nnumPrims(long struct) { return memIntBuffer(struct + BGFXStats.NUMPRIMS, BGFX_TOPOLOGY_COUNT); }
     /** Unsafe version of {@link #numPrims(int) numPrims}. */
     public static int nnumPrims(long struct, int index) {
-        return memGetInt(struct + BGFXStats.NUMPRIMS + check(index, BGFX_TOPOLOGY_COUNT) * 4);
+        return UNSAFE.getInt(null, struct + BGFXStats.NUMPRIMS + check(index, BGFX_TOPOLOGY_COUNT) * 4);
     }
     /** Unsafe version of {@link #gpuMemoryMax}. */
-    public static long ngpuMemoryMax(long struct) { return memGetLong(struct + BGFXStats.GPUMEMORYMAX); }
+    public static long ngpuMemoryMax(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.GPUMEMORYMAX); }
     /** Unsafe version of {@link #gpuMemoryUsed}. */
-    public static long ngpuMemoryUsed(long struct) { return memGetLong(struct + BGFXStats.GPUMEMORYUSED); }
+    public static long ngpuMemoryUsed(long struct) { return UNSAFE.getLong(null, struct + BGFXStats.GPUMEMORYUSED); }
     /** Unsafe version of {@link #width}. */
-    public static short nwidth(long struct) { return memGetShort(struct + BGFXStats.WIDTH); }
+    public static short nwidth(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.WIDTH); }
     /** Unsafe version of {@link #height}. */
-    public static short nheight(long struct) { return memGetShort(struct + BGFXStats.HEIGHT); }
+    public static short nheight(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.HEIGHT); }
     /** Unsafe version of {@link #textWidth}. */
-    public static short ntextWidth(long struct) { return memGetShort(struct + BGFXStats.TEXTWIDTH); }
+    public static short ntextWidth(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.TEXTWIDTH); }
     /** Unsafe version of {@link #textHeight}. */
-    public static short ntextHeight(long struct) { return memGetShort(struct + BGFXStats.TEXTHEIGHT); }
+    public static short ntextHeight(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.TEXTHEIGHT); }
     /** Unsafe version of {@link #numViews}. */
-    public static short nnumViews(long struct) { return memGetShort(struct + BGFXStats.NUMVIEWS); }
+    public static short nnumViews(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMVIEWS); }
     /** Unsafe version of {@link #viewStats}. */
     public static BGFXViewStats.Buffer nviewStats(long struct) { return BGFXViewStats.create(memGetAddress(struct + BGFXStats.VIEWSTATS), Short.toUnsignedInt(nnumViews(struct))); }
-    /** Unsafe version of {@link #numEncoder}. */
-    public static short nnumEncoder(long struct) { return memGetShort(struct + BGFXStats.NUMENCODER); }
+    /** Unsafe version of {@link #numEncoders}. */
+    public static short nnumEncoders(long struct) { return UNSAFE.getShort(null, struct + BGFXStats.NUMENCODERS); }
     /** Unsafe version of {@link #encoderStats}. */
-    public static BGFXEncoderStats.Buffer nencoderStats(long struct) { return BGFXEncoderStats.create(memGetAddress(struct + BGFXStats.ENCODERSTATS), Short.toUnsignedInt(nnumEncoder(struct))); }
+    public static BGFXEncoderStats.Buffer nencoderStats(long struct) { return BGFXEncoderStats.create(memGetAddress(struct + BGFXStats.ENCODERSTATS), Short.toUnsignedInt(nnumEncoders(struct))); }
 
     // -----------------------------------
 
     /** An array of {@link BGFXStats} structs. */
     public static class Buffer extends StructBuffer<BGFXStats, Buffer> {
 
+        private static final BGFXStats ELEMENT_FACTORY = BGFXStats.create(-1L);
+
         /**
-         * Creates a new {@link BGFXStats.Buffer} instance backed by the specified container.
+         * Creates a new {@code BGFXStats.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -522,18 +530,8 @@ public class BGFXStats extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected BGFXStats newInstance(long address) {
-            return new BGFXStats(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected BGFXStats getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code cpuTimeFrame} field. */
@@ -569,6 +567,9 @@ public class BGFXStats extends Struct {
         /** Returns the value of the {@code numCompute} field. */
         @NativeType("uint32_t")
         public int numCompute() { return BGFXStats.nnumCompute(address()); }
+        /** Returns the value of the {@code numBlit} field. */
+        @NativeType("uint32_t")
+        public int numBlit() { return BGFXStats.nnumBlit(address()); }
         /** Returns the value of the {@code maxGpuLatency} field. */
         @NativeType("uint32_t")
         public int maxGpuLatency() { return BGFXStats.nmaxGpuLatency(address()); }
@@ -647,9 +648,9 @@ public class BGFXStats extends Struct {
         /** Returns a {@link BGFXViewStats.Buffer} view of the struct array pointed to by the {@code viewStats} field. */
         @NativeType("bgfx_view_stats_t *")
         public BGFXViewStats.Buffer viewStats() { return BGFXStats.nviewStats(address()); }
-        /** Returns the value of the {@code numEncoder} field. */
+        /** Returns the value of the {@code numEncoders} field. */
         @NativeType("uint16_t")
-        public short numEncoder() { return BGFXStats.nnumEncoder(address()); }
+        public short numEncoders() { return BGFXStats.nnumEncoders(address()); }
         /** Returns a {@link BGFXEncoderStats.Buffer} view of the struct array pointed to by the {@code encoderStats} field. */
         @NativeType("bgfx_encoder_stats_t *")
         public BGFXEncoderStats.Buffer encoderStats() { return BGFXStats.nencoderStats(address()); }

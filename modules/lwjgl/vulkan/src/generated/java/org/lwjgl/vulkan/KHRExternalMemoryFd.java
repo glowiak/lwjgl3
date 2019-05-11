@@ -88,7 +88,7 @@ public class KHRExternalMemoryFd {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, device.address(), pGetFdInfo, pFd);
+        return callPPPI(device.address(), pGetFdInfo, pFd, __functionAddress);
     }
 
     /**
@@ -106,14 +106,14 @@ public class KHRExternalMemoryFd {
      * 
      * <h5>Description</h5>
      * 
-     * <p>Each call to {@link #vkGetMemoryFdKHR GetMemoryFdKHR} <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor using the {@code close} system call when it is no longer needed, or by importing a Vulkan memory object from it. Where supported by the operating system, the implementation <b>must</b> set the file descriptor to be closed automatically when an {@code execve} system call is made.</p>
+     * <p>Each call to {@code vkGetMemoryFdKHR} <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor using the {@code close} system call when it is no longer needed, or by importing a Vulkan memory object from it. Where supported by the operating system, the implementation <b>must</b> set the file descriptor to be closed automatically when an {@code execve} system call is made.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
      * <ul>
      * <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
      * <li>{@code pGetFdInfo} <b>must</b> be a valid pointer to a valid {@link VkMemoryGetFdInfoKHR} structure</li>
-     * <li>{@code pFd} <b>must</b> be a valid pointer to a {@code int} value</li>
+     * <li>{@code pFd} <b>must</b> be a valid pointer to an {@code int} value</li>
      * </ul>
      * 
      * <h5>Return Codes</h5>
@@ -154,7 +154,7 @@ public class KHRExternalMemoryFd {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, device.address(), handleType, fd, pMemoryFdProperties);
+        return callPPI(device.address(), handleType, fd, pMemoryFdProperties, __functionAddress);
     }
 
     /**
@@ -206,7 +206,7 @@ public class KHRExternalMemoryFd {
      * @param device              the logical device that will be importing {@code fd}.
      * @param handleType          the type of the handle {@code fd}.
      * @param fd                  the handle which will be imported.
-     * @param pMemoryFdProperties will return properties of the handle {@code fd}.
+     * @param pMemoryFdProperties a pointer to a {@link VkMemoryFdPropertiesKHR} structure in which the properties of the handle {@code fd} are returned.
      */
     @NativeType("VkResult")
     public static int vkGetMemoryFdPropertiesKHR(VkDevice device, @NativeType("VkExternalMemoryHandleTypeFlagBits") int handleType, int fd, @NativeType("VkMemoryFdPropertiesKHR *") VkMemoryFdPropertiesKHR pMemoryFdProperties) {
@@ -221,7 +221,7 @@ public class KHRExternalMemoryFd {
             check(__functionAddress);
             check(pFd, 1);
         }
-        return callPPPI(__functionAddress, device.address(), pGetFdInfo.address(), pFd);
+        return callPPPI(device.address(), pGetFdInfo.address(), pFd, __functionAddress);
     }
 
 }

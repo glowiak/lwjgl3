@@ -6,44 +6,6 @@ package yoga
 
 import org.lwjgl.generator.*
 
-fun config() {
-    packageInfo(
-        Module.YOGA,
-        """
-        Contains bindings to ${url("https://facebook.github.io/yoga/", "Yoga")}.
-
-        Yoga is a cross-platform layout engine enabling maximum collaboration within your team by implementing an API familiar to many designers and opening it
-        up to developers across different platforms.
-        ${ul(
-            "Do you already know Flexbox? Then you already know Yoga.",
-            "Write code in a language familiar to you - Java, C#, Objective-C, C.",
-            "C under the hood so your code moves fast.",
-            "Battle tested in popular frameworks like React Native."
-        )}
-
-        <h3>LWJGL implementation</h3>
-
-        Unlike the official Yoga Java bindings, the LWJGL bindings directly expose the native C API. {@code YGNodeRef} handles do not need to be wrapped in Java
-        instances, so there is no memory overhead. The internal Yoga structs are also exposed, which makes it very efficient to read the current tree layout
-        after a call to #NodeCalculateLayout():
-        ${codeBlock("""
-// Public API, 4x JNI call overhead
-float l = YGNodeLayoutGetLeft(node);
-float t = YGNodeLayoutGetTop(node);
-float w = YGNodeLayoutGetWidth(node);
-float h = YGNodeLayoutGetHeight(node);
-
-// Internal API without overhead (plain memory accesses, assuming allocations are eliminated via EA)
-YGLayout layout = YGNode.create(node).layout();
-
-float l = layout.positions(YGEdgeLeft);
-float t = layout.positions(YGEdgeTop);
-float w = layout.dimensions(YGDimensionWidth);
-float h = layout.dimensions(YGDimensionHeight);""")}
-        """
-    )
-}
-
 val YGNodeRef = "YGNodeRef".handle
 val YGConfigRef = "YGConfigRef".handle
 
@@ -60,18 +22,17 @@ val YGMeasureMode = "YGMeasureMode".enumType
 val YGNodeType = "YGNodeType".enumType
 val YGOverflow = "YGOverflow".enumType
 val YGPositionType = "YGPositionType".enumType
-val YGPrintOptions = "YGPrintOptions".enumType
 val YGUnit = "YGUnit".enumType
 val YGWrap = "YGWrap".enumType
 
 val YGSize = struct(Module.YOGA, "YGSize") {
-    float.member("width", "")
-    float.member("height", "")
+    float("width", "")
+    float("height", "")
 }
 
 val YGValue = struct(Module.YOGA, "YGValue") {
-    float.member("value", "")
-    YGUnit.member("unit", "")
+    float("value", "")
+    YGUnit("unit", "")
 }
 
 // TODO: Returns struct by value
@@ -80,11 +41,11 @@ val YGMeasureFunc = Module.YOGA.callback {
         "YGMeasureFunc",
         "Use {@link YGMeasureFunc\\#toLong toLong} to create the return value.",
 
-        YGNodeRef.IN("node", ""),
-        float.IN("width", ""),
-        YGMeasureMode.IN("widthMode", ""),
-        float.IN("height", ""),
-        YGMeasureMode.IN("heightMode", ""),
+        YGNodeRef("node", ""),
+        float("width", ""),
+        YGMeasureMode("widthMode", ""),
+        float("height", ""),
+        YGMeasureMode("heightMode", ""),
 
         nativeType = "YGMeasureFunc"
     ) {
@@ -102,9 +63,9 @@ val YGBaselineFunc = Module.YOGA.callback {
         "YGBaselineFunc",
         "",
 
-        YGNodeRef.IN("node", ""),
-        float.IN("width", ""),
-        float.IN("height", ""),
+        YGNodeRef("node", ""),
+        float("width", ""),
+        float("height", ""),
 
         nativeType = "YGBaselineFunc"
     )
@@ -115,7 +76,7 @@ val YGDirtiedFunc = Module.YOGA.callback {
         "YGDirtiedFunc",
         "",
 
-        YGNodeRef.IN("node", ""),
+        YGNodeRef("node", ""),
 
         nativeType = "YGDirtiedFunc"
     )
@@ -126,9 +87,20 @@ val YGPrintFunc = Module.YOGA.callback {
         "YGPrintFunc",
         "",
 
-        YGNodeRef.IN("node", ""),
+        YGNodeRef("node", ""),
 
         nativeType = "YGPrintFunc"
+    )
+}
+
+val YGNodeCleanupFunc = Module.YOGA.callback {
+    void(
+        "YGNodeCleanupFunc",
+        "",
+
+        YGNodeRef("node", ""),
+
+        nativeType = "YGNodeCleanupFunc"
     )
 }
 
@@ -137,11 +109,11 @@ val YGLogger = Module.YOGA.callback {
         "YGLogger",
         "",
 
-        YGConfigRef.const.IN("config", ""),
-        YGNodeRef.const.IN("node", ""),
-        YGLogLevel.IN("level", ""),
-        charUTF8.const.p.IN("format", ""),
-        va_list.IN("args", ""),
+        YGConfigRef.const("config", ""),
+        YGNodeRef.const("node", ""),
+        YGLogLevel("level", ""),
+        charUTF8.const.p("format", ""),
+        va_list("args", ""),
 
         nativeType = "YGLogger"
     )
@@ -152,104 +124,239 @@ val YGCloneNodeFunc = Module.YOGA.callback {
         "YGCloneNodeFunc",
         "",
 
-        YGNodeRef.IN("oldNode", ""),
-        YGNodeRef.IN("owner", ""),
-        int.IN("childIndex", ""),
+        YGNodeRef("oldNode", ""),
+        YGNodeRef("owner", ""),
+        int("childIndex", ""),
 
         nativeType = "YGCloneNodeFunc"
     )
 }
 
+// Marker API
+
+val YGMarkerLayoutData = struct(Module.YOGA, "YGMarkerLayoutData", mutable = false) {
+    int("layouts", "")
+    int("measures", "")
+    int("maxMeasureCache", "")
+    int("cachedLayouts", "")
+    int("cachedMeasures", "")
+}
+
+val YGMarkerNoData = struct(Module.YOGA, "YGMarkerNoData", mutable = false) {
+    bool("_unused", "").private()
+}
+
+val YGMarkerData = union(Module.YOGA, "YGMarkerData", mutable = false) {
+  YGMarkerLayoutData.p("layout", "")
+  YGMarkerNoData.p("noData", "")
+}
+
+val YGMarker = "YGMarker".enumType
+
+// TODO: parameter data is passed by value
+val YGMarkerCallbacks = struct(Module.YOGA, "YGMarkerCallbacks") {
+  nullable..Module.YOGA.callback {
+        opaque_p(
+            "StartMarkerCallback",
+            "The start marker callback.",
+
+            YGMarker("marker", ""),
+            YGNodeRef("node", ""),
+            //YGMarkerData("data", "")
+            opaque_p("data", "")
+        ) {
+            documentation = "Instances of this interface may be set to the {@code startMarker} field of the ##YGMarkerCallbacks struct."
+        }
+    }(
+        "startMarker",
+        "Accepts marker type, a node ref, and marker data (depends on marker type) can return a handle or id that Yoga will pass to {@code endMarker}."
+    )
+  nullable..Module.YOGA.callback {
+        void(
+            "EndMarkerCallback",
+            "The end marker callback.",
+
+            YGMarker("marker", ""),
+            YGNodeRef("node", ""),
+            //YGMarkerData("data", ""),
+            opaque_p("data", ""),
+            opaque_p("id", "")
+        ) {
+            documentation = "Instances of this interface may be set to the {@code endMarker} field of the ##YGMarkerCallbacks struct."
+        }
+    }(
+        "endMarker",
+        "Accepts marker type, a node ref, marker data, and marker id as returned by {@code startMarker}."
+    )
+}
+
 // Internal API, exposed for efficiency.
 
-val YGCachedMeasurement = struct(Module.YOGA, "YGCachedMeasurement", mutable = false) {
-    float.member("availableWidth", "")
-    float.member("availableHeight", "")
-    YGMeasureMode.member("widthMeasureMode", "")
-    YGMeasureMode.member("heightMeasureMode", "")
+val CompactValue = struct(Module.YOGA, "CompactValue", mutable = false) {
+    documentation = "Unstable/private API."
 
-    float.member("computedWidth", "")
-    float.member("computedHeight", "")
+    union {
+        float("value", "")
+        uint32_t("repr", "")
+    }
+}
+
+val YGCachedMeasurement = struct(Module.YOGA, "YGCachedMeasurement", mutable = false) {
+    documentation = "Unstable/private API."
+
+    float("availableWidth", "")
+    float("availableHeight", "")
+    YGMeasureMode("widthMeasureMode", "")
+    YGMeasureMode("heightMeasureMode", "")
+
+    float("computedWidth", "")
+    float("computedHeight", "")
 }
 
 val YGFloatOptional = struct(Module.YOGA, "YGFloatOptional", mutable = false) {
-    float.member("value", "")
-    bool.member("isUndefined", "")
+    float("value", "")
 }
 
 const val YG_MAX_CACHED_RESULT_COUNT = 16
 val YGLayout = struct(Module.YOGA, "YGLayout", mutable = false) {
-    float.array("positions", "", size = 4)
-    float.array("dimensions", "", size = 2)
-    float.array("margin", "", size = 6)
-    float.array("border", "", size = 6)
-    float.array("padding", "", size = 6)
-    YGDirection.member("direction", "")
+    documentation = "Unstable/private API."
 
-    uint32_t.member("computedFlexBasisGeneration", "")
-    YGFloatOptional.member("computedFlexBasis", "")
-    bool.member("hadOverflow", "")
+    cpp = true
+    nativeImport("YGLayout.h")
 
-    uint32_t.member("generationCount", "")
-    YGDirection.member("lastOwnerDirection", "")
+    NativeName("position")..float("positions", "")[4]
+    float("dimensions", "")[2]
+    float("margin", "")[6]
+    float("border", "")[6]
+    float("padding", "")[6]
+    YGDirection("direction", "", bits = 2)
+    bool("didUseLegacyFlag", "", bits = 1)
+    bool("doesLegacyStretchFlagAffectsLayout", "", bits = 1)
+    bool("hadOverflow", "", bits = 1)
 
-    uint32_t.member("nextCachedMeasurementsIndex", "")
-    YGCachedMeasurement.array("cachedMeasurements", "", size = YG_MAX_CACHED_RESULT_COUNT)
-    float.array("measuredDimensions", "", size = 2)
+    uint32_t("computedFlexBasisGeneration", "")
+    YGFloatOptional("computedFlexBasis", "")
 
-    YGCachedMeasurement.member("cachedLayout", "")
-    bool.member("didUseLegacyFlag", "")
-    bool.member("doesLegacyStretchFlagAffectsLayout", "")
+    uint32_t("generationCount", "")
+    YGDirection("lastOwnerDirection", "")
+
+    uint32_t("nextCachedMeasurementsIndex", "")
+    YGCachedMeasurement("cachedMeasurements", "")[YG_MAX_CACHED_RESULT_COUNT]
+    float("measuredDimensions", "")[2]
+
+    YGCachedMeasurement("cachedLayout", "")
 }
 
 const val YGEdgeCount = 9
 val YGStyle = struct(Module.YOGA, "YGStyle", mutable = false) {
-    YGDirection.member("direction", "")
-    YGFlexDirection.member("flexDirection", "")
-    YGJustify.member("justifyContent", "")
-    YGAlign.member("alignContent", "")
-    YGAlign.member("alignItems", "")
-    YGAlign.member("alignSelf", "")
-    YGPositionType.member("positionType", "")
-    YGWrap.member("flexWrap", "")
-    YGOverflow.member("overflow", "")
-    YGDisplay.member("display", "")
-    YGFloatOptional.member("flex", "")
-    YGFloatOptional.member("flexGrow", "")
-    YGFloatOptional.member("flexShrink", "")
-    YGValue.member("flexBasis", "")
-    YGValue.array("margin", "", size = YGEdgeCount)
-    YGValue.array("positions", "", size = YGEdgeCount)
-    YGValue.array("padding", "", size = YGEdgeCount)
-    YGValue.array("border", "", size = YGEdgeCount)
-    YGValue.array("dimensions", "", size = 2)
-    YGValue.array("minDimensions", "", size = 2)
-    YGValue.array("maxDimensions", "", size = 2)
+    documentation = "Unstable/private API."
 
-    // Yoga specific properties, not compatible with flexbox specification
-    YGFloatOptional.member("aspectRatio", "")
+    cpp = true
+    nativeImport("YGStyle.h")
+
+    YGDirection("direction", "", bits = 2)
+    YGFlexDirection("flexDirection", "", bits = 2)
+    YGJustify("justifyContent", "", bits = 3)
+    YGAlign("alignContent", "", bits = 3)
+    YGAlign("alignItems", "", bits = 3)
+    YGAlign("alignSelf", "", bits = 3)
+    YGPositionType("positionType", "", bits = 1)
+    YGWrap("flexWrap", "", bits = 2)
+    YGOverflow("overflow", "", bits = 2)
+    YGDisplay("display", "", bits = 1)
+    YGFloatOptional("flex", "")
+    YGFloatOptional("flexGrow", "")
+    YGFloatOptional("flexShrink", "")
+    CompactValue("flexBasis", "")
+    CompactValue("margin", "")[YGEdgeCount]
+    NativeName("position")..CompactValue("positions", "")[YGEdgeCount]
+    CompactValue("padding", "")[YGEdgeCount]
+    CompactValue("border", "")[YGEdgeCount]
+    CompactValue("dimensions", "")[2]
+    CompactValue("minDimensions", "")[2]
+    CompactValue("maxDimensions", "")[2]
+
+    YGFloatOptional("aspectRatio", "")
 }
 
-private val YGNodeListRef = "YGNodeListRef".handle
-private val _YGNode = struct(Module.YOGA, "YGNode")
-val YGNode = struct(Module.YOGA, "YGNode") {
-    nullable..opaque_p.member("context", "")
-    nullable..YGPrintFunc.member("print", "")
-    bool.member("hasNewLayout", "")
-    YGNodeType.member("nodeType", "")
-    nullable..YGMeasureFunc.member("measure", "")
-    nullable..YGBaselineFunc.member("baseline", "")
-    nullable..YGDirtiedFunc.member("dirtied", "")
+val YGNode = struct(Module.YOGA, "YGNode", nativeName = "YGNodeLWJGL") {
+    documentation = "Unstable/private API."
 
-    YGStyle.member("style", "")
-    YGLayout.member("layout", "")
-    uint32_t.member("lineIndex", "")
+    cpp = true
+    nativeImport("Yoga.h")
+    nativeImport("YGLayout.h")
+    nativeImport("YGStyle.h")
 
-    nullable..YGNodeRef.member("owner", "")
-    nullable..YGNodeListRef.member("children", "")
-    nullable.._YGNode.p.member("nextChild", "")
+    // Redefine YGNode as a struct to expose the private layout
+    nativeDirective("""
+typedef YGSize (*MeasureWithContextFn)(YGNode*, float, YGMeasureMode, float, YGMeasureMode, void*);
+typedef float (*BaselineWithContextFn)(YGNode*, float, float, void*);
+typedef void (*PrintWithContextFn)(YGNode*, void*);
 
-    nullable..YGConfigRef.member("config", "")
-    bool.member("isDirty", "")
-    YGValue.p.array("resolvedDimensions", "", size = 2)
+typedef struct YGNodeLWJGL {
+  void* context;
+  bool hasNewLayout : 1;
+  bool isReferenceBaseline : 1;
+  bool isDirty : 1;
+  YGNodeType nodeType : 1;
+  bool measureUsesContext : 1;
+  bool baselineUsesContext : 1;
+  bool printUsesContext : 1;
+  union {
+    YGMeasureFunc noContext;
+    MeasureWithContextFn withContext;
+  } measure;
+  union {
+    YGBaselineFunc noContext;
+    BaselineWithContextFn withContext;
+  } baseline;
+  union {
+    YGPrintFunc noContext;
+    PrintWithContextFn withContext;
+  } print;
+  YGDirtiedFunc dirtied;
+  YGStyle style;
+  YGLayout layout;
+  uint32_t lineIndex;
+  YGNodeRef owner;
+  YGVector children;
+  YGConfigRef config;
+  std::array<YGValue, 2> resolvedDimensions;
+} YGNodeLWJGL;""")
+
+    nullable..opaque_p("context", "")
+    bool("hasNewLayout", "", bits = 1)
+    bool("isReferenceBaseline", "", bits = 1)
+    bool("isDirty", "", bits = 1)
+    YGNodeType("nodeType", "", bits = 1)
+    bool("measureUsesContext", "", bits = 1)
+    bool("baselineUsesContext", "", bits = 1)
+    bool("printUsesContext", "", bits = 1)
+
+    union {
+        nullable..YGMeasureFunc("noContext", "")
+        nullable.."MeasureWithContextFn".handle("withContext", "")
+    }("measure", "")
+
+    union {
+        nullable..YGBaselineFunc("noContext", "")
+        nullable.."BaselineWithContextFn".handle("withContext", "")
+    }("baseline", "")
+
+    union {
+        nullable..YGPrintFunc("noContext", "")
+        nullable.."PrintWithContextFn".handle("withContext", "")
+    }("print", "")
+
+    nullable..YGDirtiedFunc("dirtied", "")
+
+    YGStyle("style", "")
+    YGLayout("layout", "")
+    uint32_t("lineIndex", "")
+
+    nullable..YGNodeRef("owner", "")
+    nullable.."YGVector".handle("children", "").private() // std:vector<YGNodeRef>
+
+    nullable..YGConfigRef("config", "")
+    YGValue("resolvedDimensions", "")[2]
 }

@@ -16,7 +16,7 @@ val KHR_variable_pointers = "KHRVariablePointers".nativeClassVK("KHR_variable_po
         The {@code SPV_KHR_variable_pointers} extension introduces two capabilities. The first, {@code VariablePointersStorageBuffer}, <b>must</b> be supported by all implementations of this extension. The second, {@code VariablePointers}, is optional.
 
         <h5>Promotion to Vulkan 1.1</h5>
-        All functionality in this extension is included in core Vulkan 1.1, with the KHR suffix omitted, however support for the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#features-features-variablePointersStorageBuffer"> {@code variablePointersStorageBuffer}</a> feature is made optional. The original type, enum and command names are still available as aliases of the core functionality.
+        All functionality in this extension is included in core Vulkan 1.1, with the KHR suffix omitted, however support for the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#features-variablePointersStorageBuffer"> {@code variablePointersStorageBuffer}</a> feature is made optional. The original type, enum and command names are still available as aliases of the core functionality.
 
         <dl>
             <dt><b>Name String</b></dt>
@@ -40,7 +40,7 @@ val KHR_variable_pointers = "KHRVariablePointers".nativeClassVK("KHR_variable_po
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -56,7 +56,7 @@ val KHR_variable_pointers = "KHRVariablePointers".nativeClassVK("KHR_variable_po
 
             <dt><b>Interactions and External Dependencies</b></dt>
             <dd><ul>
-                <li>Requires the <a target="_blank" href="https://www.khronos.org/registry/spir-v/extensions/KHR/SPV_KHR_variable_pointers.html">SPV_KHR_variable_pointers</a> SPIR-V extension.</li>
+                <li>Requires the <a target="_blank" href="https://www.khronos.org/registry/spir-v/extensions/KHR/SPV_KHR_variable_pointers.html">{@code SPV_KHR_variable_pointers}</a> SPIR-V extension.</li>
                 <li>Promoted to Vulkan 1.1 Core</li>
             </ul></dd>
 
@@ -90,6 +90,7 @@ val KHR_variable_pointers = "KHRVariablePointers".nativeClassVK("KHR_variable_po
     EnumConstant(
         "Extends {@code VkStructureType}.",
 
-        "STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES_KHR".."1000120000"
+        "STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES_KHR".."1000120000",
+        "STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES_KHR".."1000120000"
     )
 }

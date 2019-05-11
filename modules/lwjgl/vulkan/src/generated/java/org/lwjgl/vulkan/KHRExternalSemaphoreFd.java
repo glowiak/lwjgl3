@@ -88,7 +88,7 @@ public class KHRExternalSemaphoreFd {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, device.address(), pImportSemaphoreFdInfo);
+        return callPPI(device.address(), pImportSemaphoreFdInfo, __functionAddress);
     }
 
     /**
@@ -156,7 +156,7 @@ public class KHRExternalSemaphoreFd {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, device.address(), pGetFdInfo, pFd);
+        return callPPPI(device.address(), pGetFdInfo, pFd, __functionAddress);
     }
 
     /**
@@ -174,7 +174,7 @@ public class KHRExternalSemaphoreFd {
      * 
      * <h5>Description</h5>
      * 
-     * <p>Each call to {@link #vkGetSemaphoreFdKHR GetSemaphoreFdKHR} <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor when it is no longer needed.</p>
+     * <p>Each call to {@code vkGetSemaphoreFdKHR} <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor when it is no longer needed.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
@@ -183,14 +183,14 @@ public class KHRExternalSemaphoreFd {
      * 
      * <p>Where supported by the operating system, the implementation <b>must</b> set the file descriptor to be closed automatically when an {@code execve} system call is made.</p>
      * 
-     * <p>Exporting a file descriptor from a semaphore <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore State</a>.</p>
+     * <p>Exporting a file descriptor from a semaphore <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore State</a>.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
      * <ul>
      * <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
      * <li>{@code pGetFdInfo} <b>must</b> be a valid pointer to a valid {@link VkSemaphoreGetFdInfoKHR} structure</li>
-     * <li>{@code pFd} <b>must</b> be a valid pointer to a {@code int} value</li>
+     * <li>{@code pFd} <b>must</b> be a valid pointer to an {@code int} value</li>
      * </ul>
      * 
      * <h5>Return Codes</h5>
@@ -231,7 +231,7 @@ public class KHRExternalSemaphoreFd {
             check(__functionAddress);
             check(pFd, 1);
         }
-        return callPPPI(__functionAddress, device.address(), pGetFdInfo.address(), pFd);
+        return callPPPI(device.address(), pGetFdInfo.address(), pFd, __functionAddress);
     }
 
 }

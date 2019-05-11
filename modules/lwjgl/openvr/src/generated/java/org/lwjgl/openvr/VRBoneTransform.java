@@ -53,18 +53,14 @@ public class VRBoneTransform extends Struct implements NativeResource {
         ORIENTATION = layout.offsetof(1);
     }
 
-    VRBoneTransform(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VRBoneTransform} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VRBoneTransform} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VRBoneTransform(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -83,30 +79,31 @@ public class VRBoneTransform extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VRBoneTransform} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VRBoneTransform} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VRBoneTransform malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VRBoneTransform.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VRBoneTransform} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VRBoneTransform} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VRBoneTransform calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VRBoneTransform.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VRBoneTransform} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VRBoneTransform} instance allocated with {@link BufferUtils}. */
     public static VRBoneTransform create() {
-        return new VRBoneTransform(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VRBoneTransform.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VRBoneTransform} instance for the specified memory address. */
+    /** Returns a new {@code VRBoneTransform} instance for the specified memory address. */
     public static VRBoneTransform create(long address) {
-        return new VRBoneTransform(address, null);
+        return wrap(VRBoneTransform.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VRBoneTransform createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VRBoneTransform.class, address);
     }
 
     /**
@@ -115,7 +112,7 @@ public class VRBoneTransform extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRBoneTransform.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -124,7 +121,7 @@ public class VRBoneTransform extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRBoneTransform.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -133,7 +130,8 @@ public class VRBoneTransform extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRBoneTransform.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -143,43 +141,43 @@ public class VRBoneTransform extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRBoneTransform.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VRBoneTransform.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VRBoneTransform} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VRBoneTransform} instance allocated on the thread-local {@link MemoryStack}. */
     public static VRBoneTransform mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VRBoneTransform} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VRBoneTransform} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VRBoneTransform callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VRBoneTransform} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VRBoneTransform} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VRBoneTransform mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VRBoneTransform.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VRBoneTransform} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VRBoneTransform} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VRBoneTransform callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VRBoneTransform.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -207,7 +205,7 @@ public class VRBoneTransform extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRBoneTransform.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -217,7 +215,7 @@ public class VRBoneTransform extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRBoneTransform.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -232,8 +230,10 @@ public class VRBoneTransform extends Struct implements NativeResource {
     /** An array of {@link VRBoneTransform} structs. */
     public static class Buffer extends StructBuffer<VRBoneTransform, Buffer> implements NativeResource {
 
+        private static final VRBoneTransform ELEMENT_FACTORY = VRBoneTransform.create(-1L);
+
         /**
-         * Creates a new {@link VRBoneTransform.Buffer} instance backed by the specified container.
+         * Creates a new {@code VRBoneTransform.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -259,18 +259,8 @@ public class VRBoneTransform extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VRBoneTransform newInstance(long address) {
-            return new VRBoneTransform(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VRBoneTransform getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link HmdVector4} view of the {@code position} field. */

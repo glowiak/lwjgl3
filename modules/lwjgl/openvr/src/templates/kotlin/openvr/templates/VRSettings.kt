@@ -10,7 +10,6 @@ import openvr.*
 val VRSettings = "VRSettings".nativeClass(
     Module.OPENVR,
     prefixMethod = "VRSettings_",
-    library = OPENVR_LIBRARY,
     binding = OPENVR_FNTABLE_BINDING
 ) {
     documentation =
@@ -21,109 +20,109 @@ val VRSettings = "VRSettings".nativeClass(
         "GetSettingsErrorNameFromEnum",
         "",
 
-        EVRSettingsError.IN("eError", "")
+        EVRSettingsError("eError", "")
     )
 
     bool(
         "Sync",
         "Returns true if file sync occurred (force or settings dirty).",
 
-        bool.IN("bForce", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        bool("bForce", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     void(
         "SetBool",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        charASCII.const.p.IN("pchSettingsKey", ""),
-        bool.IN("bValue", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        charASCII.const.p("pchSettingsKey", ""),
+        bool("bValue", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     void(
         "SetInt32",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        charASCII.const.p.IN("pchSettingsKey", ""),
-        int32_t.IN("nValue", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        charASCII.const.p("pchSettingsKey", ""),
+        int32_t("nValue", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     void(
         "SetFloat",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        charASCII.const.p.IN("pchSettingsKey", ""),
-        float.IN("flValue", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        charASCII.const.p("pchSettingsKey", ""),
+        float("flValue", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     void(
         "SetString",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        charASCII.const.p.IN("pchSettingsKey", ""),
-        charASCII.const.p.IN("pchValue", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        charASCII.const.p("pchSettingsKey", ""),
+        charASCII.const.p("pchValue", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     bool(
         "GetBool",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        charASCII.const.p.IN("pchSettingsKey", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        charASCII.const.p("pchSettingsKey", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     int32_t(
         "GetInt32",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        charASCII.const.p.IN("pchSettingsKey", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        charASCII.const.p("pchSettingsKey", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     float(
         "GetFloat",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        charASCII.const.p.IN("pchSettingsKey", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        charASCII.const.p("pchSettingsKey", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     void(
         "GetString",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        charASCII.const.p.IN("pchSettingsKey", ""),
-        char.p.OUT("pchValue", ""),
-        AutoSize("pchValue")..uint32_t.IN("unValueLen", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        charASCII.const.p("pchSettingsKey", ""),
+        char.p("pchValue", ""),
+        AutoSize("pchValue")..uint32_t("unValueLen", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     void(
         "RemoveSection",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 
     void(
         "RemoveKeyInSection",
         "",
 
-        charASCII.const.p.IN("pchSection", ""),
-        charASCII.const.p.IN("pchSettingsKey", ""),
-        Check(1)..EVRSettingsError.p.OUT("peError", "")
+        charASCII.const.p("pchSection", ""),
+        charASCII.const.p("pchSettingsKey", ""),
+        Check(1)..EVRSettingsError.p("peError", "")
     )
 }

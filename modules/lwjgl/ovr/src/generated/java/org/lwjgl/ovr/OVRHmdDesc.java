@@ -63,7 +63,6 @@ import static org.lwjgl.ovr.OVR.ovrEye_Count;
  *     {@link OVRFovPort ovrFovPort} MaxEyeFov[ovrEye_Count];
  *     {@link OVRSizei ovrSizei} Resolution;
  *     float DisplayRefreshRate;
- *     char[4];
  * }</code></pre>
  */
 @NativeType("struct ovrHmdDesc")
@@ -96,6 +95,7 @@ public class OVRHmdDesc extends Struct implements NativeResource {
 
     static {
         Layout layout = __struct(
+            DEFAULT_PACK_ALIGNMENT, POINTER_SIZE,
             __member(4),
             __padding(4, Pointer.BITS64),
             __array(1, 64),
@@ -112,8 +112,7 @@ public class OVRHmdDesc extends Struct implements NativeResource {
             __array(OVRFovPort.SIZEOF, OVRFovPort.ALIGNOF, ovrEye_Count),
             __array(OVRFovPort.SIZEOF, OVRFovPort.ALIGNOF, ovrEye_Count),
             __member(OVRSizei.SIZEOF, OVRSizei.ALIGNOF),
-            __member(4),
-            __padding(4, Pointer.BITS64)
+            __member(4)
         );
 
         SIZEOF = layout.getSize();
@@ -137,18 +136,14 @@ public class OVRHmdDesc extends Struct implements NativeResource {
         DISPLAYREFRESHRATE = layout.offsetof(16);
     }
 
-    OVRHmdDesc(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link OVRHmdDesc} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code OVRHmdDesc} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public OVRHmdDesc(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -217,66 +212,67 @@ public class OVRHmdDesc extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRHmdDesc} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRHmdDesc} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static OVRHmdDesc malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(OVRHmdDesc.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link OVRHmdDesc} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRHmdDesc} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static OVRHmdDesc calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(OVRHmdDesc.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link OVRHmdDesc} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code OVRHmdDesc} instance allocated with {@link BufferUtils}. */
     public static OVRHmdDesc create() {
-        return new OVRHmdDesc(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(OVRHmdDesc.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link OVRHmdDesc} instance for the specified memory address. */
+    /** Returns a new {@code OVRHmdDesc} instance for the specified memory address. */
     public static OVRHmdDesc create(long address) {
-        return new OVRHmdDesc(address, null);
+        return wrap(OVRHmdDesc.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static OVRHmdDesc createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(OVRHmdDesc.class, address);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRHmdDesc} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code OVRHmdDesc} instance allocated on the thread-local {@link MemoryStack}. */
     public static OVRHmdDesc mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link OVRHmdDesc} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code OVRHmdDesc} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static OVRHmdDesc callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link OVRHmdDesc} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code OVRHmdDesc} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRHmdDesc mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(OVRHmdDesc.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link OVRHmdDesc} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code OVRHmdDesc} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRHmdDesc callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(OVRHmdDesc.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #Type}. */
-    public static int nType(long struct) { return memGetInt(struct + OVRHmdDesc.TYPE); }
+    public static int nType(long struct) { return UNSAFE.getInt(null, struct + OVRHmdDesc.TYPE); }
     /** Unsafe version of {@link #ProductName}. */
     public static ByteBuffer nProductName(long struct) { return memByteBuffer(struct + OVRHmdDesc.PRODUCTNAME, 64); }
     /** Unsafe version of {@link #ProductNameString}. */
@@ -286,25 +282,25 @@ public class OVRHmdDesc extends Struct implements NativeResource {
     /** Unsafe version of {@link #ManufacturerString}. */
     public static String nManufacturerString(long struct) { return memUTF8(struct + OVRHmdDesc.MANUFACTURER); }
     /** Unsafe version of {@link #VendorId}. */
-    public static short nVendorId(long struct) { return memGetShort(struct + OVRHmdDesc.VENDORID); }
+    public static short nVendorId(long struct) { return UNSAFE.getShort(null, struct + OVRHmdDesc.VENDORID); }
     /** Unsafe version of {@link #ProductId}. */
-    public static short nProductId(long struct) { return memGetShort(struct + OVRHmdDesc.PRODUCTID); }
+    public static short nProductId(long struct) { return UNSAFE.getShort(null, struct + OVRHmdDesc.PRODUCTID); }
     /** Unsafe version of {@link #SerialNumber}. */
     public static ByteBuffer nSerialNumber(long struct) { return memByteBuffer(struct + OVRHmdDesc.SERIALNUMBER, 24); }
     /** Unsafe version of {@link #SerialNumberString}. */
     public static String nSerialNumberString(long struct) { return memASCII(struct + OVRHmdDesc.SERIALNUMBER); }
     /** Unsafe version of {@link #FirmwareMajor}. */
-    public static short nFirmwareMajor(long struct) { return memGetShort(struct + OVRHmdDesc.FIRMWAREMAJOR); }
+    public static short nFirmwareMajor(long struct) { return UNSAFE.getShort(null, struct + OVRHmdDesc.FIRMWAREMAJOR); }
     /** Unsafe version of {@link #FirmwareMinor}. */
-    public static short nFirmwareMinor(long struct) { return memGetShort(struct + OVRHmdDesc.FIRMWAREMINOR); }
+    public static short nFirmwareMinor(long struct) { return UNSAFE.getShort(null, struct + OVRHmdDesc.FIRMWAREMINOR); }
     /** Unsafe version of {@link #AvailableHmdCaps}. */
-    public static int nAvailableHmdCaps(long struct) { return memGetInt(struct + OVRHmdDesc.AVAILABLEHMDCAPS); }
+    public static int nAvailableHmdCaps(long struct) { return UNSAFE.getInt(null, struct + OVRHmdDesc.AVAILABLEHMDCAPS); }
     /** Unsafe version of {@link #DefaultHmdCaps}. */
-    public static int nDefaultHmdCaps(long struct) { return memGetInt(struct + OVRHmdDesc.DEFAULTHMDCAPS); }
+    public static int nDefaultHmdCaps(long struct) { return UNSAFE.getInt(null, struct + OVRHmdDesc.DEFAULTHMDCAPS); }
     /** Unsafe version of {@link #AvailableTrackingCaps}. */
-    public static int nAvailableTrackingCaps(long struct) { return memGetInt(struct + OVRHmdDesc.AVAILABLETRACKINGCAPS); }
+    public static int nAvailableTrackingCaps(long struct) { return UNSAFE.getInt(null, struct + OVRHmdDesc.AVAILABLETRACKINGCAPS); }
     /** Unsafe version of {@link #DefaultTrackingCaps}. */
-    public static int nDefaultTrackingCaps(long struct) { return memGetInt(struct + OVRHmdDesc.DEFAULTTRACKINGCAPS); }
+    public static int nDefaultTrackingCaps(long struct) { return UNSAFE.getInt(null, struct + OVRHmdDesc.DEFAULTTRACKINGCAPS); }
     /** Unsafe version of {@link #DefaultEyeFov}. */
     public static OVRFovPort.Buffer nDefaultEyeFov(long struct) { return OVRFovPort.create(struct + OVRHmdDesc.DEFAULTEYEFOV, ovrEye_Count); }
     /** Unsafe version of {@link #DefaultEyeFov(int) DefaultEyeFov}. */
@@ -320,6 +316,6 @@ public class OVRHmdDesc extends Struct implements NativeResource {
     /** Unsafe version of {@link #Resolution}. */
     public static OVRSizei nResolution(long struct) { return OVRSizei.create(struct + OVRHmdDesc.RESOLUTION); }
     /** Unsafe version of {@link #DisplayRefreshRate}. */
-    public static float nDisplayRefreshRate(long struct) { return memGetFloat(struct + OVRHmdDesc.DISPLAYREFRESHRATE); }
+    public static float nDisplayRefreshRate(long struct) { return UNSAFE.getFloat(null, struct + OVRHmdDesc.DISPLAYREFRESHRATE); }
 
 }

@@ -11,7 +11,7 @@ import vulkan.*
 val KHR_get_display_properties2 = "KHRGetDisplayProperties2".nativeClassVK("KHR_get_display_properties2", type = "instance", postfix = KHR) {
     documentation =
         """
-        This extension provides new entry points to query device display properties and capabilities in a way that can be easily extended by other extensions, without introducing any further entry points. This extension can be considered the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VK_KHR_display">VK_KHR_display</a> equivalent of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VK_KHR_get_physical_device_properties2"> VK_KHR_get_physical_device_properties2</a> extension.
+        This extension provides new entry points to query device display properties and capabilities in a way that can be easily extended by other extensions, without introducing any further entry points. This extension can be considered the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VK_KHR_display">VK_KHR_display</a> equivalent of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VK_KHR_get_physical_device_properties2"> VK_KHR_get_physical_device_properties2</a> extension.
 
         <dl>
             <dt><b>Name String</b></dt>
@@ -88,7 +88,7 @@ val KHR_get_display_properties2 = "KHRGetDisplayProperties2".nativeClassVK("KHR_
 ￿    VkDisplayProperties2KHR*                    pProperties);</code></pre>
 
         <h5>Description</h5>
-        #GetPhysicalDeviceDisplayProperties2KHR() behaves similarly to #GetPhysicalDeviceDisplayPropertiesKHR(), with the ability to return extended information via chained output structures.
+        {@code vkGetPhysicalDeviceDisplayProperties2KHR} behaves similarly to #GetPhysicalDeviceDisplayPropertiesKHR(), with the ability to return extended information via chained output structures.
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
@@ -116,9 +116,9 @@ val KHR_get_display_properties2 = "KHRGetDisplayProperties2".nativeClassVK("KHR_
         ##VkDisplayProperties2KHR
         """,
 
-        VkPhysicalDevice.IN("physicalDevice", "a physical device."),
-        AutoSize("pProperties")..Check(1)..uint32_t.p.INOUT("pPropertyCount", "a pointer to an integer related to the number of display devices available or queried, as described below."),
-        nullable..VkDisplayProperties2KHR.p.OUT("pProperties", "either {@code NULL} or a pointer to an array of ##VkDisplayProperties2KHR structures.")
+        VkPhysicalDevice("physicalDevice", "a physical device."),
+        AutoSize("pProperties")..Check(1)..uint32_t.p("pPropertyCount", "a pointer to an integer related to the number of display devices available or queried, as described below."),
+        nullable..VkDisplayProperties2KHR.p("pProperties", "either {@code NULL} or a pointer to an array of ##VkDisplayProperties2KHR structures.")
     )
 
     VkResult(
@@ -136,7 +136,7 @@ val KHR_get_display_properties2 = "KHRGetDisplayProperties2".nativeClassVK("KHR_
 ￿    VkDisplayPlaneProperties2KHR*               pProperties);</code></pre>
 
         <h5>Description</h5>
-        #GetPhysicalDeviceDisplayPlaneProperties2KHR() behaves similarly to #GetPhysicalDeviceDisplayPlanePropertiesKHR(), with the ability to return extended information via chained output structures.
+        {@code vkGetPhysicalDeviceDisplayPlaneProperties2KHR} behaves similarly to #GetPhysicalDeviceDisplayPlanePropertiesKHR(), with the ability to return extended information via chained output structures.
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
@@ -164,9 +164,9 @@ val KHR_get_display_properties2 = "KHRGetDisplayProperties2".nativeClassVK("KHR_
         ##VkDisplayPlaneProperties2KHR
         """,
 
-        VkPhysicalDevice.IN("physicalDevice", "a physical device."),
-        AutoSize("pProperties")..Check(1)..uint32_t.p.INOUT("pPropertyCount", "a pointer to an integer related to the number of display planes available or queried, as described below."),
-        nullable..VkDisplayPlaneProperties2KHR.p.OUT("pProperties", "either {@code NULL} or a pointer to an array of ##VkDisplayPlaneProperties2KHR structures.")
+        VkPhysicalDevice("physicalDevice", "a physical device."),
+        AutoSize("pProperties")..Check(1)..uint32_t.p("pPropertyCount", "a pointer to an integer related to the number of display planes available or queried, as described below."),
+        nullable..VkDisplayPlaneProperties2KHR.p("pProperties", "either {@code NULL} or a pointer to an array of ##VkDisplayPlaneProperties2KHR structures.")
     )
 
     VkResult(
@@ -185,7 +185,7 @@ val KHR_get_display_properties2 = "KHRGetDisplayProperties2".nativeClassVK("KHR_
 ￿    VkDisplayModeProperties2KHR*                pProperties);</code></pre>
 
         <h5>Description</h5>
-        #GetDisplayModeProperties2KHR() behaves similarly to #GetDisplayModePropertiesKHR(), with the ability to return extended information via chained output structures.
+        {@code vkGetDisplayModeProperties2KHR} behaves similarly to #GetDisplayModePropertiesKHR(), with the ability to return extended information via chained output structures.
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
@@ -214,10 +214,10 @@ val KHR_get_display_properties2 = "KHRGetDisplayProperties2".nativeClassVK("KHR_
         ##VkDisplayModeProperties2KHR
         """,
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device associated with {@code display}."),
-        VkDisplayKHR.IN("display", "the display to query."),
-        AutoSize("pProperties")..Check(1)..uint32_t.p.INOUT("pPropertyCount", "a pointer to an integer related to the number of display modes available or queried, as described below."),
-        nullable..VkDisplayModeProperties2KHR.p.OUT("pProperties", "either {@code NULL} or a pointer to an array of ##VkDisplayModeProperties2KHR structures.")
+        VkPhysicalDevice("physicalDevice", "the physical device associated with {@code display}."),
+        VkDisplayKHR("display", "the display to query."),
+        AutoSize("pProperties")..Check(1)..uint32_t.p("pPropertyCount", "a pointer to an integer related to the number of display modes available or queried, as described below."),
+        nullable..VkDisplayModeProperties2KHR.p("pProperties", "either {@code NULL} or a pointer to an array of ##VkDisplayModeProperties2KHR structures.")
     )
 
     VkResult(
@@ -235,7 +235,7 @@ val KHR_get_display_properties2 = "KHRGetDisplayProperties2".nativeClassVK("KHR_
 ￿    VkDisplayPlaneCapabilities2KHR*             pCapabilities);</code></pre>
 
         <h5>Description</h5>
-        #GetDisplayPlaneCapabilities2KHR() behaves similarly to #GetDisplayPlaneCapabilitiesKHR(), with the ability to specify extended inputs via chained input structures, and to return extended information via chained output structures.
+        {@code vkGetDisplayPlaneCapabilities2KHR} behaves similarly to #GetDisplayPlaneCapabilitiesKHR(), with the ability to specify extended inputs via chained input structures, and to return extended information via chained output structures.
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
@@ -262,8 +262,8 @@ val KHR_get_display_properties2 = "KHRGetDisplayProperties2".nativeClassVK("KHR_
         ##VkDisplayPlaneCapabilities2KHR, ##VkDisplayPlaneInfo2KHR
         """,
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device associated with {@code pDisplayPlaneInfo}."),
-        VkDisplayPlaneInfo2KHR.const.p.IN("pDisplayPlaneInfo", "a pointer to an instance of the ##VkDisplayPlaneInfo2KHR structure describing the plane and mode."),
-        VkDisplayPlaneCapabilities2KHR.p.OUT("pCapabilities", "a pointer to a ##VkDisplayPlaneCapabilities2KHR structure in which the capabilities are returned.")
+        VkPhysicalDevice("physicalDevice", "the physical device associated with {@code pDisplayPlaneInfo}."),
+        VkDisplayPlaneInfo2KHR.const.p("pDisplayPlaneInfo", "a pointer to an instance of the ##VkDisplayPlaneInfo2KHR structure describing the plane and mode."),
+        VkDisplayPlaneCapabilities2KHR.p("pCapabilities", "a pointer to a ##VkDisplayPlaneCapabilities2KHR structure in which the capabilities are returned.")
     )
 }

@@ -66,7 +66,7 @@ public class SOFTLoopback {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return invokePP(__functionAddress, deviceName);
+        return invokePP(deviceName, __functionAddress);
     }
 
     /**
@@ -113,8 +113,9 @@ public class SOFTLoopback {
     public static long alcLoopbackOpenDeviceSOFT(@Nullable @NativeType("ALCchar const *") CharSequence deviceName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer deviceNameEncoded = stack.UTF8Safe(deviceName);
-            return nalcLoopbackOpenDeviceSOFT(memAddressSafe(deviceNameEncoded));
+            stack.nUTF8Safe(deviceName, true);
+            long deviceNameEncoded = deviceName == null ? NULL : stack.getPointerAddress();
+            return nalcLoopbackOpenDeviceSOFT(deviceNameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -140,7 +141,7 @@ public class SOFTLoopback {
             check(__functionAddress);
             check(device);
         }
-        return invokePZ(__functionAddress, device, frequency, channels, type);
+        return invokePZ(device, frequency, channels, type, __functionAddress);
     }
 
     // --- [ alcRenderSamplesSOFT ] ---
@@ -152,7 +153,7 @@ public class SOFTLoopback {
             check(__functionAddress);
             check(device);
         }
-        invokePPV(__functionAddress, device, buffer, samples);
+        invokePPV(device, buffer, samples, __functionAddress);
     }
 
     /**
@@ -215,7 +216,7 @@ public class SOFTLoopback {
             check(__functionAddress);
             check(device);
         }
-        invokePPV(__functionAddress, device, buffer, samples);
+        invokePPV(device, buffer, samples, __functionAddress);
     }
 
     /** Array version of: {@link #alcRenderSamplesSOFT RenderSamplesSOFT} */
@@ -226,7 +227,7 @@ public class SOFTLoopback {
             check(__functionAddress);
             check(device);
         }
-        invokePPV(__functionAddress, device, buffer, samples);
+        invokePPV(device, buffer, samples, __functionAddress);
     }
 
     /** Array version of: {@link #alcRenderSamplesSOFT RenderSamplesSOFT} */
@@ -237,7 +238,7 @@ public class SOFTLoopback {
             check(__functionAddress);
             check(device);
         }
-        invokePPV(__functionAddress, device, buffer, samples);
+        invokePPV(device, buffer, samples, __functionAddress);
     }
 
 }

@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * <pre><code>
  * typedef VkBool32 (VKAPI_PTR *PFN_vkDebugUtilsMessengerCallbackEXT)(
  *     VkDebugUtilsMessageSeverityFlagBitsEXT           messageSeverity,
- *     VkDebugUtilsMessageTypeFlagsEXT                  messageType,
+ *     VkDebugUtilsMessageTypeFlagsEXT                  messageTypes,
  *     const VkDebugUtilsMessengerCallbackDataEXT*      pCallbackData,
  *     void*                                            pUserData);</code></pre>
  * 
@@ -66,7 +66,7 @@ public abstract class VkDebugUtilsMessengerCallbackEXT extends Callback implemen
         super(SIGNATURE);
     }
 
-    private VkDebugUtilsMessengerCallbackEXT(long functionPointer) {
+    VkDebugUtilsMessengerCallbackEXT(long functionPointer) {
         super(functionPointer);
     }
 
@@ -80,8 +80,8 @@ public abstract class VkDebugUtilsMessengerCallbackEXT extends Callback implemen
         }
 
         @Override
-        public int invoke(int messageSeverity, int messageType, long pCallbackData, long pUserData) {
-            return delegate.invoke(messageSeverity, messageType, pCallbackData, pUserData);
+        public int invoke(int messageSeverity, int messageTypes, long pCallbackData, long pUserData) {
+            return delegate.invoke(messageSeverity, messageTypes, pCallbackData, pUserData);
         }
 
     }

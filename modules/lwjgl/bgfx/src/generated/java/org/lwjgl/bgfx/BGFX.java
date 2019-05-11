@@ -24,7 +24,7 @@ import static org.lwjgl.system.Pointer.*;
 public class BGFX {
 
     /** API version */
-    public static final int BGFX_API_VERSION = 84;
+    public static final int BGFX_API_VERSION = 99;
 
     /** Invalid handle */
     public static final short BGFX_INVALID_HANDLE = (short)0xFFFF;
@@ -285,11 +285,15 @@ public class BGFX {
         BGFX_SAMPLER_W_MIRROR         = 0x10,
         BGFX_SAMPLER_W_CLAMP          = 0x20,
         BGFX_SAMPLER_W_BORDER         = 0x30,
+        BGFX_SAMPLER_UVW_MIRROR       = (0 | BGFX_SAMPLER_U_MIRROR | BGFX_SAMPLER_V_MIRROR | BGFX_SAMPLER_W_MIRROR),
+        BGFX_SAMPLER_UVW_CLAMP        = (0 | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP | BGFX_SAMPLER_W_CLAMP),
+        BGFX_SAMPLER_UVW_BORDER       = (0 | BGFX_SAMPLER_U_BORDER | BGFX_SAMPLER_V_BORDER | BGFX_SAMPLER_W_BORDER),
         BGFX_SAMPLER_MIN_POINT        = 0x40,
         BGFX_SAMPLER_MIN_ANISOTROPIC  = 0x80,
         BGFX_SAMPLER_MAG_POINT        = 0x100,
         BGFX_SAMPLER_MAG_ANISOTROPIC  = 0x200,
         BGFX_SAMPLER_MIP_POINT        = 0x400,
+        BGFX_SAMPLER_POINT            = (0 | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT),
         BGFX_SAMPLER_COMPARE_LESS     = 0x10000,
         BGFX_SAMPLER_COMPARE_LEQUAL   = 0x20000,
         BGFX_SAMPLER_COMPARE_EQUAL    = 0x30000,
@@ -367,25 +371,26 @@ public class BGFX {
         BGFX_CAPS_DRAW_INDIRECT          = 0x10L,
         BGFX_CAPS_FRAGMENT_DEPTH         = 0x20L,
         BGFX_CAPS_FRAGMENT_ORDERING      = 0x40L,
-        BGFX_CAPS_GRAPHICS_DEBUGGER      = 0x80L,
-        BGFX_CAPS_HDR10                  = 0x100L,
-        BGFX_CAPS_HIDPI                  = 0x400L,
-        BGFX_CAPS_INDEX32                = 0x800L,
-        BGFX_CAPS_INSTANCING             = 0x1000L,
-        BGFX_CAPS_OCCLUSION_QUERY        = 0x2000L,
-        BGFX_CAPS_RENDERER_MULTITHREADED = 0x4000L,
-        BGFX_CAPS_SWAP_CHAIN             = 0x8000L,
-        BGFX_CAPS_TEXTURE_2D_ARRAY       = 0x10000L,
-        BGFX_CAPS_TEXTURE_3D             = 0x20000L,
-        BGFX_CAPS_TEXTURE_BLIT           = 0x40000L,
-        BGFX_CAPS_TEXTURE_COMPARE_ALL    = 0x180000L,
-        BGFX_CAPS_TEXTURE_COMPARE_LEQUAL = 0x100000L,
-        BGFX_CAPS_TEXTURE_CUBE_ARRAY     = 0x200000L,
-        BGFX_CAPS_TEXTURE_DIRECT_ACCESS  = 0x400000L,
-        BGFX_CAPS_TEXTURE_READ_BACK      = 0x800000L,
-        BGFX_CAPS_VERTEX_ATTRIB_HALF     = 0x1000000L,
-        BGFX_CAPS_VERTEX_ATTRIB_UINT10   = 0x2000000L,
-        BGFX_CAPS_VERTEX_ID              = 0x4000000L;
+        BGFX_CAPS_FRAMEBUFFER_RW         = 0x80L,
+        BGFX_CAPS_GRAPHICS_DEBUGGER      = 0x100L,
+        BGFX_CAPS_HDR10                  = 0x400L,
+        BGFX_CAPS_HIDPI                  = 0x800L,
+        BGFX_CAPS_INDEX32                = 0x1000L,
+        BGFX_CAPS_INSTANCING             = 0x2000L,
+        BGFX_CAPS_OCCLUSION_QUERY        = 0x4000L,
+        BGFX_CAPS_RENDERER_MULTITHREADED = 0x8000L,
+        BGFX_CAPS_SWAP_CHAIN             = 0x10000L,
+        BGFX_CAPS_TEXTURE_2D_ARRAY       = 0x20000L,
+        BGFX_CAPS_TEXTURE_3D             = 0x40000L,
+        BGFX_CAPS_TEXTURE_BLIT           = 0x180000L,
+        BGFX_CAPS_TEXTURE_COMPARE_ALL    = 0x100000L,
+        BGFX_CAPS_TEXTURE_COMPARE_LEQUAL = 0x200000L,
+        BGFX_CAPS_TEXTURE_CUBE_ARRAY     = 0x400000L,
+        BGFX_CAPS_TEXTURE_DIRECT_ACCESS  = 0x800000L,
+        BGFX_CAPS_TEXTURE_READ_BACK      = 0x1000000L,
+        BGFX_CAPS_VERTEX_ATTRIB_HALF     = 0x2000000L,
+        BGFX_CAPS_VERTEX_ATTRIB_UINT10   = 0x4000000L,
+        BGFX_CAPS_VERTEX_ID              = 0x8000000L;
 
     /** Format caps */
     public static final short
@@ -406,22 +411,10 @@ public class BGFX {
         BGFX_CAPS_FORMAT_TEXTURE_MSAA             = 0x2000,
         BGFX_CAPS_FORMAT_TEXTURE_MIP_AUTOGEN      = 0x4000;
 
-    /** View */
+    /** Resolve flags. */
     public static final byte
-        BGFX_VIEW_NONE   = 0x0,
-        BGFX_VIEW_STEREO = 0x1;
-
-    /** Submit */
-    public static final byte
-        BGFX_SUBMIT_EYE_LEFT  = 0x1,
-        BGFX_SUBMIT_EYE_RIGHT = 0x2,
-        BGFX_SUBMIT_EYE_FIRST = BGFX_SUBMIT_EYE_LEFT;
-
-    /** Submit */
-    public static final byte
-        BGFX_SUBMIT_EYE_MASK       = 0x3,
-        BGFX_SUBMIT_RESERVED_SHIFT = 7,
-        BGFX_SUBMIT_RESERVED_MASK  = (byte)0x80;
+        BGFX_RESOLVE_NONE          = 0x0,
+        BGFX_RESOLVE_AUTO_GEN_MIPS = 0x1;
 
     /** PCI */
     public static final short
@@ -452,6 +445,7 @@ public class BGFX {
      * <li>{@link #BGFX_RENDERER_TYPE_DIRECT3D12 RENDERER_TYPE_DIRECT3D12} - Direct3D 12.0</li>
      * <li>{@link #BGFX_RENDERER_TYPE_GNM RENDERER_TYPE_GNM} - GNM</li>
      * <li>{@link #BGFX_RENDERER_TYPE_METAL RENDERER_TYPE_METAL} - Metal</li>
+     * <li>{@link #BGFX_RENDERER_TYPE_NVN RENDERER_TYPE_NVN} - Nvn</li>
      * <li>{@link #BGFX_RENDERER_TYPE_OPENGLES RENDERER_TYPE_OPENGLES} - OpenGL ES 2.0+</li>
      * <li>{@link #BGFX_RENDERER_TYPE_OPENGL RENDERER_TYPE_OPENGL} - OpenGL 2.1+</li>
      * <li>{@link #BGFX_RENDERER_TYPE_VULKAN RENDERER_TYPE_VULKAN} - Vulkan</li>
@@ -465,10 +459,11 @@ public class BGFX {
         BGFX_RENDERER_TYPE_DIRECT3D12 = 3,
         BGFX_RENDERER_TYPE_GNM        = 4,
         BGFX_RENDERER_TYPE_METAL      = 5,
-        BGFX_RENDERER_TYPE_OPENGLES   = 6,
-        BGFX_RENDERER_TYPE_OPENGL     = 7,
-        BGFX_RENDERER_TYPE_VULKAN     = 8,
-        BGFX_RENDERER_TYPE_COUNT      = 9;
+        BGFX_RENDERER_TYPE_NVN        = 6,
+        BGFX_RENDERER_TYPE_OPENGLES   = 7,
+        BGFX_RENDERER_TYPE_OPENGL     = 8,
+        BGFX_RENDERER_TYPE_VULKAN     = 9,
+        BGFX_RENDERER_TYPE_COUNT      = 10;
 
     /**
      * Access mode ({@code bgfx_access_t})
@@ -759,7 +754,7 @@ public class BGFX {
      * <h5>Enum values:</h5>
      * 
      * <ul>
-     * <li>{@link #BGFX_UNIFORM_TYPE_INT1 UNIFORM_TYPE_INT1} - Int, used for samplers only.</li>
+     * <li>{@link #BGFX_UNIFORM_TYPE_SAMPLER UNIFORM_TYPE_SAMPLER} - Sampler.</li>
      * <li>{@link #BGFX_UNIFORM_TYPE_END UNIFORM_TYPE_END} - Reserved, do not use.</li>
      * <li>{@link #BGFX_UNIFORM_TYPE_VEC4 UNIFORM_TYPE_VEC4} - 4 floats vector.</li>
      * <li>{@link #BGFX_UNIFORM_TYPE_MAT3 UNIFORM_TYPE_MAT3} - 3x3 matrix.</li>
@@ -768,12 +763,12 @@ public class BGFX {
      * </ul>
      */
     public static final int
-        BGFX_UNIFORM_TYPE_INT1  = 0,
-        BGFX_UNIFORM_TYPE_END   = 1,
-        BGFX_UNIFORM_TYPE_VEC4  = 2,
-        BGFX_UNIFORM_TYPE_MAT3  = 3,
-        BGFX_UNIFORM_TYPE_MAT4  = 4,
-        BGFX_UNIFORM_TYPE_COUNT = 5;
+        BGFX_UNIFORM_TYPE_SAMPLER = 0,
+        BGFX_UNIFORM_TYPE_END     = 1,
+        BGFX_UNIFORM_TYPE_VEC4    = 2,
+        BGFX_UNIFORM_TYPE_MAT3    = 3,
+        BGFX_UNIFORM_TYPE_MAT4    = 4,
+        BGFX_UNIFORM_TYPE_COUNT   = 5;
 
     /**
      * Backbuffer ratio ({@code bgfx_backbuffer_ratio_t}).
@@ -907,7 +902,7 @@ public class BGFX {
      * <li>{@link #BGFX_VIEW_MODE_SEQUENTIAL VIEW_MODE_SEQUENTIAL} - Sort in the same order in which submit calls were called.</li>
      * <li>{@link #BGFX_VIEW_MODE_DEPTH_ASCENDING VIEW_MODE_DEPTH_ASCENDING} - Sort draw call depth in ascending order.</li>
      * <li>{@link #BGFX_VIEW_MODE_DEPTH_DESCENDING VIEW_MODE_DEPTH_DESCENDING} - Sort draw call depth in descending order.</li>
-     * <li>{@link #BGFX_VIEW_MODE_CCOUNT VIEW_MODE_CCOUNT}</li>
+     * <li>{@link #BGFX_VIEW_MODE_COUNT VIEW_MODE_COUNT}</li>
      * </ul>
      */
     public static final int
@@ -915,7 +910,7 @@ public class BGFX {
         BGFX_VIEW_MODE_SEQUENTIAL       = 1,
         BGFX_VIEW_MODE_DEPTH_ASCENDING  = 2,
         BGFX_VIEW_MODE_DEPTH_DESCENDING = 3,
-        BGFX_VIEW_MODE_CCOUNT           = 4;
+        BGFX_VIEW_MODE_COUNT            = 4;
 
     /**
      * Fatal errors ({@code bgfx_fatal_t}).
@@ -963,6 +958,7 @@ public class BGFX {
 
         /** Function address. */
         public static final long
+            attachment_init                                      = apiGetFunctionAddress(BGFX, "bgfx_attachment_init"),
             vertex_decl_begin                                    = apiGetFunctionAddress(BGFX, "bgfx_vertex_decl_begin"),
             vertex_decl_add                                      = apiGetFunctionAddress(BGFX, "bgfx_vertex_decl_add"),
             vertex_decl_decode                                   = apiGetFunctionAddress(BGFX, "bgfx_vertex_decl_decode"),
@@ -981,8 +977,6 @@ public class BGFX {
             init                                                 = apiGetFunctionAddress(BGFX, "bgfx_init"),
             shutdown                                             = apiGetFunctionAddress(BGFX, "bgfx_shutdown"),
             reset                                                = apiGetFunctionAddress(BGFX, "bgfx_reset"),
-            begin                                                = apiGetFunctionAddress(BGFX, "bgfx_begin"),
-            end                                                  = apiGetFunctionAddress(BGFX, "bgfx_end"),
             frame                                                = apiGetFunctionAddress(BGFX, "bgfx_frame"),
             get_renderer_type                                    = apiGetFunctionAddress(BGFX, "bgfx_get_renderer_type"),
             get_caps                                             = apiGetFunctionAddress(BGFX, "bgfx_get_caps"),
@@ -997,8 +991,12 @@ public class BGFX {
             dbg_text_vprintf                                     = apiGetFunctionAddress(BGFX, "bgfx_dbg_text_vprintf"),
             dbg_text_image                                       = apiGetFunctionAddress(BGFX, "bgfx_dbg_text_image"),
             create_index_buffer                                  = apiGetFunctionAddress(BGFX, "bgfx_create_index_buffer"),
+            set_index_buffer_name                                = apiGetFunctionAddress(BGFX, "bgfx_set_index_buffer_name"),
             destroy_index_buffer                                 = apiGetFunctionAddress(BGFX, "bgfx_destroy_index_buffer"),
+            create_vertex_decl                                   = apiGetFunctionAddress(BGFX, "bgfx_create_vertex_decl"),
+            destroy_vertex_decl                                  = apiGetFunctionAddress(BGFX, "bgfx_destroy_vertex_decl"),
             create_vertex_buffer                                 = apiGetFunctionAddress(BGFX, "bgfx_create_vertex_buffer"),
+            set_vertex_buffer_name                               = apiGetFunctionAddress(BGFX, "bgfx_set_vertex_buffer_name"),
             destroy_vertex_buffer                                = apiGetFunctionAddress(BGFX, "bgfx_destroy_vertex_buffer"),
             create_dynamic_index_buffer                          = apiGetFunctionAddress(BGFX, "bgfx_create_dynamic_index_buffer"),
             create_dynamic_index_buffer_mem                      = apiGetFunctionAddress(BGFX, "bgfx_create_dynamic_index_buffer_mem"),
@@ -1043,6 +1041,7 @@ public class BGFX {
             create_frame_buffer_from_handles                     = apiGetFunctionAddress(BGFX, "bgfx_create_frame_buffer_from_handles"),
             create_frame_buffer_from_attachment                  = apiGetFunctionAddress(BGFX, "bgfx_create_frame_buffer_from_attachment"),
             create_frame_buffer_from_nwh                         = apiGetFunctionAddress(BGFX, "bgfx_create_frame_buffer_from_nwh"),
+            set_frame_buffer_name                                = apiGetFunctionAddress(BGFX, "bgfx_set_frame_buffer_name"),
             get_texture                                          = apiGetFunctionAddress(BGFX, "bgfx_get_texture"),
             destroy_frame_buffer                                 = apiGetFunctionAddress(BGFX, "bgfx_destroy_frame_buffer"),
             create_uniform                                       = apiGetFunctionAddress(BGFX, "bgfx_create_uniform"),
@@ -1052,54 +1051,19 @@ public class BGFX {
             get_result                                           = apiGetFunctionAddress(BGFX, "bgfx_get_result"),
             destroy_occlusion_query                              = apiGetFunctionAddress(BGFX, "bgfx_destroy_occlusion_query"),
             set_palette_color                                    = apiGetFunctionAddress(BGFX, "bgfx_set_palette_color"),
+            set_palette_color_rgba8                              = apiGetFunctionAddress(BGFX, "bgfx_set_palette_color_rgba8"),
             set_view_name                                        = apiGetFunctionAddress(BGFX, "bgfx_set_view_name"),
             set_view_rect                                        = apiGetFunctionAddress(BGFX, "bgfx_set_view_rect"),
-            set_view_rect_auto                                   = apiGetFunctionAddress(BGFX, "bgfx_set_view_rect_auto"),
+            set_view_rect_ratio                                  = apiGetFunctionAddress(BGFX, "bgfx_set_view_rect_ratio"),
             set_view_scissor                                     = apiGetFunctionAddress(BGFX, "bgfx_set_view_scissor"),
             set_view_clear                                       = apiGetFunctionAddress(BGFX, "bgfx_set_view_clear"),
             set_view_clear_mrt                                   = apiGetFunctionAddress(BGFX, "bgfx_set_view_clear_mrt"),
             set_view_mode                                        = apiGetFunctionAddress(BGFX, "bgfx_set_view_mode"),
             set_view_frame_buffer                                = apiGetFunctionAddress(BGFX, "bgfx_set_view_frame_buffer"),
             set_view_transform                                   = apiGetFunctionAddress(BGFX, "bgfx_set_view_transform"),
-            set_view_transform_stereo                            = apiGetFunctionAddress(BGFX, "bgfx_set_view_transform_stereo"),
             set_view_order                                       = apiGetFunctionAddress(BGFX, "bgfx_set_view_order"),
-            reset_view                                           = apiGetFunctionAddress(BGFX, "bgfx_reset_view"),
-            set_marker                                           = apiGetFunctionAddress(BGFX, "bgfx_set_marker"),
-            set_state                                            = apiGetFunctionAddress(BGFX, "bgfx_set_state"),
-            set_condition                                        = apiGetFunctionAddress(BGFX, "bgfx_set_condition"),
-            set_stencil                                          = apiGetFunctionAddress(BGFX, "bgfx_set_stencil"),
-            set_scissor                                          = apiGetFunctionAddress(BGFX, "bgfx_set_scissor"),
-            set_scissor_cached                                   = apiGetFunctionAddress(BGFX, "bgfx_set_scissor_cached"),
-            set_transform                                        = apiGetFunctionAddress(BGFX, "bgfx_set_transform"),
-            alloc_transform                                      = apiGetFunctionAddress(BGFX, "bgfx_alloc_transform"),
-            set_transform_cached                                 = apiGetFunctionAddress(BGFX, "bgfx_set_transform_cached"),
-            set_uniform                                          = apiGetFunctionAddress(BGFX, "bgfx_set_uniform"),
-            set_index_buffer                                     = apiGetFunctionAddress(BGFX, "bgfx_set_index_buffer"),
-            set_dynamic_index_buffer                             = apiGetFunctionAddress(BGFX, "bgfx_set_dynamic_index_buffer"),
-            set_transient_index_buffer                           = apiGetFunctionAddress(BGFX, "bgfx_set_transient_index_buffer"),
-            set_vertex_buffer                                    = apiGetFunctionAddress(BGFX, "bgfx_set_vertex_buffer"),
-            set_dynamic_vertex_buffer                            = apiGetFunctionAddress(BGFX, "bgfx_set_dynamic_vertex_buffer"),
-            set_transient_vertex_buffer                          = apiGetFunctionAddress(BGFX, "bgfx_set_transient_vertex_buffer"),
-            set_vertex_count                                     = apiGetFunctionAddress(BGFX, "bgfx_set_vertex_count"),
-            set_instance_data_buffer                             = apiGetFunctionAddress(BGFX, "bgfx_set_instance_data_buffer"),
-            set_instance_data_from_vertex_buffer                 = apiGetFunctionAddress(BGFX, "bgfx_set_instance_data_from_vertex_buffer"),
-            set_instance_data_from_dynamic_vertex_buffer         = apiGetFunctionAddress(BGFX, "bgfx_set_instance_data_from_dynamic_vertex_buffer"),
-            set_instance_count                                   = apiGetFunctionAddress(BGFX, "bgfx_set_instance_count"),
-            set_texture                                          = apiGetFunctionAddress(BGFX, "bgfx_set_texture"),
-            touch                                                = apiGetFunctionAddress(BGFX, "bgfx_touch"),
-            submit                                               = apiGetFunctionAddress(BGFX, "bgfx_submit"),
-            submit_occlusion_query                               = apiGetFunctionAddress(BGFX, "bgfx_submit_occlusion_query"),
-            submit_indirect                                      = apiGetFunctionAddress(BGFX, "bgfx_submit_indirect"),
-            set_image                                            = apiGetFunctionAddress(BGFX, "bgfx_set_image"),
-            set_compute_index_buffer                             = apiGetFunctionAddress(BGFX, "bgfx_set_compute_index_buffer"),
-            set_compute_vertex_buffer                            = apiGetFunctionAddress(BGFX, "bgfx_set_compute_vertex_buffer"),
-            set_compute_dynamic_index_buffer                     = apiGetFunctionAddress(BGFX, "bgfx_set_compute_dynamic_index_buffer"),
-            set_compute_dynamic_vertex_buffer                    = apiGetFunctionAddress(BGFX, "bgfx_set_compute_dynamic_vertex_buffer"),
-            set_compute_indirect_buffer                          = apiGetFunctionAddress(BGFX, "bgfx_set_compute_indirect_buffer"),
-            dispatch                                             = apiGetFunctionAddress(BGFX, "bgfx_dispatch"),
-            dispatch_indirect                                    = apiGetFunctionAddress(BGFX, "bgfx_dispatch_indirect"),
-            discard                                              = apiGetFunctionAddress(BGFX, "bgfx_discard"),
-            blit                                                 = apiGetFunctionAddress(BGFX, "bgfx_blit"),
+            encoder_begin                                        = apiGetFunctionAddress(BGFX, "bgfx_encoder_begin"),
+            encoder_end                                          = apiGetFunctionAddress(BGFX, "bgfx_encoder_end"),
             encoder_set_marker                                   = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_marker"),
             encoder_set_state                                    = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_state"),
             encoder_set_condition                                = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_condition"),
@@ -1107,8 +1071,8 @@ public class BGFX {
             encoder_set_scissor                                  = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_scissor"),
             encoder_set_scissor_cached                           = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_scissor_cached"),
             encoder_set_transform                                = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_transform"),
-            encoder_alloc_transform                              = apiGetFunctionAddress(BGFX, "bgfx_encoder_alloc_transform"),
             encoder_set_transform_cached                         = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_transform_cached"),
+            encoder_alloc_transform                              = apiGetFunctionAddress(BGFX, "bgfx_encoder_alloc_transform"),
             encoder_set_uniform                                  = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_uniform"),
             encoder_set_index_buffer                             = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_index_buffer"),
             encoder_set_dynamic_index_buffer                     = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_dynamic_index_buffer"),
@@ -1126,17 +1090,53 @@ public class BGFX {
             encoder_submit                                       = apiGetFunctionAddress(BGFX, "bgfx_encoder_submit"),
             encoder_submit_occlusion_query                       = apiGetFunctionAddress(BGFX, "bgfx_encoder_submit_occlusion_query"),
             encoder_submit_indirect                              = apiGetFunctionAddress(BGFX, "bgfx_encoder_submit_indirect"),
-            encoder_set_image                                    = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_image"),
             encoder_set_compute_index_buffer                     = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_compute_index_buffer"),
             encoder_set_compute_vertex_buffer                    = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_compute_vertex_buffer"),
             encoder_set_compute_dynamic_index_buffer             = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_compute_dynamic_index_buffer"),
             encoder_set_compute_dynamic_vertex_buffer            = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_compute_dynamic_vertex_buffer"),
             encoder_set_compute_indirect_buffer                  = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_compute_indirect_buffer"),
+            encoder_set_image                                    = apiGetFunctionAddress(BGFX, "bgfx_encoder_set_image"),
             encoder_dispatch                                     = apiGetFunctionAddress(BGFX, "bgfx_encoder_dispatch"),
             encoder_dispatch_indirect                            = apiGetFunctionAddress(BGFX, "bgfx_encoder_dispatch_indirect"),
             encoder_discard                                      = apiGetFunctionAddress(BGFX, "bgfx_encoder_discard"),
             encoder_blit                                         = apiGetFunctionAddress(BGFX, "bgfx_encoder_blit"),
-            request_screen_shot                                  = apiGetFunctionAddress(BGFX, "bgfx_request_screen_shot");
+            request_screen_shot                                  = apiGetFunctionAddress(BGFX, "bgfx_request_screen_shot"),
+            set_marker                                           = apiGetFunctionAddress(BGFX, "bgfx_set_marker"),
+            set_state                                            = apiGetFunctionAddress(BGFX, "bgfx_set_state"),
+            set_condition                                        = apiGetFunctionAddress(BGFX, "bgfx_set_condition"),
+            set_stencil                                          = apiGetFunctionAddress(BGFX, "bgfx_set_stencil"),
+            set_scissor                                          = apiGetFunctionAddress(BGFX, "bgfx_set_scissor"),
+            set_scissor_cached                                   = apiGetFunctionAddress(BGFX, "bgfx_set_scissor_cached"),
+            set_transform                                        = apiGetFunctionAddress(BGFX, "bgfx_set_transform"),
+            set_transform_cached                                 = apiGetFunctionAddress(BGFX, "bgfx_set_transform_cached"),
+            alloc_transform                                      = apiGetFunctionAddress(BGFX, "bgfx_alloc_transform"),
+            set_uniform                                          = apiGetFunctionAddress(BGFX, "bgfx_set_uniform"),
+            set_index_buffer                                     = apiGetFunctionAddress(BGFX, "bgfx_set_index_buffer"),
+            set_dynamic_index_buffer                             = apiGetFunctionAddress(BGFX, "bgfx_set_dynamic_index_buffer"),
+            set_transient_index_buffer                           = apiGetFunctionAddress(BGFX, "bgfx_set_transient_index_buffer"),
+            set_vertex_buffer                                    = apiGetFunctionAddress(BGFX, "bgfx_set_vertex_buffer"),
+            set_dynamic_vertex_buffer                            = apiGetFunctionAddress(BGFX, "bgfx_set_dynamic_vertex_buffer"),
+            set_transient_vertex_buffer                          = apiGetFunctionAddress(BGFX, "bgfx_set_transient_vertex_buffer"),
+            set_vertex_count                                     = apiGetFunctionAddress(BGFX, "bgfx_set_vertex_count"),
+            set_instance_data_buffer                             = apiGetFunctionAddress(BGFX, "bgfx_set_instance_data_buffer"),
+            set_instance_data_from_vertex_buffer                 = apiGetFunctionAddress(BGFX, "bgfx_set_instance_data_from_vertex_buffer"),
+            set_instance_data_from_dynamic_vertex_buffer         = apiGetFunctionAddress(BGFX, "bgfx_set_instance_data_from_dynamic_vertex_buffer"),
+            set_instance_count                                   = apiGetFunctionAddress(BGFX, "bgfx_set_instance_count"),
+            set_texture                                          = apiGetFunctionAddress(BGFX, "bgfx_set_texture"),
+            touch                                                = apiGetFunctionAddress(BGFX, "bgfx_touch"),
+            submit                                               = apiGetFunctionAddress(BGFX, "bgfx_submit"),
+            submit_occlusion_query                               = apiGetFunctionAddress(BGFX, "bgfx_submit_occlusion_query"),
+            submit_indirect                                      = apiGetFunctionAddress(BGFX, "bgfx_submit_indirect"),
+            set_compute_index_buffer                             = apiGetFunctionAddress(BGFX, "bgfx_set_compute_index_buffer"),
+            set_compute_vertex_buffer                            = apiGetFunctionAddress(BGFX, "bgfx_set_compute_vertex_buffer"),
+            set_compute_dynamic_index_buffer                     = apiGetFunctionAddress(BGFX, "bgfx_set_compute_dynamic_index_buffer"),
+            set_compute_dynamic_vertex_buffer                    = apiGetFunctionAddress(BGFX, "bgfx_set_compute_dynamic_vertex_buffer"),
+            set_compute_indirect_buffer                          = apiGetFunctionAddress(BGFX, "bgfx_set_compute_indirect_buffer"),
+            set_image                                            = apiGetFunctionAddress(BGFX, "bgfx_set_image"),
+            dispatch                                             = apiGetFunctionAddress(BGFX, "bgfx_dispatch"),
+            dispatch_indirect                                    = apiGetFunctionAddress(BGFX, "bgfx_dispatch_indirect"),
+            discard                                              = apiGetFunctionAddress(BGFX, "bgfx_discard"),
+            blit                                                 = apiGetFunctionAddress(BGFX, "bgfx_blit");
 
     }
 
@@ -1145,30 +1145,54 @@ public class BGFX {
         return BGFX;
     }
 
+    // --- [ bgfx_attachment_init ] ---
+
+    /** Unsafe version of: {@link #bgfx_attachment_init attachment_init} */
+    public static void nbgfx_attachment_init(long _this, short _handle, int _access, short _layer, short _mip, byte _resolve) {
+        long __functionAddress = Functions.attachment_init;
+        invokePV(_this, _handle, _access, _layer, _mip, _resolve, __functionAddress);
+    }
+
+    /**
+     * Init attachment.
+     *
+     * @param _handle  render target texture handle
+     * @param _access  access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
+     * @param _layer   cubemap side or depth layer/slice
+     * @param _mip     mip level
+     * @param _resolve resolve flags. One of:<br><table><tr><td>{@link #BGFX_RESOLVE_NONE RESOLVE_NONE}</td><td>{@link #BGFX_RESOLVE_AUTO_GEN_MIPS RESOLVE_AUTO_GEN_MIPS}</td></tr></table>
+     */
+    public static void bgfx_attachment_init(@NativeType("bgfx_attachment_t *") BGFXAttachment _this, @NativeType("bgfx_texture_handle_t") short _handle, @NativeType("bgfx_access_t") int _access, @NativeType("uint16_t") int _layer, @NativeType("uint16_t") int _mip, @NativeType("uint8_t") int _resolve) {
+        nbgfx_attachment_init(_this.address(), _handle, _access, (short)_layer, (short)_mip, (byte)_resolve);
+    }
+
     // --- [ bgfx_vertex_decl_begin ] ---
 
     /** Unsafe version of: {@link #bgfx_vertex_decl_begin vertex_decl_begin} */
-    public static void nbgfx_vertex_decl_begin(long _decl, int _renderer) {
+    public static long nbgfx_vertex_decl_begin(long _decl, int _renderer) {
         long __functionAddress = Functions.vertex_decl_begin;
-        invokePV(__functionAddress, _decl, _renderer);
+        return invokePP(_decl, _renderer, __functionAddress);
     }
 
     /**
      * Start a vertex declaration.
      *
      * @param _decl     the vertex declaration
-     * @param _renderer the renderer type. One of:<br><table><tr><td>{@link #BGFX_RENDERER_TYPE_NOOP RENDERER_TYPE_NOOP}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D9 RENDERER_TYPE_DIRECT3D9}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D11 RENDERER_TYPE_DIRECT3D11}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D12 RENDERER_TYPE_DIRECT3D12}</td><td>{@link #BGFX_RENDERER_TYPE_GNM RENDERER_TYPE_GNM}</td><td>{@link #BGFX_RENDERER_TYPE_METAL RENDERER_TYPE_METAL}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_OPENGLES RENDERER_TYPE_OPENGLES}</td><td>{@link #BGFX_RENDERER_TYPE_OPENGL RENDERER_TYPE_OPENGL}</td><td>{@link #BGFX_RENDERER_TYPE_VULKAN RENDERER_TYPE_VULKAN}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_COUNT RENDERER_TYPE_COUNT}</td></tr></table>
+     * @param _renderer the renderer type. One of:<br><table><tr><td>{@link #BGFX_RENDERER_TYPE_NOOP RENDERER_TYPE_NOOP}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D9 RENDERER_TYPE_DIRECT3D9}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D11 RENDERER_TYPE_DIRECT3D11}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D12 RENDERER_TYPE_DIRECT3D12}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_GNM RENDERER_TYPE_GNM}</td><td>{@link #BGFX_RENDERER_TYPE_METAL RENDERER_TYPE_METAL}</td><td>{@link #BGFX_RENDERER_TYPE_NVN RENDERER_TYPE_NVN}</td><td>{@link #BGFX_RENDERER_TYPE_OPENGLES RENDERER_TYPE_OPENGLES}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_OPENGL RENDERER_TYPE_OPENGL}</td><td>{@link #BGFX_RENDERER_TYPE_VULKAN RENDERER_TYPE_VULKAN}</td><td>{@link #BGFX_RENDERER_TYPE_COUNT RENDERER_TYPE_COUNT}</td></tr></table>
      */
-    public static void bgfx_vertex_decl_begin(@NativeType("bgfx_vertex_decl_t *") BGFXVertexDecl _decl, @NativeType("bgfx_renderer_type_t") int _renderer) {
-        nbgfx_vertex_decl_begin(_decl.address(), _renderer);
+    @Nullable
+    @NativeType("bgfx_vertex_decl_t *")
+    public static BGFXVertexDecl bgfx_vertex_decl_begin(@NativeType("bgfx_vertex_decl_t *") BGFXVertexDecl _decl, @NativeType("bgfx_renderer_type_t") int _renderer) {
+        long __result = nbgfx_vertex_decl_begin(_decl.address(), _renderer);
+        return BGFXVertexDecl.createSafe(__result);
     }
 
     // --- [ bgfx_vertex_decl_add ] ---
 
     /** Unsafe version of: {@link #bgfx_vertex_decl_add vertex_decl_add} */
-    public static void nbgfx_vertex_decl_add(long _decl, int _attrib, byte _num, int _type, boolean _normalized, boolean _asInt) {
+    public static long nbgfx_vertex_decl_add(long _decl, int _attrib, byte _num, int _type, boolean _normalized, boolean _asInt) {
         long __functionAddress = Functions.vertex_decl_add;
-        invokePV(__functionAddress, _decl, _attrib, _num, _type, _normalized, _asInt);
+        return invokePP(_decl, _attrib, _num, _type, _normalized, _asInt, __functionAddress);
     }
 
     /**
@@ -1185,8 +1209,11 @@ public class BGFX {
      * @param _asInt      packaging rule for {@code vertexPack}, {@code vertexUnpack}, and {@code vertexConvert} for {@link #BGFX_ATTRIB_TYPE_UINT8 ATTRIB_TYPE_UINT8} and {@link #BGFX_ATTRIB_TYPE_INT16 ATTRIB_TYPE_INT16}. Unpacking
      *                    code must be implemented inside vertex shader.
      */
-    public static void bgfx_vertex_decl_add(@NativeType("bgfx_vertex_decl_t *") BGFXVertexDecl _decl, @NativeType("bgfx_attrib_t") int _attrib, @NativeType("uint8_t") int _num, @NativeType("bgfx_attrib_type_t") int _type, @NativeType("bool") boolean _normalized, @NativeType("bool") boolean _asInt) {
-        nbgfx_vertex_decl_add(_decl.address(), _attrib, (byte)_num, _type, _normalized, _asInt);
+    @Nullable
+    @NativeType("bgfx_vertex_decl_t *")
+    public static BGFXVertexDecl bgfx_vertex_decl_add(@NativeType("bgfx_vertex_decl_t *") BGFXVertexDecl _decl, @NativeType("bgfx_attrib_t") int _attrib, @NativeType("uint8_t") int _num, @NativeType("bgfx_attrib_type_t") int _type, @NativeType("bool") boolean _normalized, @NativeType("bool") boolean _asInt) {
+        long __result = nbgfx_vertex_decl_add(_decl.address(), _attrib, (byte)_num, _type, _normalized, _asInt);
+        return BGFXVertexDecl.createSafe(__result);
     }
 
     // --- [ bgfx_vertex_decl_decode ] ---
@@ -1194,7 +1221,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_vertex_decl_decode vertex_decl_decode} */
     public static void nbgfx_vertex_decl_decode(long _decl, int _attrib, long _num, long _type, long _normalized, long _asInt) {
         long __functionAddress = Functions.vertex_decl_decode;
-        invokePPPPPV(__functionAddress, _decl, _attrib, _num, _type, _normalized, _asInt);
+        invokePPPPPV(_decl, _attrib, _num, _type, _normalized, _asInt, __functionAddress);
     }
 
     /**
@@ -1222,7 +1249,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_vertex_decl_has vertex_decl_has} */
     public static boolean nbgfx_vertex_decl_has(long _decl, int _attr) {
         long __functionAddress = Functions.vertex_decl_has;
-        return invokePZ(__functionAddress, _decl, _attr);
+        return invokePZ(_decl, _attr, __functionAddress);
     }
 
     /**
@@ -1239,9 +1266,9 @@ public class BGFX {
     // --- [ bgfx_vertex_decl_skip ] ---
 
     /** Unsafe version of: {@link #bgfx_vertex_decl_skip vertex_decl_skip} */
-    public static void nbgfx_vertex_decl_skip(long _decl, byte _num) {
+    public static long nbgfx_vertex_decl_skip(long _decl, byte _num) {
         long __functionAddress = Functions.vertex_decl_skip;
-        invokePV(__functionAddress, _decl, _num);
+        return invokePP(_decl, _num, __functionAddress);
     }
 
     /**
@@ -1250,8 +1277,11 @@ public class BGFX {
      * @param _decl the vertex declaration
      * @param _num  the number of bytes to skip
      */
-    public static void bgfx_vertex_decl_skip(@NativeType("bgfx_vertex_decl_t *") BGFXVertexDecl _decl, @NativeType("uint8_t") int _num) {
-        nbgfx_vertex_decl_skip(_decl.address(), (byte)_num);
+    @Nullable
+    @NativeType("bgfx_vertex_decl_t *")
+    public static BGFXVertexDecl bgfx_vertex_decl_skip(@NativeType("bgfx_vertex_decl_t *") BGFXVertexDecl _decl, @NativeType("uint8_t") int _num) {
+        long __result = nbgfx_vertex_decl_skip(_decl.address(), (byte)_num);
+        return BGFXVertexDecl.createSafe(__result);
     }
 
     // --- [ bgfx_vertex_decl_end ] ---
@@ -1259,7 +1289,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_vertex_decl_end vertex_decl_end} */
     public static void nbgfx_vertex_decl_end(long _decl) {
         long __functionAddress = Functions.vertex_decl_end;
-        invokePV(__functionAddress, _decl);
+        invokePV(_decl, __functionAddress);
     }
 
     /**
@@ -1276,7 +1306,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_vertex_pack vertex_pack} */
     public static void nbgfx_vertex_pack(long _input, boolean _inputNormalized, int _attr, long _decl, long _data, int _index) {
         long __functionAddress = Functions.vertex_pack;
-        invokePPPV(__functionAddress, _input, _inputNormalized, _attr, _decl, _data, _index);
+        invokePPPV(_input, _inputNormalized, _attr, _decl, _data, _index, __functionAddress);
     }
 
     /**
@@ -1301,7 +1331,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_vertex_unpack vertex_unpack} */
     public static void nbgfx_vertex_unpack(long _output, int _attr, long _decl, long _data, int _index) {
         long __functionAddress = Functions.vertex_unpack;
-        invokePPPV(__functionAddress, _output, _attr, _decl, _data, _index);
+        invokePPPV(_output, _attr, _decl, _data, _index, __functionAddress);
     }
 
     /**
@@ -1323,22 +1353,22 @@ public class BGFX {
     // --- [ bgfx_vertex_convert ] ---
 
     /** Unsafe version of: {@link #bgfx_vertex_convert vertex_convert} */
-    public static void nbgfx_vertex_convert(long _destDecl, long _destData, long _srcDecl, long _srcData, int _num) {
+    public static void nbgfx_vertex_convert(long _dstDecl, long _dstData, long _srcDecl, long _srcData, int _num) {
         long __functionAddress = Functions.vertex_convert;
-        invokePPPPV(__functionAddress, _destDecl, _destData, _srcDecl, _srcData, _num);
+        invokePPPPV(_dstDecl, _dstData, _srcDecl, _srcData, _num, __functionAddress);
     }
 
     /**
      * Converts vertex stream data from one vertex stream format to another.
      *
-     * @param _destDecl destination vertex stream declaration
-     * @param _destData destination vertex stream
-     * @param _srcDecl  source vertex stream declaration
-     * @param _srcData  source vertex stream data
-     * @param _num      number of vertices to convert from source to destination
+     * @param _dstDecl destination vertex stream declaration
+     * @param _dstData destination vertex stream
+     * @param _srcDecl source vertex stream declaration
+     * @param _srcData source vertex stream data
+     * @param _num     number of vertices to convert from source to destination
      */
-    public static void bgfx_vertex_convert(@NativeType("bgfx_vertex_decl_t const *") BGFXVertexDecl _destDecl, @NativeType("void *") ByteBuffer _destData, @NativeType("bgfx_vertex_decl_t const *") BGFXVertexDecl _srcDecl, @NativeType("void const *") ByteBuffer _srcData, @NativeType("uint32_t") int _num) {
-        nbgfx_vertex_convert(_destDecl.address(), memAddress(_destData), _srcDecl.address(), memAddress(_srcData), _num);
+    public static void bgfx_vertex_convert(@NativeType("bgfx_vertex_decl_t const *") BGFXVertexDecl _dstDecl, @NativeType("void *") ByteBuffer _dstData, @NativeType("bgfx_vertex_decl_t const *") BGFXVertexDecl _srcDecl, @NativeType("void const *") ByteBuffer _srcData, @NativeType("uint32_t") int _num) {
+        nbgfx_vertex_convert(_dstDecl.address(), memAddress(_dstData), _srcDecl.address(), memAddress(_srcData), _num);
     }
 
     // --- [ bgfx_weld_vertices ] ---
@@ -1350,7 +1380,7 @@ public class BGFX {
      */
     public static short nbgfx_weld_vertices(long _output, long _decl, long _data, short _num, float _epsilon) {
         long __functionAddress = Functions.weld_vertices;
-        return invokePPPS(__functionAddress, _output, _decl, _data, _num, _epsilon);
+        return invokePPPS(_output, _decl, _data, _num, _epsilon, __functionAddress);
     }
 
     /**
@@ -1379,7 +1409,7 @@ public class BGFX {
      */
     public static int nbgfx_topology_convert(int _conversion, long _dst, int _dstSize, long _indices, int _numIndices, boolean _index32) {
         long __functionAddress = Functions.topology_convert;
-        return invokePPI(__functionAddress, _conversion, _dst, _dstSize, _indices, _numIndices, _index32);
+        return invokePPI(_conversion, _dst, _dstSize, _indices, _numIndices, _index32, __functionAddress);
     }
 
     /**
@@ -1438,7 +1468,7 @@ public class BGFX {
      */
     public static void nbgfx_topology_sort_tri_list(int _sort, long _dst, int _dstSize, long _dir, long _pos, long _vertices, int _stride, long _indices, int _numIndices, boolean _index32) {
         long __functionAddress = Functions.topology_sort_tri_list;
-        invokePPPPPV(__functionAddress, _sort, _dst, _dstSize, _dir, _pos, _vertices, _stride, _indices, _numIndices, _index32);
+        invokePPPPPV(_sort, _dst, _dstSize, _dir, _pos, _vertices, _stride, _indices, _numIndices, _index32, __functionAddress);
     }
 
     /**
@@ -1510,7 +1540,7 @@ public class BGFX {
      */
     public static byte nbgfx_get_supported_renderers(byte _max, long _enum) {
         long __functionAddress = Functions.get_supported_renderers;
-        return invokePB(__functionAddress, _max, _enum);
+        return invokePB(_max, _enum, __functionAddress);
     }
 
     /**
@@ -1530,13 +1560,13 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_get_renderer_name get_renderer_name} */
     public static long nbgfx_get_renderer_name(int _type) {
         long __functionAddress = Functions.get_renderer_name;
-        return invokeP(__functionAddress, _type);
+        return invokeP(_type, __functionAddress);
     }
 
     /**
      * Returns name of renderer.
      *
-     * @param _type the renderer type. One of:<br><table><tr><td>{@link #BGFX_RENDERER_TYPE_NOOP RENDERER_TYPE_NOOP}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D9 RENDERER_TYPE_DIRECT3D9}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D11 RENDERER_TYPE_DIRECT3D11}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D12 RENDERER_TYPE_DIRECT3D12}</td><td>{@link #BGFX_RENDERER_TYPE_GNM RENDERER_TYPE_GNM}</td><td>{@link #BGFX_RENDERER_TYPE_METAL RENDERER_TYPE_METAL}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_OPENGLES RENDERER_TYPE_OPENGLES}</td><td>{@link #BGFX_RENDERER_TYPE_OPENGL RENDERER_TYPE_OPENGL}</td><td>{@link #BGFX_RENDERER_TYPE_VULKAN RENDERER_TYPE_VULKAN}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_COUNT RENDERER_TYPE_COUNT}</td></tr></table>
+     * @param _type the renderer type. One of:<br><table><tr><td>{@link #BGFX_RENDERER_TYPE_NOOP RENDERER_TYPE_NOOP}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D9 RENDERER_TYPE_DIRECT3D9}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D11 RENDERER_TYPE_DIRECT3D11}</td><td>{@link #BGFX_RENDERER_TYPE_DIRECT3D12 RENDERER_TYPE_DIRECT3D12}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_GNM RENDERER_TYPE_GNM}</td><td>{@link #BGFX_RENDERER_TYPE_METAL RENDERER_TYPE_METAL}</td><td>{@link #BGFX_RENDERER_TYPE_NVN RENDERER_TYPE_NVN}</td><td>{@link #BGFX_RENDERER_TYPE_OPENGLES RENDERER_TYPE_OPENGLES}</td></tr><tr><td>{@link #BGFX_RENDERER_TYPE_OPENGL RENDERER_TYPE_OPENGL}</td><td>{@link #BGFX_RENDERER_TYPE_VULKAN RENDERER_TYPE_VULKAN}</td><td>{@link #BGFX_RENDERER_TYPE_COUNT RENDERER_TYPE_COUNT}</td></tr></table>
      */
     @Nullable
     @NativeType("char const *")
@@ -1550,7 +1580,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_init_ctor init_ctor} */
     public static void nbgfx_init_ctor(long _init) {
         long __functionAddress = Functions.init_ctor;
-        invokePV(__functionAddress, _init);
+        invokePV(_init, __functionAddress);
     }
 
     /**
@@ -1570,7 +1600,7 @@ public class BGFX {
         if (CHECKS) {
             BGFXInit.validate(_init);
         }
-        return invokePZ(__functionAddress, _init);
+        return invokePZ(_init, __functionAddress);
     }
 
     /**
@@ -1607,35 +1637,7 @@ public class BGFX {
      */
     public static void bgfx_reset(@NativeType("uint32_t") int _width, @NativeType("uint32_t") int _height, @NativeType("uint32_t") int _flags, @NativeType("bgfx_texture_format_t") int _format) {
         long __functionAddress = Functions.reset;
-        invokeV(__functionAddress, _width, _height, _flags, _format);
-    }
-
-    // --- [ bgfx_begin ] ---
-
-    /**
-     * Begin submitting draw calls from thread.
-     *
-     * @return an encoder for submitting draw calls from multiple threads
-     */
-    @NativeType("struct bgfx_encoder_s *")
-    public static long bgfx_begin() {
-        long __functionAddress = Functions.begin;
-        return invokeP(__functionAddress);
-    }
-
-    // --- [ bgfx_end ] ---
-
-    /**
-     * End submitting draw calls from thread.
-     *
-     * @param _encoder the encoder
-     */
-    public static void bgfx_end(@NativeType("struct bgfx_encoder_s *") long _encoder) {
-        long __functionAddress = Functions.end;
-        if (CHECKS) {
-            check(_encoder);
-        }
-        invokePV(__functionAddress, _encoder);
+        invokeV(_width, _height, _flags, _format, __functionAddress);
     }
 
     // --- [ bgfx_frame ] ---
@@ -1652,7 +1654,7 @@ public class BGFX {
     @NativeType("uint32_t")
     public static int bgfx_frame(@NativeType("bool") boolean _capture) {
         long __functionAddress = Functions.frame;
-        return invokeI(__functionAddress, _capture);
+        return invokeI(_capture, __functionAddress);
     }
 
     // --- [ bgfx_get_renderer_type ] ---
@@ -1705,7 +1707,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_alloc alloc} */
     public static long nbgfx_alloc(int _size) {
         long __functionAddress = Functions.alloc;
-        return invokeP(__functionAddress, _size);
+        return invokeP(_size, __functionAddress);
     }
 
     /**
@@ -1729,7 +1731,7 @@ public class BGFX {
      */
     public static long nbgfx_copy(long _data, int _size) {
         long __functionAddress = Functions.copy;
-        return invokePP(__functionAddress, _data, _size);
+        return invokePP(_data, _size, __functionAddress);
     }
 
     /**
@@ -1825,7 +1827,7 @@ public class BGFX {
      */
     public static long nbgfx_make_ref(long _data, int _size) {
         long __functionAddress = Functions.make_ref;
-        return invokePP(__functionAddress, _data, _size);
+        return invokePP(_data, _size, __functionAddress);
     }
 
     /**
@@ -1935,7 +1937,7 @@ public class BGFX {
      */
     public static long nbgfx_make_ref_release(long _data, int _size, long _releaseFn, long _userData) {
         long __functionAddress = Functions.make_ref_release;
-        return invokePPPP(__functionAddress, _data, _size, _releaseFn, _userData);
+        return invokePPPP(_data, _size, _releaseFn, _userData, __functionAddress);
     }
 
     /**
@@ -2066,7 +2068,7 @@ public class BGFX {
      */
     public static void bgfx_set_debug(@NativeType("uint32_t") int _debug) {
         long __functionAddress = Functions.set_debug;
-        invokeV(__functionAddress, _debug);
+        invokeV(_debug, __functionAddress);
     }
 
     // --- [ bgfx_dbg_text_clear ] ---
@@ -2074,14 +2076,14 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_dbg_text_clear dbg_text_clear} */
     public static void nbgfx_dbg_text_clear(byte _attr, boolean _small) {
         long __functionAddress = Functions.dbg_text_clear;
-        invokeV(__functionAddress, _attr, _small);
+        invokeV(_attr, _small, __functionAddress);
     }
 
     /**
      * Clears internal debug text buffer.
      *
-     * @param _attr color palette. Where top 4-bits represent index of background, and bottom 4-bits represent foreground color from standard VGA text palette (ANSI
-     *              escape codes).
+     * @param _attr  background color
+     * @param _small default 8x16 or 8x8 font
      */
     public static void bgfx_dbg_text_clear(@NativeType("uint8_t") int _attr, @NativeType("bool") boolean _small) {
         nbgfx_dbg_text_clear((byte)_attr, _small);
@@ -2092,7 +2094,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_dbg_text_printf dbg_text_printf} */
     public static void nbgfx_dbg_text_printf(short _x, short _y, byte _attr, long _format) {
         long __functionAddress = Functions.dbg_text_printf;
-        invokePV(__functionAddress, _x, _y, _attr, _format);
+        invokePV(_x, _y, _attr, _format, __functionAddress);
     }
 
     /**
@@ -2123,8 +2125,9 @@ public class BGFX {
     public static void bgfx_dbg_text_printf(@NativeType("uint16_t") int _x, @NativeType("uint16_t") int _y, @NativeType("uint8_t") int _attr, @NativeType("char const *") CharSequence _format) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer _formatEncoded = stack.ASCII(_format);
-            nbgfx_dbg_text_printf((short)_x, (short)_y, (byte)_attr, memAddress(_formatEncoded));
+            stack.nASCII(_format, true);
+            long _formatEncoded = stack.getPointerAddress();
+            nbgfx_dbg_text_printf((short)_x, (short)_y, (byte)_attr, _formatEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2138,7 +2141,7 @@ public class BGFX {
         if (CHECKS) {
             check(_argList);
         }
-        invokePPV(__functionAddress, _x, _y, _attr, _format, _argList);
+        invokePPV(_x, _y, _attr, _format, _argList, __functionAddress);
     }
 
     /**
@@ -2169,8 +2172,9 @@ public class BGFX {
     public static void bgfx_dbg_text_vprintf(@NativeType("uint16_t") int _x, @NativeType("uint16_t") int _y, @NativeType("uint8_t") int _attr, @NativeType("char const *") CharSequence _format, @NativeType("va_list") long _argList) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer _formatEncoded = stack.ASCII(_format);
-            nbgfx_dbg_text_vprintf((short)_x, (short)_y, (byte)_attr, memAddress(_formatEncoded), _argList);
+            stack.nASCII(_format, true);
+            long _formatEncoded = stack.getPointerAddress();
+            nbgfx_dbg_text_vprintf((short)_x, (short)_y, (byte)_attr, _formatEncoded, _argList);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2181,7 +2185,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_dbg_text_image dbg_text_image} */
     public static void nbgfx_dbg_text_image(short _x, short _y, short _width, short _height, long _data, short _pitch) {
         long __functionAddress = Functions.dbg_text_image;
-        invokePV(__functionAddress, _x, _y, _width, _height, _data, _pitch);
+        invokePV(_x, _y, _width, _height, _data, _pitch, __functionAddress);
     }
 
     /**
@@ -2209,7 +2213,7 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        return invokePS(__functionAddress, _mem, _flags);
+        return invokePS(_mem, _flags, __functionAddress);
     }
 
     /**
@@ -2223,6 +2227,45 @@ public class BGFX {
         return nbgfx_create_index_buffer(_mem.address(), (short)_flags);
     }
 
+    // --- [ bgfx_set_index_buffer_name ] ---
+
+    /**
+     * Unsafe version of: {@link #bgfx_set_index_buffer_name set_index_buffer_name}
+     *
+     * @param _len static index buffer name length (if length is {@code INT32_MAX}, it's expected that {@code _name} is zero terminated string)
+     */
+    public static void nbgfx_set_index_buffer_name(short _handle, long _name, int _len) {
+        long __functionAddress = Functions.set_index_buffer_name;
+        invokePV(_handle, _name, _len, __functionAddress);
+    }
+
+    /**
+     * Set static index buffer debug name.
+     *
+     * @param _handle static index buffer handle
+     * @param _name   static index buffer name
+     */
+    public static void bgfx_set_index_buffer_name(@NativeType("bgfx_index_buffer_handle_t") short _handle, @NativeType("char const *") ByteBuffer _name) {
+        nbgfx_set_index_buffer_name(_handle, memAddress(_name), _name.remaining());
+    }
+
+    /**
+     * Set static index buffer debug name.
+     *
+     * @param _handle static index buffer handle
+     * @param _name   static index buffer name
+     */
+    public static void bgfx_set_index_buffer_name(@NativeType("bgfx_index_buffer_handle_t") short _handle, @NativeType("char const *") CharSequence _name) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            int _nameEncodedLength = stack.nASCII(_name, false);
+            long _nameEncoded = stack.getPointerAddress();
+            nbgfx_set_index_buffer_name(_handle, _nameEncoded, _nameEncodedLength);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
     // --- [ bgfx_destroy_index_buffer ] ---
 
     /**
@@ -2232,7 +2275,37 @@ public class BGFX {
      */
     public static void bgfx_destroy_index_buffer(@NativeType("bgfx_index_buffer_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_index_buffer;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
+    }
+
+    // --- [ bgfx_create_vertex_decl ] ---
+
+    /** Unsafe version of: {@link #bgfx_create_vertex_decl create_vertex_decl} */
+    public static short nbgfx_create_vertex_decl(long _decl) {
+        long __functionAddress = Functions.create_vertex_decl;
+        return invokePS(_decl, __functionAddress);
+    }
+
+    /**
+     * Create vertex declaration.
+     *
+     * @param _decl vertex declaration
+     */
+    @NativeType("bgfx_vertex_decl_handle_t")
+    public static short bgfx_create_vertex_decl(@NativeType("bgfx_vertex_decl_t const *") BGFXVertexDecl _decl) {
+        return nbgfx_create_vertex_decl(_decl.address());
+    }
+
+    // --- [ bgfx_destroy_vertex_decl ] ---
+
+    /**
+     * Destroy vertex declaration.
+     *
+     * @param _handle vertex declaration handle
+     */
+    public static void bgfx_destroy_vertex_decl(@NativeType("bgfx_vertex_decl_handle_t") short _handle) {
+        long __functionAddress = Functions.destroy_vertex_decl;
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_create_vertex_buffer ] ---
@@ -2243,7 +2316,7 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        return invokePPS(__functionAddress, _mem, _decl, _flags);
+        return invokePPS(_mem, _decl, _flags, __functionAddress);
     }
 
     /**
@@ -2258,6 +2331,45 @@ public class BGFX {
         return nbgfx_create_vertex_buffer(_mem.address(), _decl.address(), (short)_flags);
     }
 
+    // --- [ bgfx_set_vertex_buffer_name ] ---
+
+    /**
+     * Unsafe version of: {@link #bgfx_set_vertex_buffer_name set_vertex_buffer_name}
+     *
+     * @param _len static vertex buffer name length (if length is {@code INT32_MAX}, it's expected that {@code _name} is zero terminated string)
+     */
+    public static void nbgfx_set_vertex_buffer_name(short _handle, long _name, int _len) {
+        long __functionAddress = Functions.set_vertex_buffer_name;
+        invokePV(_handle, _name, _len, __functionAddress);
+    }
+
+    /**
+     * Set static vertex buffer debug name.
+     *
+     * @param _handle static vertex buffer handle
+     * @param _name   static vertex buffer name
+     */
+    public static void bgfx_set_vertex_buffer_name(@NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("char const *") ByteBuffer _name) {
+        nbgfx_set_vertex_buffer_name(_handle, memAddress(_name), _name.remaining());
+    }
+
+    /**
+     * Set static vertex buffer debug name.
+     *
+     * @param _handle static vertex buffer handle
+     * @param _name   static vertex buffer name
+     */
+    public static void bgfx_set_vertex_buffer_name(@NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("char const *") CharSequence _name) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            int _nameEncodedLength = stack.nASCII(_name, false);
+            long _nameEncoded = stack.getPointerAddress();
+            nbgfx_set_vertex_buffer_name(_handle, _nameEncoded, _nameEncodedLength);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
     // --- [ bgfx_destroy_vertex_buffer ] ---
 
     /**
@@ -2267,7 +2379,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_vertex_buffer(@NativeType("bgfx_vertex_buffer_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_vertex_buffer;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_create_dynamic_index_buffer ] ---
@@ -2275,7 +2387,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_create_dynamic_index_buffer create_dynamic_index_buffer} */
     public static short nbgfx_create_dynamic_index_buffer(int _num, short _flags) {
         long __functionAddress = Functions.create_dynamic_index_buffer;
-        return invokeS(__functionAddress, _num, _flags);
+        return invokeS(_num, _flags, __functionAddress);
     }
 
     /**
@@ -2297,7 +2409,7 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        return invokePS(__functionAddress, _mem, _flags);
+        return invokePS(_mem, _flags, __functionAddress);
     }
 
     /**
@@ -2319,7 +2431,7 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        invokePV(__functionAddress, _handle, _startIndex, _mem);
+        invokePV(_handle, _startIndex, _mem, __functionAddress);
     }
 
     /**
@@ -2342,7 +2454,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_dynamic_index_buffer(@NativeType("bgfx_dynamic_index_buffer_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_dynamic_index_buffer;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_create_dynamic_vertex_buffer ] ---
@@ -2350,7 +2462,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_create_dynamic_vertex_buffer create_dynamic_vertex_buffer} */
     public static short nbgfx_create_dynamic_vertex_buffer(int _num, long _decl, short _flags) {
         long __functionAddress = Functions.create_dynamic_vertex_buffer;
-        return invokePS(__functionAddress, _num, _decl, _flags);
+        return invokePS(_num, _decl, _flags, __functionAddress);
     }
 
     /**
@@ -2373,7 +2485,7 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        return invokePPS(__functionAddress, _mem, _decl, _flags);
+        return invokePPS(_mem, _decl, _flags, __functionAddress);
     }
 
     /**
@@ -2396,7 +2508,7 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        invokePV(__functionAddress, _handle, _startVertex, _mem);
+        invokePV(_handle, _startVertex, _mem, __functionAddress);
     }
 
     /**
@@ -2419,7 +2531,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_dynamic_vertex_buffer(@NativeType("bgfx_dynamic_vertex_buffer_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_dynamic_vertex_buffer;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_get_avail_transient_index_buffer ] ---
@@ -2432,7 +2544,7 @@ public class BGFX {
     @NativeType("uint32_t")
     public static int bgfx_get_avail_transient_index_buffer(@NativeType("uint32_t") int _num) {
         long __functionAddress = Functions.get_avail_transient_index_buffer;
-        return invokeI(__functionAddress, _num);
+        return invokeI(_num, __functionAddress);
     }
 
     // --- [ bgfx_get_avail_transient_vertex_buffer ] ---
@@ -2440,7 +2552,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_get_avail_transient_vertex_buffer get_avail_transient_vertex_buffer} */
     public static int nbgfx_get_avail_transient_vertex_buffer(int _num, long _decl) {
         long __functionAddress = Functions.get_avail_transient_vertex_buffer;
-        return invokePI(__functionAddress, _num, _decl);
+        return invokePI(_num, _decl, __functionAddress);
     }
 
     /**
@@ -2459,7 +2571,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_get_avail_instance_data_buffer get_avail_instance_data_buffer} */
     public static int nbgfx_get_avail_instance_data_buffer(int _num, short _stride) {
         long __functionAddress = Functions.get_avail_instance_data_buffer;
-        return invokeI(__functionAddress, _num, _stride);
+        return invokeI(_num, _stride, __functionAddress);
     }
 
     /**
@@ -2478,7 +2590,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_alloc_transient_index_buffer alloc_transient_index_buffer} */
     public static void nbgfx_alloc_transient_index_buffer(long _tib, int _num) {
         long __functionAddress = Functions.alloc_transient_index_buffer;
-        invokePV(__functionAddress, _tib, _num);
+        invokePV(_tib, _num, __functionAddress);
     }
 
     /**
@@ -2498,7 +2610,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_alloc_transient_vertex_buffer alloc_transient_vertex_buffer} */
     public static void nbgfx_alloc_transient_vertex_buffer(long _tvb, int _num, long _decl) {
         long __functionAddress = Functions.alloc_transient_vertex_buffer;
-        invokePPV(__functionAddress, _tvb, _num, _decl);
+        invokePPV(_tvb, _num, _decl, __functionAddress);
     }
 
     /**
@@ -2517,7 +2629,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_alloc_transient_buffers alloc_transient_buffers} */
     public static boolean nbgfx_alloc_transient_buffers(long _tvb, long _decl, int _numVertices, long _tib, int _numIndices) {
         long __functionAddress = Functions.alloc_transient_buffers;
-        return invokePPPZ(__functionAddress, _tvb, _decl, _numVertices, _tib, _numIndices);
+        return invokePPPZ(_tvb, _decl, _numVertices, _tib, _numIndices, __functionAddress);
     }
 
     /**
@@ -2541,7 +2653,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_alloc_instance_data_buffer alloc_instance_data_buffer} */
     public static void nbgfx_alloc_instance_data_buffer(long _idb, int _num, short _stride) {
         long __functionAddress = Functions.alloc_instance_data_buffer;
-        invokePV(__functionAddress, _idb, _num, _stride);
+        invokePV(_idb, _num, _stride, __functionAddress);
     }
 
     /**
@@ -2565,7 +2677,7 @@ public class BGFX {
     @NativeType("bgfx_indirect_buffer_handle_t")
     public static short bgfx_create_indirect_buffer(@NativeType("uint32_t") int _num) {
         long __functionAddress = Functions.create_indirect_buffer;
-        return invokeS(__functionAddress, _num);
+        return invokeS(_num, __functionAddress);
     }
 
     // --- [ bgfx_destroy_indirect_buffer ] ---
@@ -2577,7 +2689,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_indirect_buffer(@NativeType("bgfx_indirect_buffer_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_indirect_buffer;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_create_shader ] ---
@@ -2588,7 +2700,7 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        return invokePS(__functionAddress, _mem);
+        return invokePS(_mem, __functionAddress);
     }
 
     /** Creates shader from memory buffer. */
@@ -2606,7 +2718,7 @@ public class BGFX {
      */
     public static short nbgfx_get_shader_uniforms(short _handle, long _uniforms, short _max) {
         long __functionAddress = Functions.get_shader_uniforms;
-        return invokePS(__functionAddress, _handle, _uniforms, _max);
+        return invokePS(_handle, _uniforms, _max, __functionAddress);
     }
 
     /**
@@ -2633,7 +2745,7 @@ public class BGFX {
      */
     public static void nbgfx_set_shader_name(short _handle, long _name, int _len) {
         long __functionAddress = Functions.set_shader_name;
-        invokePV(__functionAddress, _handle, _name, _len);
+        invokePV(_handle, _name, _len, __functionAddress);
     }
 
     /**
@@ -2655,8 +2767,9 @@ public class BGFX {
     public static void bgfx_set_shader_name(@NativeType("bgfx_shader_handle_t") short _handle, @NativeType("char const *") CharSequence _name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer _nameEncoded = stack.UTF8(_name, false);
-            nbgfx_set_shader_name(_handle, memAddress(_nameEncoded), _nameEncoded.remaining());
+            int _nameEncodedLength = stack.nUTF8(_name, false);
+            long _nameEncoded = stack.getPointerAddress();
+            nbgfx_set_shader_name(_handle, _nameEncoded, _nameEncodedLength);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2671,7 +2784,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_shader(@NativeType("bgfx_shader_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_shader;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_create_program ] ---
@@ -2688,7 +2801,7 @@ public class BGFX {
     @NativeType("bgfx_program_handle_t")
     public static short bgfx_create_program(@NativeType("bgfx_shader_handle_t") short _vsh, @NativeType("bgfx_shader_handle_t") short _fsh, @NativeType("bool") boolean _destroyShaders) {
         long __functionAddress = Functions.create_program;
-        return invokeS(__functionAddress, _vsh, _fsh, _destroyShaders);
+        return invokeS(_vsh, _fsh, _destroyShaders, __functionAddress);
     }
 
     // --- [ bgfx_create_compute_program ] ---
@@ -2702,7 +2815,7 @@ public class BGFX {
     @NativeType("bgfx_program_handle_t")
     public static short bgfx_create_compute_program(@NativeType("bgfx_shader_handle_t") short _csh, @NativeType("bool") boolean _destroyShaders) {
         long __functionAddress = Functions.create_compute_program;
-        return invokeS(__functionAddress, _csh, _destroyShaders);
+        return invokeS(_csh, _destroyShaders, __functionAddress);
     }
 
     // --- [ bgfx_destroy_program ] ---
@@ -2714,7 +2827,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_program(@NativeType("bgfx_program_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_program;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_is_texture_valid ] ---
@@ -2722,7 +2835,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_is_texture_valid is_texture_valid} */
     public static boolean nbgfx_is_texture_valid(short _depth, boolean _cubeMap, short _numLayers, int _format, long _flags) {
         long __functionAddress = Functions.is_texture_valid;
-        return invokeJZ(__functionAddress, _depth, _cubeMap, _numLayers, _format, _flags);
+        return invokeJZ(_depth, _cubeMap, _numLayers, _format, _flags, __functionAddress);
     }
 
     /**
@@ -2744,7 +2857,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_calc_texture_size calc_texture_size} */
     public static void nbgfx_calc_texture_size(long _info, short _width, short _height, short _depth, boolean _cubeMap, boolean _hasMips, short _numLayers, int _format) {
         long __functionAddress = Functions.calc_texture_size;
-        invokePV(__functionAddress, _info, _width, _height, _depth, _cubeMap, _hasMips, _numLayers, _format);
+        invokePV(_info, _width, _height, _depth, _cubeMap, _hasMips, _numLayers, _format, __functionAddress);
     }
 
     /**
@@ -2771,14 +2884,14 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        return invokePJPS(__functionAddress, _mem, _flags, _skip, _info);
+        return invokePJPS(_mem, _flags, _skip, _info, __functionAddress);
     }
 
     /**
      * Creates texture from memory buffer.
      *
      * @param _mem   DDS, KTX or PVR texture data
-     * @param _flags texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
+     * @param _flags texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td><td>{@link #BGFX_SAMPLER_UVW_CLAMP SAMPLER_UVW_CLAMP}</td></tr><tr><td>{@link #BGFX_SAMPLER_UVW_BORDER SAMPLER_UVW_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_POINT SAMPLER_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
      * @param _skip  skip top level mips when parsing texture
      * @param _info  when non-{@code NULL} is specified it returns parsed texture information
      */
@@ -2795,7 +2908,7 @@ public class BGFX {
         if (CHECKS) {
             if (_mem != NULL) { BGFXMemory.validate(_mem); }
         }
-        return invokeJPS(__functionAddress, _width, _height, _hasMips, _numLayers, _format, _flags, _mem);
+        return invokeJPS(_width, _height, _hasMips, _numLayers, _format, _flags, _mem, __functionAddress);
     }
 
     /**
@@ -2806,7 +2919,7 @@ public class BGFX {
      * @param _hasMips   indicates that texture contains full mip-map chain
      * @param _numLayers number of layers in texture array. Must be 1 if caps {@link #BGFX_CAPS_TEXTURE_2D_ARRAY CAPS_TEXTURE_2D_ARRAY} flag is not set.
      * @param _format    texture format. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
-     * @param _flags     texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
+     * @param _flags     texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td><td>{@link #BGFX_SAMPLER_UVW_CLAMP SAMPLER_UVW_CLAMP}</td></tr><tr><td>{@link #BGFX_SAMPLER_UVW_BORDER SAMPLER_UVW_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_POINT SAMPLER_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
      * @param _mem       texture data. If {@code _mem} is non-{@code NULL}, created texture will be immutable. When {@code _numLayers} is more than 1, expected memory layout is
      *                   texture and all mips together for each array element.
      */
@@ -2820,17 +2933,17 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_create_texture_2d_scaled create_texture_2d_scaled} */
     public static short nbgfx_create_texture_2d_scaled(int _ratio, boolean _hasMips, short _numLayers, int _format, long _flags) {
         long __functionAddress = Functions.create_texture_2d_scaled;
-        return invokeJS(__functionAddress, _ratio, _hasMips, _numLayers, _format, _flags);
+        return invokeJS(_ratio, _hasMips, _numLayers, _format, _flags, __functionAddress);
     }
 
     /**
-     * Creates frame buffer with size based on backbuffer ratio. Frame buffer will maintain ratio if back buffer resolution changes.
+     * Creates texture with size based on backbuffer ratio. Texture will maintain ratio if back buffer resolution changes.
      *
      * @param _ratio     frame buffer size in respect to back-buffer size. One of:<br><table><tr><td>{@link #BGFX_BACKBUFFER_RATIO_EQUAL BACKBUFFER_RATIO_EQUAL}</td><td>{@link #BGFX_BACKBUFFER_RATIO_HALF BACKBUFFER_RATIO_HALF}</td><td>{@link #BGFX_BACKBUFFER_RATIO_QUARTER BACKBUFFER_RATIO_QUARTER}</td></tr><tr><td>{@link #BGFX_BACKBUFFER_RATIO_EIGHTH BACKBUFFER_RATIO_EIGHTH}</td><td>{@link #BGFX_BACKBUFFER_RATIO_SIXTEENTH BACKBUFFER_RATIO_SIXTEENTH}</td><td>{@link #BGFX_BACKBUFFER_RATIO_DOUBLE BACKBUFFER_RATIO_DOUBLE}</td></tr></table>
      * @param _hasMips   indicates that texture contains full mip-map chain
      * @param _numLayers number of layers in texture array. Must be 1 if caps {@link #BGFX_CAPS_TEXTURE_2D_ARRAY CAPS_TEXTURE_2D_ARRAY} flag is not set.
      * @param _format    texture format. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
-     * @param _flags     texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
+     * @param _flags     texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td><td>{@link #BGFX_SAMPLER_UVW_CLAMP SAMPLER_UVW_CLAMP}</td></tr><tr><td>{@link #BGFX_SAMPLER_UVW_BORDER SAMPLER_UVW_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_POINT SAMPLER_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
      */
     @NativeType("bgfx_texture_handle_t")
     public static short bgfx_create_texture_2d_scaled(@NativeType("bgfx_backbuffer_ratio_t") int _ratio, @NativeType("bool") boolean _hasMips, @NativeType("uint16_t") int _numLayers, @NativeType("bgfx_texture_format_t") int _format, @NativeType("uint64_t") long _flags) {
@@ -2845,7 +2958,7 @@ public class BGFX {
         if (CHECKS) {
             if (_mem != NULL) { BGFXMemory.validate(_mem); }
         }
-        return invokeJPS(__functionAddress, _width, _height, _depth, _hasMips, _format, _flags, _mem);
+        return invokeJPS(_width, _height, _depth, _hasMips, _format, _flags, _mem, __functionAddress);
     }
 
     /**
@@ -2856,7 +2969,7 @@ public class BGFX {
      * @param _depth   depth
      * @param _hasMips indicates that texture contains full mip-map chain
      * @param _format  texture format. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
-     * @param _flags   texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
+     * @param _flags   texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td><td>{@link #BGFX_SAMPLER_UVW_CLAMP SAMPLER_UVW_CLAMP}</td></tr><tr><td>{@link #BGFX_SAMPLER_UVW_BORDER SAMPLER_UVW_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_POINT SAMPLER_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
      * @param _mem     texture data. If {@code _mem} is non-{@code NULL}, created texture will be immutable.
      */
     @NativeType("bgfx_texture_handle_t")
@@ -2872,7 +2985,7 @@ public class BGFX {
         if (CHECKS) {
             if (_mem != NULL) { BGFXMemory.validate(_mem); }
         }
-        return invokeJPS(__functionAddress, _size, _hasMips, _numLayers, _format, _flags, _mem);
+        return invokeJPS(_size, _hasMips, _numLayers, _format, _flags, _mem, __functionAddress);
     }
 
     /**
@@ -2882,7 +2995,7 @@ public class BGFX {
      * @param _hasMips   indicates that texture contains full mip-map chain
      * @param _numLayers number of layers in texture array. Must be 1 if caps {@link #BGFX_CAPS_TEXTURE_CUBE_ARRAY CAPS_TEXTURE_CUBE_ARRAY} flag is not set.
      * @param _format    one of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
-     * @param _flags     texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
+     * @param _flags     texture creation and sampler flags. Default texture sampling mode is linear, and wrap mode is repeat. One or more of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td><td>{@link #BGFX_SAMPLER_UVW_CLAMP SAMPLER_UVW_CLAMP}</td></tr><tr><td>{@link #BGFX_SAMPLER_UVW_BORDER SAMPLER_UVW_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_POINT SAMPLER_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
      * @param _mem       texture data. If {@code _mem} is non-{@code NULL}, created texture will be immutable. When {@code _numLayers} is more than 1, expected memory layout is
      *                   cubemap texture and all mips together for each array element.
      */
@@ -2899,11 +3012,13 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        invokePV(__functionAddress, _handle, _layer, _mip, _x, _y, _width, _height, _mem, _pitch);
+        invokePV(_handle, _layer, _mip, _x, _y, _width, _height, _mem, _pitch, __functionAddress);
     }
 
     /**
      * Updates 2D texture.
+     * 
+     * <p>It's valid to update only mutable texture. See {@link #bgfx_create_texture_2d create_texture_2d} for more info.</p>
      *
      * @param _handle texture handle
      * @param _layer  layers in texture array
@@ -2927,11 +3042,13 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        invokePV(__functionAddress, _handle, _mip, _x, _y, _z, _width, _height, _depth, _mem);
+        invokePV(_handle, _mip, _x, _y, _z, _width, _height, _depth, _mem, __functionAddress);
     }
 
     /**
      * Updates 3D texture.
+     * 
+     * <p>It's valid to update only mutable texture. See {@link #bgfx_create_texture_3d create_texture_3d} for more info.</p>
      *
      * @param _handle texture handle
      * @param _mip    mip level
@@ -2955,35 +3072,37 @@ public class BGFX {
         if (CHECKS) {
             BGFXMemory.validate(_mem);
         }
-        invokePV(__functionAddress, _handle, _layer, _side, _mip, _x, _y, _width, _height, _mem, _pitch);
+        invokePV(_handle, _layer, _side, _mip, _x, _y, _width, _height, _mem, _pitch, __functionAddress);
     }
 
     /**
      * Updates Cube texture.
      * 
-     * <p>Cubemap sides: 0 is +X, 1 is -X, 2 is +Y, 3 is -Y, 4 is +Z, and 5 is -Z.</p>
-     * 
-     * <pre><code>
-     *            +----------+
-     *            |-z       2|
-     *            | ^  +y    |
-     *            | |        |    Unfolded cube:
-     *            | +----&gt;+x |
-     * +----------+----------+----------+----------+
-     * |+y       1|+y       4|+y       0|+y       5|
-     * | ^  -x    | ^  +z    | ^  +x    | ^  -z    |
-     * | |        | |        | |        | |        |
-     * | +----&gt;+z | +----&gt;+x | +----&gt;-z | +----&gt;-x |
-     * +----------+----------+----------+----------+
-     *            |+z       3|
-     *            | ^  -y    |
-     *            | |        |
-     *            | +----&gt;+x |
-     *            +----------+</code></pre>
+     * <p>It's valid to update only mutable texture. See {@link #bgfx_create_texture_cube create_texture_cube} for more info.</p>
      *
      * @param _handle texture handle
      * @param _layer  layers in texture array
-     * @param _side   cubemap side. One of:<br><table><tr><td>{@link #BGFX_CUBE_MAP_POSITIVE_X CUBE_MAP_POSITIVE_X}</td><td>{@link #BGFX_CUBE_MAP_NEGATIVE_X CUBE_MAP_NEGATIVE_X}</td><td>{@link #BGFX_CUBE_MAP_POSITIVE_Y CUBE_MAP_POSITIVE_Y}</td><td>{@link #BGFX_CUBE_MAP_NEGATIVE_Y CUBE_MAP_NEGATIVE_Y}</td></tr><tr><td>{@link #BGFX_CUBE_MAP_POSITIVE_Z CUBE_MAP_POSITIVE_Z}</td><td>{@link #BGFX_CUBE_MAP_NEGATIVE_Z CUBE_MAP_NEGATIVE_Z}</td></tr></table>
+     * @param _side   cubemap side, where 0 is +X, 1 is -X, 2 is +Y, 3 is -Y, 4 is +Z, and 5 is -Z.
+     *                
+     *                <pre><code>
+     *                           +----------+
+     *                           |-z       2|
+     *                           | ^  +y    |
+     *                           | |        |    Unfolded cube:
+     *                           | +----&gt;+x |
+     *                +----------+----------+----------+----------+
+     *                |+y       1|+y       4|+y       0|+y       5|
+     *                | ^  -x    | ^  +z    | ^  +x    | ^  -z    |
+     *                | |        | |        | |        | |        |
+     *                | +----&gt;+z | +----&gt;+x | +----&gt;-z | +----&gt;-x |
+     *                +----------+----------+----------+----------+
+     *                           |+z       3|
+     *                           | ^  -y    |
+     *                           | |        |
+     *                           | +----&gt;+x |
+     *                           +----------+</code></pre>
+     *                
+     *                <p>. One of:<br></p><table><tr><td>{@link #BGFX_CUBE_MAP_POSITIVE_X CUBE_MAP_POSITIVE_X}</td><td>{@link #BGFX_CUBE_MAP_NEGATIVE_X CUBE_MAP_NEGATIVE_X}</td><td>{@link #BGFX_CUBE_MAP_POSITIVE_Y CUBE_MAP_POSITIVE_Y}</td><td>{@link #BGFX_CUBE_MAP_NEGATIVE_Y CUBE_MAP_NEGATIVE_Y}</td></tr><tr><td>{@link #BGFX_CUBE_MAP_POSITIVE_Z CUBE_MAP_POSITIVE_Z}</td><td>{@link #BGFX_CUBE_MAP_NEGATIVE_Z CUBE_MAP_NEGATIVE_Z}</td></tr></table>
      * @param _mip    mip level
      * @param _x      x offset in texture
      * @param _y      y offset in texture
@@ -3001,7 +3120,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_read_texture read_texture} */
     public static int nbgfx_read_texture(short _handle, long _data, byte _mip) {
         long __functionAddress = Functions.read_texture;
-        return invokePI(__functionAddress, _handle, _data, _mip);
+        return invokePI(_handle, _data, _mip, __functionAddress);
     }
 
     /**
@@ -3077,7 +3196,7 @@ public class BGFX {
      */
     public static void nbgfx_set_texture_name(short _handle, long _name, int _len) {
         long __functionAddress = Functions.set_texture_name;
-        invokePV(__functionAddress, _handle, _name, _len);
+        invokePV(_handle, _name, _len, __functionAddress);
     }
 
     /**
@@ -3099,8 +3218,9 @@ public class BGFX {
     public static void bgfx_set_texture_name(@NativeType("bgfx_texture_handle_t") short _handle, @NativeType("char const *") CharSequence _name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer _nameEncoded = stack.UTF8(_name, false);
-            nbgfx_set_texture_name(_handle, memAddress(_nameEncoded), _nameEncoded.remaining());
+            int _nameEncodedLength = stack.nUTF8(_name, false);
+            long _nameEncoded = stack.getPointerAddress();
+            nbgfx_set_texture_name(_handle, _nameEncoded, _nameEncodedLength);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3121,7 +3241,7 @@ public class BGFX {
     @NativeType("void *")
     public static long bgfx_get_direct_access_ptr(@NativeType("bgfx_texture_handle_t") short _handle) {
         long __functionAddress = Functions.get_direct_access_ptr;
-        return invokeP(__functionAddress, _handle);
+        return invokeP(_handle, __functionAddress);
     }
 
     // --- [ bgfx_destroy_texture ] ---
@@ -3133,7 +3253,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_texture(@NativeType("bgfx_texture_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_texture;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_create_frame_buffer ] ---
@@ -3141,7 +3261,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_create_frame_buffer create_frame_buffer} */
     public static short nbgfx_create_frame_buffer(short _width, short _height, int _format, long _textureFlags) {
         long __functionAddress = Functions.create_frame_buffer;
-        return invokeJS(__functionAddress, _width, _height, _format, _textureFlags);
+        return invokeJS(_width, _height, _format, _textureFlags, __functionAddress);
     }
 
     /**
@@ -3150,7 +3270,7 @@ public class BGFX {
      * @param _width        texture width
      * @param _height       texture height
      * @param _format       texture format. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
-     * @param _textureFlags default texture sampling mode is linear, and wrap mode is repeat. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
+     * @param _textureFlags default texture sampling mode is linear, and wrap mode is repeat. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td><td>{@link #BGFX_SAMPLER_UVW_CLAMP SAMPLER_UVW_CLAMP}</td></tr><tr><td>{@link #BGFX_SAMPLER_UVW_BORDER SAMPLER_UVW_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_POINT SAMPLER_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
      *
      * @return handle to frame buffer object
      */
@@ -3166,14 +3286,14 @@ public class BGFX {
      *
      * @param _ratio        frame buffer size in respect to back-buffer size. One of:<br><table><tr><td>{@link #BGFX_BACKBUFFER_RATIO_EQUAL BACKBUFFER_RATIO_EQUAL}</td><td>{@link #BGFX_BACKBUFFER_RATIO_HALF BACKBUFFER_RATIO_HALF}</td><td>{@link #BGFX_BACKBUFFER_RATIO_QUARTER BACKBUFFER_RATIO_QUARTER}</td></tr><tr><td>{@link #BGFX_BACKBUFFER_RATIO_EIGHTH BACKBUFFER_RATIO_EIGHTH}</td><td>{@link #BGFX_BACKBUFFER_RATIO_SIXTEENTH BACKBUFFER_RATIO_SIXTEENTH}</td><td>{@link #BGFX_BACKBUFFER_RATIO_DOUBLE BACKBUFFER_RATIO_DOUBLE}</td></tr></table>
      * @param _format       texture format. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
-     * @param _textureFlags default texture sampling mode is linear, and wrap mode is repeat. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
+     * @param _textureFlags default texture sampling mode is linear, and wrap mode is repeat. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_NONE TEXTURE_NONE}</td><td>{@link #BGFX_TEXTURE_MSAA_SAMPLE TEXTURE_MSAA_SAMPLE}</td><td>{@link #BGFX_TEXTURE_RT TEXTURE_RT}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X2 TEXTURE_RT_MSAA_X2}</td></tr><tr><td>{@link #BGFX_TEXTURE_RT_MSAA_X4 TEXTURE_RT_MSAA_X4}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X8 TEXTURE_RT_MSAA_X8}</td><td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr><tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td><td>{@link #BGFX_SAMPLER_UVW_CLAMP SAMPLER_UVW_CLAMP}</td></tr><tr><td>{@link #BGFX_SAMPLER_UVW_BORDER SAMPLER_UVW_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_POINT SAMPLER_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
      *
      * @return handle to frame buffer object
      */
     @NativeType("bgfx_frame_buffer_handle_t")
     public static short bgfx_create_frame_buffer_scaled(@NativeType("bgfx_backbuffer_ratio_t") int _ratio, @NativeType("bgfx_texture_format_t") int _format, @NativeType("uint64_t") long _textureFlags) {
         long __functionAddress = Functions.create_frame_buffer_scaled;
-        return invokeJS(__functionAddress, _ratio, _format, _textureFlags);
+        return invokeJS(_ratio, _format, _textureFlags, __functionAddress);
     }
 
     // --- [ bgfx_create_frame_buffer_from_handles ] ---
@@ -3185,7 +3305,7 @@ public class BGFX {
      */
     public static short nbgfx_create_frame_buffer_from_handles(byte _num, long _handles, boolean _destroyTextures) {
         long __functionAddress = Functions.create_frame_buffer_from_handles;
-        return invokePS(__functionAddress, _num, _handles, _destroyTextures);
+        return invokePS(_num, _handles, _destroyTextures, __functionAddress);
     }
 
     /**
@@ -3210,7 +3330,7 @@ public class BGFX {
      */
     public static short nbgfx_create_frame_buffer_from_attachment(byte _num, long _attachment, boolean _destroyTextures) {
         long __functionAddress = Functions.create_frame_buffer_from_attachment;
-        return invokePS(__functionAddress, _num, _attachment, _destroyTextures);
+        return invokePS(_num, _attachment, _destroyTextures, __functionAddress);
     }
 
     /**
@@ -3234,7 +3354,7 @@ public class BGFX {
         if (CHECKS) {
             check(_nwh);
         }
-        return invokePS(__functionAddress, _nwh, _width, _height, _format, _depthFormat);
+        return invokePS(_nwh, _width, _height, _format, _depthFormat, __functionAddress);
     }
 
     /**
@@ -3255,12 +3375,51 @@ public class BGFX {
         return nbgfx_create_frame_buffer_from_nwh(_nwh, (short)_width, (short)_height, _format, _depthFormat);
     }
 
+    // --- [ bgfx_set_frame_buffer_name ] ---
+
+    /**
+     * Unsafe version of: {@link #bgfx_set_frame_buffer_name set_frame_buffer_name}
+     *
+     * @param _len frame buffer name length (if length is {@code INT32_MAX}, it's expected that {@code _name} is zero terminated string)
+     */
+    public static void nbgfx_set_frame_buffer_name(short _handle, long _name, int _len) {
+        long __functionAddress = Functions.set_frame_buffer_name;
+        invokePV(_handle, _name, _len, __functionAddress);
+    }
+
+    /**
+     * Set frame buffer debug name.
+     *
+     * @param _handle frame buffer handle
+     * @param _name   frame buffer name
+     */
+    public static void bgfx_set_frame_buffer_name(@NativeType("bgfx_frame_buffer_handle_t") short _handle, @NativeType("char const *") ByteBuffer _name) {
+        nbgfx_set_frame_buffer_name(_handle, memAddress(_name), _name.remaining());
+    }
+
+    /**
+     * Set frame buffer debug name.
+     *
+     * @param _handle frame buffer handle
+     * @param _name   frame buffer name
+     */
+    public static void bgfx_set_frame_buffer_name(@NativeType("bgfx_frame_buffer_handle_t") short _handle, @NativeType("char const *") CharSequence _name) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            int _nameEncodedLength = stack.nASCII(_name, false);
+            long _nameEncoded = stack.getPointerAddress();
+            nbgfx_set_frame_buffer_name(_handle, _nameEncoded, _nameEncodedLength);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
     // --- [ bgfx_get_texture ] ---
 
     /** Unsafe version of: {@link #bgfx_get_texture get_texture} */
     public static short nbgfx_get_texture(short _handle, byte _attachment) {
         long __functionAddress = Functions.get_texture;
-        return invokeS(__functionAddress, _handle, _attachment);
+        return invokeS(_handle, _attachment, __functionAddress);
     }
 
     /**
@@ -3285,7 +3444,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_frame_buffer(@NativeType("bgfx_frame_buffer_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_frame_buffer;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_create_uniform ] ---
@@ -3293,7 +3452,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_create_uniform create_uniform} */
     public static short nbgfx_create_uniform(long _name, int _type, short _num) {
         long __functionAddress = Functions.create_uniform;
-        return invokePS(__functionAddress, _name, _type, _num);
+        return invokePS(_name, _type, _num, __functionAddress);
     }
 
     /**
@@ -3321,7 +3480,7 @@ public class BGFX {
      * </ul>
      *
      * @param _name uniform name in shader
-     * @param _type type of uniform. One of:<br><table><tr><td>{@link #BGFX_UNIFORM_TYPE_INT1 UNIFORM_TYPE_INT1}</td><td>{@link #BGFX_UNIFORM_TYPE_END UNIFORM_TYPE_END}</td><td>{@link #BGFX_UNIFORM_TYPE_VEC4 UNIFORM_TYPE_VEC4}</td><td>{@link #BGFX_UNIFORM_TYPE_MAT3 UNIFORM_TYPE_MAT3}</td></tr><tr><td>{@link #BGFX_UNIFORM_TYPE_MAT4 UNIFORM_TYPE_MAT4}</td></tr></table>
+     * @param _type type of uniform. One of:<br><table><tr><td>{@link #BGFX_UNIFORM_TYPE_SAMPLER UNIFORM_TYPE_SAMPLER}</td><td>{@link #BGFX_UNIFORM_TYPE_END UNIFORM_TYPE_END}</td><td>{@link #BGFX_UNIFORM_TYPE_VEC4 UNIFORM_TYPE_VEC4}</td><td>{@link #BGFX_UNIFORM_TYPE_MAT3 UNIFORM_TYPE_MAT3}</td></tr><tr><td>{@link #BGFX_UNIFORM_TYPE_MAT4 UNIFORM_TYPE_MAT4}</td></tr></table>
      * @param _num  number of elements in array
      *
      * @return handle to uniform object
@@ -3359,7 +3518,7 @@ public class BGFX {
      * </ul>
      *
      * @param _name uniform name in shader
-     * @param _type type of uniform. One of:<br><table><tr><td>{@link #BGFX_UNIFORM_TYPE_INT1 UNIFORM_TYPE_INT1}</td><td>{@link #BGFX_UNIFORM_TYPE_END UNIFORM_TYPE_END}</td><td>{@link #BGFX_UNIFORM_TYPE_VEC4 UNIFORM_TYPE_VEC4}</td><td>{@link #BGFX_UNIFORM_TYPE_MAT3 UNIFORM_TYPE_MAT3}</td></tr><tr><td>{@link #BGFX_UNIFORM_TYPE_MAT4 UNIFORM_TYPE_MAT4}</td></tr></table>
+     * @param _type type of uniform. One of:<br><table><tr><td>{@link #BGFX_UNIFORM_TYPE_SAMPLER UNIFORM_TYPE_SAMPLER}</td><td>{@link #BGFX_UNIFORM_TYPE_END UNIFORM_TYPE_END}</td><td>{@link #BGFX_UNIFORM_TYPE_VEC4 UNIFORM_TYPE_VEC4}</td><td>{@link #BGFX_UNIFORM_TYPE_MAT3 UNIFORM_TYPE_MAT3}</td></tr><tr><td>{@link #BGFX_UNIFORM_TYPE_MAT4 UNIFORM_TYPE_MAT4}</td></tr></table>
      * @param _num  number of elements in array
      *
      * @return handle to uniform object
@@ -3368,8 +3527,9 @@ public class BGFX {
     public static short bgfx_create_uniform(@NativeType("char const *") CharSequence _name, @NativeType("bgfx_uniform_type_t") int _type, @NativeType("uint16_t") int _num) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer _nameEncoded = stack.ASCII(_name);
-            return nbgfx_create_uniform(memAddress(_nameEncoded), _type, (short)_num);
+            stack.nASCII(_name, true);
+            long _nameEncoded = stack.getPointerAddress();
+            return nbgfx_create_uniform(_nameEncoded, _type, (short)_num);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3380,7 +3540,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_get_uniform_info get_uniform_info} */
     public static void nbgfx_get_uniform_info(short _handle, long _info) {
         long __functionAddress = Functions.get_uniform_info;
-        invokePV(__functionAddress, _handle, _info);
+        invokePV(_handle, _info, __functionAddress);
     }
 
     /**
@@ -3402,7 +3562,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_uniform(@NativeType("bgfx_uniform_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_uniform;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_create_occlusion_query ] ---
@@ -3423,7 +3583,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_get_result get_result} */
     public static int nbgfx_get_result(short _handle, long _result) {
         long __functionAddress = Functions.get_result;
-        return invokePI(__functionAddress, _handle, _result);
+        return invokePI(_handle, _result, __functionAddress);
     }
 
     /**
@@ -3451,7 +3611,7 @@ public class BGFX {
      */
     public static void bgfx_destroy_occlusion_query(@NativeType("bgfx_occlusion_query_handle_t") short _handle) {
         long __functionAddress = Functions.destroy_occlusion_query;
-        invokeV(__functionAddress, _handle);
+        invokeV(_handle, __functionAddress);
     }
 
     // --- [ bgfx_set_palette_color ] ---
@@ -3459,14 +3619,14 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_set_palette_color set_palette_color} */
     public static void nbgfx_set_palette_color(byte _index, long _rgba) {
         long __functionAddress = Functions.set_palette_color;
-        invokePV(__functionAddress, _index, _rgba);
+        invokePV(_index, _rgba, __functionAddress);
     }
 
     /**
      * Sets palette color value.
      *
      * @param _index index into palette
-     * @param _rgba  packed 32-bit RGBA value
+     * @param _rgba  RGBA floating point values
      */
     public static void bgfx_set_palette_color(@NativeType("uint8_t") int _index, @NativeType("float const *") FloatBuffer _rgba) {
         if (CHECKS) {
@@ -3475,12 +3635,30 @@ public class BGFX {
         nbgfx_set_palette_color((byte)_index, memAddress(_rgba));
     }
 
+    // --- [ bgfx_set_palette_color_rgba8 ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_palette_color_rgba8 set_palette_color_rgba8} */
+    public static void nbgfx_set_palette_color_rgba8(byte _index, int _rgba) {
+        long __functionAddress = Functions.set_palette_color_rgba8;
+        invokeV(_index, _rgba, __functionAddress);
+    }
+
+    /**
+     * Sets palette color value.
+     *
+     * @param _index index into palette
+     * @param _rgba  packed 32-bit RGBA value
+     */
+    public static void bgfx_set_palette_color_rgba8(@NativeType("uint8_t") int _index, @NativeType("uint32_t") int _rgba) {
+        nbgfx_set_palette_color_rgba8((byte)_index, _rgba);
+    }
+
     // --- [ bgfx_set_view_name ] ---
 
     /** Unsafe version of: {@link #bgfx_set_view_name set_view_name} */
     public static void nbgfx_set_view_name(short _id, long _name) {
         long __functionAddress = Functions.set_view_name;
-        invokePV(__functionAddress, _id, _name);
+        invokePV(_id, _name, __functionAddress);
     }
 
     /**
@@ -3523,8 +3701,9 @@ public class BGFX {
     public static void bgfx_set_view_name(@NativeType("bgfx_view_id_t") int _id, @NativeType("char const *") CharSequence _name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer _nameEncoded = stack.ASCII(_name);
-            nbgfx_set_view_name((short)_id, memAddress(_nameEncoded));
+            stack.nASCII(_name, true);
+            long _nameEncoded = stack.getPointerAddress();
+            nbgfx_set_view_name((short)_id, _nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3535,7 +3714,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_set_view_rect set_view_rect} */
     public static void nbgfx_set_view_rect(short _id, short _x, short _y, short _width, short _height) {
         long __functionAddress = Functions.set_view_rect;
-        invokeV(__functionAddress, _id, _x, _y, _width, _height);
+        invokeV(_id, _x, _y, _width, _height, __functionAddress);
     }
 
     /**
@@ -3551,12 +3730,12 @@ public class BGFX {
         nbgfx_set_view_rect((short)_id, (short)_x, (short)_y, (short)_width, (short)_height);
     }
 
-    // --- [ bgfx_set_view_rect_auto ] ---
+    // --- [ bgfx_set_view_rect_ratio ] ---
 
-    /** Unsafe version of: {@link #bgfx_set_view_rect_auto set_view_rect_auto} */
-    public static void nbgfx_set_view_rect_auto(short _id, short _x, short _y, int _ratio) {
-        long __functionAddress = Functions.set_view_rect_auto;
-        invokeV(__functionAddress, _id, _x, _y, _ratio);
+    /** Unsafe version of: {@link #bgfx_set_view_rect_ratio set_view_rect_ratio} */
+    public static void nbgfx_set_view_rect_ratio(short _id, short _x, short _y, int _ratio) {
+        long __functionAddress = Functions.set_view_rect_ratio;
+        invokeV(_id, _x, _y, _ratio, __functionAddress);
     }
 
     /**
@@ -3567,8 +3746,8 @@ public class BGFX {
      * @param _y     position y from the top corner of the window
      * @param _ratio width and height will be set in respect to back-buffer size. One of:<br><table><tr><td>{@link #BGFX_BACKBUFFER_RATIO_EQUAL BACKBUFFER_RATIO_EQUAL}</td><td>{@link #BGFX_BACKBUFFER_RATIO_HALF BACKBUFFER_RATIO_HALF}</td><td>{@link #BGFX_BACKBUFFER_RATIO_QUARTER BACKBUFFER_RATIO_QUARTER}</td></tr><tr><td>{@link #BGFX_BACKBUFFER_RATIO_EIGHTH BACKBUFFER_RATIO_EIGHTH}</td><td>{@link #BGFX_BACKBUFFER_RATIO_SIXTEENTH BACKBUFFER_RATIO_SIXTEENTH}</td><td>{@link #BGFX_BACKBUFFER_RATIO_DOUBLE BACKBUFFER_RATIO_DOUBLE}</td></tr></table>
      */
-    public static void bgfx_set_view_rect_auto(@NativeType("bgfx_view_id_t") int _id, @NativeType("uint16_t") int _x, @NativeType("uint16_t") int _y, @NativeType("bgfx_backbuffer_ratio_t") int _ratio) {
-        nbgfx_set_view_rect_auto((short)_id, (short)_x, (short)_y, _ratio);
+    public static void bgfx_set_view_rect_ratio(@NativeType("bgfx_view_id_t") int _id, @NativeType("uint16_t") int _x, @NativeType("uint16_t") int _y, @NativeType("bgfx_backbuffer_ratio_t") int _ratio) {
+        nbgfx_set_view_rect_ratio((short)_id, (short)_x, (short)_y, _ratio);
     }
 
     // --- [ bgfx_set_view_scissor ] ---
@@ -3576,7 +3755,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_set_view_scissor set_view_scissor} */
     public static void nbgfx_set_view_scissor(short _id, short _x, short _y, short _width, short _height) {
         long __functionAddress = Functions.set_view_scissor;
-        invokeV(__functionAddress, _id, _x, _y, _width, _height);
+        invokeV(_id, _x, _y, _width, _height, __functionAddress);
     }
 
     /**
@@ -3598,7 +3777,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_set_view_clear set_view_clear} */
     public static void nbgfx_set_view_clear(short _id, short _flags, int _rgba, float _depth, byte _stencil) {
         long __functionAddress = Functions.set_view_clear;
-        invokeV(__functionAddress, _id, _flags, _rgba, _depth, _stencil);
+        invokeV(_id, _flags, _rgba, _depth, _stencil, __functionAddress);
     }
 
     /**
@@ -3619,11 +3798,11 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_set_view_clear_mrt set_view_clear_mrt} */
     public static void nbgfx_set_view_clear_mrt(short _id, short _flags, float _depth, byte _stencil, byte _0, byte _1, byte _2, byte _3, byte _4, byte _5, byte _6, byte _7) {
         long __functionAddress = Functions.set_view_clear_mrt;
-        invokeV(__functionAddress, _id, _flags, _depth, _stencil, _0, _1, _2, _3, _4, _5, _6, _7);
+        invokeV(_id, _flags, _depth, _stencil, _0, _1, _2, _3, _4, _5, _6, _7, __functionAddress);
     }
 
     /**
-     * Sets view clear flags with different clear color for each frame buffer texture. Must use {@code setClearColor} to setup clear color palette.
+     * Sets view clear flags with different clear color for each frame buffer texture. Must use {@link #bgfx_set_palette_color set_palette_color} to setup clear color palette.
      *
      * @param _id      view id
      * @param _flags   clear flags. Use {@link #BGFX_CLEAR_NONE CLEAR_NONE} to remove any clear operation. One or more of:<br><table><tr><td>{@link #BGFX_CLEAR_NONE CLEAR_NONE}</td><td>{@link #BGFX_CLEAR_COLOR CLEAR_COLOR}</td><td>{@link #BGFX_CLEAR_DEPTH CLEAR_DEPTH}</td><td>{@link #BGFX_CLEAR_STENCIL CLEAR_STENCIL}</td></tr><tr><td>{@link #BGFX_CLEAR_DISCARD_COLOR_0 CLEAR_DISCARD_COLOR_0}</td><td>{@link #BGFX_CLEAR_DISCARD_COLOR_1 CLEAR_DISCARD_COLOR_1}</td><td>{@link #BGFX_CLEAR_DISCARD_COLOR_2 CLEAR_DISCARD_COLOR_2}</td><td>{@link #BGFX_CLEAR_DISCARD_COLOR_3 CLEAR_DISCARD_COLOR_3}</td></tr><tr><td>{@link #BGFX_CLEAR_DISCARD_COLOR_4 CLEAR_DISCARD_COLOR_4}</td><td>{@link #BGFX_CLEAR_DISCARD_COLOR_5 CLEAR_DISCARD_COLOR_5}</td><td>{@link #BGFX_CLEAR_DISCARD_COLOR_6 CLEAR_DISCARD_COLOR_6}</td><td>{@link #BGFX_CLEAR_DISCARD_COLOR_7 CLEAR_DISCARD_COLOR_7}</td></tr><tr><td>{@link #BGFX_CLEAR_DISCARD_DEPTH CLEAR_DISCARD_DEPTH}</td><td>{@link #BGFX_CLEAR_DISCARD_STENCIL CLEAR_DISCARD_STENCIL}</td><td>{@link #BGFX_CLEAR_DISCARD_COLOR_MASK CLEAR_DISCARD_COLOR_MASK}</td><td>{@link #BGFX_CLEAR_DISCARD_MASK CLEAR_DISCARD_MASK}</td></tr></table>
@@ -3647,14 +3826,14 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_set_view_mode set_view_mode} */
     public static void nbgfx_set_view_mode(short _id, int _mode) {
         long __functionAddress = Functions.set_view_mode;
-        invokeV(__functionAddress, _id, _mode);
+        invokeV(_id, _mode, __functionAddress);
     }
 
     /**
      * Sets view sorting mode.
      *
      * @param _id   view id
-     * @param _mode view sort mode. One of:<br><table><tr><td>{@link #BGFX_VIEW_MODE_DEFAULT VIEW_MODE_DEFAULT}</td><td>{@link #BGFX_VIEW_MODE_SEQUENTIAL VIEW_MODE_SEQUENTIAL}</td><td>{@link #BGFX_VIEW_MODE_DEPTH_ASCENDING VIEW_MODE_DEPTH_ASCENDING}</td></tr><tr><td>{@link #BGFX_VIEW_MODE_DEPTH_DESCENDING VIEW_MODE_DEPTH_DESCENDING}</td><td>{@link #BGFX_VIEW_MODE_CCOUNT VIEW_MODE_CCOUNT}</td></tr></table>
+     * @param _mode view sort mode. One of:<br><table><tr><td>{@link #BGFX_VIEW_MODE_DEFAULT VIEW_MODE_DEFAULT}</td><td>{@link #BGFX_VIEW_MODE_SEQUENTIAL VIEW_MODE_SEQUENTIAL}</td><td>{@link #BGFX_VIEW_MODE_DEPTH_ASCENDING VIEW_MODE_DEPTH_ASCENDING}</td></tr><tr><td>{@link #BGFX_VIEW_MODE_DEPTH_DESCENDING VIEW_MODE_DEPTH_DESCENDING}</td></tr></table>
      */
     public static void bgfx_set_view_mode(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_view_mode_t") int _mode) {
         nbgfx_set_view_mode((short)_id, _mode);
@@ -3665,7 +3844,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_set_view_frame_buffer set_view_frame_buffer} */
     public static void nbgfx_set_view_frame_buffer(short _id, short _handle) {
         long __functionAddress = Functions.set_view_frame_buffer;
-        invokeV(__functionAddress, _id, _handle);
+        invokeV(_id, _handle, __functionAddress);
     }
 
     /**
@@ -3685,7 +3864,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_set_view_transform set_view_transform} */
     public static void nbgfx_set_view_transform(short _id, long _view, long _proj) {
         long __functionAddress = Functions.set_view_transform;
-        invokePPV(__functionAddress, _id, _view, _proj);
+        invokePPV(_id, _view, _proj, __functionAddress);
     }
 
     /**
@@ -3718,56 +3897,12 @@ public class BGFX {
         nbgfx_set_view_transform((short)_id, memAddressSafe(_view), memAddressSafe(_proj));
     }
 
-    // --- [ bgfx_set_view_transform_stereo ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_view_transform_stereo set_view_transform_stereo} */
-    public static void nbgfx_set_view_transform_stereo(short _id, long _view, long _projL, byte _flags, long _projR) {
-        long __functionAddress = Functions.set_view_transform_stereo;
-        invokePPPV(__functionAddress, _id, _view, _projL, _flags, _projR);
-    }
-
-    /**
-     * Sets view view and projection matrices, all draw primitives in this view will use these matrices.
-     *
-     * @param _id    view id
-     * @param _view  project matrix
-     * @param _projL projection matrix for left eye in stereo mode
-     * @param _flags view flags. One of:<br><table><tr><td>{@link #BGFX_VIEW_NONE VIEW_NONE}</td><td>{@link #BGFX_VIEW_STEREO VIEW_STEREO}</td></tr></table>
-     * @param _projR projection matrix for right eye in stereo mode
-     */
-    public static void bgfx_set_view_transform_stereo(@NativeType("bgfx_view_id_t") int _id, @Nullable @NativeType("void const *") ByteBuffer _view, @Nullable @NativeType("void const *") ByteBuffer _projL, @NativeType("uint8_t") int _flags, @Nullable @NativeType("void const *") ByteBuffer _projR) {
-        if (CHECKS) {
-            checkSafe(_view, 64);
-            checkSafe(_projL, 64);
-            checkSafe(_projR, 64);
-        }
-        nbgfx_set_view_transform_stereo((short)_id, memAddressSafe(_view), memAddressSafe(_projL), (byte)_flags, memAddressSafe(_projR));
-    }
-
-    /**
-     * Sets view view and projection matrices, all draw primitives in this view will use these matrices.
-     *
-     * @param _id    view id
-     * @param _view  project matrix
-     * @param _projL projection matrix for left eye in stereo mode
-     * @param _flags view flags. One of:<br><table><tr><td>{@link #BGFX_VIEW_NONE VIEW_NONE}</td><td>{@link #BGFX_VIEW_STEREO VIEW_STEREO}</td></tr></table>
-     * @param _projR projection matrix for right eye in stereo mode
-     */
-    public static void bgfx_set_view_transform_stereo(@NativeType("bgfx_view_id_t") int _id, @Nullable @NativeType("void const *") FloatBuffer _view, @Nullable @NativeType("void const *") FloatBuffer _projL, @NativeType("uint8_t") int _flags, @Nullable @NativeType("void const *") FloatBuffer _projR) {
-        if (CHECKS) {
-            checkSafe(_view, 64 >> 2);
-            checkSafe(_projL, 64 >> 2);
-            checkSafe(_projR, 64 >> 2);
-        }
-        nbgfx_set_view_transform_stereo((short)_id, memAddressSafe(_view), memAddressSafe(_projL), (byte)_flags, memAddressSafe(_projR));
-    }
-
     // --- [ bgfx_set_view_order ] ---
 
     /** Unsafe version of: {@link #bgfx_set_view_order set_view_order} */
     public static void nbgfx_set_view_order(short _id, short _num, long _order) {
         long __functionAddress = Functions.set_view_order;
-        invokePV(__functionAddress, _id, _num, _order);
+        invokePV(_id, _num, _order, __functionAddress);
     }
 
     /**
@@ -3784,797 +3919,34 @@ public class BGFX {
         nbgfx_set_view_order((short)_id, (short)_num, memAddressSafe(_order));
     }
 
-    // --- [ bgfx_reset_view ] ---
-
-    /** Unsafe version of: {@link #bgfx_reset_view reset_view} */
-    public static void nbgfx_reset_view(short _id) {
-        long __functionAddress = Functions.reset_view;
-        invokeV(__functionAddress, _id);
-    }
+    // --- [ bgfx_encoder_begin ] ---
 
     /**
-     * Resets all view settings to default.
+     * Begin submitting draw calls from thread.
      *
-     * @param _id view id
+     * @param _forThread explicitly request an encoder for a worker thread
+     *
+     * @return an encoder for submitting draw calls from multiple threads
      */
-    public static void bgfx_reset_view(@NativeType("bgfx_view_id_t") int _id) {
-        nbgfx_reset_view((short)_id);
+    @NativeType("struct bgfx_encoder_s *")
+    public static long bgfx_encoder_begin(@NativeType("bool") boolean _forThread) {
+        long __functionAddress = Functions.encoder_begin;
+        return invokeP(_forThread, __functionAddress);
     }
 
-    // --- [ bgfx_set_marker ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_marker set_marker} */
-    public static void nbgfx_set_marker(long _marker) {
-        long __functionAddress = Functions.set_marker;
-        invokePV(__functionAddress, _marker);
-    }
+    // --- [ bgfx_encoder_end ] ---
 
     /**
-     * Sets debug marker.
+     * End submitting draw calls from thread.
      *
-     * @param _marker debug marker
+     * @param _encoder the encoder
      */
-    public static void bgfx_set_marker(@NativeType("char const *") ByteBuffer _marker) {
+    public static void bgfx_encoder_end(@NativeType("struct bgfx_encoder_s *") long _encoder) {
+        long __functionAddress = Functions.encoder_end;
         if (CHECKS) {
-            checkNT1(_marker);
+            check(_encoder);
         }
-        nbgfx_set_marker(memAddress(_marker));
-    }
-
-    /**
-     * Sets debug marker.
-     *
-     * @param _marker debug marker
-     */
-    public static void bgfx_set_marker(@NativeType("char const *") CharSequence _marker) {
-        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
-        try {
-            ByteBuffer _markerEncoded = stack.ASCII(_marker);
-            nbgfx_set_marker(memAddress(_markerEncoded));
-        } finally {
-            stack.setPointer(stackPointer);
-        }
-    }
-
-    // --- [ bgfx_set_state ] ---
-
-    /**
-     * Sets render states for draw primitive.
-     * 
-     * <p>Remarks:</p>
-     * 
-     * <ol>
-     * <li>To setup more complex states use:
-     * 
-     * <pre><code>
-     * BGFX_STATE_ALPHA_REF(_ref),
-     * BGFX_STATE_POINT_SIZE(_size),
-     * BGFX_STATE_BLEND_FUNC(_src, _dst),
-     * BGFX_STATE_BLEND_FUNC_SEPARATE(_srcRGB, _dstRGB, _srcA, _dstA)
-     * BGFX_STATE_BLEND_EQUATION(_equation)
-     * BGFX_STATE_BLEND_EQUATION_SEPARATE(_equationRGB, _equationA)</code></pre></li>
-     * <li>{@link #BGFX_STATE_BLEND_EQUATION_ADD STATE_BLEND_EQUATION_ADD} is set when no other blend equation is specified.</li>
-     * </ol>
-     *
-     * @param _state state flags. One or more of:<br><table><tr><td>{@link #BGFX_STATE_WRITE_R STATE_WRITE_R}</td><td>{@link #BGFX_STATE_WRITE_G STATE_WRITE_G}</td><td>{@link #BGFX_STATE_WRITE_B STATE_WRITE_B}</td><td>{@link #BGFX_STATE_WRITE_A STATE_WRITE_A}</td></tr><tr><td>{@link #BGFX_STATE_WRITE_Z STATE_WRITE_Z}</td><td>{@link #BGFX_STATE_WRITE_RGB STATE_WRITE_RGB}</td><td>{@link #BGFX_STATE_WRITE_MASK STATE_WRITE_MASK}</td><td>{@link #BGFX_STATE_DEPTH_TEST_LESS STATE_DEPTH_TEST_LESS}</td></tr><tr><td>{@link #BGFX_STATE_DEPTH_TEST_LEQUAL STATE_DEPTH_TEST_LEQUAL}</td><td>{@link #BGFX_STATE_DEPTH_TEST_EQUAL STATE_DEPTH_TEST_EQUAL}</td><td>{@link #BGFX_STATE_DEPTH_TEST_GEQUAL STATE_DEPTH_TEST_GEQUAL}</td><td>{@link #BGFX_STATE_DEPTH_TEST_GREATER STATE_DEPTH_TEST_GREATER}</td></tr><tr><td>{@link #BGFX_STATE_DEPTH_TEST_NOTEQUAL STATE_DEPTH_TEST_NOTEQUAL}</td><td>{@link #BGFX_STATE_DEPTH_TEST_NEVER STATE_DEPTH_TEST_NEVER}</td><td>{@link #BGFX_STATE_DEPTH_TEST_ALWAYS STATE_DEPTH_TEST_ALWAYS}</td><td>{@link #BGFX_STATE_BLEND_ZERO STATE_BLEND_ZERO}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_ONE STATE_BLEND_ONE}</td><td>{@link #BGFX_STATE_BLEND_SRC_COLOR STATE_BLEND_SRC_COLOR}</td><td>{@link #BGFX_STATE_BLEND_INV_SRC_COLOR STATE_BLEND_INV_SRC_COLOR}</td><td>{@link #BGFX_STATE_BLEND_SRC_ALPHA STATE_BLEND_SRC_ALPHA}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_INV_SRC_ALPHA STATE_BLEND_INV_SRC_ALPHA}</td><td>{@link #BGFX_STATE_BLEND_DST_ALPHA STATE_BLEND_DST_ALPHA}</td><td>{@link #BGFX_STATE_BLEND_INV_DST_ALPHA STATE_BLEND_INV_DST_ALPHA}</td><td>{@link #BGFX_STATE_BLEND_DST_COLOR STATE_BLEND_DST_COLOR}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_INV_DST_COLOR STATE_BLEND_INV_DST_COLOR}</td><td>{@link #BGFX_STATE_BLEND_SRC_ALPHA_SAT STATE_BLEND_SRC_ALPHA_SAT}</td><td>{@link #BGFX_STATE_BLEND_FACTOR STATE_BLEND_FACTOR}</td><td>{@link #BGFX_STATE_BLEND_INV_FACTOR STATE_BLEND_INV_FACTOR}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_EQUATION_ADD STATE_BLEND_EQUATION_ADD}</td><td>{@link #BGFX_STATE_BLEND_EQUATION_SUB STATE_BLEND_EQUATION_SUB}</td><td>{@link #BGFX_STATE_BLEND_EQUATION_REVSUB STATE_BLEND_EQUATION_REVSUB}</td><td>{@link #BGFX_STATE_BLEND_EQUATION_MIN STATE_BLEND_EQUATION_MIN}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_EQUATION_MAX STATE_BLEND_EQUATION_MAX}</td><td>{@link #BGFX_STATE_BLEND_INDEPENDENT STATE_BLEND_INDEPENDENT}</td><td>{@link #BGFX_STATE_BLEND_ALPHA_TO_COVERAGE STATE_BLEND_ALPHA_TO_COVERAGE}</td><td>{@link #BGFX_STATE_CULL_CW STATE_CULL_CW}</td></tr><tr><td>{@link #BGFX_STATE_CULL_CCW STATE_CULL_CCW}</td><td>{@link #BGFX_STATE_PT_TRISTRIP STATE_PT_TRISTRIP}</td><td>{@link #BGFX_STATE_PT_LINES STATE_PT_LINES}</td><td>{@link #BGFX_STATE_PT_LINESTRIP STATE_PT_LINESTRIP}</td></tr><tr><td>{@link #BGFX_STATE_PT_POINTS STATE_PT_POINTS}</td><td>{@link #BGFX_STATE_MSAA STATE_MSAA}</td><td>{@link #BGFX_STATE_LINEAA STATE_LINEAA}</td><td>{@link #BGFX_STATE_CONSERVATIVE_RASTER STATE_CONSERVATIVE_RASTER}</td></tr><tr><td>{@link #BGFX_STATE_NONE STATE_NONE}</td><td>{@link #BGFX_STATE_DEFAULT STATE_DEFAULT}</td></tr></table>
-     * @param _rgba  blend factor used by {@link #BGFX_STATE_BLEND_FACTOR STATE_BLEND_FACTOR} and {@link #BGFX_STATE_BLEND_INV_FACTOR STATE_BLEND_INV_FACTOR} blend modes
-     */
-    public static void bgfx_set_state(@NativeType("uint64_t") long _state, @NativeType("uint32_t") int _rgba) {
-        long __functionAddress = Functions.set_state;
-        invokeJV(__functionAddress, _state, _rgba);
-    }
-
-    // --- [ bgfx_set_condition ] ---
-
-    /**
-     * Sets condition for rendering.
-     *
-     * @param _handle  occlusion query handle
-     * @param _visible render if occlusion query is visible
-     */
-    public static void bgfx_set_condition(@NativeType("bgfx_occlusion_query_handle_t") short _handle, @NativeType("bool") boolean _visible) {
-        long __functionAddress = Functions.set_condition;
-        invokeV(__functionAddress, _handle, _visible);
-    }
-
-    // --- [ bgfx_set_stencil ] ---
-
-    /**
-     * Sets stencil test state.
-     *
-     * @param _fstencil front stencil state. One or more of:<br><table><tr><td>{@link #BGFX_STENCIL_TEST_LESS STENCIL_TEST_LESS}</td><td>{@link #BGFX_STENCIL_TEST_LEQUAL STENCIL_TEST_LEQUAL}</td><td>{@link #BGFX_STENCIL_TEST_EQUAL STENCIL_TEST_EQUAL}</td></tr><tr><td>{@link #BGFX_STENCIL_TEST_GEQUAL STENCIL_TEST_GEQUAL}</td><td>{@link #BGFX_STENCIL_TEST_GREATER STENCIL_TEST_GREATER}</td><td>{@link #BGFX_STENCIL_TEST_NOTEQUAL STENCIL_TEST_NOTEQUAL}</td></tr><tr><td>{@link #BGFX_STENCIL_TEST_NEVER STENCIL_TEST_NEVER}</td><td>{@link #BGFX_STENCIL_TEST_ALWAYS STENCIL_TEST_ALWAYS}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_ZERO STENCIL_OP_FAIL_S_ZERO}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_KEEP STENCIL_OP_FAIL_S_KEEP}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_REPLACE STENCIL_OP_FAIL_S_REPLACE}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_INCR STENCIL_OP_FAIL_S_INCR}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_INCRSAT STENCIL_OP_FAIL_S_INCRSAT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_DECR STENCIL_OP_FAIL_S_DECR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_DECRSAT STENCIL_OP_FAIL_S_DECRSAT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_INVERT STENCIL_OP_FAIL_S_INVERT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_ZERO STENCIL_OP_FAIL_Z_ZERO}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_KEEP STENCIL_OP_FAIL_Z_KEEP}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_Z_REPLACE STENCIL_OP_FAIL_Z_REPLACE}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INCR STENCIL_OP_FAIL_Z_INCR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INCRSAT STENCIL_OP_FAIL_Z_INCRSAT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_Z_DECR STENCIL_OP_FAIL_Z_DECR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_DECRSAT STENCIL_OP_FAIL_Z_DECRSAT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INVERT STENCIL_OP_FAIL_Z_INVERT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_ZERO STENCIL_OP_PASS_Z_ZERO}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_KEEP STENCIL_OP_PASS_Z_KEEP}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_REPLACE STENCIL_OP_PASS_Z_REPLACE}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_INCR STENCIL_OP_PASS_Z_INCR}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_INCRSAT STENCIL_OP_PASS_Z_INCRSAT}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_DECR STENCIL_OP_PASS_Z_DECR}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_DECRSAT STENCIL_OP_PASS_Z_DECRSAT}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_INVERT STENCIL_OP_PASS_Z_INVERT}</td><td>{@link #BGFX_STENCIL_NONE STENCIL_NONE}</td></tr><tr><td>{@link #BGFX_STENCIL_DEFAULT STENCIL_DEFAULT}</td></tr></table>
-     * @param _bstencil back stencil state. If back is set to {@link #BGFX_STENCIL_NONE STENCIL_NONE} {@code _fstencil} is applied to both front and back facing primitives. One or more of:<br><table><tr><td>{@link #BGFX_STENCIL_TEST_LESS STENCIL_TEST_LESS}</td><td>{@link #BGFX_STENCIL_TEST_LEQUAL STENCIL_TEST_LEQUAL}</td><td>{@link #BGFX_STENCIL_TEST_EQUAL STENCIL_TEST_EQUAL}</td></tr><tr><td>{@link #BGFX_STENCIL_TEST_GEQUAL STENCIL_TEST_GEQUAL}</td><td>{@link #BGFX_STENCIL_TEST_GREATER STENCIL_TEST_GREATER}</td><td>{@link #BGFX_STENCIL_TEST_NOTEQUAL STENCIL_TEST_NOTEQUAL}</td></tr><tr><td>{@link #BGFX_STENCIL_TEST_NEVER STENCIL_TEST_NEVER}</td><td>{@link #BGFX_STENCIL_TEST_ALWAYS STENCIL_TEST_ALWAYS}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_ZERO STENCIL_OP_FAIL_S_ZERO}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_KEEP STENCIL_OP_FAIL_S_KEEP}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_REPLACE STENCIL_OP_FAIL_S_REPLACE}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_INCR STENCIL_OP_FAIL_S_INCR}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_INCRSAT STENCIL_OP_FAIL_S_INCRSAT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_DECR STENCIL_OP_FAIL_S_DECR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_DECRSAT STENCIL_OP_FAIL_S_DECRSAT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_INVERT STENCIL_OP_FAIL_S_INVERT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_ZERO STENCIL_OP_FAIL_Z_ZERO}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_KEEP STENCIL_OP_FAIL_Z_KEEP}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_Z_REPLACE STENCIL_OP_FAIL_Z_REPLACE}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INCR STENCIL_OP_FAIL_Z_INCR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INCRSAT STENCIL_OP_FAIL_Z_INCRSAT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_Z_DECR STENCIL_OP_FAIL_Z_DECR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_DECRSAT STENCIL_OP_FAIL_Z_DECRSAT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INVERT STENCIL_OP_FAIL_Z_INVERT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_ZERO STENCIL_OP_PASS_Z_ZERO}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_KEEP STENCIL_OP_PASS_Z_KEEP}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_REPLACE STENCIL_OP_PASS_Z_REPLACE}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_INCR STENCIL_OP_PASS_Z_INCR}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_INCRSAT STENCIL_OP_PASS_Z_INCRSAT}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_DECR STENCIL_OP_PASS_Z_DECR}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_DECRSAT STENCIL_OP_PASS_Z_DECRSAT}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_INVERT STENCIL_OP_PASS_Z_INVERT}</td><td>{@link #BGFX_STENCIL_NONE STENCIL_NONE}</td></tr><tr><td>{@link #BGFX_STENCIL_DEFAULT STENCIL_DEFAULT}</td></tr></table>
-     */
-    public static void bgfx_set_stencil(@NativeType("uint32_t") int _fstencil, @NativeType("uint32_t") int _bstencil) {
-        long __functionAddress = Functions.set_stencil;
-        invokeV(__functionAddress, _fstencil, _bstencil);
-    }
-
-    // --- [ bgfx_set_scissor ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_scissor set_scissor} */
-    public static short nbgfx_set_scissor(short _x, short _y, short _width, short _height) {
-        long __functionAddress = Functions.set_scissor;
-        return invokeS(__functionAddress, _x, _y, _width, _height);
-    }
-
-    /**
-     * Sets scissor for draw primitive. For scissor for all primitives in view see {@link #bgfx_set_view_scissor set_view_scissor}.
-     *
-     * @param _x      position x from the left corner of the window
-     * @param _y      position y from the top corner of the window
-     * @param _width  width of scissor region
-     * @param _height height of scissor region
-     *
-     * @return scissor cache index
-     */
-    @NativeType("uint16_t")
-    public static short bgfx_set_scissor(@NativeType("uint16_t") int _x, @NativeType("uint16_t") int _y, @NativeType("uint16_t") int _width, @NativeType("uint16_t") int _height) {
-        return nbgfx_set_scissor((short)_x, (short)_y, (short)_width, (short)_height);
-    }
-
-    // --- [ bgfx_set_scissor_cached ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_scissor_cached set_scissor_cached} */
-    public static void nbgfx_set_scissor_cached(short _cache) {
-        long __functionAddress = Functions.set_scissor_cached;
-        invokeV(__functionAddress, _cache);
-    }
-
-    /**
-     * Sets scissor from cache for draw primitive.
-     *
-     * @param _cache index in scissor cache. Passing {@code UINT16_MAX} unsets primitive scissor and primitive will use view scissor instead.
-     */
-    public static void bgfx_set_scissor_cached(@NativeType("uint16_t") int _cache) {
-        nbgfx_set_scissor_cached((short)_cache);
-    }
-
-    // --- [ bgfx_set_transform ] ---
-
-    /**
-     * Unsafe version of: {@link #bgfx_set_transform set_transform}
-     *
-     * @param _num number of matrices in array
-     */
-    public static int nbgfx_set_transform(long _mtx, short _num) {
-        long __functionAddress = Functions.set_transform;
-        return invokePI(__functionAddress, _mtx, _num);
-    }
-
-    /**
-     * Sets model matrix for draw primitive. If it is not called model will be rendered with identity model matrix.
-     *
-     * @param _mtx pointer to first matrix in array
-     *
-     * @return index into matrix cache in case the same model matrix has to be used for other draw primitive call
-     */
-    @NativeType("uint32_t")
-    public static int bgfx_set_transform(@NativeType("void const *") ByteBuffer _mtx) {
-        return nbgfx_set_transform(memAddress(_mtx), (short)(_mtx.remaining() >> 6));
-    }
-
-    /**
-     * Sets model matrix for draw primitive. If it is not called model will be rendered with identity model matrix.
-     *
-     * @param _mtx pointer to first matrix in array
-     *
-     * @return index into matrix cache in case the same model matrix has to be used for other draw primitive call
-     */
-    @NativeType("uint32_t")
-    public static int bgfx_set_transform(@NativeType("void const *") FloatBuffer _mtx) {
-        return nbgfx_set_transform(memAddress(_mtx), (short)(_mtx.remaining() >> 4));
-    }
-
-    // --- [ bgfx_alloc_transform ] ---
-
-    /** Unsafe version of: {@link #bgfx_alloc_transform alloc_transform} */
-    public static int nbgfx_alloc_transform(long _transform, short _num) {
-        long __functionAddress = Functions.alloc_transform;
-        return invokePI(__functionAddress, _transform, _num);
-    }
-
-    /**
-     * Reserves {@code _num} matrices in internal matrix cache.
-     * 
-     * <p>Pointer returned can be modifed until {@link #bgfx_frame frame} is called.</p>
-     *
-     * @param _transform pointer to {@link BGFXTransform} structure
-     * @param _num       number of matrices
-     *
-     * @return index into matrix cache
-     */
-    @NativeType("uint32_t")
-    public static int bgfx_alloc_transform(@NativeType("bgfx_transform_t *") BGFXTransform _transform, @NativeType("uint16_t") int _num) {
-        return nbgfx_alloc_transform(_transform.address(), (short)_num);
-    }
-
-    // --- [ bgfx_set_transform_cached ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_transform_cached set_transform_cached} */
-    public static void nbgfx_set_transform_cached(int _cache, short _num) {
-        long __functionAddress = Functions.set_transform_cached;
-        invokeV(__functionAddress, _cache, _num);
-    }
-
-    /**
-     * Sets model matrix from matrix cache for draw primitive.
-     *
-     * @param _cache index in matrix cache
-     * @param _num   number of matrices from cache
-     */
-    public static void bgfx_set_transform_cached(@NativeType("uint32_t") int _cache, @NativeType("uint16_t") int _num) {
-        nbgfx_set_transform_cached(_cache, (short)_num);
-    }
-
-    // --- [ bgfx_set_uniform ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_uniform set_uniform} */
-    public static void nbgfx_set_uniform(short _handle, long _value, short _num) {
-        long __functionAddress = Functions.set_uniform;
-        invokePV(__functionAddress, _handle, _value, _num);
-    }
-
-    /**
-     * Sets shader uniform parameter for draw primitive.
-     *
-     * @param _handle uniform
-     * @param _value  pointer to uniform data
-     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
-     */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") ByteBuffer _value, @NativeType("uint16_t") int _num) {
-        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
-    }
-
-    /**
-     * Sets shader uniform parameter for draw primitive.
-     *
-     * @param _handle uniform
-     * @param _value  pointer to uniform data
-     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
-     */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") ShortBuffer _value, @NativeType("uint16_t") int _num) {
-        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
-    }
-
-    /**
-     * Sets shader uniform parameter for draw primitive.
-     *
-     * @param _handle uniform
-     * @param _value  pointer to uniform data
-     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
-     */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") IntBuffer _value, @NativeType("uint16_t") int _num) {
-        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
-    }
-
-    /**
-     * Sets shader uniform parameter for draw primitive.
-     *
-     * @param _handle uniform
-     * @param _value  pointer to uniform data
-     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
-     */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") LongBuffer _value, @NativeType("uint16_t") int _num) {
-        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
-    }
-
-    /**
-     * Sets shader uniform parameter for draw primitive.
-     *
-     * @param _handle uniform
-     * @param _value  pointer to uniform data
-     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
-     */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") FloatBuffer _value, @NativeType("uint16_t") int _num) {
-        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
-    }
-
-    /**
-     * Sets shader uniform parameter for draw primitive.
-     *
-     * @param _handle uniform
-     * @param _value  pointer to uniform data
-     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
-     */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") DoubleBuffer _value, @NativeType("uint16_t") int _num) {
-        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
-    }
-
-    // --- [ bgfx_set_index_buffer ] ---
-
-    /**
-     * Sets index buffer for draw primitive.
-     *
-     * @param _handle     index buffer
-     * @param _firstIndex first index to render
-     * @param _numIndices number of indices to render
-     */
-    public static void bgfx_set_index_buffer(@NativeType("bgfx_index_buffer_handle_t") short _handle, @NativeType("uint32_t") int _firstIndex, @NativeType("uint32_t") int _numIndices) {
-        long __functionAddress = Functions.set_index_buffer;
-        invokeV(__functionAddress, _handle, _firstIndex, _numIndices);
-    }
-
-    // --- [ bgfx_set_dynamic_index_buffer ] ---
-
-    /**
-     * Sets index buffer for draw primitive.
-     *
-     * @param _handle     dynamic index buffer
-     * @param _firstIndex first index to render
-     * @param _numIndices number of indices to render
-     */
-    public static void bgfx_set_dynamic_index_buffer(@NativeType("bgfx_dynamic_index_buffer_handle_t") short _handle, @NativeType("uint32_t") int _firstIndex, @NativeType("uint32_t") int _numIndices) {
-        long __functionAddress = Functions.set_dynamic_index_buffer;
-        invokeV(__functionAddress, _handle, _firstIndex, _numIndices);
-    }
-
-    // --- [ bgfx_set_transient_index_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_transient_index_buffer set_transient_index_buffer} */
-    public static void nbgfx_set_transient_index_buffer(long _tib, int _firstIndex, int _numIndices) {
-        long __functionAddress = Functions.set_transient_index_buffer;
-        if (CHECKS) {
-            BGFXTransientIndexBuffer.validate(_tib);
-        }
-        invokePV(__functionAddress, _tib, _firstIndex, _numIndices);
-    }
-
-    /**
-     * Sets index buffer for draw primitive.
-     *
-     * @param _tib        transient index buffer
-     * @param _firstIndex first index to render
-     * @param _numIndices number of indices to render
-     */
-    public static void bgfx_set_transient_index_buffer(@NativeType("bgfx_transient_index_buffer_t const *") BGFXTransientIndexBuffer _tib, @NativeType("uint32_t") int _firstIndex, @NativeType("uint32_t") int _numIndices) {
-        nbgfx_set_transient_index_buffer(_tib.address(), _firstIndex, _numIndices);
-    }
-
-    // --- [ bgfx_set_vertex_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_vertex_buffer set_vertex_buffer} */
-    public static void nbgfx_set_vertex_buffer(byte _stream, short _handle, int _startVertex, int _numVertices) {
-        long __functionAddress = Functions.set_vertex_buffer;
-        invokeV(__functionAddress, _stream, _handle, _startVertex, _numVertices);
-    }
-
-    /**
-     * Sets vertex buffer for draw primitive.
-     *
-     * @param _stream      vertex stream
-     * @param _handle      vertex buffer
-     * @param _startVertex first vertex to render
-     * @param _numVertices number of vertices to render
-     */
-    public static void bgfx_set_vertex_buffer(@NativeType("uint8_t") int _stream, @NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices) {
-        nbgfx_set_vertex_buffer((byte)_stream, _handle, _startVertex, _numVertices);
-    }
-
-    // --- [ bgfx_set_dynamic_vertex_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_dynamic_vertex_buffer set_dynamic_vertex_buffer} */
-    public static void nbgfx_set_dynamic_vertex_buffer(byte _stream, short _handle, int _startVertex, int _numVertices) {
-        long __functionAddress = Functions.set_dynamic_vertex_buffer;
-        invokeV(__functionAddress, _stream, _handle, _startVertex, _numVertices);
-    }
-
-    /**
-     * Sets vertex buffer for draw primitive.
-     *
-     * @param _stream      vertex stream
-     * @param _handle      dynamic vertex buffer
-     * @param _startVertex first vertex to render
-     * @param _numVertices number of vertices to render
-     */
-    public static void bgfx_set_dynamic_vertex_buffer(@NativeType("uint8_t") int _stream, @NativeType("bgfx_dynamic_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices) {
-        nbgfx_set_dynamic_vertex_buffer((byte)_stream, _handle, _startVertex, _numVertices);
-    }
-
-    // --- [ bgfx_set_transient_vertex_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_transient_vertex_buffer set_transient_vertex_buffer} */
-    public static void nbgfx_set_transient_vertex_buffer(byte _stream, long _tvb, int _startVertex, int _numVertices) {
-        long __functionAddress = Functions.set_transient_vertex_buffer;
-        if (CHECKS) {
-            BGFXTransientVertexBuffer.validate(_tvb);
-        }
-        invokePV(__functionAddress, _stream, _tvb, _startVertex, _numVertices);
-    }
-
-    /**
-     * Sets vertex buffer for draw primitive.
-     *
-     * @param _stream      vertex stream
-     * @param _tvb         transient vertex buffer
-     * @param _startVertex first vertex to render
-     * @param _numVertices number of vertices to render
-     */
-    public static void bgfx_set_transient_vertex_buffer(@NativeType("uint8_t") int _stream, @NativeType("bgfx_transient_vertex_buffer_t const *") BGFXTransientVertexBuffer _tvb, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices) {
-        nbgfx_set_transient_vertex_buffer((byte)_stream, _tvb.address(), _startVertex, _numVertices);
-    }
-
-    // --- [ bgfx_set_vertex_count ] ---
-
-    /**
-     * Set number of vertices for auto generated vertices use in conjuction with {@code gl_VertexID}.
-     * 
-     * <p>Availability depends on: {@link #BGFX_CAPS_VERTEX_ID CAPS_VERTEX_ID}.</p>
-     *
-     * @param _numVertices number of vertices
-     */
-    public static void bgfx_set_vertex_count(@NativeType("uint32_t") int _numVertices) {
-        long __functionAddress = Functions.set_vertex_count;
-        invokeV(__functionAddress, _numVertices);
-    }
-
-    // --- [ bgfx_set_instance_data_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_instance_data_buffer set_instance_data_buffer} */
-    public static void nbgfx_set_instance_data_buffer(long _idb, int _start, int _num) {
-        long __functionAddress = Functions.set_instance_data_buffer;
-        if (CHECKS) {
-            BGFXInstanceDataBuffer.validate(_idb);
-        }
-        invokePV(__functionAddress, _idb, _start, _num);
-    }
-
-    /**
-     * Sets instance data buffer for draw primitive.
-     *
-     * @param _idb   transient instance data buffer
-     * @param _start first instance data
-     * @param _num   number of data instances
-     */
-    public static void bgfx_set_instance_data_buffer(@NativeType("bgfx_instance_data_buffer_t const *") BGFXInstanceDataBuffer _idb, @NativeType("uint32_t") int _start, @NativeType("uint32_t") int _num) {
-        nbgfx_set_instance_data_buffer(_idb.address(), _start, _num);
-    }
-
-    // --- [ bgfx_set_instance_data_from_vertex_buffer ] ---
-
-    /**
-     * Set instance data buffer for draw primitive.
-     *
-     * @param _handle vertex buffer
-     * @param _start  first instance data
-     * @param _num    number of data instances
-     */
-    public static void bgfx_set_instance_data_from_vertex_buffer(@NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _start, @NativeType("uint32_t") int _num) {
-        long __functionAddress = Functions.set_instance_data_from_vertex_buffer;
-        invokeV(__functionAddress, _handle, _start, _num);
-    }
-
-    // --- [ bgfx_set_instance_data_from_dynamic_vertex_buffer ] ---
-
-    /**
-     * Set instance data buffer for draw primitive.
-     *
-     * @param _handle dynamic vertex buffer
-     * @param _start  first instance data
-     * @param _num    number of data instances
-     */
-    public static void bgfx_set_instance_data_from_dynamic_vertex_buffer(@NativeType("bgfx_dynamic_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _start, @NativeType("uint32_t") int _num) {
-        long __functionAddress = Functions.set_instance_data_from_dynamic_vertex_buffer;
-        invokeV(__functionAddress, _handle, _start, _num);
-    }
-
-    // --- [ bgfx_set_instance_count ] ---
-
-    /**
-     * Sets number of instances for auto generated instances use in conjuction with {@code gl_InstanceID}.
-     * 
-     * <p>Availability depends on: {@link #BGFX_CAPS_VERTEX_ID CAPS_VERTEX_ID}.</p>
-     *
-     * @param _numInstances number of instances
-     */
-    public static void bgfx_set_instance_count(@NativeType("uint32_t") int _numInstances) {
-        long __functionAddress = Functions.set_instance_count;
-        invokeV(__functionAddress, _numInstances);
-    }
-
-    // --- [ bgfx_set_texture ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_texture set_texture} */
-    public static void nbgfx_set_texture(byte _stage, short _sampler, short _handle, int _flags) {
-        long __functionAddress = Functions.set_texture;
-        invokeV(__functionAddress, _stage, _sampler, _handle, _flags);
-    }
-
-    /**
-     * Sets texture stage for draw primitive.
-     *
-     * @param _stage   texture unit
-     * @param _sampler program sampler
-     * @param _handle  texture handle
-     * @param _flags   texture sampling mode. {@code UINT32_MAX} uses texture sampling settings from the texture. One of:<br><table><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
-     */
-    public static void bgfx_set_texture(@NativeType("uint8_t") int _stage, @NativeType("bgfx_uniform_handle_t") short _sampler, @NativeType("bgfx_texture_handle_t") short _handle, @NativeType("uint32_t") int _flags) {
-        nbgfx_set_texture((byte)_stage, _sampler, _handle, _flags);
-    }
-
-    // --- [ bgfx_touch ] ---
-
-    /** Unsafe version of: {@link #bgfx_touch touch} */
-    public static void nbgfx_touch(short _id) {
-        long __functionAddress = Functions.touch;
-        invokeV(__functionAddress, _id);
-    }
-
-    /**
-     * Submits an empty primitive for rendering. Uniforms and draw state will be applied but no geometry will be submitted.
-     * 
-     * <p>These empty draw calls will sort before ordinary draw calls.</p>
-     *
-     * @param _id view id
-     */
-    public static void bgfx_touch(@NativeType("bgfx_view_id_t") int _id) {
-        nbgfx_touch((short)_id);
-    }
-
-    // --- [ bgfx_submit ] ---
-
-    /** Unsafe version of: {@link #bgfx_submit submit} */
-    public static void nbgfx_submit(short _id, short _handle, int _depth, boolean _preserveState) {
-        long __functionAddress = Functions.submit;
-        invokeV(__functionAddress, _id, _handle, _depth, _preserveState);
-    }
-
-    /**
-     * Submits primitive for rendering.
-     *
-     * @param _id            view id
-     * @param _handle        program
-     * @param _depth         depth for sorting
-     * @param _preserveState preserve internal draw state for next draw call submit
-     */
-    public static void bgfx_submit(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("int32_t") int _depth, @NativeType("bool") boolean _preserveState) {
-        nbgfx_submit((short)_id, _handle, _depth, _preserveState);
-    }
-
-    // --- [ bgfx_submit_occlusion_query ] ---
-
-    /** Unsafe version of: {@link #bgfx_submit_occlusion_query submit_occlusion_query} */
-    public static void nbgfx_submit_occlusion_query(short _id, short _program, short _occlusionQuery, int _depth, boolean _preserveState) {
-        long __functionAddress = Functions.submit_occlusion_query;
-        invokeV(__functionAddress, _id, _program, _occlusionQuery, _depth, _preserveState);
-    }
-
-    /**
-     * Submits primitive with occlusion query for rendering.
-     *
-     * @param _id             view id
-     * @param _program        program
-     * @param _occlusionQuery occlusion query
-     * @param _depth          depth for sorting
-     * @param _preserveState  preserve internal draw state for next draw call submit
-     */
-    public static void bgfx_submit_occlusion_query(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _program, @NativeType("bgfx_occlusion_query_handle_t") short _occlusionQuery, @NativeType("int32_t") int _depth, @NativeType("bool") boolean _preserveState) {
-        nbgfx_submit_occlusion_query((short)_id, _program, _occlusionQuery, _depth, _preserveState);
-    }
-
-    // --- [ bgfx_submit_indirect ] ---
-
-    /** Unsafe version of: {@link #bgfx_submit_indirect submit_indirect} */
-    public static void nbgfx_submit_indirect(short _id, short _handle, short _indirectHandle, short _start, short _num, int _depth, boolean _preserveState) {
-        long __functionAddress = Functions.submit_indirect;
-        invokeV(__functionAddress, _id, _handle, _indirectHandle, _start, _num, _depth, _preserveState);
-    }
-
-    /**
-     * Submits primitive for rendering with index and instance data info from indirect buffer.
-     *
-     * @param _id             view id
-     * @param _handle         program
-     * @param _indirectHandle indirect buffer
-     * @param _start          first element in indirect buffer
-     * @param _num            number of dispatches
-     * @param _depth          depth for sorting
-     * @param _preserveState  preserve internal draw state for next draw call submit
-     */
-    public static void bgfx_submit_indirect(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("bgfx_indirect_buffer_handle_t") short _indirectHandle, @NativeType("uint16_t") int _start, @NativeType("uint16_t") int _num, @NativeType("int32_t") int _depth, @NativeType("bool") boolean _preserveState) {
-        nbgfx_submit_indirect((short)_id, _handle, _indirectHandle, (short)_start, (short)_num, _depth, _preserveState);
-    }
-
-    // --- [ bgfx_set_image ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_image set_image} */
-    public static void nbgfx_set_image(byte _stage, short _handle, byte _mip, int _access, int _format) {
-        long __functionAddress = Functions.set_image;
-        invokeV(__functionAddress, _stage, _handle, _mip, _access, _format);
-    }
-
-    /**
-     * Sets compute image from texture.
-     *
-     * @param _stage  texture unit
-     * @param _handle texture handle
-     * @param _mip    mip level
-     * @param _access texture access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
-     * @param _format texture format. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
-     */
-    public static void bgfx_set_image(@NativeType("uint8_t") int _stage, @NativeType("bgfx_texture_handle_t") short _handle, @NativeType("uint8_t") int _mip, @NativeType("bgfx_access_t") int _access, @NativeType("bgfx_texture_format_t") int _format) {
-        nbgfx_set_image((byte)_stage, _handle, (byte)_mip, _access, _format);
-    }
-
-    // --- [ bgfx_set_compute_index_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_compute_index_buffer set_compute_index_buffer} */
-    public static void nbgfx_set_compute_index_buffer(byte _stage, short _handle, int _access) {
-        long __functionAddress = Functions.set_compute_index_buffer;
-        invokeV(__functionAddress, _stage, _handle, _access);
-    }
-
-    /**
-     * Sets compute index buffer.
-     *
-     * @param _stage  compute stage
-     * @param _handle index buffer handle
-     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
-     */
-    public static void bgfx_set_compute_index_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_index_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
-        nbgfx_set_compute_index_buffer((byte)_stage, _handle, _access);
-    }
-
-    // --- [ bgfx_set_compute_vertex_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_compute_vertex_buffer set_compute_vertex_buffer} */
-    public static void nbgfx_set_compute_vertex_buffer(byte _stage, short _handle, int _access) {
-        long __functionAddress = Functions.set_compute_vertex_buffer;
-        invokeV(__functionAddress, _stage, _handle, _access);
-    }
-
-    /**
-     * Sets compute vertex buffer.
-     *
-     * @param _stage  compute stage
-     * @param _handle vertex buffer handle
-     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
-     */
-    public static void bgfx_set_compute_vertex_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
-        nbgfx_set_compute_vertex_buffer((byte)_stage, _handle, _access);
-    }
-
-    // --- [ bgfx_set_compute_dynamic_index_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_compute_dynamic_index_buffer set_compute_dynamic_index_buffer} */
-    public static void nbgfx_set_compute_dynamic_index_buffer(byte _stage, short _handle, int _access) {
-        long __functionAddress = Functions.set_compute_dynamic_index_buffer;
-        invokeV(__functionAddress, _stage, _handle, _access);
-    }
-
-    /**
-     * Sets compute dynamic index buffer.
-     *
-     * @param _stage  compute stage
-     * @param _handle dynamic index buffer handle
-     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
-     */
-    public static void bgfx_set_compute_dynamic_index_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_dynamic_index_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
-        nbgfx_set_compute_dynamic_index_buffer((byte)_stage, _handle, _access);
-    }
-
-    // --- [ bgfx_set_compute_dynamic_vertex_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_compute_dynamic_vertex_buffer set_compute_dynamic_vertex_buffer} */
-    public static void nbgfx_set_compute_dynamic_vertex_buffer(byte _stage, short _handle, int _access) {
-        long __functionAddress = Functions.set_compute_dynamic_vertex_buffer;
-        invokeV(__functionAddress, _stage, _handle, _access);
-    }
-
-    /**
-     * Sets compute dynamic vertex buffer.
-     *
-     * @param _stage  compute stage
-     * @param _handle dynamic vertex buffer handle
-     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
-     */
-    public static void bgfx_set_compute_dynamic_vertex_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_dynamic_vertex_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
-        nbgfx_set_compute_dynamic_vertex_buffer((byte)_stage, _handle, _access);
-    }
-
-    // --- [ bgfx_set_compute_indirect_buffer ] ---
-
-    /** Unsafe version of: {@link #bgfx_set_compute_indirect_buffer set_compute_indirect_buffer} */
-    public static void nbgfx_set_compute_indirect_buffer(byte _stage, short _handle, int _access) {
-        long __functionAddress = Functions.set_compute_indirect_buffer;
-        invokeV(__functionAddress, _stage, _handle, _access);
-    }
-
-    /**
-     * Sets compute indirect buffer.
-     *
-     * @param _stage  compute stage
-     * @param _handle indirect buffer handle
-     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
-     */
-    public static void bgfx_set_compute_indirect_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_indirect_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
-        nbgfx_set_compute_indirect_buffer((byte)_stage, _handle, _access);
-    }
-
-    // --- [ bgfx_dispatch ] ---
-
-    /** Unsafe version of: {@link #bgfx_dispatch dispatch} */
-    public static void nbgfx_dispatch(short _id, short _handle, int _numX, int _numY, int _numZ, byte _flags) {
-        long __functionAddress = Functions.dispatch;
-        invokeV(__functionAddress, _id, _handle, _numX, _numY, _numZ, _flags);
-    }
-
-    /**
-     * Dispatches compute.
-     *
-     * @param _id     view id
-     * @param _handle compute program
-     * @param _numX   number of groups X
-     * @param _numY   number of groups Y
-     * @param _numZ   number of groups Z
-     * @param _flags  view flags. One of:<br><table><tr><td>{@link #BGFX_SUBMIT_EYE_LEFT SUBMIT_EYE_LEFT}</td><td>{@link #BGFX_SUBMIT_EYE_RIGHT SUBMIT_EYE_RIGHT}</td><td>{@link #BGFX_SUBMIT_EYE_FIRST SUBMIT_EYE_FIRST}</td></tr></table>
-     */
-    public static void bgfx_dispatch(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("uint32_t") int _numX, @NativeType("uint32_t") int _numY, @NativeType("uint32_t") int _numZ, @NativeType("uint8_t") int _flags) {
-        nbgfx_dispatch((short)_id, _handle, _numX, _numY, _numZ, (byte)_flags);
-    }
-
-    // --- [ bgfx_dispatch_indirect ] ---
-
-    /** Unsafe version of: {@link #bgfx_dispatch_indirect dispatch_indirect} */
-    public static void nbgfx_dispatch_indirect(short _id, short _handle, short _indirectHandle, short _start, short _num, byte _flags) {
-        long __functionAddress = Functions.dispatch_indirect;
-        invokeV(__functionAddress, _id, _handle, _indirectHandle, _start, _num, _flags);
-    }
-
-    /**
-     * Dispatches compute indirect.
-     *
-     * @param _id             view id
-     * @param _handle         compute program
-     * @param _indirectHandle indirect buffer
-     * @param _start          first element in indirect buffer
-     * @param _num            number of dispatches
-     * @param _flags          view flags. One of:<br><table><tr><td>{@link #BGFX_SUBMIT_EYE_LEFT SUBMIT_EYE_LEFT}</td><td>{@link #BGFX_SUBMIT_EYE_RIGHT SUBMIT_EYE_RIGHT}</td><td>{@link #BGFX_SUBMIT_EYE_FIRST SUBMIT_EYE_FIRST}</td></tr></table>
-     */
-    public static void bgfx_dispatch_indirect(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("bgfx_indirect_buffer_handle_t") short _indirectHandle, @NativeType("uint16_t") int _start, @NativeType("uint16_t") int _num, @NativeType("uint8_t") int _flags) {
-        nbgfx_dispatch_indirect((short)_id, _handle, _indirectHandle, (short)_start, (short)_num, (byte)_flags);
-    }
-
-    // --- [ bgfx_discard ] ---
-
-    /** Discards all previously set state for draw or compute call. */
-    public static void bgfx_discard() {
-        long __functionAddress = Functions.discard;
-        invokeV(__functionAddress);
-    }
-
-    // --- [ bgfx_blit ] ---
-
-    /** Unsafe version of: {@link #bgfx_blit blit} */
-    public static void nbgfx_blit(short _id, short _dst, byte _dstMip, short _dstX, short _dstY, short _dstZ, short _src, byte _srcMip, short _srcX, short _srcY, short _srcZ, short _width, short _height, short _depth) {
-        long __functionAddress = Functions.blit;
-        invokeV(__functionAddress, _id, _dst, _dstMip, _dstX, _dstY, _dstZ, _src, _srcMip, _srcX, _srcY, _srcZ, _width, _height, _depth);
-    }
-
-    /**
-     * Blits texture region between two textures.
-     * 
-     * <p>Destination texture must be created with {@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST} flag. Availability depends on {@link #BGFX_CAPS_TEXTURE_BLIT CAPS_TEXTURE_BLIT}.</p>
-     *
-     * @param _id     view id
-     * @param _dst    destination texture handle
-     * @param _dstMip destination texture mip level
-     * @param _dstX   destination texture X position
-     * @param _dstY   destination texture Y position
-     * @param _dstZ   if texture is 2D this argument should be 0. If destination texture is cube this argument represents destination texture cube face. For 3D texture
-     *                this argument represents destination texture Z position.
-     * @param _src    source texture handle
-     * @param _srcMip source texture mip level
-     * @param _srcX   source texture X position
-     * @param _srcY   source texture Y position
-     * @param _srcZ   if texture is 2D this argument should be 0. If destination texture is cube this argument represents destination texture cube face. For 3D texture
-     *                this argument represents destination texture Z position.
-     * @param _width  width of region
-     * @param _height height of region
-     * @param _depth  if texture is 3D this argument represents depth of region, otherwise it's unused
-     */
-    public static void bgfx_blit(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_texture_handle_t") short _dst, @NativeType("uint8_t") int _dstMip, @NativeType("uint16_t") int _dstX, @NativeType("uint16_t") int _dstY, @NativeType("uint16_t") int _dstZ, @NativeType("bgfx_texture_handle_t") short _src, @NativeType("uint8_t") int _srcMip, @NativeType("uint16_t") int _srcX, @NativeType("uint16_t") int _srcY, @NativeType("uint16_t") int _srcZ, @NativeType("uint16_t") int _width, @NativeType("uint16_t") int _height, @NativeType("uint16_t") int _depth) {
-        nbgfx_blit((short)_id, _dst, (byte)_dstMip, (short)_dstX, (short)_dstY, (short)_dstZ, _src, (byte)_srcMip, (short)_srcX, (short)_srcY, (short)_srcZ, (short)_width, (short)_height, (short)_depth);
+        invokePV(_encoder, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_marker ] ---
@@ -4585,7 +3957,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePPV(__functionAddress, _encoder, _marker);
+        invokePPV(_encoder, _marker, __functionAddress);
     }
 
     /**
@@ -4610,8 +3982,9 @@ public class BGFX {
     public static void bgfx_encoder_set_marker(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("char const *") CharSequence _marker) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer _markerEncoded = stack.ASCII(_marker);
-            nbgfx_encoder_set_marker(_encoder, memAddress(_markerEncoded));
+            stack.nASCII(_marker, true);
+            long _markerEncoded = stack.getPointerAddress();
+            nbgfx_encoder_set_marker(_encoder, _markerEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4646,7 +4019,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePJV(__functionAddress, _encoder, _state, _rgba);
+        invokePJV(_encoder, _state, _rgba, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_condition ] ---
@@ -4663,7 +4036,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _handle, _visible);
+        invokePV(_encoder, _handle, _visible, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_stencil ] ---
@@ -4680,7 +4053,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _fstencil, _bstencil);
+        invokePV(_encoder, _fstencil, _bstencil, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_scissor ] ---
@@ -4691,7 +4064,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        return invokePS(__functionAddress, _encoder, _x, _y, _width, _height);
+        return invokePS(_encoder, _x, _y, _width, _height, __functionAddress);
     }
 
     /**
@@ -4718,7 +4091,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _cache);
+        invokePV(_encoder, _cache, __functionAddress);
     }
 
     /**
@@ -4743,7 +4116,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        return invokePPI(__functionAddress, _encoder, _mtx, _num);
+        return invokePPI(_encoder, _mtx, _num, __functionAddress);
     }
 
     /**
@@ -4772,6 +4145,28 @@ public class BGFX {
         return nbgfx_encoder_set_transform(_encoder, memAddress(_mtx), (short)(_mtx.remaining() >> 4));
     }
 
+    // --- [ bgfx_encoder_set_transform_cached ] ---
+
+    /** Unsafe version of: {@link #bgfx_encoder_set_transform_cached encoder_set_transform_cached} */
+    public static void nbgfx_encoder_set_transform_cached(long _encoder, int _cache, short _num) {
+        long __functionAddress = Functions.encoder_set_transform_cached;
+        if (CHECKS) {
+            check(_encoder);
+        }
+        invokePV(_encoder, _cache, _num, __functionAddress);
+    }
+
+    /**
+     * Sets model matrix from matrix cache for draw primitive.
+     *
+     * @param _encoder the encoder
+     * @param _cache   index in matrix cache
+     * @param _num     number of matrices from cache
+     */
+    public static void bgfx_encoder_set_transform_cached(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint32_t") int _cache, @NativeType("uint16_t") int _num) {
+        nbgfx_encoder_set_transform_cached(_encoder, _cache, (short)_num);
+    }
+
     // --- [ bgfx_encoder_alloc_transform ] ---
 
     /** Unsafe version of: {@link #bgfx_encoder_alloc_transform encoder_alloc_transform} */
@@ -4780,7 +4175,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        return invokePPI(__functionAddress, _encoder, _transform, _num);
+        return invokePPI(_encoder, _transform, _num, __functionAddress);
     }
 
     /**
@@ -4799,28 +4194,6 @@ public class BGFX {
         return nbgfx_encoder_alloc_transform(_encoder, _transform.address(), (short)_num);
     }
 
-    // --- [ bgfx_encoder_set_transform_cached ] ---
-
-    /** Unsafe version of: {@link #bgfx_encoder_set_transform_cached encoder_set_transform_cached} */
-    public static void nbgfx_encoder_set_transform_cached(long _encoder, int _cache, short _num) {
-        long __functionAddress = Functions.encoder_set_transform_cached;
-        if (CHECKS) {
-            check(_encoder);
-        }
-        invokePV(__functionAddress, _encoder, _cache, _num);
-    }
-
-    /**
-     * Sets model matrix from matrix cache for draw primitive.
-     *
-     * @param _encoder the encoder
-     * @param _cache   index in matrix cache
-     * @param _num     number of matrices from cache
-     */
-    public static void bgfx_encoder_set_transform_cached(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint32_t") int _cache, @NativeType("uint16_t") int _num) {
-        nbgfx_encoder_set_transform_cached(_encoder, _cache, (short)_num);
-    }
-
     // --- [ bgfx_encoder_set_uniform ] ---
 
     /** Unsafe version of: {@link #bgfx_encoder_set_uniform encoder_set_uniform} */
@@ -4829,7 +4202,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePPV(__functionAddress, _encoder, _handle, _value, _num);
+        invokePPV(_encoder, _handle, _value, _num, __functionAddress);
     }
 
     /**
@@ -4919,7 +4292,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _handle, _firstIndex, _numIndices);
+        invokePV(_encoder, _handle, _firstIndex, _numIndices, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_dynamic_index_buffer ] ---
@@ -4937,7 +4310,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _handle, _firstIndex, _numIndices);
+        invokePV(_encoder, _handle, _firstIndex, _numIndices, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_transient_index_buffer ] ---
@@ -4949,7 +4322,7 @@ public class BGFX {
             check(_encoder);
             BGFXTransientIndexBuffer.validate(_tib);
         }
-        invokePPV(__functionAddress, _encoder, _tib, _firstIndex, _numIndices);
+        invokePPV(_encoder, _tib, _firstIndex, _numIndices, __functionAddress);
     }
 
     /**
@@ -4967,12 +4340,12 @@ public class BGFX {
     // --- [ bgfx_encoder_set_vertex_buffer ] ---
 
     /** Unsafe version of: {@link #bgfx_encoder_set_vertex_buffer encoder_set_vertex_buffer} */
-    public static void nbgfx_encoder_set_vertex_buffer(long _encoder, byte _stream, short _handle, int _startVertex, int _numVertices) {
+    public static void nbgfx_encoder_set_vertex_buffer(long _encoder, byte _stream, short _handle, int _startVertex, int _numVertices, short _declHandle) {
         long __functionAddress = Functions.encoder_set_vertex_buffer;
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _stream, _handle, _startVertex, _numVertices);
+        invokePV(_encoder, _stream, _handle, _startVertex, _numVertices, _declHandle, __functionAddress);
     }
 
     /**
@@ -4983,20 +4356,21 @@ public class BGFX {
      * @param _handle      vertex buffer
      * @param _startVertex first vertex to render
      * @param _numVertices number of vertices to render
+     * @param _declHandle  {@code bgfx_vertex_decl_handle_t} handle for aliasing vertex buffer
      */
-    public static void bgfx_encoder_set_vertex_buffer(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint8_t") int _stream, @NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices) {
-        nbgfx_encoder_set_vertex_buffer(_encoder, (byte)_stream, _handle, _startVertex, _numVertices);
+    public static void bgfx_encoder_set_vertex_buffer(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint8_t") int _stream, @NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices, @NativeType("bgfx_vertex_decl_handle_t") short _declHandle) {
+        nbgfx_encoder_set_vertex_buffer(_encoder, (byte)_stream, _handle, _startVertex, _numVertices, _declHandle);
     }
 
     // --- [ bgfx_encoder_set_dynamic_vertex_buffer ] ---
 
     /** Unsafe version of: {@link #bgfx_encoder_set_dynamic_vertex_buffer encoder_set_dynamic_vertex_buffer} */
-    public static void nbgfx_encoder_set_dynamic_vertex_buffer(long _encoder, byte _stream, short _handle, int _startVertex, int _numVertices) {
+    public static void nbgfx_encoder_set_dynamic_vertex_buffer(long _encoder, byte _stream, short _handle, int _startVertex, int _numVertices, short _declHandle) {
         long __functionAddress = Functions.encoder_set_dynamic_vertex_buffer;
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _stream, _handle, _startVertex, _numVertices);
+        invokePV(_encoder, _stream, _handle, _startVertex, _numVertices, _declHandle, __functionAddress);
     }
 
     /**
@@ -5007,21 +4381,22 @@ public class BGFX {
      * @param _handle      dynamic vertex buffer
      * @param _startVertex first vertex to render
      * @param _numVertices number of vertices to render
+     * @param _declHandle  {@code bgfx_vertex_decl_handle_t} handle for aliasing vertex buffer
      */
-    public static void bgfx_encoder_set_dynamic_vertex_buffer(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint8_t") int _stream, @NativeType("bgfx_dynamic_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices) {
-        nbgfx_encoder_set_dynamic_vertex_buffer(_encoder, (byte)_stream, _handle, _startVertex, _numVertices);
+    public static void bgfx_encoder_set_dynamic_vertex_buffer(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint8_t") int _stream, @NativeType("bgfx_dynamic_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices, @NativeType("bgfx_vertex_decl_handle_t") short _declHandle) {
+        nbgfx_encoder_set_dynamic_vertex_buffer(_encoder, (byte)_stream, _handle, _startVertex, _numVertices, _declHandle);
     }
 
     // --- [ bgfx_encoder_set_transient_vertex_buffer ] ---
 
     /** Unsafe version of: {@link #bgfx_encoder_set_transient_vertex_buffer encoder_set_transient_vertex_buffer} */
-    public static void nbgfx_encoder_set_transient_vertex_buffer(long _encoder, byte _stream, long _tvb, int _startVertex, int _numVertices) {
+    public static void nbgfx_encoder_set_transient_vertex_buffer(long _encoder, byte _stream, long _tvb, int _startVertex, int _numVertices, short _declHandle) {
         long __functionAddress = Functions.encoder_set_transient_vertex_buffer;
         if (CHECKS) {
             check(_encoder);
             BGFXTransientVertexBuffer.validate(_tvb);
         }
-        invokePPV(__functionAddress, _encoder, _stream, _tvb, _startVertex, _numVertices);
+        invokePPV(_encoder, _stream, _tvb, _startVertex, _numVertices, _declHandle, __functionAddress);
     }
 
     /**
@@ -5032,9 +4407,10 @@ public class BGFX {
      * @param _tvb         transient vertex buffer
      * @param _startVertex first vertex to render
      * @param _numVertices number of vertices to render
+     * @param _declHandle  {@code bgfx_vertex_decl_handle_t} handle for aliasing vertex buffer
      */
-    public static void bgfx_encoder_set_transient_vertex_buffer(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint8_t") int _stream, @NativeType("bgfx_transient_vertex_buffer_t const *") BGFXTransientVertexBuffer _tvb, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices) {
-        nbgfx_encoder_set_transient_vertex_buffer(_encoder, (byte)_stream, _tvb.address(), _startVertex, _numVertices);
+    public static void bgfx_encoder_set_transient_vertex_buffer(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint8_t") int _stream, @NativeType("bgfx_transient_vertex_buffer_t const *") BGFXTransientVertexBuffer _tvb, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices, @NativeType("bgfx_vertex_decl_handle_t") short _declHandle) {
+        nbgfx_encoder_set_transient_vertex_buffer(_encoder, (byte)_stream, _tvb.address(), _startVertex, _numVertices, _declHandle);
     }
 
     // --- [ bgfx_encoder_set_vertex_count ] ---
@@ -5052,7 +4428,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _numVertices);
+        invokePV(_encoder, _numVertices, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_instance_data_buffer ] ---
@@ -5064,7 +4440,7 @@ public class BGFX {
             check(_encoder);
             BGFXInstanceDataBuffer.validate(_idb);
         }
-        invokePPV(__functionAddress, _encoder, _idb, _start, _num);
+        invokePPV(_encoder, _idb, _start, _num, __functionAddress);
     }
 
     /**
@@ -5094,7 +4470,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _handle, _start, _num);
+        invokePV(_encoder, _handle, _start, _num, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_instance_data_from_dynamic_vertex_buffer ] ---
@@ -5112,7 +4488,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _handle, _start, _num);
+        invokePV(_encoder, _handle, _start, _num, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_instance_count ] ---
@@ -5130,7 +4506,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _numInstances);
+        invokePV(_encoder, _numInstances, __functionAddress);
     }
 
     // --- [ bgfx_encoder_set_texture ] ---
@@ -5141,7 +4517,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _stage, _sampler, _handle, _flags);
+        invokePV(_encoder, _stage, _sampler, _handle, _flags, __functionAddress);
     }
 
     /**
@@ -5151,7 +4527,7 @@ public class BGFX {
      * @param _stage   texture unit
      * @param _sampler program sampler
      * @param _handle  texture handle
-     * @param _flags   texture sampling mode. {@code UINT32_MAX} uses texture sampling settings from the texture. One of:<br><table><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
+     * @param _flags   texture sampling mode. {@code UINT32_MAX} uses texture sampling settings from the texture. One of:<br><table><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td><td>{@link #BGFX_SAMPLER_UVW_CLAMP SAMPLER_UVW_CLAMP}</td></tr><tr><td>{@link #BGFX_SAMPLER_UVW_BORDER SAMPLER_UVW_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_POINT SAMPLER_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
      */
     public static void bgfx_encoder_set_texture(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint8_t") int _stage, @NativeType("bgfx_uniform_handle_t") short _sampler, @NativeType("bgfx_texture_handle_t") short _handle, @NativeType("uint32_t") int _flags) {
         nbgfx_encoder_set_texture(_encoder, (byte)_stage, _sampler, _handle, _flags);
@@ -5165,7 +4541,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _id);
+        invokePV(_encoder, _id, __functionAddress);
     }
 
     /**
@@ -5188,7 +4564,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _id, _handle, _depth, _preserveState);
+        invokePV(_encoder, _id, _handle, _depth, _preserveState, __functionAddress);
     }
 
     /**
@@ -5200,7 +4576,7 @@ public class BGFX {
      * @param _depth         depth for sorting
      * @param _preserveState preserve internal draw state for next draw call submit
      */
-    public static void bgfx_encoder_submit(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("int32_t") int _depth, @NativeType("bool") boolean _preserveState) {
+    public static void bgfx_encoder_submit(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("uint32_t") int _depth, @NativeType("bool") boolean _preserveState) {
         nbgfx_encoder_submit(_encoder, (short)_id, _handle, _depth, _preserveState);
     }
 
@@ -5212,7 +4588,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _id, _program, _occlusionQuery, _depth, _preserveState);
+        invokePV(_encoder, _id, _program, _occlusionQuery, _depth, _preserveState, __functionAddress);
     }
 
     /**
@@ -5225,7 +4601,7 @@ public class BGFX {
      * @param _depth          depth for sorting
      * @param _preserveState  preserve internal draw state for next draw call submit
      */
-    public static void bgfx_encoder_submit_occlusion_query(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _program, @NativeType("bgfx_occlusion_query_handle_t") short _occlusionQuery, @NativeType("int32_t") int _depth, @NativeType("bool") boolean _preserveState) {
+    public static void bgfx_encoder_submit_occlusion_query(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _program, @NativeType("bgfx_occlusion_query_handle_t") short _occlusionQuery, @NativeType("uint32_t") int _depth, @NativeType("bool") boolean _preserveState) {
         nbgfx_encoder_submit_occlusion_query(_encoder, (short)_id, _program, _occlusionQuery, _depth, _preserveState);
     }
 
@@ -5237,7 +4613,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _id, _handle, _indirectHandle, _start, _num, _depth, _preserveState);
+        invokePV(_encoder, _id, _handle, _indirectHandle, _start, _num, _depth, _preserveState, __functionAddress);
     }
 
     /**
@@ -5252,33 +4628,8 @@ public class BGFX {
      * @param _depth          depth for sorting
      * @param _preserveState  preserve internal draw state for next draw call submit
      */
-    public static void bgfx_encoder_submit_indirect(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("bgfx_indirect_buffer_handle_t") short _indirectHandle, @NativeType("uint16_t") int _start, @NativeType("uint16_t") int _num, @NativeType("int32_t") int _depth, @NativeType("bool") boolean _preserveState) {
+    public static void bgfx_encoder_submit_indirect(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("bgfx_indirect_buffer_handle_t") short _indirectHandle, @NativeType("uint16_t") int _start, @NativeType("uint16_t") int _num, @NativeType("uint32_t") int _depth, @NativeType("bool") boolean _preserveState) {
         nbgfx_encoder_submit_indirect(_encoder, (short)_id, _handle, _indirectHandle, (short)_start, (short)_num, _depth, _preserveState);
-    }
-
-    // --- [ bgfx_encoder_set_image ] ---
-
-    /** Unsafe version of: {@link #bgfx_encoder_set_image encoder_set_image} */
-    public static void nbgfx_encoder_set_image(long _encoder, byte _stage, short _handle, byte _mip, int _access, int _format) {
-        long __functionAddress = Functions.encoder_set_image;
-        if (CHECKS) {
-            check(_encoder);
-        }
-        invokePV(__functionAddress, _encoder, _stage, _handle, _mip, _access, _format);
-    }
-
-    /**
-     * Sets compute image from texture.
-     *
-     * @param _encoder the encoder
-     * @param _stage   texture unit
-     * @param _handle  texture handle
-     * @param _mip     mip level
-     * @param _access  texture access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
-     * @param _format  texture format. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
-     */
-    public static void bgfx_encoder_set_image(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint8_t") int _stage, @NativeType("bgfx_texture_handle_t") short _handle, @NativeType("uint8_t") int _mip, @NativeType("bgfx_access_t") int _access, @NativeType("bgfx_texture_format_t") int _format) {
-        nbgfx_encoder_set_image(_encoder, (byte)_stage, _handle, (byte)_mip, _access, _format);
     }
 
     // --- [ bgfx_encoder_set_compute_index_buffer ] ---
@@ -5289,7 +4640,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _stage, _handle, _access);
+        invokePV(_encoder, _stage, _handle, _access, __functionAddress);
     }
 
     /**
@@ -5312,7 +4663,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _stage, _handle, _access);
+        invokePV(_encoder, _stage, _handle, _access, __functionAddress);
     }
 
     /**
@@ -5335,7 +4686,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _stage, _handle, _access);
+        invokePV(_encoder, _stage, _handle, _access, __functionAddress);
     }
 
     /**
@@ -5358,7 +4709,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _stage, _handle, _access);
+        invokePV(_encoder, _stage, _handle, _access, __functionAddress);
     }
 
     /**
@@ -5381,7 +4732,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _stage, _handle, _access);
+        invokePV(_encoder, _stage, _handle, _access, __functionAddress);
     }
 
     /**
@@ -5396,15 +4747,40 @@ public class BGFX {
         nbgfx_encoder_set_compute_indirect_buffer(_encoder, (byte)_stage, _handle, _access);
     }
 
+    // --- [ bgfx_encoder_set_image ] ---
+
+    /** Unsafe version of: {@link #bgfx_encoder_set_image encoder_set_image} */
+    public static void nbgfx_encoder_set_image(long _encoder, byte _stage, short _handle, byte _mip, int _access, int _format) {
+        long __functionAddress = Functions.encoder_set_image;
+        if (CHECKS) {
+            check(_encoder);
+        }
+        invokePV(_encoder, _stage, _handle, _mip, _access, _format, __functionAddress);
+    }
+
+    /**
+     * Sets compute image from texture.
+     *
+     * @param _encoder the encoder
+     * @param _stage   texture unit
+     * @param _handle  texture handle
+     * @param _mip     mip level
+     * @param _access  texture access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
+     * @param _format  texture format. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
+     */
+    public static void bgfx_encoder_set_image(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("uint8_t") int _stage, @NativeType("bgfx_texture_handle_t") short _handle, @NativeType("uint8_t") int _mip, @NativeType("bgfx_access_t") int _access, @NativeType("bgfx_texture_format_t") int _format) {
+        nbgfx_encoder_set_image(_encoder, (byte)_stage, _handle, (byte)_mip, _access, _format);
+    }
+
     // --- [ bgfx_encoder_dispatch ] ---
 
     /** Unsafe version of: {@link #bgfx_encoder_dispatch encoder_dispatch} */
-    public static void nbgfx_encoder_dispatch(long _encoder, short _id, short _handle, int _numX, int _numY, int _numZ, byte _flags) {
+    public static void nbgfx_encoder_dispatch(long _encoder, short _id, short _handle, int _numX, int _numY, int _numZ) {
         long __functionAddress = Functions.encoder_dispatch;
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _id, _handle, _numX, _numY, _numZ, _flags);
+        invokePV(_encoder, _id, _handle, _numX, _numY, _numZ, __functionAddress);
     }
 
     /**
@@ -5416,21 +4792,20 @@ public class BGFX {
      * @param _numX    number of groups X
      * @param _numY    number of groups Y
      * @param _numZ    number of groups Z
-     * @param _flags   view flags. One of:<br><table><tr><td>{@link #BGFX_SUBMIT_EYE_LEFT SUBMIT_EYE_LEFT}</td><td>{@link #BGFX_SUBMIT_EYE_RIGHT SUBMIT_EYE_RIGHT}</td><td>{@link #BGFX_SUBMIT_EYE_FIRST SUBMIT_EYE_FIRST}</td></tr></table>
      */
-    public static void bgfx_encoder_dispatch(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("uint32_t") int _numX, @NativeType("uint32_t") int _numY, @NativeType("uint32_t") int _numZ, @NativeType("uint8_t") int _flags) {
-        nbgfx_encoder_dispatch(_encoder, (short)_id, _handle, _numX, _numY, _numZ, (byte)_flags);
+    public static void bgfx_encoder_dispatch(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("uint32_t") int _numX, @NativeType("uint32_t") int _numY, @NativeType("uint32_t") int _numZ) {
+        nbgfx_encoder_dispatch(_encoder, (short)_id, _handle, _numX, _numY, _numZ);
     }
 
     // --- [ bgfx_encoder_dispatch_indirect ] ---
 
     /** Unsafe version of: {@link #bgfx_encoder_dispatch_indirect encoder_dispatch_indirect} */
-    public static void nbgfx_encoder_dispatch_indirect(long _encoder, short _id, short _handle, short _indirectHandle, short _start, short _num, byte _flags) {
+    public static void nbgfx_encoder_dispatch_indirect(long _encoder, short _id, short _handle, short _indirectHandle, short _start, short _num) {
         long __functionAddress = Functions.encoder_dispatch_indirect;
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _id, _handle, _indirectHandle, _start, _num, _flags);
+        invokePV(_encoder, _id, _handle, _indirectHandle, _start, _num, __functionAddress);
     }
 
     /**
@@ -5442,10 +4817,9 @@ public class BGFX {
      * @param _indirectHandle indirect buffer
      * @param _start          first element in indirect buffer
      * @param _num            number of dispatches
-     * @param _flags          view flags. One of:<br><table><tr><td>{@link #BGFX_SUBMIT_EYE_LEFT SUBMIT_EYE_LEFT}</td><td>{@link #BGFX_SUBMIT_EYE_RIGHT SUBMIT_EYE_RIGHT}</td><td>{@link #BGFX_SUBMIT_EYE_FIRST SUBMIT_EYE_FIRST}</td></tr></table>
      */
-    public static void bgfx_encoder_dispatch_indirect(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("bgfx_indirect_buffer_handle_t") short _indirectHandle, @NativeType("uint16_t") int _start, @NativeType("uint16_t") int _num, @NativeType("uint8_t") int _flags) {
-        nbgfx_encoder_dispatch_indirect(_encoder, (short)_id, _handle, _indirectHandle, (short)_start, (short)_num, (byte)_flags);
+    public static void bgfx_encoder_dispatch_indirect(@NativeType("struct bgfx_encoder_s *") long _encoder, @NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _handle, @NativeType("bgfx_indirect_buffer_handle_t") short _indirectHandle, @NativeType("uint16_t") int _start, @NativeType("uint16_t") int _num) {
+        nbgfx_encoder_dispatch_indirect(_encoder, (short)_id, _handle, _indirectHandle, (short)_start, (short)_num);
     }
 
     // --- [ bgfx_encoder_discard ] ---
@@ -5460,7 +4834,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder);
+        invokePV(_encoder, __functionAddress);
     }
 
     // --- [ bgfx_encoder_blit ] ---
@@ -5471,7 +4845,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePV(__functionAddress, _encoder, _id, _dst, _dstMip, _dstX, _dstY, _dstZ, _src, _srcMip, _srcX, _srcY, _srcZ, _width, _height, _depth);
+        invokePV(_encoder, _id, _dst, _dstMip, _dstX, _dstY, _dstZ, _src, _srcMip, _srcX, _srcY, _srcZ, _width, _height, _depth, __functionAddress);
     }
 
     /**
@@ -5506,7 +4880,7 @@ public class BGFX {
     /** Unsafe version of: {@link #bgfx_request_screen_shot request_screen_shot} */
     public static void nbgfx_request_screen_shot(short _handle, long _filePath) {
         long __functionAddress = Functions.request_screen_shot;
-        invokePV(__functionAddress, _handle, _filePath);
+        invokePV(_handle, _filePath, __functionAddress);
     }
 
     /**
@@ -5531,11 +4905,787 @@ public class BGFX {
     public static void bgfx_request_screen_shot(@NativeType("bgfx_frame_buffer_handle_t") short _handle, @NativeType("char const *") CharSequence _filePath) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer _filePathEncoded = stack.ASCII(_filePath);
-            nbgfx_request_screen_shot(_handle, memAddress(_filePathEncoded));
+            stack.nASCII(_filePath, true);
+            long _filePathEncoded = stack.getPointerAddress();
+            nbgfx_request_screen_shot(_handle, _filePathEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
+    }
+
+    // --- [ bgfx_set_marker ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_marker set_marker} */
+    public static void nbgfx_set_marker(long _marker) {
+        long __functionAddress = Functions.set_marker;
+        invokePV(_marker, __functionAddress);
+    }
+
+    /**
+     * Sets debug marker.
+     *
+     * @param _marker debug marker
+     */
+    public static void bgfx_set_marker(@NativeType("char const *") ByteBuffer _marker) {
+        if (CHECKS) {
+            checkNT1(_marker);
+        }
+        nbgfx_set_marker(memAddress(_marker));
+    }
+
+    /**
+     * Sets debug marker.
+     *
+     * @param _marker debug marker
+     */
+    public static void bgfx_set_marker(@NativeType("char const *") CharSequence _marker) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            stack.nASCII(_marker, true);
+            long _markerEncoded = stack.getPointerAddress();
+            nbgfx_set_marker(_markerEncoded);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
+    // --- [ bgfx_set_state ] ---
+
+    /**
+     * Sets render states for draw primitive.
+     * 
+     * <p>Remarks:</p>
+     * 
+     * <ol>
+     * <li>To setup more complex states use:
+     * 
+     * <pre><code>
+     * BGFX_STATE_ALPHA_REF(_ref),
+     * BGFX_STATE_POINT_SIZE(_size),
+     * BGFX_STATE_BLEND_FUNC(_src, _dst),
+     * BGFX_STATE_BLEND_FUNC_SEPARATE(_srcRGB, _dstRGB, _srcA, _dstA)
+     * BGFX_STATE_BLEND_EQUATION(_equation)
+     * BGFX_STATE_BLEND_EQUATION_SEPARATE(_equationRGB, _equationA)</code></pre></li>
+     * <li>{@link #BGFX_STATE_BLEND_EQUATION_ADD STATE_BLEND_EQUATION_ADD} is set when no other blend equation is specified.</li>
+     * </ol>
+     *
+     * @param _state state flags. One or more of:<br><table><tr><td>{@link #BGFX_STATE_WRITE_R STATE_WRITE_R}</td><td>{@link #BGFX_STATE_WRITE_G STATE_WRITE_G}</td><td>{@link #BGFX_STATE_WRITE_B STATE_WRITE_B}</td><td>{@link #BGFX_STATE_WRITE_A STATE_WRITE_A}</td></tr><tr><td>{@link #BGFX_STATE_WRITE_Z STATE_WRITE_Z}</td><td>{@link #BGFX_STATE_WRITE_RGB STATE_WRITE_RGB}</td><td>{@link #BGFX_STATE_WRITE_MASK STATE_WRITE_MASK}</td><td>{@link #BGFX_STATE_DEPTH_TEST_LESS STATE_DEPTH_TEST_LESS}</td></tr><tr><td>{@link #BGFX_STATE_DEPTH_TEST_LEQUAL STATE_DEPTH_TEST_LEQUAL}</td><td>{@link #BGFX_STATE_DEPTH_TEST_EQUAL STATE_DEPTH_TEST_EQUAL}</td><td>{@link #BGFX_STATE_DEPTH_TEST_GEQUAL STATE_DEPTH_TEST_GEQUAL}</td><td>{@link #BGFX_STATE_DEPTH_TEST_GREATER STATE_DEPTH_TEST_GREATER}</td></tr><tr><td>{@link #BGFX_STATE_DEPTH_TEST_NOTEQUAL STATE_DEPTH_TEST_NOTEQUAL}</td><td>{@link #BGFX_STATE_DEPTH_TEST_NEVER STATE_DEPTH_TEST_NEVER}</td><td>{@link #BGFX_STATE_DEPTH_TEST_ALWAYS STATE_DEPTH_TEST_ALWAYS}</td><td>{@link #BGFX_STATE_BLEND_ZERO STATE_BLEND_ZERO}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_ONE STATE_BLEND_ONE}</td><td>{@link #BGFX_STATE_BLEND_SRC_COLOR STATE_BLEND_SRC_COLOR}</td><td>{@link #BGFX_STATE_BLEND_INV_SRC_COLOR STATE_BLEND_INV_SRC_COLOR}</td><td>{@link #BGFX_STATE_BLEND_SRC_ALPHA STATE_BLEND_SRC_ALPHA}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_INV_SRC_ALPHA STATE_BLEND_INV_SRC_ALPHA}</td><td>{@link #BGFX_STATE_BLEND_DST_ALPHA STATE_BLEND_DST_ALPHA}</td><td>{@link #BGFX_STATE_BLEND_INV_DST_ALPHA STATE_BLEND_INV_DST_ALPHA}</td><td>{@link #BGFX_STATE_BLEND_DST_COLOR STATE_BLEND_DST_COLOR}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_INV_DST_COLOR STATE_BLEND_INV_DST_COLOR}</td><td>{@link #BGFX_STATE_BLEND_SRC_ALPHA_SAT STATE_BLEND_SRC_ALPHA_SAT}</td><td>{@link #BGFX_STATE_BLEND_FACTOR STATE_BLEND_FACTOR}</td><td>{@link #BGFX_STATE_BLEND_INV_FACTOR STATE_BLEND_INV_FACTOR}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_EQUATION_ADD STATE_BLEND_EQUATION_ADD}</td><td>{@link #BGFX_STATE_BLEND_EQUATION_SUB STATE_BLEND_EQUATION_SUB}</td><td>{@link #BGFX_STATE_BLEND_EQUATION_REVSUB STATE_BLEND_EQUATION_REVSUB}</td><td>{@link #BGFX_STATE_BLEND_EQUATION_MIN STATE_BLEND_EQUATION_MIN}</td></tr><tr><td>{@link #BGFX_STATE_BLEND_EQUATION_MAX STATE_BLEND_EQUATION_MAX}</td><td>{@link #BGFX_STATE_BLEND_INDEPENDENT STATE_BLEND_INDEPENDENT}</td><td>{@link #BGFX_STATE_BLEND_ALPHA_TO_COVERAGE STATE_BLEND_ALPHA_TO_COVERAGE}</td><td>{@link #BGFX_STATE_CULL_CW STATE_CULL_CW}</td></tr><tr><td>{@link #BGFX_STATE_CULL_CCW STATE_CULL_CCW}</td><td>{@link #BGFX_STATE_PT_TRISTRIP STATE_PT_TRISTRIP}</td><td>{@link #BGFX_STATE_PT_LINES STATE_PT_LINES}</td><td>{@link #BGFX_STATE_PT_LINESTRIP STATE_PT_LINESTRIP}</td></tr><tr><td>{@link #BGFX_STATE_PT_POINTS STATE_PT_POINTS}</td><td>{@link #BGFX_STATE_MSAA STATE_MSAA}</td><td>{@link #BGFX_STATE_LINEAA STATE_LINEAA}</td><td>{@link #BGFX_STATE_CONSERVATIVE_RASTER STATE_CONSERVATIVE_RASTER}</td></tr><tr><td>{@link #BGFX_STATE_NONE STATE_NONE}</td><td>{@link #BGFX_STATE_DEFAULT STATE_DEFAULT}</td></tr></table>
+     * @param _rgba  blend factor used by {@link #BGFX_STATE_BLEND_FACTOR STATE_BLEND_FACTOR} and {@link #BGFX_STATE_BLEND_INV_FACTOR STATE_BLEND_INV_FACTOR} blend modes
+     */
+    public static void bgfx_set_state(@NativeType("uint64_t") long _state, @NativeType("uint32_t") int _rgba) {
+        long __functionAddress = Functions.set_state;
+        invokeJV(_state, _rgba, __functionAddress);
+    }
+
+    // --- [ bgfx_set_condition ] ---
+
+    /**
+     * Sets condition for rendering.
+     *
+     * @param _handle  occlusion query handle
+     * @param _visible render if occlusion query is visible
+     */
+    public static void bgfx_set_condition(@NativeType("bgfx_occlusion_query_handle_t") short _handle, @NativeType("bool") boolean _visible) {
+        long __functionAddress = Functions.set_condition;
+        invokeV(_handle, _visible, __functionAddress);
+    }
+
+    // --- [ bgfx_set_stencil ] ---
+
+    /**
+     * Sets stencil test state.
+     *
+     * @param _fstencil front stencil state. One or more of:<br><table><tr><td>{@link #BGFX_STENCIL_TEST_LESS STENCIL_TEST_LESS}</td><td>{@link #BGFX_STENCIL_TEST_LEQUAL STENCIL_TEST_LEQUAL}</td><td>{@link #BGFX_STENCIL_TEST_EQUAL STENCIL_TEST_EQUAL}</td></tr><tr><td>{@link #BGFX_STENCIL_TEST_GEQUAL STENCIL_TEST_GEQUAL}</td><td>{@link #BGFX_STENCIL_TEST_GREATER STENCIL_TEST_GREATER}</td><td>{@link #BGFX_STENCIL_TEST_NOTEQUAL STENCIL_TEST_NOTEQUAL}</td></tr><tr><td>{@link #BGFX_STENCIL_TEST_NEVER STENCIL_TEST_NEVER}</td><td>{@link #BGFX_STENCIL_TEST_ALWAYS STENCIL_TEST_ALWAYS}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_ZERO STENCIL_OP_FAIL_S_ZERO}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_KEEP STENCIL_OP_FAIL_S_KEEP}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_REPLACE STENCIL_OP_FAIL_S_REPLACE}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_INCR STENCIL_OP_FAIL_S_INCR}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_INCRSAT STENCIL_OP_FAIL_S_INCRSAT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_DECR STENCIL_OP_FAIL_S_DECR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_DECRSAT STENCIL_OP_FAIL_S_DECRSAT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_INVERT STENCIL_OP_FAIL_S_INVERT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_ZERO STENCIL_OP_FAIL_Z_ZERO}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_KEEP STENCIL_OP_FAIL_Z_KEEP}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_Z_REPLACE STENCIL_OP_FAIL_Z_REPLACE}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INCR STENCIL_OP_FAIL_Z_INCR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INCRSAT STENCIL_OP_FAIL_Z_INCRSAT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_Z_DECR STENCIL_OP_FAIL_Z_DECR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_DECRSAT STENCIL_OP_FAIL_Z_DECRSAT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INVERT STENCIL_OP_FAIL_Z_INVERT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_ZERO STENCIL_OP_PASS_Z_ZERO}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_KEEP STENCIL_OP_PASS_Z_KEEP}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_REPLACE STENCIL_OP_PASS_Z_REPLACE}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_INCR STENCIL_OP_PASS_Z_INCR}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_INCRSAT STENCIL_OP_PASS_Z_INCRSAT}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_DECR STENCIL_OP_PASS_Z_DECR}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_DECRSAT STENCIL_OP_PASS_Z_DECRSAT}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_INVERT STENCIL_OP_PASS_Z_INVERT}</td><td>{@link #BGFX_STENCIL_NONE STENCIL_NONE}</td></tr><tr><td>{@link #BGFX_STENCIL_DEFAULT STENCIL_DEFAULT}</td></tr></table>
+     * @param _bstencil back stencil state. If back is set to {@link #BGFX_STENCIL_NONE STENCIL_NONE} {@code _fstencil} is applied to both front and back facing primitives. One or more of:<br><table><tr><td>{@link #BGFX_STENCIL_TEST_LESS STENCIL_TEST_LESS}</td><td>{@link #BGFX_STENCIL_TEST_LEQUAL STENCIL_TEST_LEQUAL}</td><td>{@link #BGFX_STENCIL_TEST_EQUAL STENCIL_TEST_EQUAL}</td></tr><tr><td>{@link #BGFX_STENCIL_TEST_GEQUAL STENCIL_TEST_GEQUAL}</td><td>{@link #BGFX_STENCIL_TEST_GREATER STENCIL_TEST_GREATER}</td><td>{@link #BGFX_STENCIL_TEST_NOTEQUAL STENCIL_TEST_NOTEQUAL}</td></tr><tr><td>{@link #BGFX_STENCIL_TEST_NEVER STENCIL_TEST_NEVER}</td><td>{@link #BGFX_STENCIL_TEST_ALWAYS STENCIL_TEST_ALWAYS}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_ZERO STENCIL_OP_FAIL_S_ZERO}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_KEEP STENCIL_OP_FAIL_S_KEEP}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_REPLACE STENCIL_OP_FAIL_S_REPLACE}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_INCR STENCIL_OP_FAIL_S_INCR}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_INCRSAT STENCIL_OP_FAIL_S_INCRSAT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_DECR STENCIL_OP_FAIL_S_DECR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_S_DECRSAT STENCIL_OP_FAIL_S_DECRSAT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_S_INVERT STENCIL_OP_FAIL_S_INVERT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_ZERO STENCIL_OP_FAIL_Z_ZERO}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_KEEP STENCIL_OP_FAIL_Z_KEEP}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_Z_REPLACE STENCIL_OP_FAIL_Z_REPLACE}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INCR STENCIL_OP_FAIL_Z_INCR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INCRSAT STENCIL_OP_FAIL_Z_INCRSAT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_FAIL_Z_DECR STENCIL_OP_FAIL_Z_DECR}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_DECRSAT STENCIL_OP_FAIL_Z_DECRSAT}</td><td>{@link #BGFX_STENCIL_OP_FAIL_Z_INVERT STENCIL_OP_FAIL_Z_INVERT}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_ZERO STENCIL_OP_PASS_Z_ZERO}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_KEEP STENCIL_OP_PASS_Z_KEEP}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_REPLACE STENCIL_OP_PASS_Z_REPLACE}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_INCR STENCIL_OP_PASS_Z_INCR}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_INCRSAT STENCIL_OP_PASS_Z_INCRSAT}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_DECR STENCIL_OP_PASS_Z_DECR}</td></tr><tr><td>{@link #BGFX_STENCIL_OP_PASS_Z_DECRSAT STENCIL_OP_PASS_Z_DECRSAT}</td><td>{@link #BGFX_STENCIL_OP_PASS_Z_INVERT STENCIL_OP_PASS_Z_INVERT}</td><td>{@link #BGFX_STENCIL_NONE STENCIL_NONE}</td></tr><tr><td>{@link #BGFX_STENCIL_DEFAULT STENCIL_DEFAULT}</td></tr></table>
+     */
+    public static void bgfx_set_stencil(@NativeType("uint32_t") int _fstencil, @NativeType("uint32_t") int _bstencil) {
+        long __functionAddress = Functions.set_stencil;
+        invokeV(_fstencil, _bstencil, __functionAddress);
+    }
+
+    // --- [ bgfx_set_scissor ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_scissor set_scissor} */
+    public static short nbgfx_set_scissor(short _x, short _y, short _width, short _height) {
+        long __functionAddress = Functions.set_scissor;
+        return invokeS(_x, _y, _width, _height, __functionAddress);
+    }
+
+    /**
+     * Sets scissor for draw primitive. For scissor for all primitives in view see {@link #bgfx_set_view_scissor set_view_scissor}.
+     *
+     * @param _x      position x from the left corner of the window
+     * @param _y      position y from the top corner of the window
+     * @param _width  width of scissor region
+     * @param _height height of scissor region
+     *
+     * @return scissor cache index
+     */
+    @NativeType("uint16_t")
+    public static short bgfx_set_scissor(@NativeType("uint16_t") int _x, @NativeType("uint16_t") int _y, @NativeType("uint16_t") int _width, @NativeType("uint16_t") int _height) {
+        return nbgfx_set_scissor((short)_x, (short)_y, (short)_width, (short)_height);
+    }
+
+    // --- [ bgfx_set_scissor_cached ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_scissor_cached set_scissor_cached} */
+    public static void nbgfx_set_scissor_cached(short _cache) {
+        long __functionAddress = Functions.set_scissor_cached;
+        invokeV(_cache, __functionAddress);
+    }
+
+    /**
+     * Sets scissor from cache for draw primitive.
+     *
+     * @param _cache index in scissor cache. Passing {@code UINT16_MAX} unsets primitive scissor and primitive will use view scissor instead.
+     */
+    public static void bgfx_set_scissor_cached(@NativeType("uint16_t") int _cache) {
+        nbgfx_set_scissor_cached((short)_cache);
+    }
+
+    // --- [ bgfx_set_transform ] ---
+
+    /**
+     * Unsafe version of: {@link #bgfx_set_transform set_transform}
+     *
+     * @param _num number of matrices in array
+     */
+    public static int nbgfx_set_transform(long _mtx, short _num) {
+        long __functionAddress = Functions.set_transform;
+        return invokePI(_mtx, _num, __functionAddress);
+    }
+
+    /**
+     * Sets model matrix for draw primitive. If it is not called model will be rendered with identity model matrix.
+     *
+     * @param _mtx pointer to first matrix in array
+     *
+     * @return index into matrix cache in case the same model matrix has to be used for other draw primitive call
+     */
+    @NativeType("uint32_t")
+    public static int bgfx_set_transform(@NativeType("void const *") ByteBuffer _mtx) {
+        return nbgfx_set_transform(memAddress(_mtx), (short)(_mtx.remaining() >> 6));
+    }
+
+    /**
+     * Sets model matrix for draw primitive. If it is not called model will be rendered with identity model matrix.
+     *
+     * @param _mtx pointer to first matrix in array
+     *
+     * @return index into matrix cache in case the same model matrix has to be used for other draw primitive call
+     */
+    @NativeType("uint32_t")
+    public static int bgfx_set_transform(@NativeType("void const *") FloatBuffer _mtx) {
+        return nbgfx_set_transform(memAddress(_mtx), (short)(_mtx.remaining() >> 4));
+    }
+
+    // --- [ bgfx_set_transform_cached ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_transform_cached set_transform_cached} */
+    public static void nbgfx_set_transform_cached(int _cache, short _num) {
+        long __functionAddress = Functions.set_transform_cached;
+        invokeV(_cache, _num, __functionAddress);
+    }
+
+    /**
+     * Sets model matrix from matrix cache for draw primitive.
+     *
+     * @param _cache index in matrix cache
+     * @param _num   number of matrices from cache
+     */
+    public static void bgfx_set_transform_cached(@NativeType("uint32_t") int _cache, @NativeType("uint16_t") int _num) {
+        nbgfx_set_transform_cached(_cache, (short)_num);
+    }
+
+    // --- [ bgfx_alloc_transform ] ---
+
+    /** Unsafe version of: {@link #bgfx_alloc_transform alloc_transform} */
+    public static int nbgfx_alloc_transform(long _transform, short _num) {
+        long __functionAddress = Functions.alloc_transform;
+        return invokePI(_transform, _num, __functionAddress);
+    }
+
+    /**
+     * Reserves {@code _num} matrices in internal matrix cache.
+     * 
+     * <p>Pointer returned can be modifed until {@link #bgfx_frame frame} is called.</p>
+     *
+     * @param _transform pointer to {@link BGFXTransform} structure
+     * @param _num       number of matrices
+     *
+     * @return index into matrix cache
+     */
+    @NativeType("uint32_t")
+    public static int bgfx_alloc_transform(@NativeType("bgfx_transform_t *") BGFXTransform _transform, @NativeType("uint16_t") int _num) {
+        return nbgfx_alloc_transform(_transform.address(), (short)_num);
+    }
+
+    // --- [ bgfx_set_uniform ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_uniform set_uniform} */
+    public static void nbgfx_set_uniform(short _handle, long _value, short _num) {
+        long __functionAddress = Functions.set_uniform;
+        invokePV(_handle, _value, _num, __functionAddress);
+    }
+
+    /**
+     * Sets shader uniform parameter for draw primitive.
+     *
+     * @param _handle uniform
+     * @param _value  pointer to uniform data
+     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
+     */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") ByteBuffer _value, @NativeType("uint16_t") int _num) {
+        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
+    }
+
+    /**
+     * Sets shader uniform parameter for draw primitive.
+     *
+     * @param _handle uniform
+     * @param _value  pointer to uniform data
+     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
+     */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") ShortBuffer _value, @NativeType("uint16_t") int _num) {
+        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
+    }
+
+    /**
+     * Sets shader uniform parameter for draw primitive.
+     *
+     * @param _handle uniform
+     * @param _value  pointer to uniform data
+     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
+     */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") IntBuffer _value, @NativeType("uint16_t") int _num) {
+        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
+    }
+
+    /**
+     * Sets shader uniform parameter for draw primitive.
+     *
+     * @param _handle uniform
+     * @param _value  pointer to uniform data
+     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
+     */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") LongBuffer _value, @NativeType("uint16_t") int _num) {
+        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
+    }
+
+    /**
+     * Sets shader uniform parameter for draw primitive.
+     *
+     * @param _handle uniform
+     * @param _value  pointer to uniform data
+     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
+     */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") FloatBuffer _value, @NativeType("uint16_t") int _num) {
+        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
+    }
+
+    /**
+     * Sets shader uniform parameter for draw primitive.
+     *
+     * @param _handle uniform
+     * @param _value  pointer to uniform data
+     * @param _num    number of elements. Passing {@code UINT16_MAX} will use the {@code _num} passed on uniform creation.
+     */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") DoubleBuffer _value, @NativeType("uint16_t") int _num) {
+        nbgfx_set_uniform(_handle, memAddress(_value), (short)_num);
+    }
+
+    // --- [ bgfx_set_index_buffer ] ---
+
+    /**
+     * Sets index buffer for draw primitive.
+     *
+     * @param _handle     index buffer
+     * @param _firstIndex first index to render
+     * @param _numIndices number of indices to render
+     */
+    public static void bgfx_set_index_buffer(@NativeType("bgfx_index_buffer_handle_t") short _handle, @NativeType("uint32_t") int _firstIndex, @NativeType("uint32_t") int _numIndices) {
+        long __functionAddress = Functions.set_index_buffer;
+        invokeV(_handle, _firstIndex, _numIndices, __functionAddress);
+    }
+
+    // --- [ bgfx_set_dynamic_index_buffer ] ---
+
+    /**
+     * Sets index buffer for draw primitive.
+     *
+     * @param _handle     dynamic index buffer
+     * @param _firstIndex first index to render
+     * @param _numIndices number of indices to render
+     */
+    public static void bgfx_set_dynamic_index_buffer(@NativeType("bgfx_dynamic_index_buffer_handle_t") short _handle, @NativeType("uint32_t") int _firstIndex, @NativeType("uint32_t") int _numIndices) {
+        long __functionAddress = Functions.set_dynamic_index_buffer;
+        invokeV(_handle, _firstIndex, _numIndices, __functionAddress);
+    }
+
+    // --- [ bgfx_set_transient_index_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_transient_index_buffer set_transient_index_buffer} */
+    public static void nbgfx_set_transient_index_buffer(long _tib, int _firstIndex, int _numIndices) {
+        long __functionAddress = Functions.set_transient_index_buffer;
+        if (CHECKS) {
+            BGFXTransientIndexBuffer.validate(_tib);
+        }
+        invokePV(_tib, _firstIndex, _numIndices, __functionAddress);
+    }
+
+    /**
+     * Sets index buffer for draw primitive.
+     *
+     * @param _tib        transient index buffer
+     * @param _firstIndex first index to render
+     * @param _numIndices number of indices to render
+     */
+    public static void bgfx_set_transient_index_buffer(@NativeType("bgfx_transient_index_buffer_t const *") BGFXTransientIndexBuffer _tib, @NativeType("uint32_t") int _firstIndex, @NativeType("uint32_t") int _numIndices) {
+        nbgfx_set_transient_index_buffer(_tib.address(), _firstIndex, _numIndices);
+    }
+
+    // --- [ bgfx_set_vertex_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_vertex_buffer set_vertex_buffer} */
+    public static void nbgfx_set_vertex_buffer(byte _stream, short _handle, int _startVertex, int _numVertices) {
+        long __functionAddress = Functions.set_vertex_buffer;
+        invokeV(_stream, _handle, _startVertex, _numVertices, __functionAddress);
+    }
+
+    /**
+     * Sets vertex buffer for draw primitive.
+     *
+     * @param _stream      vertex stream
+     * @param _handle      vertex buffer
+     * @param _startVertex first vertex to render
+     * @param _numVertices number of vertices to render
+     */
+    public static void bgfx_set_vertex_buffer(@NativeType("uint8_t") int _stream, @NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices) {
+        nbgfx_set_vertex_buffer((byte)_stream, _handle, _startVertex, _numVertices);
+    }
+
+    // --- [ bgfx_set_dynamic_vertex_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_dynamic_vertex_buffer set_dynamic_vertex_buffer} */
+    public static void nbgfx_set_dynamic_vertex_buffer(byte _stream, short _handle, int _startVertex, int _numVertices) {
+        long __functionAddress = Functions.set_dynamic_vertex_buffer;
+        invokeV(_stream, _handle, _startVertex, _numVertices, __functionAddress);
+    }
+
+    /**
+     * Sets vertex buffer for draw primitive.
+     *
+     * @param _stream      vertex stream
+     * @param _handle      dynamic vertex buffer
+     * @param _startVertex first vertex to render
+     * @param _numVertices number of vertices to render
+     */
+    public static void bgfx_set_dynamic_vertex_buffer(@NativeType("uint8_t") int _stream, @NativeType("bgfx_dynamic_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices) {
+        nbgfx_set_dynamic_vertex_buffer((byte)_stream, _handle, _startVertex, _numVertices);
+    }
+
+    // --- [ bgfx_set_transient_vertex_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_transient_vertex_buffer set_transient_vertex_buffer} */
+    public static void nbgfx_set_transient_vertex_buffer(byte _stream, long _tvb, int _startVertex, int _numVertices) {
+        long __functionAddress = Functions.set_transient_vertex_buffer;
+        if (CHECKS) {
+            BGFXTransientVertexBuffer.validate(_tvb);
+        }
+        invokePV(_stream, _tvb, _startVertex, _numVertices, __functionAddress);
+    }
+
+    /**
+     * Sets vertex buffer for draw primitive.
+     *
+     * @param _stream      vertex stream
+     * @param _tvb         transient vertex buffer
+     * @param _startVertex first vertex to render
+     * @param _numVertices number of vertices to render
+     */
+    public static void bgfx_set_transient_vertex_buffer(@NativeType("uint8_t") int _stream, @NativeType("bgfx_transient_vertex_buffer_t const *") BGFXTransientVertexBuffer _tvb, @NativeType("uint32_t") int _startVertex, @NativeType("uint32_t") int _numVertices) {
+        nbgfx_set_transient_vertex_buffer((byte)_stream, _tvb.address(), _startVertex, _numVertices);
+    }
+
+    // --- [ bgfx_set_vertex_count ] ---
+
+    /**
+     * Set number of vertices for auto generated vertices use in conjuction with {@code gl_VertexID}.
+     * 
+     * <p>Availability depends on: {@link #BGFX_CAPS_VERTEX_ID CAPS_VERTEX_ID}.</p>
+     *
+     * @param _numVertices number of vertices
+     */
+    public static void bgfx_set_vertex_count(@NativeType("uint32_t") int _numVertices) {
+        long __functionAddress = Functions.set_vertex_count;
+        invokeV(_numVertices, __functionAddress);
+    }
+
+    // --- [ bgfx_set_instance_data_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_instance_data_buffer set_instance_data_buffer} */
+    public static void nbgfx_set_instance_data_buffer(long _idb, int _start, int _num) {
+        long __functionAddress = Functions.set_instance_data_buffer;
+        if (CHECKS) {
+            BGFXInstanceDataBuffer.validate(_idb);
+        }
+        invokePV(_idb, _start, _num, __functionAddress);
+    }
+
+    /**
+     * Sets instance data buffer for draw primitive.
+     *
+     * @param _idb   transient instance data buffer
+     * @param _start first instance data
+     * @param _num   number of data instances
+     */
+    public static void bgfx_set_instance_data_buffer(@NativeType("bgfx_instance_data_buffer_t const *") BGFXInstanceDataBuffer _idb, @NativeType("uint32_t") int _start, @NativeType("uint32_t") int _num) {
+        nbgfx_set_instance_data_buffer(_idb.address(), _start, _num);
+    }
+
+    // --- [ bgfx_set_instance_data_from_vertex_buffer ] ---
+
+    /**
+     * Set instance data buffer for draw primitive.
+     *
+     * @param _handle vertex buffer
+     * @param _start  first instance data
+     * @param _num    number of data instances
+     */
+    public static void bgfx_set_instance_data_from_vertex_buffer(@NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _start, @NativeType("uint32_t") int _num) {
+        long __functionAddress = Functions.set_instance_data_from_vertex_buffer;
+        invokeV(_handle, _start, _num, __functionAddress);
+    }
+
+    // --- [ bgfx_set_instance_data_from_dynamic_vertex_buffer ] ---
+
+    /**
+     * Set instance data buffer for draw primitive.
+     *
+     * @param _handle dynamic vertex buffer
+     * @param _start  first instance data
+     * @param _num    number of data instances
+     */
+    public static void bgfx_set_instance_data_from_dynamic_vertex_buffer(@NativeType("bgfx_dynamic_vertex_buffer_handle_t") short _handle, @NativeType("uint32_t") int _start, @NativeType("uint32_t") int _num) {
+        long __functionAddress = Functions.set_instance_data_from_dynamic_vertex_buffer;
+        invokeV(_handle, _start, _num, __functionAddress);
+    }
+
+    // --- [ bgfx_set_instance_count ] ---
+
+    /**
+     * Sets number of instances for auto generated instances use in conjuction with {@code gl_InstanceID}.
+     * 
+     * <p>Availability depends on: {@link #BGFX_CAPS_VERTEX_ID CAPS_VERTEX_ID}.</p>
+     *
+     * @param _numInstances number of instances
+     */
+    public static void bgfx_set_instance_count(@NativeType("uint32_t") int _numInstances) {
+        long __functionAddress = Functions.set_instance_count;
+        invokeV(_numInstances, __functionAddress);
+    }
+
+    // --- [ bgfx_set_texture ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_texture set_texture} */
+    public static void nbgfx_set_texture(byte _stage, short _sampler, short _handle, int _flags) {
+        long __functionAddress = Functions.set_texture;
+        invokeV(_stage, _sampler, _handle, _flags, __functionAddress);
+    }
+
+    /**
+     * Sets texture stage for draw primitive.
+     *
+     * @param _stage   texture unit
+     * @param _sampler program sampler
+     * @param _handle  texture handle
+     * @param _flags   texture sampling mode. {@code UINT32_MAX} uses texture sampling settings from the texture. One of:<br><table><tr><td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td></tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td><td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td><td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td><td>{@link #BGFX_SAMPLER_UVW_CLAMP SAMPLER_UVW_CLAMP}</td></tr><tr><td>{@link #BGFX_SAMPLER_UVW_BORDER SAMPLER_UVW_BORDER}</td><td>{@link #BGFX_SAMPLER_MIN_POINT SAMPLER_MIN_POINT}</td><td>{@link #BGFX_SAMPLER_MIN_ANISOTROPIC SAMPLER_MIN_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MAG_POINT SAMPLER_MAG_POINT}</td></tr><tr><td>{@link #BGFX_SAMPLER_MAG_ANISOTROPIC SAMPLER_MAG_ANISOTROPIC}</td><td>{@link #BGFX_SAMPLER_MIP_POINT SAMPLER_MIP_POINT}</td><td>{@link #BGFX_SAMPLER_POINT SAMPLER_POINT}</td><td>{@link #BGFX_SAMPLER_COMPARE_LESS SAMPLER_COMPARE_LESS}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_LEQUAL SAMPLER_COMPARE_LEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_EQUAL SAMPLER_COMPARE_EQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GEQUAL SAMPLER_COMPARE_GEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_GREATER SAMPLER_COMPARE_GREATER}</td></tr><tr><td>{@link #BGFX_SAMPLER_COMPARE_NOTEQUAL SAMPLER_COMPARE_NOTEQUAL}</td><td>{@link #BGFX_SAMPLER_COMPARE_NEVER SAMPLER_COMPARE_NEVER}</td><td>{@link #BGFX_SAMPLER_COMPARE_ALWAYS SAMPLER_COMPARE_ALWAYS}</td><td>{@link #BGFX_SAMPLER_SAMPLE_STENCIL SAMPLER_SAMPLE_STENCIL}</td></tr></table>
+     */
+    public static void bgfx_set_texture(@NativeType("uint8_t") int _stage, @NativeType("bgfx_uniform_handle_t") short _sampler, @NativeType("bgfx_texture_handle_t") short _handle, @NativeType("uint32_t") int _flags) {
+        nbgfx_set_texture((byte)_stage, _sampler, _handle, _flags);
+    }
+
+    // --- [ bgfx_touch ] ---
+
+    /** Unsafe version of: {@link #bgfx_touch touch} */
+    public static void nbgfx_touch(short _id) {
+        long __functionAddress = Functions.touch;
+        invokeV(_id, __functionAddress);
+    }
+
+    /**
+     * Submits an empty primitive for rendering. Uniforms and draw state will be applied but no geometry will be submitted.
+     * 
+     * <p>These empty draw calls will sort before ordinary draw calls.</p>
+     *
+     * @param _id view id
+     */
+    public static void bgfx_touch(@NativeType("bgfx_view_id_t") int _id) {
+        nbgfx_touch((short)_id);
+    }
+
+    // --- [ bgfx_submit ] ---
+
+    /** Unsafe version of: {@link #bgfx_submit submit} */
+    public static void nbgfx_submit(short _id, short _program, int _depth, boolean _preserveState) {
+        long __functionAddress = Functions.submit;
+        invokeV(_id, _program, _depth, _preserveState, __functionAddress);
+    }
+
+    /**
+     * Submits primitive for rendering.
+     *
+     * @param _id            view id
+     * @param _program       program
+     * @param _depth         depth for sorting
+     * @param _preserveState preserve internal draw state for next draw call submit
+     */
+    public static void bgfx_submit(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _program, @NativeType("uint32_t") int _depth, @NativeType("bool") boolean _preserveState) {
+        nbgfx_submit((short)_id, _program, _depth, _preserveState);
+    }
+
+    // --- [ bgfx_submit_occlusion_query ] ---
+
+    /** Unsafe version of: {@link #bgfx_submit_occlusion_query submit_occlusion_query} */
+    public static void nbgfx_submit_occlusion_query(short _id, short _program, short _occlusionQuery, int _depth, boolean _preserveState) {
+        long __functionAddress = Functions.submit_occlusion_query;
+        invokeV(_id, _program, _occlusionQuery, _depth, _preserveState, __functionAddress);
+    }
+
+    /**
+     * Submits primitive with occlusion query for rendering.
+     *
+     * @param _id             view id
+     * @param _program        program
+     * @param _occlusionQuery occlusion query
+     * @param _depth          depth for sorting
+     * @param _preserveState  preserve internal draw state for next draw call submit
+     */
+    public static void bgfx_submit_occlusion_query(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _program, @NativeType("bgfx_occlusion_query_handle_t") short _occlusionQuery, @NativeType("uint32_t") int _depth, @NativeType("bool") boolean _preserveState) {
+        nbgfx_submit_occlusion_query((short)_id, _program, _occlusionQuery, _depth, _preserveState);
+    }
+
+    // --- [ bgfx_submit_indirect ] ---
+
+    /** Unsafe version of: {@link #bgfx_submit_indirect submit_indirect} */
+    public static void nbgfx_submit_indirect(short _id, short _program, short _indirectHandle, short _start, short _num, int _depth, boolean _preserveState) {
+        long __functionAddress = Functions.submit_indirect;
+        invokeV(_id, _program, _indirectHandle, _start, _num, _depth, _preserveState, __functionAddress);
+    }
+
+    /**
+     * Submits primitive for rendering with index and instance data info from indirect buffer.
+     *
+     * @param _id             view id
+     * @param _program        program
+     * @param _indirectHandle indirect buffer
+     * @param _start          first element in indirect buffer
+     * @param _num            number of dispatches
+     * @param _depth          depth for sorting
+     * @param _preserveState  preserve internal draw state for next draw call submit
+     */
+    public static void bgfx_submit_indirect(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _program, @NativeType("bgfx_indirect_buffer_handle_t") short _indirectHandle, @NativeType("uint16_t") int _start, @NativeType("uint16_t") int _num, @NativeType("uint32_t") int _depth, @NativeType("bool") boolean _preserveState) {
+        nbgfx_submit_indirect((short)_id, _program, _indirectHandle, (short)_start, (short)_num, _depth, _preserveState);
+    }
+
+    // --- [ bgfx_set_compute_index_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_compute_index_buffer set_compute_index_buffer} */
+    public static void nbgfx_set_compute_index_buffer(byte _stage, short _handle, int _access) {
+        long __functionAddress = Functions.set_compute_index_buffer;
+        invokeV(_stage, _handle, _access, __functionAddress);
+    }
+
+    /**
+     * Sets compute index buffer.
+     *
+     * @param _stage  compute stage
+     * @param _handle index buffer handle
+     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
+     */
+    public static void bgfx_set_compute_index_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_index_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
+        nbgfx_set_compute_index_buffer((byte)_stage, _handle, _access);
+    }
+
+    // --- [ bgfx_set_compute_vertex_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_compute_vertex_buffer set_compute_vertex_buffer} */
+    public static void nbgfx_set_compute_vertex_buffer(byte _stage, short _handle, int _access) {
+        long __functionAddress = Functions.set_compute_vertex_buffer;
+        invokeV(_stage, _handle, _access, __functionAddress);
+    }
+
+    /**
+     * Sets compute vertex buffer.
+     *
+     * @param _stage  compute stage
+     * @param _handle vertex buffer handle
+     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
+     */
+    public static void bgfx_set_compute_vertex_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_vertex_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
+        nbgfx_set_compute_vertex_buffer((byte)_stage, _handle, _access);
+    }
+
+    // --- [ bgfx_set_compute_dynamic_index_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_compute_dynamic_index_buffer set_compute_dynamic_index_buffer} */
+    public static void nbgfx_set_compute_dynamic_index_buffer(byte _stage, short _handle, int _access) {
+        long __functionAddress = Functions.set_compute_dynamic_index_buffer;
+        invokeV(_stage, _handle, _access, __functionAddress);
+    }
+
+    /**
+     * Sets compute dynamic index buffer.
+     *
+     * @param _stage  compute stage
+     * @param _handle dynamic index buffer handle
+     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
+     */
+    public static void bgfx_set_compute_dynamic_index_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_dynamic_index_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
+        nbgfx_set_compute_dynamic_index_buffer((byte)_stage, _handle, _access);
+    }
+
+    // --- [ bgfx_set_compute_dynamic_vertex_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_compute_dynamic_vertex_buffer set_compute_dynamic_vertex_buffer} */
+    public static void nbgfx_set_compute_dynamic_vertex_buffer(byte _stage, short _handle, int _access) {
+        long __functionAddress = Functions.set_compute_dynamic_vertex_buffer;
+        invokeV(_stage, _handle, _access, __functionAddress);
+    }
+
+    /**
+     * Sets compute dynamic vertex buffer.
+     *
+     * @param _stage  compute stage
+     * @param _handle dynamic vertex buffer handle
+     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
+     */
+    public static void bgfx_set_compute_dynamic_vertex_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_dynamic_vertex_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
+        nbgfx_set_compute_dynamic_vertex_buffer((byte)_stage, _handle, _access);
+    }
+
+    // --- [ bgfx_set_compute_indirect_buffer ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_compute_indirect_buffer set_compute_indirect_buffer} */
+    public static void nbgfx_set_compute_indirect_buffer(byte _stage, short _handle, int _access) {
+        long __functionAddress = Functions.set_compute_indirect_buffer;
+        invokeV(_stage, _handle, _access, __functionAddress);
+    }
+
+    /**
+     * Sets compute indirect buffer.
+     *
+     * @param _stage  compute stage
+     * @param _handle indirect buffer handle
+     * @param _access buffer access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
+     */
+    public static void bgfx_set_compute_indirect_buffer(@NativeType("uint8_t") int _stage, @NativeType("bgfx_indirect_buffer_handle_t") short _handle, @NativeType("bgfx_access_t") int _access) {
+        nbgfx_set_compute_indirect_buffer((byte)_stage, _handle, _access);
+    }
+
+    // --- [ bgfx_set_image ] ---
+
+    /** Unsafe version of: {@link #bgfx_set_image set_image} */
+    public static void nbgfx_set_image(byte _stage, short _handle, byte _mip, int _access, int _format) {
+        long __functionAddress = Functions.set_image;
+        invokeV(_stage, _handle, _mip, _access, _format, __functionAddress);
+    }
+
+    /**
+     * Sets compute image from texture.
+     *
+     * @param _stage  texture unit
+     * @param _handle texture handle
+     * @param _mip    mip level
+     * @param _access texture access. One of:<br><table><tr><td>{@link #BGFX_ACCESS_READ ACCESS_READ}</td><td>{@link #BGFX_ACCESS_WRITE ACCESS_WRITE}</td><td>{@link #BGFX_ACCESS_READWRITE ACCESS_READWRITE}</td></tr></table>
+     * @param _format texture format. One of:<br><table><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC1 TEXTURE_FORMAT_BC1}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC2 TEXTURE_FORMAT_BC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC3 TEXTURE_FORMAT_BC3}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC4 TEXTURE_FORMAT_BC4}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_BC5 TEXTURE_FORMAT_BC5}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC6H TEXTURE_FORMAT_BC6H}</td><td>{@link #BGFX_TEXTURE_FORMAT_BC7 TEXTURE_FORMAT_BC7}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC1 TEXTURE_FORMAT_ETC1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ETC2 TEXTURE_FORMAT_ETC2}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A TEXTURE_FORMAT_ETC2A}</td><td>{@link #BGFX_TEXTURE_FORMAT_ETC2A1 TEXTURE_FORMAT_ETC2A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12 TEXTURE_FORMAT_PTC12}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC14 TEXTURE_FORMAT_PTC14}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC12A TEXTURE_FORMAT_PTC12A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC14A TEXTURE_FORMAT_PTC14A}</td><td>{@link #BGFX_TEXTURE_FORMAT_PTC22 TEXTURE_FORMAT_PTC22}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_PTC24 TEXTURE_FORMAT_PTC24}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATC TEXTURE_FORMAT_ATC}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCE TEXTURE_FORMAT_ATCE}</td><td>{@link #BGFX_TEXTURE_FORMAT_ATCI TEXTURE_FORMAT_ATCI}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC4x4 TEXTURE_FORMAT_ASTC4x4}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC5x5 TEXTURE_FORMAT_ASTC5x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC6x6 TEXTURE_FORMAT_ASTC6x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x5 TEXTURE_FORMAT_ASTC8x5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_ASTC8x6 TEXTURE_FORMAT_ASTC8x6}</td><td>{@link #BGFX_TEXTURE_FORMAT_ASTC10x5 TEXTURE_FORMAT_ASTC10x5}</td><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN TEXTURE_FORMAT_UNKNOWN}</td><td>{@link #BGFX_TEXTURE_FORMAT_R1 TEXTURE_FORMAT_R1}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_A8 TEXTURE_FORMAT_A8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8 TEXTURE_FORMAT_R8}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8I TEXTURE_FORMAT_R8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R8U TEXTURE_FORMAT_R8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R8S TEXTURE_FORMAT_R8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16 TEXTURE_FORMAT_R16}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16I TEXTURE_FORMAT_R16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16U TEXTURE_FORMAT_R16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R16F TEXTURE_FORMAT_R16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R16S TEXTURE_FORMAT_R16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32I TEXTURE_FORMAT_R32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_R32U TEXTURE_FORMAT_R32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_R32F TEXTURE_FORMAT_R32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8 TEXTURE_FORMAT_RG8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8I TEXTURE_FORMAT_RG8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG8U TEXTURE_FORMAT_RG8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG8S TEXTURE_FORMAT_RG8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16 TEXTURE_FORMAT_RG16}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16I TEXTURE_FORMAT_RG16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16U TEXTURE_FORMAT_RG16U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG16F TEXTURE_FORMAT_RG16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG16S TEXTURE_FORMAT_RG16S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32I TEXTURE_FORMAT_RG32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG32U TEXTURE_FORMAT_RG32U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RG32F TEXTURE_FORMAT_RG32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8 TEXTURE_FORMAT_RGB8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8I TEXTURE_FORMAT_RGB8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB8U TEXTURE_FORMAT_RGB8U}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGB8S TEXTURE_FORMAT_RGB8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB9E5F TEXTURE_FORMAT_RGB9E5F}</td><td>{@link #BGFX_TEXTURE_FORMAT_BGRA8 TEXTURE_FORMAT_BGRA8}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8 TEXTURE_FORMAT_RGBA8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8I TEXTURE_FORMAT_RGBA8I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8U TEXTURE_FORMAT_RGBA8U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA8S TEXTURE_FORMAT_RGBA8S}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16 TEXTURE_FORMAT_RGBA16}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16I TEXTURE_FORMAT_RGBA16I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16U TEXTURE_FORMAT_RGBA16U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16F TEXTURE_FORMAT_RGBA16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA16S TEXTURE_FORMAT_RGBA16S}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32I TEXTURE_FORMAT_RGBA32I}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32U TEXTURE_FORMAT_RGBA32U}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGBA32F TEXTURE_FORMAT_RGBA32F}</td><td>{@link #BGFX_TEXTURE_FORMAT_R5G6B5 TEXTURE_FORMAT_R5G6B5}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_RGBA4 TEXTURE_FORMAT_RGBA4}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB5A1 TEXTURE_FORMAT_RGB5A1}</td><td>{@link #BGFX_TEXTURE_FORMAT_RGB10A2 TEXTURE_FORMAT_RGB10A2}</td><td>{@link #BGFX_TEXTURE_FORMAT_RG11B10F TEXTURE_FORMAT_RG11B10F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_UNKNOWN_DEPTH TEXTURE_FORMAT_UNKNOWN_DEPTH}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16 TEXTURE_FORMAT_D16}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24 TEXTURE_FORMAT_D24}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24S8 TEXTURE_FORMAT_D24S8}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D32 TEXTURE_FORMAT_D32}</td><td>{@link #BGFX_TEXTURE_FORMAT_D16F TEXTURE_FORMAT_D16F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D24F TEXTURE_FORMAT_D24F}</td><td>{@link #BGFX_TEXTURE_FORMAT_D32F TEXTURE_FORMAT_D32F}</td></tr><tr><td>{@link #BGFX_TEXTURE_FORMAT_D0S8 TEXTURE_FORMAT_D0S8}</td></tr></table>
+     */
+    public static void bgfx_set_image(@NativeType("uint8_t") int _stage, @NativeType("bgfx_texture_handle_t") short _handle, @NativeType("uint8_t") int _mip, @NativeType("bgfx_access_t") int _access, @NativeType("bgfx_texture_format_t") int _format) {
+        nbgfx_set_image((byte)_stage, _handle, (byte)_mip, _access, _format);
+    }
+
+    // --- [ bgfx_dispatch ] ---
+
+    /** Unsafe version of: {@link #bgfx_dispatch dispatch} */
+    public static void nbgfx_dispatch(short _id, short _program, int _numX, int _numY, int _numZ) {
+        long __functionAddress = Functions.dispatch;
+        invokeV(_id, _program, _numX, _numY, _numZ, __functionAddress);
+    }
+
+    /**
+     * Dispatches compute.
+     *
+     * @param _id      view id
+     * @param _program compute program
+     * @param _numX    number of groups X
+     * @param _numY    number of groups Y
+     * @param _numZ    number of groups Z
+     */
+    public static void bgfx_dispatch(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _program, @NativeType("uint32_t") int _numX, @NativeType("uint32_t") int _numY, @NativeType("uint32_t") int _numZ) {
+        nbgfx_dispatch((short)_id, _program, _numX, _numY, _numZ);
+    }
+
+    // --- [ bgfx_dispatch_indirect ] ---
+
+    /** Unsafe version of: {@link #bgfx_dispatch_indirect dispatch_indirect} */
+    public static void nbgfx_dispatch_indirect(short _id, short _program, short _indirectHandle, short _start, short _num) {
+        long __functionAddress = Functions.dispatch_indirect;
+        invokeV(_id, _program, _indirectHandle, _start, _num, __functionAddress);
+    }
+
+    /**
+     * Dispatches compute indirect.
+     *
+     * @param _id             view id
+     * @param _program        compute program
+     * @param _indirectHandle indirect buffer
+     * @param _start          first element in indirect buffer
+     * @param _num            number of dispatches
+     */
+    public static void bgfx_dispatch_indirect(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_program_handle_t") short _program, @NativeType("bgfx_indirect_buffer_handle_t") short _indirectHandle, @NativeType("uint16_t") int _start, @NativeType("uint16_t") int _num) {
+        nbgfx_dispatch_indirect((short)_id, _program, _indirectHandle, (short)_start, (short)_num);
+    }
+
+    // --- [ bgfx_discard ] ---
+
+    /** Discards all previously set state for draw or compute call. */
+    public static void bgfx_discard() {
+        long __functionAddress = Functions.discard;
+        invokeV(__functionAddress);
+    }
+
+    // --- [ bgfx_blit ] ---
+
+    /** Unsafe version of: {@link #bgfx_blit blit} */
+    public static void nbgfx_blit(short _id, short _dst, byte _dstMip, short _dstX, short _dstY, short _dstZ, short _src, byte _srcMip, short _srcX, short _srcY, short _srcZ, short _width, short _height, short _depth) {
+        long __functionAddress = Functions.blit;
+        invokeV(_id, _dst, _dstMip, _dstX, _dstY, _dstZ, _src, _srcMip, _srcX, _srcY, _srcZ, _width, _height, _depth, __functionAddress);
+    }
+
+    /**
+     * Blits texture region between two textures.
+     * 
+     * <p>Destination texture must be created with {@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST} flag. Availability depends on {@link #BGFX_CAPS_TEXTURE_BLIT CAPS_TEXTURE_BLIT}.</p>
+     *
+     * @param _id     view id
+     * @param _dst    destination texture handle
+     * @param _dstMip destination texture mip level
+     * @param _dstX   destination texture X position
+     * @param _dstY   destination texture Y position
+     * @param _dstZ   if texture is 2D this argument should be 0. If destination texture is cube this argument represents destination texture cube face. For 3D texture
+     *                this argument represents destination texture Z position.
+     * @param _src    source texture handle
+     * @param _srcMip source texture mip level
+     * @param _srcX   source texture X position
+     * @param _srcY   source texture Y position
+     * @param _srcZ   if texture is 2D this argument should be 0. If destination texture is cube this argument represents destination texture cube face. For 3D texture
+     *                this argument represents destination texture Z position.
+     * @param _width  width of region
+     * @param _height height of region
+     * @param _depth  if texture is 3D this argument represents depth of region, otherwise it's unused
+     */
+    public static void bgfx_blit(@NativeType("bgfx_view_id_t") int _id, @NativeType("bgfx_texture_handle_t") short _dst, @NativeType("uint8_t") int _dstMip, @NativeType("uint16_t") int _dstX, @NativeType("uint16_t") int _dstY, @NativeType("uint16_t") int _dstZ, @NativeType("bgfx_texture_handle_t") short _src, @NativeType("uint8_t") int _srcMip, @NativeType("uint16_t") int _srcX, @NativeType("uint16_t") int _srcY, @NativeType("uint16_t") int _srcZ, @NativeType("uint16_t") int _width, @NativeType("uint16_t") int _height, @NativeType("uint16_t") int _depth) {
+        nbgfx_blit((short)_id, _dst, (byte)_dstMip, (short)_dstX, (short)_dstY, (short)_dstZ, _src, (byte)_srcMip, (short)_srcX, (short)_srcY, (short)_srcZ, (short)_width, (short)_height, (short)_depth);
     }
 
     // --- [ BGFX_STATE_ALPHA_REF ] ---
@@ -5666,7 +5816,7 @@ public class BGFX {
             check(_normalized, 1);
             check(_asInt, 1);
         }
-        invokePPPPPV(__functionAddress, _decl.address(), _attrib, memAddress(_num), _type, memAddress(_normalized), memAddress(_asInt));
+        invokePPPPPV(_decl.address(), _attrib, memAddress(_num), _type, memAddress(_normalized), memAddress(_asInt), __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_vertex_pack vertex_pack} */
@@ -5675,7 +5825,7 @@ public class BGFX {
         if (CHECKS) {
             check(_input, 4);
         }
-        invokePPPV(__functionAddress, _input, _inputNormalized, _attr, _decl.address(), memAddress(_data), _index);
+        invokePPPV(_input, _inputNormalized, _attr, _decl.address(), memAddress(_data), _index, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_vertex_unpack vertex_unpack} */
@@ -5684,28 +5834,28 @@ public class BGFX {
         if (CHECKS) {
             check(_output, 4);
         }
-        invokePPPV(__functionAddress, _output, _attr, _decl.address(), memAddress(_data), _index);
+        invokePPPV(_output, _attr, _decl.address(), memAddress(_data), _index, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_weld_vertices weld_vertices} */
     @NativeType("uint16_t")
     public static short bgfx_weld_vertices(@NativeType("uint16_t *") short[] _output, @NativeType("bgfx_vertex_decl_t const *") BGFXVertexDecl _decl, @NativeType("void const *") ByteBuffer _data, float _epsilon) {
         long __functionAddress = Functions.weld_vertices;
-        return invokePPPS(__functionAddress, _output, _decl.address(), memAddress(_data), (short)_output.length, _epsilon);
+        return invokePPPS(_output, _decl.address(), memAddress(_data), (short)_output.length, _epsilon, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_topology_convert topology_convert} */
     @NativeType("uint32_t")
     public static int bgfx_topology_convert(@NativeType("bgfx_topology_convert_t") int _conversion, @Nullable @NativeType("void *") short[] _dst, @NativeType("void const *") short[] _indices, @NativeType("bool") boolean _index32) {
         long __functionAddress = Functions.topology_convert;
-        return invokePPI(__functionAddress, _conversion, _dst, lengthSafe(_dst) << 1, _indices, _indices.length, _index32);
+        return invokePPI(_conversion, _dst, lengthSafe(_dst) << 1, _indices, _indices.length, _index32, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_topology_convert topology_convert} */
     @NativeType("uint32_t")
     public static int bgfx_topology_convert(@NativeType("bgfx_topology_convert_t") int _conversion, @Nullable @NativeType("void *") int[] _dst, @NativeType("void const *") int[] _indices, @NativeType("bool") boolean _index32) {
         long __functionAddress = Functions.topology_convert;
-        return invokePPI(__functionAddress, _conversion, _dst, lengthSafe(_dst) << 2, _indices, _indices.length, _index32);
+        return invokePPI(_conversion, _dst, lengthSafe(_dst) << 2, _indices, _indices.length, _index32, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_topology_sort_tri_list topology_sort_tri_list} */
@@ -5715,7 +5865,7 @@ public class BGFX {
             check(_dir, 3);
             check(_pos, 3);
         }
-        invokePPPPPV(__functionAddress, _sort, memAddress(_dst), _dst.remaining(), _dir, _pos, memAddress(_vertices), _stride, memAddress(_indices), _indices.remaining() >> (_index32 ? 2 : 1), _index32);
+        invokePPPPPV(_sort, memAddress(_dst), _dst.remaining(), _dir, _pos, memAddress(_vertices), _stride, memAddress(_indices), _indices.remaining() >> (_index32 ? 2 : 1), _index32, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_topology_sort_tri_list topology_sort_tri_list} */
@@ -5725,7 +5875,7 @@ public class BGFX {
             check(_dir, 3);
             check(_pos, 3);
         }
-        invokePPPPPV(__functionAddress, _sort, _dst, _dst.length << 1, _dir, _pos, memAddress(_vertices), _stride, _indices, _indices.length, _index32);
+        invokePPPPPV(_sort, _dst, _dst.length << 1, _dir, _pos, memAddress(_vertices), _stride, _indices, _indices.length, _index32, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_topology_sort_tri_list topology_sort_tri_list} */
@@ -5735,14 +5885,14 @@ public class BGFX {
             check(_dir, 3);
             check(_pos, 3);
         }
-        invokePPPPPV(__functionAddress, _sort, _dst, _dst.length << 2, _dir, _pos, memAddress(_vertices), _stride, _indices, _indices.length, _index32);
+        invokePPPPPV(_sort, _dst, _dst.length << 2, _dir, _pos, memAddress(_vertices), _stride, _indices, _indices.length, _index32, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_get_supported_renderers get_supported_renderers} */
     @NativeType("uint8_t")
     public static byte bgfx_get_supported_renderers(@NativeType("bgfx_renderer_type_t *") int[] _enum) {
         long __functionAddress = Functions.get_supported_renderers;
-        return invokePB(__functionAddress, (byte)_enum.length, _enum);
+        return invokePB((byte)_enum.length, _enum, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_copy copy} */
@@ -5750,7 +5900,7 @@ public class BGFX {
     @NativeType("bgfx_memory_t const *")
     public static BGFXMemory bgfx_copy(@NativeType("void const *") short[] _data) {
         long __functionAddress = Functions.copy;
-        long __result = invokePP(__functionAddress, _data, _data.length << 1);
+        long __result = invokePP(_data, _data.length << 1, __functionAddress);
         return BGFXMemory.createSafe(__result);
     }
 
@@ -5759,7 +5909,7 @@ public class BGFX {
     @NativeType("bgfx_memory_t const *")
     public static BGFXMemory bgfx_copy(@NativeType("void const *") int[] _data) {
         long __functionAddress = Functions.copy;
-        long __result = invokePP(__functionAddress, _data, _data.length << 2);
+        long __result = invokePP(_data, _data.length << 2, __functionAddress);
         return BGFXMemory.createSafe(__result);
     }
 
@@ -5768,7 +5918,7 @@ public class BGFX {
     @NativeType("bgfx_memory_t const *")
     public static BGFXMemory bgfx_copy(@NativeType("void const *") long[] _data) {
         long __functionAddress = Functions.copy;
-        long __result = invokePP(__functionAddress, _data, _data.length << 3);
+        long __result = invokePP(_data, _data.length << 3, __functionAddress);
         return BGFXMemory.createSafe(__result);
     }
 
@@ -5777,7 +5927,7 @@ public class BGFX {
     @NativeType("bgfx_memory_t const *")
     public static BGFXMemory bgfx_copy(@NativeType("void const *") float[] _data) {
         long __functionAddress = Functions.copy;
-        long __result = invokePP(__functionAddress, _data, _data.length << 2);
+        long __result = invokePP(_data, _data.length << 2, __functionAddress);
         return BGFXMemory.createSafe(__result);
     }
 
@@ -5786,7 +5936,7 @@ public class BGFX {
     @NativeType("bgfx_memory_t const *")
     public static BGFXMemory bgfx_copy(@NativeType("void const *") double[] _data) {
         long __functionAddress = Functions.copy;
-        long __result = invokePP(__functionAddress, _data, _data.length << 3);
+        long __result = invokePP(_data, _data.length << 3, __functionAddress);
         return BGFXMemory.createSafe(__result);
     }
 
@@ -5794,35 +5944,35 @@ public class BGFX {
     @NativeType("uint16_t")
     public static short bgfx_get_shader_uniforms(@NativeType("bgfx_shader_handle_t") short _handle, @NativeType("bgfx_uniform_handle_t *") short[] _uniforms) {
         long __functionAddress = Functions.get_shader_uniforms;
-        return invokePS(__functionAddress, _handle, _uniforms, (short)_uniforms.length);
+        return invokePS(_handle, _uniforms, (short)_uniforms.length, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_read_texture read_texture} */
     @NativeType("uint32_t")
     public static int bgfx_read_texture(@NativeType("bgfx_texture_handle_t") short _handle, @NativeType("void *") short[] _data, @NativeType("uint8_t") int _mip) {
         long __functionAddress = Functions.read_texture;
-        return invokePI(__functionAddress, _handle, _data, (byte)_mip);
+        return invokePI(_handle, _data, (byte)_mip, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_read_texture read_texture} */
     @NativeType("uint32_t")
     public static int bgfx_read_texture(@NativeType("bgfx_texture_handle_t") short _handle, @NativeType("void *") int[] _data, @NativeType("uint8_t") int _mip) {
         long __functionAddress = Functions.read_texture;
-        return invokePI(__functionAddress, _handle, _data, (byte)_mip);
+        return invokePI(_handle, _data, (byte)_mip, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_read_texture read_texture} */
     @NativeType("uint32_t")
     public static int bgfx_read_texture(@NativeType("bgfx_texture_handle_t") short _handle, @NativeType("void *") float[] _data, @NativeType("uint8_t") int _mip) {
         long __functionAddress = Functions.read_texture;
-        return invokePI(__functionAddress, _handle, _data, (byte)_mip);
+        return invokePI(_handle, _data, (byte)_mip, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_create_frame_buffer_from_handles create_frame_buffer_from_handles} */
     @NativeType("bgfx_frame_buffer_handle_t")
     public static short bgfx_create_frame_buffer_from_handles(@NativeType("bgfx_texture_handle_t const *") short[] _handles, @NativeType("bool") boolean _destroyTextures) {
         long __functionAddress = Functions.create_frame_buffer_from_handles;
-        return invokePS(__functionAddress, (byte)_handles.length, _handles, _destroyTextures);
+        return invokePS((byte)_handles.length, _handles, _destroyTextures, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_get_result get_result} */
@@ -5832,7 +5982,7 @@ public class BGFX {
         if (CHECKS) {
             checkSafe(_result, 1);
         }
-        return invokePI(__functionAddress, _handle, _result);
+        return invokePI(_handle, _result, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_set_palette_color set_palette_color} */
@@ -5841,7 +5991,7 @@ public class BGFX {
         if (CHECKS) {
             check(_rgba, 4);
         }
-        invokePV(__functionAddress, (byte)_index, _rgba);
+        invokePV((byte)_index, _rgba, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_set_view_transform set_view_transform} */
@@ -5851,18 +6001,7 @@ public class BGFX {
             checkSafe(_view, 64 >> 2);
             checkSafe(_proj, 64 >> 2);
         }
-        invokePPV(__functionAddress, (short)_id, _view, _proj);
-    }
-
-    /** Array version of: {@link #bgfx_set_view_transform_stereo set_view_transform_stereo} */
-    public static void bgfx_set_view_transform_stereo(@NativeType("bgfx_view_id_t") int _id, @Nullable @NativeType("void const *") float[] _view, @Nullable @NativeType("void const *") float[] _projL, @NativeType("uint8_t") int _flags, @Nullable @NativeType("void const *") float[] _projR) {
-        long __functionAddress = Functions.set_view_transform_stereo;
-        if (CHECKS) {
-            checkSafe(_view, 64 >> 2);
-            checkSafe(_projL, 64 >> 2);
-            checkSafe(_projR, 64 >> 2);
-        }
-        invokePPPV(__functionAddress, (short)_id, _view, _projL, (byte)_flags, _projR);
+        invokePPV((short)_id, _view, _proj, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_set_view_order set_view_order} */
@@ -5871,44 +6010,7 @@ public class BGFX {
         if (CHECKS) {
             checkSafe(_order, _num);
         }
-        invokePV(__functionAddress, (short)_id, (short)_num, _order);
-    }
-
-    /** Array version of: {@link #bgfx_set_transform set_transform} */
-    @NativeType("uint32_t")
-    public static int bgfx_set_transform(@NativeType("void const *") float[] _mtx) {
-        long __functionAddress = Functions.set_transform;
-        return invokePI(__functionAddress, _mtx, (short)(_mtx.length >> 4));
-    }
-
-    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") short[] _value, @NativeType("uint16_t") int _num) {
-        long __functionAddress = Functions.set_uniform;
-        invokePV(__functionAddress, _handle, _value, (short)_num);
-    }
-
-    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") int[] _value, @NativeType("uint16_t") int _num) {
-        long __functionAddress = Functions.set_uniform;
-        invokePV(__functionAddress, _handle, _value, (short)_num);
-    }
-
-    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") long[] _value, @NativeType("uint16_t") int _num) {
-        long __functionAddress = Functions.set_uniform;
-        invokePV(__functionAddress, _handle, _value, (short)_num);
-    }
-
-    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") float[] _value, @NativeType("uint16_t") int _num) {
-        long __functionAddress = Functions.set_uniform;
-        invokePV(__functionAddress, _handle, _value, (short)_num);
-    }
-
-    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
-    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") double[] _value, @NativeType("uint16_t") int _num) {
-        long __functionAddress = Functions.set_uniform;
-        invokePV(__functionAddress, _handle, _value, (short)_num);
+        invokePV((short)_id, (short)_num, _order, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_encoder_set_transform encoder_set_transform} */
@@ -5918,7 +6020,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        return invokePPI(__functionAddress, _encoder, _mtx, (short)(_mtx.length >> 4));
+        return invokePPI(_encoder, _mtx, (short)(_mtx.length >> 4), __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_encoder_set_uniform encoder_set_uniform} */
@@ -5927,7 +6029,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePPV(__functionAddress, _encoder, _handle, _value, (short)_num);
+        invokePPV(_encoder, _handle, _value, (short)_num, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_encoder_set_uniform encoder_set_uniform} */
@@ -5936,7 +6038,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePPV(__functionAddress, _encoder, _handle, _value, (short)_num);
+        invokePPV(_encoder, _handle, _value, (short)_num, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_encoder_set_uniform encoder_set_uniform} */
@@ -5945,7 +6047,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePPV(__functionAddress, _encoder, _handle, _value, (short)_num);
+        invokePPV(_encoder, _handle, _value, (short)_num, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_encoder_set_uniform encoder_set_uniform} */
@@ -5954,7 +6056,7 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePPV(__functionAddress, _encoder, _handle, _value, (short)_num);
+        invokePPV(_encoder, _handle, _value, (short)_num, __functionAddress);
     }
 
     /** Array version of: {@link #bgfx_encoder_set_uniform encoder_set_uniform} */
@@ -5963,7 +6065,44 @@ public class BGFX {
         if (CHECKS) {
             check(_encoder);
         }
-        invokePPV(__functionAddress, _encoder, _handle, _value, (short)_num);
+        invokePPV(_encoder, _handle, _value, (short)_num, __functionAddress);
+    }
+
+    /** Array version of: {@link #bgfx_set_transform set_transform} */
+    @NativeType("uint32_t")
+    public static int bgfx_set_transform(@NativeType("void const *") float[] _mtx) {
+        long __functionAddress = Functions.set_transform;
+        return invokePI(_mtx, (short)(_mtx.length >> 4), __functionAddress);
+    }
+
+    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") short[] _value, @NativeType("uint16_t") int _num) {
+        long __functionAddress = Functions.set_uniform;
+        invokePV(_handle, _value, (short)_num, __functionAddress);
+    }
+
+    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") int[] _value, @NativeType("uint16_t") int _num) {
+        long __functionAddress = Functions.set_uniform;
+        invokePV(_handle, _value, (short)_num, __functionAddress);
+    }
+
+    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") long[] _value, @NativeType("uint16_t") int _num) {
+        long __functionAddress = Functions.set_uniform;
+        invokePV(_handle, _value, (short)_num, __functionAddress);
+    }
+
+    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") float[] _value, @NativeType("uint16_t") int _num) {
+        long __functionAddress = Functions.set_uniform;
+        invokePV(_handle, _value, (short)_num, __functionAddress);
+    }
+
+    /** Array version of: {@link #bgfx_set_uniform set_uniform} */
+    public static void bgfx_set_uniform(@NativeType("bgfx_uniform_handle_t") short _handle, @NativeType("void const *") double[] _value, @NativeType("uint16_t") int _num) {
+        long __functionAddress = Functions.set_uniform;
+        invokePV(_handle, _value, (short)_num, __functionAddress);
     }
 
 }

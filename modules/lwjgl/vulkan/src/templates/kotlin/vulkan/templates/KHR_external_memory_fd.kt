@@ -86,13 +86,13 @@ val KHR_external_memory_fd = "KHRExternalMemoryFd".nativeClassVK("KHR_external_m
 ￿    int*                                        pFd);</code></pre>
 
         <h5>Description</h5>
-        Each call to #GetMemoryFdKHR() <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor using the {@code close} system call when it is no longer needed, or by importing a Vulkan memory object from it. Where supported by the operating system, the implementation <b>must</b> set the file descriptor to be closed automatically when an {@code execve} system call is made.
+        Each call to {@code vkGetMemoryFdKHR} <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor using the {@code close} system call when it is no longer needed, or by importing a Vulkan memory object from it. Where supported by the operating system, the implementation <b>must</b> set the file descriptor to be closed automatically when an {@code execve} system call is made.
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
             <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
             <li>{@code pGetFdInfo} <b>must</b> be a valid pointer to a valid ##VkMemoryGetFdInfoKHR structure</li>
-            <li>{@code pFd} <b>must</b> be a valid pointer to a {@code int} value</li>
+            <li>{@code pFd} <b>must</b> be a valid pointer to an {@code int} value</li>
         </ul>
 
         <h5>Return Codes</h5>
@@ -113,9 +113,9 @@ val KHR_external_memory_fd = "KHRExternalMemoryFd".nativeClassVK("KHR_external_m
         ##VkMemoryGetFdInfoKHR
         """,
 
-        VkDevice.IN("device", "the logical device that created the device memory being exported."),
-        VkMemoryGetFdInfoKHR.const.p.IN("pGetFdInfo", "a pointer to an instance of the ##VkMemoryGetFdInfoKHR structure containing parameters of the export operation."),
-        Check(1)..int.p.OUT("pFd", "will return a file descriptor representing the underlying resources of the device memory object.")
+        VkDevice("device", "the logical device that created the device memory being exported."),
+        VkMemoryGetFdInfoKHR.const.p("pGetFdInfo", "a pointer to an instance of the ##VkMemoryGetFdInfoKHR structure containing parameters of the export operation."),
+        Check(1)..int.p("pFd", "will return a file descriptor representing the underlying resources of the device memory object.")
     )
 
     VkResult(
@@ -163,9 +163,9 @@ val KHR_external_memory_fd = "KHRExternalMemoryFd".nativeClassVK("KHR_external_m
         ##VkMemoryFdPropertiesKHR
         """,
 
-        VkDevice.IN("device", "the logical device that will be importing {@code fd}."),
-        VkExternalMemoryHandleTypeFlagBits.IN("handleType", "the type of the handle {@code fd}."),
-        int.IN("fd", "the handle which will be imported."),
-        VkMemoryFdPropertiesKHR.p.OUT("pMemoryFdProperties", "will return properties of the handle {@code fd}.")
+        VkDevice("device", "the logical device that will be importing {@code fd}."),
+        VkExternalMemoryHandleTypeFlagBits("handleType", "the type of the handle {@code fd}."),
+        int("fd", "the handle which will be imported."),
+        VkMemoryFdPropertiesKHR.p("pMemoryFdProperties", "a pointer to a ##VkMemoryFdPropertiesKHR structure in which the properties of the handle {@code fd} are returned.")
     )
 }

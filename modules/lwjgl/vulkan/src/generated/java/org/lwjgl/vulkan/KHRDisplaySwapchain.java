@@ -94,7 +94,7 @@ public class KHRDisplaySwapchain {
             VkSwapchainCreateInfoKHR.validate(pCreateInfos, swapchainCount);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, device.address(), swapchainCount, pCreateInfos, pAllocator, pSwapchains);
+        return callPPPPI(device.address(), swapchainCount, pCreateInfos, pAllocator, pSwapchains, __functionAddress);
     }
 
     /**
@@ -114,7 +114,7 @@ public class KHRDisplaySwapchain {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkCreateSharedSwapchainsKHR CreateSharedSwapchainsKHR} is similar to {@link KHRSwapchain#vkCreateSwapchainKHR CreateSwapchainKHR}, except that it takes an array of {@link VkSwapchainCreateInfoKHR} structures, and returns an array of swapchain objects.</p>
+     * <p>{@code vkCreateSharedSwapchainsKHR} is similar to {@link KHRSwapchain#vkCreateSwapchainKHR CreateSwapchainKHR}, except that it takes an array of {@link VkSwapchainCreateInfoKHR} structures, and returns an array of swapchain objects.</p>
      * 
      * <p>The swapchain creation parameters that affect the properties and number of presentable images <b>must</b> match between all the swapchains. If the displays used by any of the swapchains do not use the same presentable image layout or are incompatible in a way that prevents sharing images, swapchain creation will fail with the result code {@link #VK_ERROR_INCOMPATIBLE_DISPLAY_KHR ERROR_INCOMPATIBLE_DISPLAY_KHR}. If any error occurs, no swapchains will be created. Images presented to multiple swapchains <b>must</b> be re-acquired from all of them before transitioning away from {@link KHRSwapchain#VK_IMAGE_LAYOUT_PRESENT_SRC_KHR IMAGE_LAYOUT_PRESENT_SRC_KHR}. After destroying one or more of the swapchains, the remaining swapchains and the presentable images <b>can</b> continue to be used.</p>
      * 
@@ -158,7 +158,7 @@ public class KHRDisplaySwapchain {
      *
      * @param device       the device to create the swapchains for.
      * @param pCreateInfos a pointer to an array of {@link VkSwapchainCreateInfoKHR} structures specifying the parameters of the created swapchains.
-     * @param pAllocator   the allocator used for host memory allocated for the swapchain objects when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
+     * @param pAllocator   the allocator used for host memory allocated for the swapchain objects when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
      * @param pSwapchains  a pointer to an array of {@code VkSwapchainKHR} handles in which the created swapchain objects will be returned.
      */
     @NativeType("VkResult")
@@ -179,7 +179,7 @@ public class KHRDisplaySwapchain {
             VkSwapchainCreateInfoKHR.validate(pCreateInfos.address(), pCreateInfos.remaining());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfos.remaining(), pCreateInfos.address(), memAddressSafe(pAllocator), pSwapchains);
+        return callPPPPI(device.address(), pCreateInfos.remaining(), pCreateInfos.address(), memAddressSafe(pAllocator), pSwapchains, __functionAddress);
     }
 
 }

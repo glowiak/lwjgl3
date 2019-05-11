@@ -9,7 +9,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
-import org.lwjgl.system.windows.*;
 
 import java.io.*;
 import java.nio.*;
@@ -24,7 +23,6 @@ import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.APIUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.windows.User32.*;
 
 /** GLFW events demo. */
 public final class Events {
@@ -76,14 +74,6 @@ public final class Events {
     }
 
     private static void demo() {
-        if (Platform.get() == Platform.WINDOWS) {
-            if (User32.Functions.SetThreadDpiAwarenessContext != NULL) {
-                SetThreadDpiAwarenessContext(IsValidDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2)
-                    ? DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
-                    : DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
-            }
-        }
-
         int WIDTH  = 640;
         int HEIGHT = 480;
 
@@ -115,11 +105,6 @@ public final class Events {
                 float xscale = px.get(0);
                 float yscale = py.get(0);
 
-                if (primaryMonitor == monitor && Platform.get() != Platform.MACOSX) {
-                    WIDTH = round(WIDTH * xscale);
-                    HEIGHT = round(HEIGHT * yscale);
-                }
-
                 double MM_TO_INCH = 0.0393701;
 
                 GLFWVidMode mode = Objects.requireNonNull(glfwGetVideoMode(monitor));
@@ -144,6 +129,10 @@ public final class Events {
 
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+        if (Platform.get() == Platform.MACOSX) {
+            glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+        }
 
         long window = glfwCreateWindow(WIDTH, HEIGHT, "GLFW Event Demo", NULL, NULL);
         if (window == NULL) {
@@ -172,14 +161,15 @@ public final class Events {
             System.out.format("\tPosition: %d, %d%n%n", pi.get(0), pj.get(0));
         }
 
-        IntBuffer w    = memAllocInt(1);
-        IntBuffer h    = memAllocInt(1);
-        IntBuffer comp = memAllocInt(1);
-
         long cursor;
 
-        // Cursor
-        {
+        try (MemoryStack s = stackPush()) {
+            IntBuffer w    = s.mallocInt(1);
+            IntBuffer h    = s.mallocInt(1);
+            IntBuffer comp = s.mallocInt(1);
+
+            // Cursor
+
             ByteBuffer png;
             try {
                 png = ioResourceToByteBuffer("demo/cursor.png", 1024);
@@ -188,16 +178,19 @@ public final class Events {
             }
 
             ByteBuffer pixels = Objects.requireNonNull(stbi_load_from_memory(png, w, h, comp, 0));
-            try (GLFWImage img = GLFWImage.malloc().set(w.get(0), h.get(0), pixels)) {
+            try {
+                GLFWImage img = GLFWImage.mallocStack(s)
+                    .width(w.get(0))
+                    .height(h.get(0))
+                    .pixels(pixels);
                 cursor = glfwCreateCursor(img, 0, 8);
                 glfwSetCursor(window, cursor);
             } finally {
                 stbi_image_free(pixels);
             }
-        }
 
-        // Icons
-        {
+            // Icons
+
             ByteBuffer icon16;
             ByteBuffer icon32;
             try {
@@ -207,32 +200,27 @@ public final class Events {
                 throw new RuntimeException(e);
             }
 
-            try (GLFWImage.Buffer icons = GLFWImage.malloc(2)) {
-                ByteBuffer pixels16 = Objects.requireNonNull(stbi_load_from_memory(icon16, w, h, comp, 4));
-                icons
-                    .position(0)
-                    .width(w.get(0))
-                    .height(h.get(0))
-                    .pixels(pixels16);
+            GLFWImage.Buffer icons = GLFWImage.mallocStack(2, s);
 
-                ByteBuffer pixels32 = Objects.requireNonNull(stbi_load_from_memory(icon32, w, h, comp, 4));
-                icons
-                    .position(1)
-                    .width(w.get(0))
-                    .height(h.get(0))
-                    .pixels(pixels32);
+            ByteBuffer pixels16 = Objects.requireNonNull(stbi_load_from_memory(icon16, w, h, comp, 4));
+            icons
+                .get(0)
+                .width(w.get(0))
+                .height(h.get(0))
+                .pixels(pixels16);
 
-                icons.position(0);
-                glfwSetWindowIcon(window, icons);
+            ByteBuffer pixels32 = Objects.requireNonNull(stbi_load_from_memory(icon32, w, h, comp, 4));
+            icons
+                .get(1)
+                .width(w.get(0))
+                .height(h.get(0))
+                .pixels(pixels32);
 
-                stbi_image_free(pixels32);
-                stbi_image_free(pixels16);
-            }
+            glfwSetWindowIcon(window, icons);
+
+            stbi_image_free(pixels32);
+            stbi_image_free(pixels16);
         }
-
-        memFree(comp);
-        memFree(h);
-        memFree(w);
 
         glfwSetMonitorCallback((monitor, event) -> printEvent("Monitor", "%s", monitor, event == GLFW_CONNECTED ? "connected" : "disconnected"));
         glfwSetJoystickCallback((joy, event) -> printEvent("Joystick", "%s %s", joy, glfwGetJoystickName(joy), event == GLFW_CONNECTED
@@ -247,7 +235,7 @@ public final class Events {
         glfwSetWindowFocusCallback(window, (windowHnd, focused) -> printEvent(focused ? "gained focus" : "lost focus", windowHnd));
         glfwSetWindowIconifyCallback(window, (windowHnd, iconified) -> printEvent(iconified ? "iconified" : "restored", windowHnd));
         glfwSetWindowMaximizeCallback(window, (windowHnd, maximized) -> printEvent(maximized ? "maximized" : "restored", windowHnd));
-        glfwSetWindowContentScaleCallback(window, (windowHnd, xscale, yscale) -> printEvent("content scale changed to %d x %d", windowHnd, xscale, yscale));
+        glfwSetWindowContentScaleCallback(window, (windowHnd, xscale, yscale) -> printEvent("content scale changed to %f x %f", windowHnd, xscale, yscale));
 
         glfwSetFramebufferSizeCallback(window, (windowHnd, width, height) -> printEvent("framebuffer resized to %d x %d", windowHnd, width, height));
 

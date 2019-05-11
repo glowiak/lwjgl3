@@ -11,7 +11,7 @@ import vulkan.*
 val KHR_get_physical_device_properties2 = "KHRGetPhysicalDeviceProperties2".nativeClassVK("KHR_get_physical_device_properties2", type = "instance", postfix = KHR) {
     documentation =
         """
-        This extension provides new entry points to query device features, device properties, and format properties in a way that can be easily extended by other extensions, without introducing any further entry points. The Vulkan 1.0 feature/limit/formatproperty structures do not include {@code sType}/{@code pNext} members. This extension wraps them in new structures with {@code sType}/{@code pNext} members, so an application can query a chain of feature/limit/formatproperty structures by constructing the chain and letting the implementation fill them in. A new command is added for each ftext:vkGetPhysicalDevice* command in core Vulkan 1.0. The new feature structure (and a chain of extension structures) can also be passed in to device creation to enable features.
+        This extension provides new entry points to query device features, device properties, and format properties in a way that can be easily extended by other extensions, without introducing any further entry points. The Vulkan 1.0 feature/limit/formatproperty structures do not include {@code sType}/{@code pNext} members. This extension wraps them in new structures with {@code sType}/{@code pNext} members, so an application can query a chain of feature/limit/formatproperty structures by constructing the chain and letting the implementation fill them in. A new command is added for each {@code vkGetPhysicalDevice*} command in core Vulkan 1.0. The new feature structure (and a chain of extension structures) can also be passed in to device creation to enable features.
 
         This extension also allows applications to use the physical-device components of device extensions before #CreateDevice() is called.
 
@@ -85,7 +85,7 @@ val KHR_get_physical_device_properties2 = "KHRGetPhysicalDeviceProperties2".nati
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -142,60 +142,60 @@ val KHR_get_physical_device_properties2 = "KHRGetPhysicalDeviceProperties2".nati
         "GetPhysicalDeviceFeatures2KHR",
         "See #GetPhysicalDeviceFeatures2().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device from which to query the supported features."),
-        VkPhysicalDeviceFeatures2.p.OUT("pFeatures", "a pointer to a ##VkPhysicalDeviceFeatures2 structure in which the physical device features are returned.")
+        VkPhysicalDevice("physicalDevice", "the physical device from which to query the supported features."),
+        VkPhysicalDeviceFeatures2.p("pFeatures", "a pointer to a ##VkPhysicalDeviceFeatures2 structure in which the physical device features are returned.")
     )
 
     void(
         "GetPhysicalDeviceProperties2KHR",
         "See #GetPhysicalDeviceProperties2().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the handle to the physical device whose properties will be queried."),
-        VkPhysicalDeviceProperties2.p.OUT("pProperties", "points to an instance of the ##VkPhysicalDeviceProperties2 structure, that will be filled with returned information.")
+        VkPhysicalDevice("physicalDevice", "the handle to the physical device whose properties will be queried."),
+        VkPhysicalDeviceProperties2.p("pProperties", "points to an instance of the ##VkPhysicalDeviceProperties2 structure, that will be filled with returned information.")
     )
 
     void(
         "GetPhysicalDeviceFormatProperties2KHR",
         "See #GetPhysicalDeviceFormatProperties2().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device from which to query the format properties."),
-        VkFormat.IN("format", "the format whose properties are queried."),
-        VkFormatProperties2.p.OUT("pFormatProperties", "a pointer to a ##VkFormatProperties2 structure in which physical device properties for {@code format} are returned.")
+        VkPhysicalDevice("physicalDevice", "the physical device from which to query the format properties."),
+        VkFormat("format", "the format whose properties are queried."),
+        VkFormatProperties2.p("pFormatProperties", "a pointer to a ##VkFormatProperties2 structure in which physical device properties for {@code format} are returned.")
     )
 
     VkResult(
         "GetPhysicalDeviceImageFormatProperties2KHR",
         "See #GetPhysicalDeviceImageFormatProperties2().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device from which to query the image capabilities."),
-        VkPhysicalDeviceImageFormatInfo2.const.p.IN("pImageFormatInfo", "points to an instance of the ##VkPhysicalDeviceImageFormatInfo2 structure, describing the parameters that would be consumed by #CreateImage()."),
-        VkImageFormatProperties2.p.OUT("pImageFormatProperties", "points to an instance of the ##VkImageFormatProperties2 structure in which capabilities are returned.")
+        VkPhysicalDevice("physicalDevice", "the physical device from which to query the image capabilities."),
+        VkPhysicalDeviceImageFormatInfo2.const.p("pImageFormatInfo", "points to an instance of the ##VkPhysicalDeviceImageFormatInfo2 structure, describing the parameters that would be consumed by #CreateImage()."),
+        VkImageFormatProperties2.p("pImageFormatProperties", "points to an instance of the ##VkImageFormatProperties2 structure in which capabilities are returned.")
     )
 
     void(
         "GetPhysicalDeviceQueueFamilyProperties2KHR",
         "See #GetPhysicalDeviceQueueFamilyProperties2().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the handle to the physical device whose properties will be queried."),
-        AutoSize("pQueueFamilyProperties")..Check(1)..uint32_t.p.INOUT("pQueueFamilyPropertyCount", "a pointer to an integer related to the number of queue families available or queried, as described in #GetPhysicalDeviceQueueFamilyProperties()."),
-        nullable..VkQueueFamilyProperties2.p.OUT("pQueueFamilyProperties", "either {@code NULL} or a pointer to an array of ##VkQueueFamilyProperties2 structures.")
+        VkPhysicalDevice("physicalDevice", "the handle to the physical device whose properties will be queried."),
+        AutoSize("pQueueFamilyProperties")..Check(1)..uint32_t.p("pQueueFamilyPropertyCount", "a pointer to an integer related to the number of queue families available or queried, as described in #GetPhysicalDeviceQueueFamilyProperties()."),
+        nullable..VkQueueFamilyProperties2.p("pQueueFamilyProperties", "either {@code NULL} or a pointer to an array of ##VkQueueFamilyProperties2 structures.")
     )
 
     void(
         "GetPhysicalDeviceMemoryProperties2KHR",
         "See #GetPhysicalDeviceMemoryProperties2().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the handle to the device to query."),
-        VkPhysicalDeviceMemoryProperties2.p.OUT("pMemoryProperties", "points to an instance of ##VkPhysicalDeviceMemoryProperties2 structure in which the properties are returned.")
+        VkPhysicalDevice("physicalDevice", "the handle to the device to query."),
+        VkPhysicalDeviceMemoryProperties2.p("pMemoryProperties", "points to an instance of ##VkPhysicalDeviceMemoryProperties2 structure in which the properties are returned.")
     )
 
     void(
         "GetPhysicalDeviceSparseImageFormatProperties2KHR",
         "See #GetPhysicalDeviceSparseImageFormatProperties2().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device from which to query the sparse image capabilities."),
-        VkPhysicalDeviceSparseImageFormatInfo2.const.p.IN("pFormatInfo", "a pointer to a structure of type ##VkPhysicalDeviceSparseImageFormatInfo2 containing input parameters to the command."),
-        AutoSize("pProperties")..Check(1)..uint32_t.p.INOUT("pPropertyCount", "a pointer to an integer related to the number of sparse format properties available or queried, as described below."),
-        nullable..VkSparseImageFormatProperties2.p.OUT("pProperties", "either {@code NULL} or a pointer to an array of ##VkSparseImageFormatProperties2 structures.")
+        VkPhysicalDevice("physicalDevice", "the physical device from which to query the sparse image capabilities."),
+        VkPhysicalDeviceSparseImageFormatInfo2.const.p("pFormatInfo", "a pointer to a structure of type ##VkPhysicalDeviceSparseImageFormatInfo2 containing input parameters to the command."),
+        AutoSize("pProperties")..Check(1)..uint32_t.p("pPropertyCount", "a pointer to an integer related to the number of sparse format properties available or queried, as described below."),
+        nullable..VkSparseImageFormatProperties2.p("pProperties", "either {@code NULL} or a pointer to an array of ##VkSparseImageFormatProperties2 structures.")
     )
 }

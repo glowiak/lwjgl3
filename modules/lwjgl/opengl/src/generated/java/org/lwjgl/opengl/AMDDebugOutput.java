@@ -166,7 +166,7 @@ public class AMDDebugOutput {
      * @param severity the message severity. One of:<br><table><tr><td>{@link #GL_DEBUG_SEVERITY_HIGH_AMD DEBUG_SEVERITY_HIGH_AMD}</td><td>{@link #GL_DEBUG_SEVERITY_MEDIUM_AMD DEBUG_SEVERITY_MEDIUM_AMD}</td><td>{@link #GL_DEBUG_SEVERITY_LOW_AMD DEBUG_SEVERITY_LOW_AMD}</td></tr></table>
      * @param enabled  whether to enable or disable the referenced subset of messages
      */
-    public static void glDebugMessageEnableAMD(@NativeType("GLenum") int category, @NativeType("GLenum") int severity, @Nullable @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
+    public static void glDebugMessageEnableAMD(@NativeType("GLenum") int category, @NativeType("GLenum") int severity, @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer ids = stack.ints(id);
@@ -224,8 +224,9 @@ public class AMDDebugOutput {
     public static void glDebugMessageInsertAMD(@NativeType("GLenum") int category, @NativeType("GLenum") int severity, @NativeType("GLuint") int id, @NativeType("GLchar const *") CharSequence buf) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer bufEncoded = stack.UTF8(buf, false);
-            nglDebugMessageInsertAMD(category, severity, id, bufEncoded.remaining(), memAddress(bufEncoded));
+            int bufEncodedLength = stack.nUTF8(buf, false);
+            long bufEncoded = stack.getPointerAddress();
+            nglDebugMessageInsertAMD(category, severity, id, bufEncodedLength, bufEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -317,7 +318,7 @@ public class AMDDebugOutput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, category, severity, lengthSafe(ids), ids, enabled);
+        callPV(category, severity, lengthSafe(ids), ids, enabled, __functionAddress);
     }
 
     /** Array version of: {@link #glGetDebugMessageLogAMD GetDebugMessageLogAMD} */
@@ -331,7 +332,7 @@ public class AMDDebugOutput {
             checkSafe(ids, count);
             checkSafe(lengths, count);
         }
-        return callPPPPPI(__functionAddress, count, remainingSafe(messageLog), categories, severities, ids, lengths, memAddressSafe(messageLog));
+        return callPPPPPI(count, remainingSafe(messageLog), categories, severities, ids, lengths, memAddressSafe(messageLog), __functionAddress);
     }
 
 }

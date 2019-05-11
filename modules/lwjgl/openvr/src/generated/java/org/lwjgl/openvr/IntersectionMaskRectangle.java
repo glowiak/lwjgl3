@@ -59,18 +59,14 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
         M_FLHEIGHT = layout.offsetof(3);
     }
 
-    IntersectionMaskRectangle(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link IntersectionMaskRectangle} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code IntersectionMaskRectangle} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public IntersectionMaskRectangle(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -123,30 +119,31 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
 
     // -----------------------------------
 
-    /** Returns a new {@link IntersectionMaskRectangle} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code IntersectionMaskRectangle} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static IntersectionMaskRectangle malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(IntersectionMaskRectangle.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link IntersectionMaskRectangle} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code IntersectionMaskRectangle} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static IntersectionMaskRectangle calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(IntersectionMaskRectangle.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link IntersectionMaskRectangle} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code IntersectionMaskRectangle} instance allocated with {@link BufferUtils}. */
     public static IntersectionMaskRectangle create() {
-        return new IntersectionMaskRectangle(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(IntersectionMaskRectangle.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link IntersectionMaskRectangle} instance for the specified memory address. */
+    /** Returns a new {@code IntersectionMaskRectangle} instance for the specified memory address. */
     public static IntersectionMaskRectangle create(long address) {
-        return new IntersectionMaskRectangle(address, null);
+        return wrap(IntersectionMaskRectangle.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static IntersectionMaskRectangle createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(IntersectionMaskRectangle.class, address);
     }
 
     /**
@@ -155,7 +152,7 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static IntersectionMaskRectangle.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -164,7 +161,7 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static IntersectionMaskRectangle.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -173,7 +170,8 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static IntersectionMaskRectangle.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -183,43 +181,43 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static IntersectionMaskRectangle.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static IntersectionMaskRectangle.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link IntersectionMaskRectangle} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code IntersectionMaskRectangle} instance allocated on the thread-local {@link MemoryStack}. */
     public static IntersectionMaskRectangle mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link IntersectionMaskRectangle} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code IntersectionMaskRectangle} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static IntersectionMaskRectangle callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link IntersectionMaskRectangle} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code IntersectionMaskRectangle} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static IntersectionMaskRectangle mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(IntersectionMaskRectangle.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link IntersectionMaskRectangle} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code IntersectionMaskRectangle} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static IntersectionMaskRectangle callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(IntersectionMaskRectangle.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -247,7 +245,7 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static IntersectionMaskRectangle.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -257,36 +255,38 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
      * @param capacity the buffer capacity
      */
     public static IntersectionMaskRectangle.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #m_flTopLeftX}. */
-    public static float nm_flTopLeftX(long struct) { return memGetFloat(struct + IntersectionMaskRectangle.M_FLTOPLEFTX); }
+    public static float nm_flTopLeftX(long struct) { return UNSAFE.getFloat(null, struct + IntersectionMaskRectangle.M_FLTOPLEFTX); }
     /** Unsafe version of {@link #m_flTopLeftY}. */
-    public static float nm_flTopLeftY(long struct) { return memGetFloat(struct + IntersectionMaskRectangle.M_FLTOPLEFTY); }
+    public static float nm_flTopLeftY(long struct) { return UNSAFE.getFloat(null, struct + IntersectionMaskRectangle.M_FLTOPLEFTY); }
     /** Unsafe version of {@link #m_flWidth}. */
-    public static float nm_flWidth(long struct) { return memGetFloat(struct + IntersectionMaskRectangle.M_FLWIDTH); }
+    public static float nm_flWidth(long struct) { return UNSAFE.getFloat(null, struct + IntersectionMaskRectangle.M_FLWIDTH); }
     /** Unsafe version of {@link #m_flHeight}. */
-    public static float nm_flHeight(long struct) { return memGetFloat(struct + IntersectionMaskRectangle.M_FLHEIGHT); }
+    public static float nm_flHeight(long struct) { return UNSAFE.getFloat(null, struct + IntersectionMaskRectangle.M_FLHEIGHT); }
 
     /** Unsafe version of {@link #m_flTopLeftX(float) m_flTopLeftX}. */
-    public static void nm_flTopLeftX(long struct, float value) { memPutFloat(struct + IntersectionMaskRectangle.M_FLTOPLEFTX, value); }
+    public static void nm_flTopLeftX(long struct, float value) { UNSAFE.putFloat(null, struct + IntersectionMaskRectangle.M_FLTOPLEFTX, value); }
     /** Unsafe version of {@link #m_flTopLeftY(float) m_flTopLeftY}. */
-    public static void nm_flTopLeftY(long struct, float value) { memPutFloat(struct + IntersectionMaskRectangle.M_FLTOPLEFTY, value); }
+    public static void nm_flTopLeftY(long struct, float value) { UNSAFE.putFloat(null, struct + IntersectionMaskRectangle.M_FLTOPLEFTY, value); }
     /** Unsafe version of {@link #m_flWidth(float) m_flWidth}. */
-    public static void nm_flWidth(long struct, float value) { memPutFloat(struct + IntersectionMaskRectangle.M_FLWIDTH, value); }
+    public static void nm_flWidth(long struct, float value) { UNSAFE.putFloat(null, struct + IntersectionMaskRectangle.M_FLWIDTH, value); }
     /** Unsafe version of {@link #m_flHeight(float) m_flHeight}. */
-    public static void nm_flHeight(long struct, float value) { memPutFloat(struct + IntersectionMaskRectangle.M_FLHEIGHT, value); }
+    public static void nm_flHeight(long struct, float value) { UNSAFE.putFloat(null, struct + IntersectionMaskRectangle.M_FLHEIGHT, value); }
 
     // -----------------------------------
 
     /** An array of {@link IntersectionMaskRectangle} structs. */
     public static class Buffer extends StructBuffer<IntersectionMaskRectangle, Buffer> implements NativeResource {
 
+        private static final IntersectionMaskRectangle ELEMENT_FACTORY = IntersectionMaskRectangle.create(-1L);
+
         /**
-         * Creates a new {@link IntersectionMaskRectangle.Buffer} instance backed by the specified container.
+         * Creates a new {@code IntersectionMaskRectangle.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -312,18 +312,8 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected IntersectionMaskRectangle newInstance(long address) {
-            return new IntersectionMaskRectangle(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected IntersectionMaskRectangle getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code m_flTopLeftX} field. */

@@ -63,18 +63,14 @@ public class GLFWGamepadState extends Struct implements NativeResource {
         AXES = layout.offsetof(1);
     }
 
-    GLFWGamepadState(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link GLFWGamepadState} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code GLFWGamepadState} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public GLFWGamepadState(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -126,30 +122,31 @@ public class GLFWGamepadState extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link GLFWGamepadState} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code GLFWGamepadState} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static GLFWGamepadState malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(GLFWGamepadState.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link GLFWGamepadState} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code GLFWGamepadState} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static GLFWGamepadState calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(GLFWGamepadState.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link GLFWGamepadState} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code GLFWGamepadState} instance allocated with {@link BufferUtils}. */
     public static GLFWGamepadState create() {
-        return new GLFWGamepadState(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(GLFWGamepadState.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link GLFWGamepadState} instance for the specified memory address. */
+    /** Returns a new {@code GLFWGamepadState} instance for the specified memory address. */
     public static GLFWGamepadState create(long address) {
-        return new GLFWGamepadState(address, null);
+        return wrap(GLFWGamepadState.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static GLFWGamepadState createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(GLFWGamepadState.class, address);
     }
 
     /**
@@ -158,7 +155,7 @@ public class GLFWGamepadState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static GLFWGamepadState.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -167,7 +164,7 @@ public class GLFWGamepadState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static GLFWGamepadState.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -176,7 +173,8 @@ public class GLFWGamepadState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static GLFWGamepadState.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -186,43 +184,43 @@ public class GLFWGamepadState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static GLFWGamepadState.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static GLFWGamepadState.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link GLFWGamepadState} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code GLFWGamepadState} instance allocated on the thread-local {@link MemoryStack}. */
     public static GLFWGamepadState mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link GLFWGamepadState} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code GLFWGamepadState} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static GLFWGamepadState callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link GLFWGamepadState} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code GLFWGamepadState} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static GLFWGamepadState mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(GLFWGamepadState.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link GLFWGamepadState} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code GLFWGamepadState} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static GLFWGamepadState callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(GLFWGamepadState.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -250,7 +248,7 @@ public class GLFWGamepadState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static GLFWGamepadState.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -260,7 +258,7 @@ public class GLFWGamepadState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static GLFWGamepadState.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -269,13 +267,13 @@ public class GLFWGamepadState extends Struct implements NativeResource {
     public static ByteBuffer nbuttons(long struct) { return memByteBuffer(struct + GLFWGamepadState.BUTTONS, 15); }
     /** Unsafe version of {@link #buttons(int) buttons}. */
     public static byte nbuttons(long struct, int index) {
-        return memGetByte(struct + GLFWGamepadState.BUTTONS + check(index, 15) * 1);
+        return UNSAFE.getByte(null, struct + GLFWGamepadState.BUTTONS + check(index, 15) * 1);
     }
     /** Unsafe version of {@link #axes}. */
     public static FloatBuffer naxes(long struct) { return memFloatBuffer(struct + GLFWGamepadState.AXES, 6); }
     /** Unsafe version of {@link #axes(int) axes}. */
     public static float naxes(long struct, int index) {
-        return memGetFloat(struct + GLFWGamepadState.AXES + check(index, 6) * 4);
+        return UNSAFE.getFloat(null, struct + GLFWGamepadState.AXES + check(index, 6) * 4);
     }
 
     /** Unsafe version of {@link #buttons(ByteBuffer) buttons}. */
@@ -285,7 +283,7 @@ public class GLFWGamepadState extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #buttons(int, byte) buttons}. */
     public static void nbuttons(long struct, int index, byte value) {
-        memPutByte(struct + GLFWGamepadState.BUTTONS + check(index, 15) * 1, value);
+        UNSAFE.putByte(null, struct + GLFWGamepadState.BUTTONS + check(index, 15) * 1, value);
     }
     /** Unsafe version of {@link #axes(FloatBuffer) axes}. */
     public static void naxes(long struct, FloatBuffer value) {
@@ -294,7 +292,7 @@ public class GLFWGamepadState extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #axes(int, float) axes}. */
     public static void naxes(long struct, int index, float value) {
-        memPutFloat(struct + GLFWGamepadState.AXES + check(index, 6) * 4, value);
+        UNSAFE.putFloat(null, struct + GLFWGamepadState.AXES + check(index, 6) * 4, value);
     }
 
     // -----------------------------------
@@ -302,8 +300,10 @@ public class GLFWGamepadState extends Struct implements NativeResource {
     /** An array of {@link GLFWGamepadState} structs. */
     public static class Buffer extends StructBuffer<GLFWGamepadState, Buffer> implements NativeResource {
 
+        private static final GLFWGamepadState ELEMENT_FACTORY = GLFWGamepadState.create(-1L);
+
         /**
-         * Creates a new {@link GLFWGamepadState.Buffer} instance backed by the specified container.
+         * Creates a new {@code GLFWGamepadState.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -329,18 +329,8 @@ public class GLFWGamepadState extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected GLFWGamepadState newInstance(long address) {
-            return new GLFWGamepadState(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected GLFWGamepadState getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link ByteBuffer} view of the {@code buttons} field. */

@@ -205,7 +205,7 @@ public class KHRSwapchain {
             VkSwapchainCreateInfoKHR.validate(pCreateInfo);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo, pAllocator, pSwapchain);
+        return callPPPPI(device.address(), pCreateInfo, pAllocator, pSwapchain, __functionAddress);
     }
 
     /**
@@ -221,6 +221,22 @@ public class KHRSwapchain {
      *     const VkSwapchainCreateInfoKHR*             pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
      *     VkSwapchainKHR*                             pSwapchain);</code></pre>
+     * 
+     * <h5>Description</h5>
+     * 
+     * <p>If the {@code oldSwapchain} parameter of {@code pCreateInfo} is a valid swapchain, which has exclusive full-screen access, that access is released from {@code oldSwapchain}. If the command succeeds in this case, the newly created swapchain will automatically acquire exclusive full-screen access from {@code oldSwapchain}.</p>
+     * 
+     * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
+     * 
+     * <p>This implicit transfer is intended to avoid exiting and entering full-screen exclusive mode, which may otherwise cause unwanted visual updates to the display.</p>
+     * </div>
+     * 
+     * <p>In some cases, swapchain creation <b>may</b> fail if exclusive full-screen mode is requested for application control, but for some implementation-specific reason exclusive full-screen access is unavailable for the particular combination of parameters provided. If this occurs, {@link VK10#VK_ERROR_INITIALIZATION_FAILED ERROR_INITIALIZATION_FAILED} will be returned.</p>
+     * 
+     * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
+     * 
+     * <p>In particular, it will fail if the {@code imageExtent} member of {@code pCreateInfo} does not match the extents of the monitor. Other reasons for failure may include the app not being set as high-dpi aware, or if the physical device and monitor are not compatible in this mode.</p>
+     * </div>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -252,6 +268,7 @@ public class KHRSwapchain {
      * <li>{@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}</li>
      * <li>{@link KHRSurface#VK_ERROR_SURFACE_LOST_KHR ERROR_SURFACE_LOST_KHR}</li>
      * <li>{@link KHRSurface#VK_ERROR_NATIVE_WINDOW_IN_USE_KHR ERROR_NATIVE_WINDOW_IN_USE_KHR}</li>
+     * <li>{@link VK10#VK_ERROR_INITIALIZATION_FAILED ERROR_INITIALIZATION_FAILED}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -261,7 +278,7 @@ public class KHRSwapchain {
      *
      * @param device      the device to create the swapchain for.
      * @param pCreateInfo a pointer to an instance of the {@link VkSwapchainCreateInfoKHR} structure specifying the parameters of the created swapchain.
-     * @param pAllocator  the allocator used for host memory allocated for the swapchain object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
+     * @param pAllocator  the allocator used for host memory allocated for the swapchain object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
      * @param pSwapchain  a pointer to a {@code VkSwapchainKHR} handle in which the created swapchain object will be returned.
      */
     @NativeType("VkResult")
@@ -281,7 +298,7 @@ public class KHRSwapchain {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, device.address(), swapchain, pAllocator);
+        callPJPV(device.address(), swapchain, pAllocator, __functionAddress);
     }
 
     /**
@@ -302,6 +319,8 @@ public class KHRSwapchain {
      * <p>The application <b>must</b> not destroy a swapchain until after completion of all outstanding operations on images that were acquired from the swapchain. {@code swapchain} and all associated {@code VkImage} handles are destroyed, and <b>must</b> not be acquired or used any more by the application. The memory of each {@code VkImage} will only be freed after that image is no longer used by the presentation engine. For example, if one image of the swapchain is being displayed in a window, the memory for that image <b>may</b> not be freed until the window is destroyed, or another swapchain is created for the window. Destroying the swapchain does not invalidate the parent {@code VkSurfaceKHR}, and a new swapchain <b>can</b> be created with it.</p>
      * 
      * <p>When a swapchain associated with a display surface is destroyed, if the image most recently presented to the display surface is from the swapchain being destroyed, then either any display resources modified by presenting images from any swapchain associated with the display surface <b>must</b> be reverted by the implementation to their state prior to the first present performed on one of these swapchains, or such resources <b>must</b> be left in their current state.</p>
+     * 
+     * <p>If {@code swapchain} has exclusive full-screen access, it is released before the swapchain is destroyed.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -332,7 +351,7 @@ public class KHRSwapchain {
      *
      * @param device     the {@code VkDevice} associated with {@code swapchain}.
      * @param swapchain  the swapchain to destroy.
-     * @param pAllocator the allocator used for host memory allocated for the swapchain object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
+     * @param pAllocator the allocator used for host memory allocated for the swapchain object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
      */
     public static void vkDestroySwapchainKHR(VkDevice device, @NativeType("VkSwapchainKHR") long swapchain, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroySwapchainKHR(device, swapchain, memAddressSafe(pAllocator));
@@ -350,7 +369,7 @@ public class KHRSwapchain {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPPI(__functionAddress, device.address(), swapchain, pSwapchainImageCount, pSwapchainImages);
+        return callPJPPI(device.address(), swapchain, pSwapchainImageCount, pSwapchainImages, __functionAddress);
     }
 
     /**
@@ -418,7 +437,7 @@ public class KHRSwapchain {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJJJJPI(__functionAddress, device.address(), swapchain, timeout, semaphore, fence, pImageIndex);
+        return callPJJJJPI(device.address(), swapchain, timeout, semaphore, fence, pImageIndex, __functionAddress);
     }
 
     /**
@@ -486,6 +505,7 @@ public class KHRSwapchain {
      * <li>{@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}</li>
      * <li>{@link #VK_ERROR_OUT_OF_DATE_KHR ERROR_OUT_OF_DATE_KHR}</li>
      * <li>{@link KHRSurface#VK_ERROR_SURFACE_LOST_KHR ERROR_SURFACE_LOST_KHR}</li>
+     * <li>{@link EXTFullScreenExclusive#VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT}</li>
      * </ul></dd>
      * </dl>
      *
@@ -494,7 +514,7 @@ public class KHRSwapchain {
      * @param timeout     specifies how long the function waits, in nanoseconds, if no image is available.
      * @param semaphore   {@link VK10#VK_NULL_HANDLE NULL_HANDLE} or a semaphore to signal.
      * @param fence       {@link VK10#VK_NULL_HANDLE NULL_HANDLE} or a fence to signal.
-     * @param pImageIndex a pointer to a {@code uint32_t} that is set to the index of the next image to use (i.e. an index into the array of images returned by {@link #vkGetSwapchainImagesKHR GetSwapchainImagesKHR}).
+     * @param pImageIndex a pointer to a {@code uint32_t} that is set to the index of the next image to use (i.e. an index into the array of images returned by {@code vkGetSwapchainImagesKHR}).
      */
     @NativeType("VkResult")
     public static int vkAcquireNextImageKHR(VkDevice device, @NativeType("VkSwapchainKHR") long swapchain, @NativeType("uint64_t") long timeout, @NativeType("VkSemaphore") long semaphore, @NativeType("VkFence") long fence, @NativeType("uint32_t *") IntBuffer pImageIndex) {
@@ -513,7 +533,7 @@ public class KHRSwapchain {
             check(__functionAddress);
             VkPresentInfoKHR.validate(pPresentInfo);
         }
-        return callPPI(__functionAddress, queue.address(), pPresentInfo);
+        return callPPI(queue.address(), pPresentInfo, __functionAddress);
     }
 
     /**
@@ -538,21 +558,23 @@ public class KHRSwapchain {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>Each element of {@code pSwapchains} member of {@code pPresentInfo} <b>must</b> be a swapchain that is created for a surface for which presentation is supported from {@code queue} as determined using a call to {@link KHRSurface#vkGetPhysicalDeviceSurfaceSupportKHR GetPhysicalDeviceSurfaceSupportKHR}</li>
+     * <li>Each element of {@code pSwapchains} member of {@code pPresentInfo} <b>must</b> be a swapchain that is created for a surface for which presentation is supported from {@code queue} as determined using a call to {@code vkGetPhysicalDeviceSurfaceSupportKHR}</li>
      * <li>If more than one member of {@code pSwapchains} was created from a display surface, all display surfaces referenced that refer to the same display <b>must</b> use the same display mode</li>
      * <li>When a semaphore unsignal operation defined by the elements of the {@code pWaitSemaphores} member of {@code pPresentInfo} executes on {@code queue}, no other queue <b>must</b> be waiting on the same semaphore.</li>
-     * <li>All elements of the {@code pWaitSemaphores} member of {@code pPresentInfo} <b>must</b> be semaphores that are signaled, or have <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-signaling">semaphore signal operations</a> previously submitted for execution.</li>
+     * <li>All elements of the {@code pWaitSemaphores} member of {@code pPresentInfo} <b>must</b> be semaphores that are signaled, or have <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-signaling">semaphore signal operations</a> previously submitted for execution.</li>
      * </ul>
      * 
      * <p>Any writes to memory backing the images referenced by the {@code pImageIndices} and {@code pSwapchains} members of {@code pPresentInfo}, that are available before {@link #vkQueuePresentKHR QueuePresentKHR} is executed, are automatically made visible to the read access performed by the presentation engine. This automatic visibility operation for an image happens-after the semaphore signal operation, and happens-before the presentation engine accesses the image.</p>
      * 
      * <p>Queueing an image for presentation defines a set of <em>queue operations</em>, including waiting on the semaphores and submitting a presentation request to the presentation engine. However, the scope of this set of queue operations does not include the actual processing of the image by the presentation engine.</p>
      * 
-     * <p>If {@link #vkQueuePresentKHR QueuePresentKHR} fails to enqueue the corresponding set of queue operations, it <b>may</b> return {@link VK10#VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY} or {@link VK10#VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}. If it does, the implementation <b>must</b> ensure that the state and contents of any resources or synchronization primitives referenced is unaffected by the call or its failure.</p>
+     * <p>If {@code vkQueuePresentKHR} fails to enqueue the corresponding set of queue operations, it <b>may</b> return {@link VK10#VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY} or {@link VK10#VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}. If it does, the implementation <b>must</b> ensure that the state and contents of any resources or synchronization primitives referenced is unaffected by the call or its failure.</p>
      * 
-     * <p>If {@link #vkQueuePresentKHR QueuePresentKHR} fails in such a way that the implementation is unable to make that guarantee, the implementation <b>must</b> return {@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}.</p>
+     * <p>If {@code vkQueuePresentKHR} fails in such a way that the implementation is unable to make that guarantee, the implementation <b>must</b> return {@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}.</p>
      * 
      * <p>However, if the presentation request is rejected by the presentation engine with an error {@link #VK_ERROR_OUT_OF_DATE_KHR ERROR_OUT_OF_DATE_KHR} or {@link KHRSurface#VK_ERROR_SURFACE_LOST_KHR ERROR_SURFACE_LOST_KHR}, the set of queue operations are still considered to be enqueued and thus any semaphore to be waited on gets unsignaled when the corresponding queue operation is complete.</p>
+     * 
+     * <p>If any {@code swapchain} member of {@code pPresentInfo} was created with {@link EXTFullScreenExclusive#VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT}, {@link EXTFullScreenExclusive#VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT} will be returned if that swapchain does not have exclusive full-screen access, possibly for implementation-specific reasons outside of the application's control.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -572,7 +594,7 @@ public class KHRSwapchain {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>-</td><td>-</td><td>Any</td><td>-</td></tr></tbody>
      * </table>
      * 
@@ -591,6 +613,7 @@ public class KHRSwapchain {
      * <li>{@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}</li>
      * <li>{@link #VK_ERROR_OUT_OF_DATE_KHR ERROR_OUT_OF_DATE_KHR}</li>
      * <li>{@link KHRSurface#VK_ERROR_SURFACE_LOST_KHR ERROR_SURFACE_LOST_KHR}</li>
+     * <li>{@link EXTFullScreenExclusive#VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -614,7 +637,7 @@ public class KHRSwapchain {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, device.address(), pDeviceGroupPresentCapabilities);
+        return callPPI(device.address(), pDeviceGroupPresentCapabilities, __functionAddress);
     }
 
     /**
@@ -672,7 +695,7 @@ public class KHRSwapchain {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPI(__functionAddress, device.address(), surface, pModes);
+        return callPJPI(device.address(), surface, pModes, __functionAddress);
     }
 
     /**
@@ -748,7 +771,7 @@ public class KHRSwapchain {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), surface, pRectCount, pRects);
+        return callPJPPI(physicalDevice.address(), surface, pRectCount, pRects, __functionAddress);
     }
 
     /**
@@ -832,7 +855,7 @@ public class KHRSwapchain {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, device.address(), pAcquireInfo, pImageIndex);
+        return callPPPI(device.address(), pAcquireInfo, pImageIndex, __functionAddress);
     }
 
     /**
@@ -879,6 +902,7 @@ public class KHRSwapchain {
      * <li>{@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}</li>
      * <li>{@link #VK_ERROR_OUT_OF_DATE_KHR ERROR_OUT_OF_DATE_KHR}</li>
      * <li>{@link KHRSurface#VK_ERROR_SURFACE_LOST_KHR ERROR_SURFACE_LOST_KHR}</li>
+     * <li>{@link EXTFullScreenExclusive#VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -908,7 +932,7 @@ public class KHRSwapchain {
             VkSwapchainCreateInfoKHR.validate(pCreateInfo.address());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pSwapchain);
+        return callPPPPI(device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pSwapchain, __functionAddress);
     }
 
     /** Array version of: {@link #vkGetSwapchainImagesKHR GetSwapchainImagesKHR} */
@@ -920,7 +944,7 @@ public class KHRSwapchain {
             check(pSwapchainImageCount, 1);
             checkSafe(pSwapchainImages, pSwapchainImageCount[0]);
         }
-        return callPJPPI(__functionAddress, device.address(), swapchain, pSwapchainImageCount, pSwapchainImages);
+        return callPJPPI(device.address(), swapchain, pSwapchainImageCount, pSwapchainImages, __functionAddress);
     }
 
     /** Array version of: {@link #vkAcquireNextImageKHR AcquireNextImageKHR} */
@@ -931,7 +955,7 @@ public class KHRSwapchain {
             check(__functionAddress);
             check(pImageIndex, 1);
         }
-        return callPJJJJPI(__functionAddress, device.address(), swapchain, timeout, semaphore, fence, pImageIndex);
+        return callPJJJJPI(device.address(), swapchain, timeout, semaphore, fence, pImageIndex, __functionAddress);
     }
 
     /** Array version of: {@link #vkGetDeviceGroupSurfacePresentModesKHR GetDeviceGroupSurfacePresentModesKHR} */
@@ -942,7 +966,7 @@ public class KHRSwapchain {
             check(__functionAddress);
             check(pModes, 1);
         }
-        return callPJPI(__functionAddress, device.address(), surface, pModes);
+        return callPJPI(device.address(), surface, pModes, __functionAddress);
     }
 
     /** Array version of: {@link #vkGetPhysicalDevicePresentRectanglesKHR GetPhysicalDevicePresentRectanglesKHR} */
@@ -954,7 +978,7 @@ public class KHRSwapchain {
             check(pRectCount, 1);
             checkSafe(pRects, pRectCount[0]);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), surface, pRectCount, memAddressSafe(pRects));
+        return callPJPPI(physicalDevice.address(), surface, pRectCount, memAddressSafe(pRects), __functionAddress);
     }
 
     /** Array version of: {@link #vkAcquireNextImage2KHR AcquireNextImage2KHR} */
@@ -965,7 +989,7 @@ public class KHRSwapchain {
             check(__functionAddress);
             check(pImageIndex, 1);
         }
-        return callPPPI(__functionAddress, device.address(), pAcquireInfo.address(), pImageIndex);
+        return callPPPI(device.address(), pAcquireInfo.address(), pImageIndex, __functionAddress);
     }
 
 }

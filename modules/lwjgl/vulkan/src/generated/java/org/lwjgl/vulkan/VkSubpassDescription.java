@@ -21,6 +21,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>Description</h5>
  * 
+ * <p>Each element of the {@code pInputAttachments} array corresponds to an input attachment index in a fragment shader, i.e. if a shader declares an image variable decorated with a {@code InputAttachmentIndex} value of <b>X</b>, then it uses the attachment provided in {@code pInputAttachments}[<b>X</b>]. Input attachments <b>must</b> also be bound to the pipeline in a descriptor set. If the {@code attachment} member of any element of {@code pInputAttachments} is {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, the application <b>must</b> not read from the corresponding input attachment index. Fragment shaders <b>can</b> use subpass input variables to access the contents of an input attachment at the fragment's (x, y, layer) framebuffer coordinates.</p>
+ * 
+ * <p>Each element of the {@code pColorAttachments} array corresponds to an output location in the shader, i.e. if the shader declares an output variable decorated with a {@code Location} value of <b>X</b>, then it uses the attachment provided in {@code pColorAttachments}[<b>X</b>]. If the {@code attachment} member of any element of {@code pColorAttachments} is {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, writes to the corresponding location by a fragment are discarded.</p>
+ * 
+ * <p>If {@code pResolveAttachments} is not {@code NULL}, each of its elements corresponds to a color attachment (the element in {@code pColorAttachments} at the same index), and a multisample resolve operation is defined for each attachment. At the end of each subpass, multisample resolve operations read the subpass's color attachments, and resolve the samples for each pixel to the same pixel location in the corresponding resolve attachments, unless the resolve attachment index is {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}.</p>
+ * 
+ * <p>Similarly, if {@link VkSubpassDescriptionDepthStencilResolveKHR}{@code ::pDepthStencilResolveAttachment} is not {@code NULL} and does not have the value {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, it corresponds to the depth/stencil attachment in {@code pDepthStencilAttachment}, and multisample resolve operations for depth and stencil are defined by {@link VkSubpassDescriptionDepthStencilResolveKHR}{@code ::depthResolveMode} and {@link VkSubpassDescriptionDepthStencilResolveKHR}{@code ::stencilResolveMode}, respectively. At the end of each subpass, multisample resolve operations read the subpass's depth/stencil attachment, and resolve the samples for each pixel to the same pixel location in the corresponding resolve attachment. If {@link VkSubpassDescriptionDepthStencilResolveKHR}{@code ::depthResolveMode} is {@link KHRDepthStencilResolve#VK_RESOLVE_MODE_NONE_KHR RESOLVE_MODE_NONE_KHR}, then the depth component of the resolve attachment is not written to and its contents are preserved. Similarly, if {@link VkSubpassDescriptionDepthStencilResolveKHR}{@code ::stencilResolveMode} is {@link KHRDepthStencilResolve#VK_RESOLVE_MODE_NONE_KHR RESOLVE_MODE_NONE_KHR}, then the stencil component of the resolve attachment is not written to and its contents are preserved. {@link VkSubpassDescriptionDepthStencilResolveKHR}{@code ::depthResolveMode} is ignored if the {@code VkFormat} of the {@code pDepthStencilResolveAttachment} does not have a depth component. Similarly, {@link VkSubpassDescriptionDepthStencilResolveKHR}{@code ::stencilResolveMode} is ignored if the {@code VkFormat} of the {@code pDepthStencilResolveAttachment} does not have a stencil component.</p>
+ * 
+ * <p>If the image subresource range referenced by the depth/stencil attachment is created with {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT}, then the multisample resolve operation uses the sample locations state specified in the {@code sampleLocationsInfo} member of the element of the {@link VkRenderPassSampleLocationsBeginInfoEXT}{@code ::pPostSubpassSampleLocations} for the subpass.</p>
+ * 
+ * <p>If {@code pDepthStencilAttachment} is {@code NULL}, or if its attachment index is {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, it indicates that no depth/stencil attachment will be used in the subpass.</p>
+ * 
  * <p>The contents of an attachment within the render area become undefined at the start of a subpass <b>S</b> if all of the following conditions are true:</p>
  * 
  * <ul>
@@ -37,16 +49,20 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code pipelineBindPoint} <b>must</b> be {@link VK10#VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}</li>
  * <li>{@code colorAttachmentCount} <b>must</b> be less than or equal to {@link VkPhysicalDeviceLimits}{@code ::maxColorAttachments}</li>
  * <li>If the first use of an attachment in this render pass is as an input attachment, and the attachment is not also used as a color or depth/stencil attachment in the same subpass, then {@code loadOp} <b>must</b> not be {@link VK10#VK_ATTACHMENT_LOAD_OP_CLEAR ATTACHMENT_LOAD_OP_CLEAR}</li>
- * <li>If {@code pResolveAttachments} is not {@code NULL}, for each resolve attachment that does not have the value {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, the corresponding color attachment <b>must</b> not have the value {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}</li>
- * <li>If {@code pResolveAttachments} is not {@code NULL}, the sample count of each element of {@code pColorAttachments} <b>must</b> be anything other than {@link VK10#VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT}</li>
- * <li>Each element of {@code pResolveAttachments} <b>must</b> have a sample count of {@link VK10#VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT}</li>
- * <li>Each element of {@code pResolveAttachments} <b>must</b> have the same {@code VkFormat} as its corresponding color attachment</li>
+ * <li>If {@code pResolveAttachments} is not {@code NULL}, for each resolve attachment that is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, the corresponding color attachment <b>must</b> not be {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}</li>
+ * <li>If {@code pResolveAttachments} is not {@code NULL}, for each resolve attachment that is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, the corresponding color attachment <b>must</b> not have a sample count of {@link VK10#VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT}</li>
+ * <li>If {@code pResolveAttachments} is not {@code NULL}, each resolve attachment that is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} <b>must</b> have a sample count of {@link VK10#VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT}</li>
+ * <li>If {@code pResolveAttachments} is not {@code NULL}, each resolve attachment that is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} <b>must</b> have the same {@code VkFormat} as its corresponding color attachment</li>
  * <li>All attachments in {@code pColorAttachments} that are not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} <b>must</b> have the same sample count</li>
- * <li>All attachments in {@code pColorAttachments} that are not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} <b>must</b> have a sample count that is smaller than or equal to the sample count of {@code pDepthStencilAttachment} if it is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}</li>
- * <li>If any input attachments are {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, then any pipelines bound during the subpass <b>must</b> not access those input attachments from the fragment shader</li>
+ * <li>All attachments in {@code pInputAttachments} that are not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} <b>must</b> have formats whose features contain at least one of {@link VK10#VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BIT} or {@link VK10#VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT}.</li>
+ * <li>All attachments in {@code pColorAttachments} that are not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} <b>must</b> have formats whose features contain {@link VK10#VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BIT}</li>
+ * <li>All attachments in {@code pResolveAttachments} that are not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} <b>must</b> have formats whose features contain {@link VK10#VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BIT}</li>
+ * <li>If {@code pDepthStencilAttachment} is not {@code NULL} and the attachment is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} then it <b>must</b> have a format whose features contain {@link VK10#VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT}</li>
+ * <li>If the {@code VK_AMD_mixed_attachment_samples} extension is enabled, and all attachments in {@code pColorAttachments} that are not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} <b>must</b> have a sample count that is smaller than or equal to the sample count of {@code pDepthStencilAttachment} if it is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}</li>
+ * <li>If neither the {@code VK_AMD_mixed_attachment_samples} nor the {@code VK_NV_framebuffer_mixed_samples} extensions are enabled, and if {@code pDepthStencilAttachment} is not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} and any attachments in {@code pColorAttachments} are not {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}, they <b>must</b> have the same sample count</li>
  * <li>The {@code attachment} member of each element of {@code pPreserveAttachments} <b>must</b> not be {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}</li>
  * <li>Each element of {@code pPreserveAttachments} <b>must</b> not also be an element of any other member of the subpass description</li>
- * <li>If any attachment is used as both an input attachment and a color or depth/stencil attachment, then each use <b>must</b> use the same {@code layout}</li>
+ * <li>If any attachment is used by more than one {@link VkAttachmentReference} member, then each use <b>must</b> use the same {@code layout}</li>
  * <li>If {@code flags} includes {@link NVXMultiviewPerViewAttributes#VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX}, it <b>must</b> also include {@link NVXMultiviewPerViewAttributes#VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX}.</li>
  * </ul>
  * 
@@ -70,15 +86,15 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code flags} &ndash; a bitmask of {@code VkSubpassDescriptionFlagBits} specifying usage of the subpass.</li>
- * <li>{@code pipelineBindPoint} &ndash; a {@code VkPipelineBindPoint} value specifying whether this is a compute or graphics subpass. Currently, only graphics subpasses are supported.</li>
+ * <li>{@code pipelineBindPoint} &ndash; a {@code VkPipelineBindPoint} value specifying the pipeline type supported for this subpass.</li>
  * <li>{@code inputAttachmentCount} &ndash; the number of input attachments.</li>
- * <li>{@code pInputAttachments} &ndash; an array of {@link VkAttachmentReference} structures (defined below) that lists which of the render pass&#8217;s attachments <b>can</b> be read in the fragment shader stage during the subpass, and what layout each attachment will be in during the subpass. Each element of the array corresponds to an input attachment unit number in the shader, i.e. if the shader declares an input variable {@code layout(input_attachment_index=X, set=Y, binding=Z)} then it uses the attachment provided in {@code pInputAttachments}[X]. Input attachments <b>must</b> also be bound to the pipeline with a descriptor set, with the input attachment descriptor written in the location (set=Y, binding=Z). Fragment shaders <b>can</b> use subpass input variables to access the contents of an input attachment at the fragment&#8217;s (x, y, layer) framebuffer coordinates.</li>
+ * <li>{@code pInputAttachments} &ndash; an array of {@link VkAttachmentReference} structures defining the input attachments for this subpass and their layouts.</li>
  * <li>{@code colorAttachmentCount} &ndash; the number of color attachments.</li>
- * <li>{@code pColorAttachments} &ndash; an array of {@code colorAttachmentCount} {@link VkAttachmentReference} structures that lists which of the render pass&#8217;s attachments will be used as color attachments in the subpass, and what layout each attachment will be in during the subpass. Each element of the array corresponds to a fragment shader output location, i.e. if the shader declared an output variable {@code layout(location=X)} then it uses the attachment provided in {@code pColorAttachments}[X].</li>
- * <li>{@code pResolveAttachments} &ndash; {@code NULL} or an array of {@code colorAttachmentCount} {@link VkAttachmentReference} structures that lists which of the render pass&#8217;s attachments are resolved to at the end of the subpass, and what layout each attachment will be in during the multisample resolve operation. If {@code pResolveAttachments} is not {@code NULL}, each of its elements corresponds to a color attachment (the element in {@code pColorAttachments} at the same index), and a multisample resolve operation is defined for each attachment. At the end of each subpass, multisample resolve operations read the subpass&#8217;s color attachments, and resolve the samples for each pixel to the same pixel location in the corresponding resolve attachments, unless the resolve attachment index is {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED}. If the first use of an attachment in a render pass is as a resolve attachment, then the {@code loadOp} is effectively ignored as the resolve is guaranteed to overwrite all pixels in the render area.</li>
- * <li>{@code pDepthStencilAttachment} &ndash; a pointer to a {@link VkAttachmentReference} specifying which attachment will be used for depth/stencil data and the layout it will be in during the subpass. Setting the attachment index to {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} or leaving this pointer as {@code NULL} indicates that no depth/stencil attachment will be used in the subpass.</li>
+ * <li>{@code pColorAttachments} &ndash; an array of {@link VkAttachmentReference} structures defining the color attachments for this subpass and their layouts.</li>
+ * <li>{@code pResolveAttachments} &ndash; an optional array of {@code colorAttachmentCount} {@link VkAttachmentReference} structures defining the resolve attachments for this subpass and their layouts.</li>
+ * <li>{@code pDepthStencilAttachment} &ndash; a pointer to a {@link VkAttachmentReference} specifying the depth/stencil attachment for this subpass and its layout.</li>
  * <li>{@code preserveAttachmentCount} &ndash; the number of preserved attachments.</li>
- * <li>{@code pPreserveAttachments} &ndash; an array of {@code preserveAttachmentCount} render pass attachment indices describing the attachments that are not used by a subpass, but whose contents <b>must</b> be preserved throughout the subpass.</li>
+ * <li>{@code pPreserveAttachments} &ndash; an array of {@code preserveAttachmentCount} render pass attachment indices identifying attachments that are not used by this subpass, but whose contents <b>must</b> be preserved throughout the subpass.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -88,11 +104,11 @@ import static org.lwjgl.system.MemoryStack.*;
  *     VkSubpassDescriptionFlags flags;
  *     VkPipelineBindPoint pipelineBindPoint;
  *     uint32_t inputAttachmentCount;
- *     {@link VkAttachmentReference VkAttachmentReference const} * pInputAttachments;
+ *     {@link VkAttachmentReference VkAttachmentReference} const * pInputAttachments;
  *     uint32_t colorAttachmentCount;
- *     {@link VkAttachmentReference VkAttachmentReference const} * pColorAttachments;
- *     {@link VkAttachmentReference VkAttachmentReference const} * pResolveAttachments;
- *     {@link VkAttachmentReference VkAttachmentReference const} * pDepthStencilAttachment;
+ *     {@link VkAttachmentReference VkAttachmentReference} const * pColorAttachments;
+ *     {@link VkAttachmentReference VkAttachmentReference} const * pResolveAttachments;
+ *     {@link VkAttachmentReference VkAttachmentReference} const * pDepthStencilAttachment;
  *     uint32_t preserveAttachmentCount;
  *     uint32_t const * pPreserveAttachments;
  * }</code></pre>
@@ -147,18 +163,14 @@ public class VkSubpassDescription extends Struct implements NativeResource {
         PPRESERVEATTACHMENTS = layout.offsetof(9);
     }
 
-    VkSubpassDescription(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkSubpassDescription} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkSubpassDescription} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkSubpassDescription(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -254,30 +266,31 @@ public class VkSubpassDescription extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSubpassDescription} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSubpassDescription} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkSubpassDescription malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkSubpassDescription.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkSubpassDescription} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSubpassDescription} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkSubpassDescription calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkSubpassDescription.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkSubpassDescription} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkSubpassDescription} instance allocated with {@link BufferUtils}. */
     public static VkSubpassDescription create() {
-        return new VkSubpassDescription(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkSubpassDescription.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkSubpassDescription} instance for the specified memory address. */
+    /** Returns a new {@code VkSubpassDescription} instance for the specified memory address. */
     public static VkSubpassDescription create(long address) {
-        return new VkSubpassDescription(address, null);
+        return wrap(VkSubpassDescription.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSubpassDescription createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkSubpassDescription.class, address);
     }
 
     /**
@@ -286,7 +299,7 @@ public class VkSubpassDescription extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSubpassDescription.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -295,7 +308,7 @@ public class VkSubpassDescription extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSubpassDescription.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -304,7 +317,8 @@ public class VkSubpassDescription extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSubpassDescription.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -314,43 +328,43 @@ public class VkSubpassDescription extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSubpassDescription.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSubpassDescription.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSubpassDescription} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkSubpassDescription} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkSubpassDescription mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkSubpassDescription} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkSubpassDescription} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkSubpassDescription callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkSubpassDescription} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkSubpassDescription} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSubpassDescription mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkSubpassDescription.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkSubpassDescription} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkSubpassDescription} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSubpassDescription callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkSubpassDescription.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -378,7 +392,7 @@ public class VkSubpassDescription extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSubpassDescription.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -388,21 +402,21 @@ public class VkSubpassDescription extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSubpassDescription.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkSubpassDescription.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkSubpassDescription.FLAGS); }
     /** Unsafe version of {@link #pipelineBindPoint}. */
-    public static int npipelineBindPoint(long struct) { return memGetInt(struct + VkSubpassDescription.PIPELINEBINDPOINT); }
+    public static int npipelineBindPoint(long struct) { return UNSAFE.getInt(null, struct + VkSubpassDescription.PIPELINEBINDPOINT); }
     /** Unsafe version of {@link #inputAttachmentCount}. */
-    public static int ninputAttachmentCount(long struct) { return memGetInt(struct + VkSubpassDescription.INPUTATTACHMENTCOUNT); }
+    public static int ninputAttachmentCount(long struct) { return UNSAFE.getInt(null, struct + VkSubpassDescription.INPUTATTACHMENTCOUNT); }
     /** Unsafe version of {@link #pInputAttachments}. */
     @Nullable public static VkAttachmentReference.Buffer npInputAttachments(long struct) { return VkAttachmentReference.createSafe(memGetAddress(struct + VkSubpassDescription.PINPUTATTACHMENTS), ninputAttachmentCount(struct)); }
     /** Unsafe version of {@link #colorAttachmentCount}. */
-    public static int ncolorAttachmentCount(long struct) { return memGetInt(struct + VkSubpassDescription.COLORATTACHMENTCOUNT); }
+    public static int ncolorAttachmentCount(long struct) { return UNSAFE.getInt(null, struct + VkSubpassDescription.COLORATTACHMENTCOUNT); }
     /** Unsafe version of {@link #pColorAttachments}. */
     @Nullable public static VkAttachmentReference.Buffer npColorAttachments(long struct) { return VkAttachmentReference.createSafe(memGetAddress(struct + VkSubpassDescription.PCOLORATTACHMENTS), ncolorAttachmentCount(struct)); }
     /** Unsafe version of {@link #pResolveAttachments}. */
@@ -410,20 +424,20 @@ public class VkSubpassDescription extends Struct implements NativeResource {
     /** Unsafe version of {@link #pDepthStencilAttachment}. */
     @Nullable public static VkAttachmentReference npDepthStencilAttachment(long struct) { return VkAttachmentReference.createSafe(memGetAddress(struct + VkSubpassDescription.PDEPTHSTENCILATTACHMENT)); }
     /** Unsafe version of {@link #preserveAttachmentCount}. */
-    public static int npreserveAttachmentCount(long struct) { return memGetInt(struct + VkSubpassDescription.PRESERVEATTACHMENTCOUNT); }
+    public static int npreserveAttachmentCount(long struct) { return UNSAFE.getInt(null, struct + VkSubpassDescription.PRESERVEATTACHMENTCOUNT); }
     /** Unsafe version of {@link #pPreserveAttachments() pPreserveAttachments}. */
     @Nullable public static IntBuffer npPreserveAttachments(long struct) { return memIntBufferSafe(memGetAddress(struct + VkSubpassDescription.PPRESERVEATTACHMENTS), npreserveAttachmentCount(struct)); }
 
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkSubpassDescription.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkSubpassDescription.FLAGS, value); }
     /** Unsafe version of {@link #pipelineBindPoint(int) pipelineBindPoint}. */
-    public static void npipelineBindPoint(long struct, int value) { memPutInt(struct + VkSubpassDescription.PIPELINEBINDPOINT, value); }
+    public static void npipelineBindPoint(long struct, int value) { UNSAFE.putInt(null, struct + VkSubpassDescription.PIPELINEBINDPOINT, value); }
     /** Sets the specified value to the {@code inputAttachmentCount} field of the specified {@code struct}. */
-    public static void ninputAttachmentCount(long struct, int value) { memPutInt(struct + VkSubpassDescription.INPUTATTACHMENTCOUNT, value); }
+    public static void ninputAttachmentCount(long struct, int value) { UNSAFE.putInt(null, struct + VkSubpassDescription.INPUTATTACHMENTCOUNT, value); }
     /** Unsafe version of {@link #pInputAttachments(VkAttachmentReference.Buffer) pInputAttachments}. */
     public static void npInputAttachments(long struct, @Nullable VkAttachmentReference.Buffer value) { memPutAddress(struct + VkSubpassDescription.PINPUTATTACHMENTS, memAddressSafe(value)); ninputAttachmentCount(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code colorAttachmentCount} field of the specified {@code struct}. */
-    public static void ncolorAttachmentCount(long struct, int value) { memPutInt(struct + VkSubpassDescription.COLORATTACHMENTCOUNT, value); }
+    public static void ncolorAttachmentCount(long struct, int value) { UNSAFE.putInt(null, struct + VkSubpassDescription.COLORATTACHMENTCOUNT, value); }
     /** Unsafe version of {@link #pColorAttachments(VkAttachmentReference.Buffer) pColorAttachments}. */
     public static void npColorAttachments(long struct, @Nullable VkAttachmentReference.Buffer value) { memPutAddress(struct + VkSubpassDescription.PCOLORATTACHMENTS, memAddressSafe(value)); }
     /** Unsafe version of {@link #pResolveAttachments(VkAttachmentReference.Buffer) pResolveAttachments}. */
@@ -431,7 +445,7 @@ public class VkSubpassDescription extends Struct implements NativeResource {
     /** Unsafe version of {@link #pDepthStencilAttachment(VkAttachmentReference) pDepthStencilAttachment}. */
     public static void npDepthStencilAttachment(long struct, @Nullable VkAttachmentReference value) { memPutAddress(struct + VkSubpassDescription.PDEPTHSTENCILATTACHMENT, memAddressSafe(value)); }
     /** Sets the specified value to the {@code preserveAttachmentCount} field of the specified {@code struct}. */
-    public static void npreserveAttachmentCount(long struct, int value) { memPutInt(struct + VkSubpassDescription.PRESERVEATTACHMENTCOUNT, value); }
+    public static void npreserveAttachmentCount(long struct, int value) { UNSAFE.putInt(null, struct + VkSubpassDescription.PRESERVEATTACHMENTCOUNT, value); }
     /** Unsafe version of {@link #pPreserveAttachments(IntBuffer) pPreserveAttachments}. */
     public static void npPreserveAttachments(long struct, @Nullable IntBuffer value) { memPutAddress(struct + VkSubpassDescription.PPRESERVEATTACHMENTS, memAddressSafe(value)); npreserveAttachmentCount(struct, value == null ? 0 : value.remaining()); }
 
@@ -460,7 +474,7 @@ public class VkSubpassDescription extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -469,8 +483,10 @@ public class VkSubpassDescription extends Struct implements NativeResource {
     /** An array of {@link VkSubpassDescription} structs. */
     public static class Buffer extends StructBuffer<VkSubpassDescription, Buffer> implements NativeResource {
 
+        private static final VkSubpassDescription ELEMENT_FACTORY = VkSubpassDescription.create(-1L);
+
         /**
-         * Creates a new {@link VkSubpassDescription.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkSubpassDescription.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -496,18 +512,8 @@ public class VkSubpassDescription extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkSubpassDescription newInstance(long address) {
-            return new VkSubpassDescription(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkSubpassDescription getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code flags} field. */

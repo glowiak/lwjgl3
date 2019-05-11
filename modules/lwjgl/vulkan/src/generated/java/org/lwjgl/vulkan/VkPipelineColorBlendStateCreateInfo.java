@@ -21,13 +21,13 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>Description</h5>
  * 
- * <p>Each element of the {@code pAttachments} array is a {@link VkPipelineColorBlendAttachmentState} structure specifying per-target blending state for each individual color attachment. If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-independentBlend">independent blending</a> feature is not enabled on the device, all {@link VkPipelineColorBlendAttachmentState} elements in the {@code pAttachments} array <b>must</b> be identical.</p>
+ * <p>Each element of the {@code pAttachments} array is a {@link VkPipelineColorBlendAttachmentState} structure specifying per-target blending state for each individual color attachment. If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-independentBlend">independent blending</a> feature is not enabled on the device, all {@link VkPipelineColorBlendAttachmentState} elements in the {@code pAttachments} array <b>must</b> be identical.</p>
  * 
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-independentBlend">independent blending</a> feature is not enabled, all elements of {@code pAttachments} <b>must</b> be identical</li>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-logicOp">logic operations</a> feature is not enabled, {@code logicOpEnable} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-independentBlend">independent blending</a> feature is not enabled, all elements of {@code pAttachments} <b>must</b> be identical</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-logicOp">logic operations</a> feature is not enabled, {@code logicOpEnable} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
  * <li>If {@code logicOpEnable} is {@link VK10#VK_TRUE TRUE}, {@code logicOp} <b>must</b> be a valid {@code VkLogicOp} value</li>
  * </ul>
  * 
@@ -50,11 +50,11 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
  * <li>{@code flags} &ndash; reserved for future use.</li>
- * <li>{@code logicOpEnable} &ndash; controls whether to apply <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-logicop">Logical Operations</a>.</li>
+ * <li>{@code logicOpEnable} &ndash; controls whether to apply <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-logicop">Logical Operations</a>.</li>
  * <li>{@code logicOp} &ndash; selects which logical operation to apply.</li>
  * <li>{@code attachmentCount} &ndash; the number of {@link VkPipelineColorBlendAttachmentState} elements in {@code pAttachments}. This value <b>must</b> equal the {@code colorAttachmentCount} for the subpass in which this pipeline is used.</li>
  * <li>{@code pAttachments} &ndash; a pointer to array of per target attachment states.</li>
- * <li>{@code blendConstants} &ndash; an array of four values used as the R, G, B, and A components of the blend constant that are used in blending, depending on the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blendfactors">blend factor</a>.</li>
+ * <li>{@code blendConstants} &ndash; an array of four values used as the R, G, B, and A components of the blend constant that are used in blending, depending on the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-blendfactors">blend factor</a>.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -67,7 +67,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     VkBool32 logicOpEnable;
  *     VkLogicOp logicOp;
  *     uint32_t attachmentCount;
- *     {@link VkPipelineColorBlendAttachmentState VkPipelineColorBlendAttachmentState const} * pAttachments;
+ *     {@link VkPipelineColorBlendAttachmentState VkPipelineColorBlendAttachmentState} const * pAttachments;
  *     float blendConstants[4];
  * }</code></pre>
  */
@@ -115,18 +115,14 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
         BLENDCONSTANTS = layout.offsetof(7);
     }
 
-    VkPipelineColorBlendStateCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPipelineColorBlendStateCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPipelineColorBlendStateCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPipelineColorBlendStateCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -212,30 +208,31 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineColorBlendStateCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineColorBlendStateCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPipelineColorBlendStateCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPipelineColorBlendStateCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineColorBlendStateCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineColorBlendStateCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPipelineColorBlendStateCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPipelineColorBlendStateCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineColorBlendStateCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPipelineColorBlendStateCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkPipelineColorBlendStateCreateInfo create() {
-        return new VkPipelineColorBlendStateCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPipelineColorBlendStateCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPipelineColorBlendStateCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkPipelineColorBlendStateCreateInfo} instance for the specified memory address. */
     public static VkPipelineColorBlendStateCreateInfo create(long address) {
-        return new VkPipelineColorBlendStateCreateInfo(address, null);
+        return wrap(VkPipelineColorBlendStateCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineColorBlendStateCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPipelineColorBlendStateCreateInfo.class, address);
     }
 
     /**
@@ -244,7 +241,7 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendStateCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -253,7 +250,7 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendStateCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -262,7 +259,8 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendStateCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -272,43 +270,43 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendStateCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineColorBlendStateCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineColorBlendStateCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPipelineColorBlendStateCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPipelineColorBlendStateCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPipelineColorBlendStateCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPipelineColorBlendStateCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPipelineColorBlendStateCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPipelineColorBlendStateCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPipelineColorBlendStateCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineColorBlendStateCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPipelineColorBlendStateCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPipelineColorBlendStateCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPipelineColorBlendStateCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineColorBlendStateCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPipelineColorBlendStateCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -336,7 +334,7 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendStateCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -346,44 +344,44 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendStateCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPipelineColorBlendStateCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendStateCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPipelineColorBlendStateCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkPipelineColorBlendStateCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendStateCreateInfo.FLAGS); }
     /** Unsafe version of {@link #logicOpEnable}. */
-    public static int nlogicOpEnable(long struct) { return memGetInt(struct + VkPipelineColorBlendStateCreateInfo.LOGICOPENABLE); }
+    public static int nlogicOpEnable(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendStateCreateInfo.LOGICOPENABLE); }
     /** Unsafe version of {@link #logicOp}. */
-    public static int nlogicOp(long struct) { return memGetInt(struct + VkPipelineColorBlendStateCreateInfo.LOGICOP); }
+    public static int nlogicOp(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendStateCreateInfo.LOGICOP); }
     /** Unsafe version of {@link #attachmentCount}. */
-    public static int nattachmentCount(long struct) { return memGetInt(struct + VkPipelineColorBlendStateCreateInfo.ATTACHMENTCOUNT); }
+    public static int nattachmentCount(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendStateCreateInfo.ATTACHMENTCOUNT); }
     /** Unsafe version of {@link #pAttachments}. */
     @Nullable public static VkPipelineColorBlendAttachmentState.Buffer npAttachments(long struct) { return VkPipelineColorBlendAttachmentState.createSafe(memGetAddress(struct + VkPipelineColorBlendStateCreateInfo.PATTACHMENTS), nattachmentCount(struct)); }
     /** Unsafe version of {@link #blendConstants}. */
     public static FloatBuffer nblendConstants(long struct) { return memFloatBuffer(struct + VkPipelineColorBlendStateCreateInfo.BLENDCONSTANTS, 4); }
     /** Unsafe version of {@link #blendConstants(int) blendConstants}. */
     public static float nblendConstants(long struct, int index) {
-        return memGetFloat(struct + VkPipelineColorBlendStateCreateInfo.BLENDCONSTANTS + check(index, 4) * 4);
+        return UNSAFE.getFloat(null, struct + VkPipelineColorBlendStateCreateInfo.BLENDCONSTANTS + check(index, 4) * 4);
     }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPipelineColorBlendStateCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendStateCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPipelineColorBlendStateCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkPipelineColorBlendStateCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendStateCreateInfo.FLAGS, value); }
     /** Unsafe version of {@link #logicOpEnable(boolean) logicOpEnable}. */
-    public static void nlogicOpEnable(long struct, int value) { memPutInt(struct + VkPipelineColorBlendStateCreateInfo.LOGICOPENABLE, value); }
+    public static void nlogicOpEnable(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendStateCreateInfo.LOGICOPENABLE, value); }
     /** Unsafe version of {@link #logicOp(int) logicOp}. */
-    public static void nlogicOp(long struct, int value) { memPutInt(struct + VkPipelineColorBlendStateCreateInfo.LOGICOP, value); }
+    public static void nlogicOp(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendStateCreateInfo.LOGICOP, value); }
     /** Sets the specified value to the {@code attachmentCount} field of the specified {@code struct}. */
-    public static void nattachmentCount(long struct, int value) { memPutInt(struct + VkPipelineColorBlendStateCreateInfo.ATTACHMENTCOUNT, value); }
+    public static void nattachmentCount(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendStateCreateInfo.ATTACHMENTCOUNT, value); }
     /** Unsafe version of {@link #pAttachments(VkPipelineColorBlendAttachmentState.Buffer) pAttachments}. */
     public static void npAttachments(long struct, @Nullable VkPipelineColorBlendAttachmentState.Buffer value) { memPutAddress(struct + VkPipelineColorBlendStateCreateInfo.PATTACHMENTS, memAddressSafe(value)); nattachmentCount(struct, value == null ? 0 : value.remaining()); }
     /** Unsafe version of {@link #blendConstants(FloatBuffer) blendConstants}. */
@@ -393,7 +391,7 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
     }
     /** Unsafe version of {@link #blendConstants(int, float) blendConstants}. */
     public static void nblendConstants(long struct, int index, float value) {
-        memPutFloat(struct + VkPipelineColorBlendStateCreateInfo.BLENDCONSTANTS + check(index, 4) * 4, value);
+        UNSAFE.putFloat(null, struct + VkPipelineColorBlendStateCreateInfo.BLENDCONSTANTS + check(index, 4) * 4, value);
     }
 
     /**
@@ -415,7 +413,7 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -424,8 +422,10 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
     /** An array of {@link VkPipelineColorBlendStateCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkPipelineColorBlendStateCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkPipelineColorBlendStateCreateInfo ELEMENT_FACTORY = VkPipelineColorBlendStateCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkPipelineColorBlendStateCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPipelineColorBlendStateCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -451,18 +451,8 @@ public class VkPipelineColorBlendStateCreateInfo extends Struct implements Nativ
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPipelineColorBlendStateCreateInfo newInstance(long address) {
-            return new VkPipelineColorBlendStateCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPipelineColorBlendStateCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

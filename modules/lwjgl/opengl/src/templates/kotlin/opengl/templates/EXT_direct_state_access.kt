@@ -159,14 +159,14 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "ClientAttribDefaultEXT",
         "",
 
-        GLbitfield.IN("mask", "")
+        GLbitfield("mask", "")
     )
 
     void(
         "PushClientAttribDefaultEXT",
         "",
 
-        GLbitfield.IN("mask", "")
+        GLbitfield("mask", "")
     )
 
     /*
@@ -179,141 +179,141 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "MatrixLoadfEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        Check(16)..GLfloat.const.p.IN("m", "")
+        GLenum("matrixMode", ""),
+        Check(16)..GLfloat.const.p("m", "")
     )
 
     void(
         "MatrixLoaddEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        Check(16)..GLdouble.const.p.IN("m", "")
+        GLenum("matrixMode", ""),
+        Check(16)..GLdouble.const.p("m", "")
     )
 
     void(
         "MatrixMultfEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        Check(16)..GLfloat.const.p.IN("m", "")
+        GLenum("matrixMode", ""),
+        Check(16)..GLfloat.const.p("m", "")
     )
 
     void(
         "MatrixMultdEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        Check(16)..GLdouble.const.p.IN("m", "")
+        GLenum("matrixMode", ""),
+        Check(16)..GLdouble.const.p("m", "")
     )
 
     void(
         "MatrixLoadIdentityEXT",
         "",
 
-        GLenum.IN("matrixMode", "")
+        GLenum("matrixMode", "")
     )
 
     void(
         "MatrixRotatefEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        GLfloat.IN("angle", ""),
-        GLfloat.IN("x", ""),
-        GLfloat.IN("y", ""),
-        GLfloat.IN("z", "")
+        GLenum("matrixMode", ""),
+        GLfloat("angle", ""),
+        GLfloat("x", ""),
+        GLfloat("y", ""),
+        GLfloat("z", "")
     )
 
     void(
         "MatrixRotatedEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        GLdouble.IN("angle", ""),
-        GLdouble.IN("x", ""),
-        GLdouble.IN("y", ""),
-        GLdouble.IN("z", "")
+        GLenum("matrixMode", ""),
+        GLdouble("angle", ""),
+        GLdouble("x", ""),
+        GLdouble("y", ""),
+        GLdouble("z", "")
     )
 
     void(
         "MatrixScalefEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        GLfloat.IN("x", ""),
-        GLfloat.IN("y", ""),
-        GLfloat.IN("z", "")
+        GLenum("matrixMode", ""),
+        GLfloat("x", ""),
+        GLfloat("y", ""),
+        GLfloat("z", "")
     )
 
     void(
         "MatrixScaledEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        GLdouble.IN("x", ""),
-        GLdouble.IN("y", ""),
-        GLdouble.IN("z", "")
+        GLenum("matrixMode", ""),
+        GLdouble("x", ""),
+        GLdouble("y", ""),
+        GLdouble("z", "")
     )
 
     void(
         "MatrixTranslatefEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        GLfloat.IN("x", ""),
-        GLfloat.IN("y", ""),
-        GLfloat.IN("z", "")
+        GLenum("matrixMode", ""),
+        GLfloat("x", ""),
+        GLfloat("y", ""),
+        GLfloat("z", "")
     )
 
     void(
         "MatrixTranslatedEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        GLdouble.IN("x", ""),
-        GLdouble.IN("y", ""),
-        GLdouble.IN("z", "")
+        GLenum("matrixMode", ""),
+        GLdouble("x", ""),
+        GLdouble("y", ""),
+        GLdouble("z", "")
     )
 
     void(
         "MatrixOrthoEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        GLdouble.IN("l", ""),
-        GLdouble.IN("r", ""),
-        GLdouble.IN("b", ""),
-        GLdouble.IN("t", ""),
-        GLdouble.IN("n", ""),
-        GLdouble.IN("f", "")
+        GLenum("matrixMode", ""),
+        GLdouble("l", ""),
+        GLdouble("r", ""),
+        GLdouble("b", ""),
+        GLdouble("t", ""),
+        GLdouble("n", ""),
+        GLdouble("f", "")
     )
 
     void(
         "MatrixFrustumEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        GLdouble.IN("l", ""),
-        GLdouble.IN("r", ""),
-        GLdouble.IN("b", ""),
-        GLdouble.IN("t", ""),
-        GLdouble.IN("n", ""),
-        GLdouble.IN("f", "")
+        GLenum("matrixMode", ""),
+        GLdouble("l", ""),
+        GLdouble("r", ""),
+        GLdouble("b", ""),
+        GLdouble("t", ""),
+        GLdouble("n", ""),
+        GLdouble("f", "")
     )
 
     void(
         "MatrixPushEXT",
         "",
 
-        GLenum.IN("matrixMode", "")
+        GLenum("matrixMode", "")
     )
 
     void(
         "MatrixPopEXT",
         "",
 
-        GLenum.IN("matrixMode", "")
+        GLenum("matrixMode", "")
     )
 
     /*
@@ -325,225 +325,225 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "TextureParameteriEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        GLint.IN("param", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        GLint("param", "")
     )
 
     void(
         "TextureParameterivEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLint.const.p.IN("param", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLint.const.p("param", "")
     )
 
     void(
         "TextureParameterfEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        GLfloat.IN("param", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        GLfloat("param", "")
     )
 
     void(
         "TextureParameterfvEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLfloat.const.p.IN("param", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLfloat.const.p("param", "")
     )
 
     void(
         "TextureImage1DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLint.IN("border", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("internalformat", ""),
+        GLsizei("width", ""),
+        GLint("border", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..nullable..void.const.p("pixels", "")
     )
 
     void(
         "TextureImage2DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLint.IN("border", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLint("border", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..nullable..void.const.p("pixels", "")
     )
 
     void(
         "TextureSubImage1DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLsizei.IN("width", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLsizei("width", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..void.const.p("pixels", "")
     )
 
     void(
         "TextureSubImage2DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..void.const.p("pixels", "")
     )
 
     void(
         "CopyTextureImage1DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", ""),
-        GLint.IN("border", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", ""),
+        GLint("border", "")
     )
 
     void(
         "CopyTextureImage2DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLint.IN("border", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLint("border", "")
     )
 
     void(
         "CopyTextureSubImage1DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", "")
     )
 
     void(
         "CopyTextureSubImage2DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", ""),
+        GLsizei("height", "")
     )
 
     void(
         "GetTextureImageEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT,
             PointerMapping.DATA_INT,
             PointerMapping.DATA_FLOAT,
             PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_PACK_BUFFER..void.p.OUT("pixels", "")
+        )..Unsafe..RawPointer..void.p("pixels", "")
     )
 
     void(
         "GetTextureParameterfvEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLfloat.p.OUT("params", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLfloat.p("params", "")
     )
 
     void(
         "GetTextureParameterivEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     void(
         "GetTextureLevelParameterfvEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLfloat.p.OUT("params", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLfloat.p("params", "")
     )
 
     void(
         "GetTextureLevelParameterivEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     /*
@@ -555,55 +555,55 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "TextureImage3DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLsizei.IN("depth", ""),
-        GLint.IN("border", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLsizei("depth", ""),
+        GLint("border", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..nullable..PIXEL_UNPACK_BUFFER..void.const.p.IN("pixels", "")
+        )..Unsafe..nullable..RawPointer..void.const.p("pixels", "")
     )
 
     DependsOn("OpenGL12")..void(
         "TextureSubImage3DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLint.IN("zoffset", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLsizei.IN("depth", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLint("zoffset", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLsizei("depth", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..void.const.p("pixels", "")
     )
 
     DependsOn("OpenGL12")..void(
         "CopyTextureSubImage3DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLint.IN("zoffset", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLint("zoffset", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", ""),
+        GLsizei("height", "")
     )
 
     /*
@@ -616,452 +616,452 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "BindMultiTextureEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("texture", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLuint("texture", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexCoordPointerEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLint.IN("size", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
+        GLenum("texunit", ""),
+        GLint("size", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT
-        )..Unsafe..ARRAY_BUFFER..void.const.p.IN("pointer", "")
+        )..Unsafe..RawPointer..void.const.p("pointer", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexEnvfEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        GLfloat.IN("param", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        GLfloat("param", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexEnvfvEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLfloat.const.p.IN("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLfloat.const.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexEnviEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        GLint.IN("param", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        GLint("param", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexEnvivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLint.const.p.IN("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLint.const.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexGendEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("coord", ""),
-        GLenum.IN("pname", ""),
-        GLdouble.IN("param", "")
+        GLenum("texunit", ""),
+        GLenum("coord", ""),
+        GLenum("pname", ""),
+        GLdouble("param", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexGendvEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("coord", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLdouble.const.p.IN("params", "")
+        GLenum("texunit", ""),
+        GLenum("coord", ""),
+        GLenum("pname", ""),
+        Check(4)..GLdouble.const.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexGenfEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("coord", ""),
-        GLenum.IN("pname", ""),
-        GLfloat.IN("param", "")
+        GLenum("texunit", ""),
+        GLenum("coord", ""),
+        GLenum("pname", ""),
+        GLfloat("param", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexGenfvEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("coord", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLfloat.const.p.IN("params", "")
+        GLenum("texunit", ""),
+        GLenum("coord", ""),
+        GLenum("pname", ""),
+        Check(4)..GLfloat.const.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexGeniEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("coord", ""),
-        GLenum.IN("pname", ""),
-        GLint.IN("param", "")
+        GLenum("texunit", ""),
+        GLenum("coord", ""),
+        GLenum("pname", ""),
+        GLint("param", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexGenivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("coord", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLint.const.p.IN("params", "")
+        GLenum("texunit", ""),
+        GLenum("coord", ""),
+        GLenum("pname", ""),
+        Check(4)..GLint.const.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexEnvfvEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLfloat.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLfloat.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexEnvivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexGendvEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("coord", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLdouble.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("coord", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLdouble.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexGenfvEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("coord", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLfloat.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("coord", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLfloat.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexGenivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("coord", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("coord", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexParameteriEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        GLint.IN("param", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        GLint("param", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexParameterivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLint.const.p.IN("param", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLint.const.p("param", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexParameterfEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        GLfloat.IN("param", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        GLfloat("param", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexParameterfvEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLfloat.const.p.IN("param", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLfloat.const.p("param", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexImage1DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLint.IN("border", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("internalformat", ""),
+        GLsizei("width", ""),
+        GLint("border", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..nullable..void.const.p("pixels", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexImage2DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLint.IN("border", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLint("border", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..nullable..void.const.p("pixels", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexSubImage1DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLsizei.IN("width", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLsizei("width", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..void.const.p("pixels", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexSubImage2DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..void.const.p("pixels", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CopyMultiTexImage1DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", ""),
-        GLint.IN("border", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", ""),
+        GLint("border", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CopyMultiTexImage2DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLint.IN("border", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLint("border", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CopyMultiTexSubImage1DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CopyMultiTexSubImage2DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", ""),
+        GLsizei("height", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexImageEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT,
             PointerMapping.DATA_INT,
             PointerMapping.DATA_FLOAT,
             PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_PACK_BUFFER..void.p.OUT("pixels", "")
+        )..Unsafe..RawPointer..void.p("pixels", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexParameterfvEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLfloat.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLfloat.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexParameterivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexLevelParameterfvEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLfloat.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLfloat.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetMultiTexLevelParameterivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexImage3DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLsizei.IN("depth", ""),
-        GLint.IN("border", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLsizei("depth", ""),
+        GLint("border", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..nullable..PIXEL_UNPACK_BUFFER..void.const.p.IN("pixels", "")
+        )..Unsafe..nullable..RawPointer..void.const.p("pixels", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MultiTexSubImage3DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLint.IN("zoffset", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLsizei.IN("depth", ""),
-        GLenum.IN("format", ""),
-        GLenum.IN("type", ""),
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLint("zoffset", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLsizei("depth", ""),
+        GLenum("format", ""),
+        GLenum("type", ""),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT, PointerMapping.DATA_DOUBLE
-        )..Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("pixels", "")
+        )..Unsafe..RawPointer..void.const.p("pixels", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CopyMultiTexSubImage3DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLint.IN("zoffset", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLint("zoffset", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLsizei("width", ""),
+        GLsizei("height", "")
     )
 
     /*
@@ -1075,16 +1075,16 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "EnableClientStateIndexedEXT",
         "",
 
-        GLenum.IN("array", ""),
-        GLuint.IN("index", "")
+        GLenum("array", ""),
+        GLuint("index", "")
     )
 
     DependsOn("OpenGL13")..void(
         "DisableClientStateIndexedEXT",
         "",
 
-        GLenum.IN("array", ""),
-        GLuint.IN("index", "")
+        GLenum("array", ""),
+        GLuint("index", "")
     )
 
     /*
@@ -1098,16 +1098,16 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "EnableClientStateiEXT",
         "",
 
-        GLenum.IN("array", ""),
-        GLuint.IN("index", "")
+        GLenum("array", ""),
+        GLuint("index", "")
     )
 
     DependsOn("OpenGL30")..IgnoreMissing..void(
         "DisableClientStateiEXT",
         "",
 
-        GLenum.IN("array", ""),
-        GLuint.IN("index", "")
+        GLenum("array", ""),
+        GLuint("index", "")
     )
 
     /*
@@ -1121,27 +1121,27 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "GetFloatIndexedvEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(1)..ReturnParam..GLfloat.p.OUT("params", "")
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(1)..ReturnParam..GLfloat.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetDoubleIndexedvEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(1)..ReturnParam..GLdouble.p.OUT("params", "")
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(1)..ReturnParam..GLdouble.p("params", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetPointerIndexedvEXT",
         "",
 
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(1)..ReturnParam..void.p.p.OUT("params", "")
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(1)..ReturnParam..void.p.p("params", "")
     )
 
     /*
@@ -1155,27 +1155,27 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "GetFloati_vEXT",
         "",
 
-        GLenum.IN("pname", ""),
-        GLuint.IN("index", ""),
-        Check(1)..ReturnParam..GLfloat.p.OUT("params", "")
+        GLenum("pname", ""),
+        GLuint("index", ""),
+        Check(1)..ReturnParam..GLfloat.p("params", "")
     )
 
     DependsOn("OpenGL30")..IgnoreMissing..void(
         "GetDoublei_vEXT",
         "",
 
-        GLenum.IN("pname", ""),
-        GLuint.IN("index", ""),
-        Check(1)..ReturnParam..GLdouble.p.OUT("params", "")
+        GLenum("pname", ""),
+        GLuint("index", ""),
+        Check(1)..ReturnParam..GLdouble.p("params", "")
     )
 
     DependsOn("OpenGL30")..IgnoreMissing..void(
         "GetPointeri_vEXT",
         "",
 
-        GLenum.IN("pname", ""),
-        GLuint.IN("index", ""),
-        Check(1)..ReturnParam..void.p.p.OUT("params", "")
+        GLenum("pname", ""),
+        GLuint("index", ""),
+        Check(1)..ReturnParam..void.p.p("params", "")
     )
 
     /*
@@ -1199,97 +1199,97 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "NamedProgramStringEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("format", ""),
-        AutoSize("string")..GLsizei.IN("len", ""),
-        void.const.p.IN("string", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLenum("format", ""),
+        AutoSize("string")..GLsizei("len", ""),
+        void.const.p("string", "")
     )
 
     DependsOn("GL_ARB_vertex_program")..void(
         "NamedProgramLocalParameter4dEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        GLdouble.IN("x", ""),
-        GLdouble.IN("y", ""),
-        GLdouble.IN("z", ""),
-        GLdouble.IN("w", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        GLdouble("x", ""),
+        GLdouble("y", ""),
+        GLdouble("z", ""),
+        GLdouble("w", "")
     )
 
     DependsOn("GL_ARB_vertex_program")..void(
         "NamedProgramLocalParameter4dvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(4)..GLdouble.const.p.IN("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(4)..GLdouble.const.p("params", "")
     )
 
     DependsOn("GL_ARB_vertex_program")..void(
         "NamedProgramLocalParameter4fEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        GLfloat.IN("x", ""),
-        GLfloat.IN("y", ""),
-        GLfloat.IN("z", ""),
-        GLfloat.IN("w", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        GLfloat("x", ""),
+        GLfloat("y", ""),
+        GLfloat("z", ""),
+        GLfloat("w", "")
     )
 
     DependsOn("GL_ARB_vertex_program")..void(
         "NamedProgramLocalParameter4fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(4)..GLfloat.const.p.IN("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(4)..GLfloat.const.p("params", "")
     )
 
     DependsOn("GL_ARB_vertex_program")..void(
         "GetNamedProgramLocalParameterdvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(4)..GLdouble.p.OUT("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(4)..GLdouble.p("params", "")
     )
 
     DependsOn("GL_ARB_vertex_program")..void(
         "GetNamedProgramLocalParameterfvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(4)..GLfloat.p.OUT("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(4)..GLfloat.p("params", "")
     )
 
     DependsOn("GL_ARB_vertex_program")..void(
         "GetNamedProgramivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        ReturnParam..Check(1)..GLint.p.OUT("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        ReturnParam..Check(1)..GLint.p("params", "")
     )
 
     DependsOn("GL_ARB_vertex_program")..void(
         "GetNamedProgramStringEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check("glGetNamedProgramiEXT(program, target, ARBVertexProgram.GL_PROGRAM_LENGTH_ARB)", debug = true)..void.p.OUT("string", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check("glGetNamedProgramiEXT(program, target, ARBVertexProgram.GL_PROGRAM_LENGTH_ARB)", debug = true)..void.p("string", "")
     )
 
     /*
@@ -1301,105 +1301,105 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "CompressedTextureImage3DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLsizei.IN("depth", ""),
-        GLint.IN("border", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("data", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLsizei("depth", ""),
+        GLint("border", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..nullable..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedTextureImage2DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLint.IN("border", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("data", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLint("border", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..nullable..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedTextureImage1DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLint.IN("border", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("data", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLint("border", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..nullable..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedTextureSubImage3DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLint.IN("zoffset", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLsizei.IN("depth", ""),
-        GLenum.IN("format", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..void.const.p.IN("data", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLint("zoffset", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLsizei("depth", ""),
+        GLenum("format", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedTextureSubImage2DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLenum.IN("format", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..void.const.p.IN("data", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLenum("format", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedTextureSubImage1DEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLsizei.IN("width", ""),
-        GLenum.IN("format", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..void.const.p.IN("data", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLsizei("width", ""),
+        GLenum("format", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetCompressedTextureImageEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
         Check(
             expression = "glGetTextureLevelParameteriEXT(texture, target, level, GL13.GL_TEXTURE_COMPRESSED_IMAGE_SIZE)", debug = true
-        )..PIXEL_PACK_BUFFER..void.p.OUT("img", "")
+        )..RawPointer..void.p("img", "")
     )
 
     /*
@@ -1412,105 +1412,105 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "CompressedMultiTexImage3DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLsizei.IN("depth", ""),
-        GLint.IN("border", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("data", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLsizei("depth", ""),
+        GLint("border", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..nullable..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedMultiTexImage2DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLint.IN("border", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("data", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLint("border", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..nullable..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedMultiTexImage1DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLint.IN("border", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..nullable..void.const.p.IN("data", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLint("border", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..nullable..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedMultiTexSubImage3DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLint.IN("zoffset", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLsizei.IN("depth", ""),
-        GLenum.IN("format", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..void.const.p.IN("data", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLint("zoffset", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLsizei("depth", ""),
+        GLenum("format", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedMultiTexSubImage2DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLint.IN("yoffset", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", ""),
-        GLenum.IN("format", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..void.const.p.IN("data", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLint("yoffset", ""),
+        GLsizei("width", ""),
+        GLsizei("height", ""),
+        GLenum("format", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "CompressedMultiTexSubImage1DEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
-        GLint.IN("xoffset", ""),
-        GLsizei.IN("width", ""),
-        GLenum.IN("format", ""),
-        AutoSize("data")..GLsizei.IN("imageSize", ""),
-        PIXEL_UNPACK_BUFFER..void.const.p.IN("data", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
+        GLint("xoffset", ""),
+        GLsizei("width", ""),
+        GLenum("format", ""),
+        AutoSize("data")..GLsizei("imageSize", ""),
+        RawPointer..void.const.p("data", "")
     )
 
     DependsOn("OpenGL13")..void(
         "GetCompressedMultiTexImageEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLint.IN("level", ""),
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLint("level", ""),
         Check(
             expression = "glGetMultiTexLevelParameteriEXT(texunit, target, level, GL13.GL_TEXTURE_COMPRESSED_IMAGE_SIZE)", debug = true
-        )..PIXEL_PACK_BUFFER..void.p.OUT("img", "")
+        )..RawPointer..void.p("img", "")
     )
 
     /*
@@ -1523,32 +1523,32 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "MatrixLoadTransposefEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        Check(16)..GLfloat.const.p.IN("m", "")
+        GLenum("matrixMode", ""),
+        Check(16)..GLfloat.const.p("m", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MatrixLoadTransposedEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        Check(16)..GLdouble.const.p.IN("m", "")
+        GLenum("matrixMode", ""),
+        Check(16)..GLdouble.const.p("m", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MatrixMultTransposefEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        Check(16)..GLfloat.const.p.IN("m", "")
+        GLenum("matrixMode", ""),
+        Check(16)..GLfloat.const.p("m", "")
     )
 
     DependsOn("OpenGL13")..void(
         "MatrixMultTransposedEXT",
         "",
 
-        GLenum.IN("matrixMode", ""),
-        Check(16)..GLdouble.const.p.IN("m", "")
+        GLenum("matrixMode", ""),
+        Check(16)..GLdouble.const.p("m", "")
     )
 
     /*
@@ -1561,69 +1561,69 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "NamedBufferDataEXT",
         "",
 
-        GLuint.IN("buffer", ""),
-        AutoSize("data")..GLsizeiptr.IN("size", ""),
+        GLuint("buffer", ""),
+        AutoSize("data")..GLsizeiptr("size", ""),
         optional..MultiType(
             PointerMapping.DATA_SHORT,
             PointerMapping.DATA_INT,
             PointerMapping.DATA_FLOAT,
             PointerMapping.DATA_DOUBLE
-        )..void.const.p.IN("data", ""),
-        GLenum.IN("usage", "")
+        )..void.const.p("data", ""),
+        GLenum("usage", "")
     )
 
     DependsOn("OpenGL15")..void(
         "NamedBufferSubDataEXT",
         "",
 
-        GLuint.IN("buffer", ""),
-        GLintptr.IN("offset", ""),
-        AutoSize("data")..GLsizeiptr.IN("size", ""),
+        GLuint("buffer", ""),
+        GLintptr("offset", ""),
+        AutoSize("data")..GLsizeiptr("size", ""),
         MultiType(
             PointerMapping.DATA_SHORT,
             PointerMapping.DATA_INT,
             PointerMapping.DATA_FLOAT,
             PointerMapping.DATA_DOUBLE
-        )..void.const.p.IN("data", "")
+        )..void.const.p("data", "")
     )
 
     DependsOn("OpenGL15")..MapPointer("glGetNamedBufferParameteriEXT(buffer, GL15.GL_BUFFER_SIZE)")..void.p(
         "MapNamedBufferEXT",
         "",
 
-        GLuint.IN("buffer", ""),
-        GLenum.IN("access", "")
+        GLuint("buffer", ""),
+        GLenum("access", "")
     )
 
     DependsOn("OpenGL15")..GLboolean(
         "UnmapNamedBufferEXT",
         "",
 
-        GLuint.IN("buffer", "")
+        GLuint("buffer", "")
     )
 
     DependsOn("OpenGL15")..void(
         "GetNamedBufferParameterivEXT",
         "",
 
-        GLuint.IN("buffer", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLuint("buffer", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     DependsOn("OpenGL15")..void(
         "GetNamedBufferSubDataEXT",
         "",
 
-        GLuint.IN("buffer", ""),
-        GLintptr.IN("offset", ""),
-        AutoSize("data")..GLsizeiptr.IN("size", ""),
+        GLuint("buffer", ""),
+        GLintptr("offset", ""),
+        AutoSize("data")..GLsizeiptr("size", ""),
         MultiType(
             PointerMapping.DATA_SHORT,
             PointerMapping.DATA_INT,
             PointerMapping.DATA_FLOAT,
             PointerMapping.DATA_DOUBLE
-        )..void.p.OUT("data", "")
+        )..void.p("data", "")
     )
 
     /*
@@ -1635,197 +1635,197 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "ProgramUniform1fEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLfloat.IN("v0", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLfloat("v0", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform2fEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLfloat.IN("v0", ""),
-        GLfloat.IN("v1", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLfloat("v0", ""),
+        GLfloat("v1", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform3fEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLfloat.IN("v0", ""),
-        GLfloat.IN("v1", ""),
-        GLfloat.IN("v2", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLfloat("v0", ""),
+        GLfloat("v1", ""),
+        GLfloat("v2", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform4fEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLfloat.IN("v0", ""),
-        GLfloat.IN("v1", ""),
-        GLfloat.IN("v2", ""),
-        GLfloat.IN("v3", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLfloat("v0", ""),
+        GLfloat("v1", ""),
+        GLfloat("v2", ""),
+        GLfloat("v3", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform1iEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLint.IN("v0", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLint("v0", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform2iEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLint.IN("v0", ""),
-        GLint.IN("v1", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLint("v0", ""),
+        GLint("v1", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform3iEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLint.IN("v0", ""),
-        GLint.IN("v1", ""),
-        GLint.IN("v2", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLint("v0", ""),
+        GLint("v1", ""),
+        GLint("v2", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform4iEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLint.IN("v0", ""),
-        GLint.IN("v1", ""),
-        GLint.IN("v2", ""),
-        GLint.IN("v3", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLint("v0", ""),
+        GLint("v1", ""),
+        GLint("v2", ""),
+        GLint("v3", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform1fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize("value")..GLsizei.IN("count", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize("value")..GLsizei("count", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform2fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(2, "value")..GLsizei.IN("count", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(2, "value")..GLsizei("count", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform3fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(3, "value")..GLsizei.IN("count", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(3, "value")..GLsizei("count", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform4fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(4, "value")..GLsizei.IN("count", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(4, "value")..GLsizei("count", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform1ivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize("value")..GLsizei.IN("count", ""),
-        GLint.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize("value")..GLsizei("count", ""),
+        GLint.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform2ivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(2, "value")..GLsizei.IN("count", ""),
-        GLint.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(2, "value")..GLsizei("count", ""),
+        GLint.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform3ivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(3, "value")..GLsizei.IN("count", ""),
-        GLint.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(3, "value")..GLsizei("count", ""),
+        GLint.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniform4ivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(4, "value")..GLsizei.IN("count", ""),
-        GLint.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(4, "value")..GLsizei("count", ""),
+        GLint.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniformMatrix2fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(2 x 2, "value")..GLsizei.IN("count", ""),
-        GLboolean.IN("transpose", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(2 x 2, "value")..GLsizei("count", ""),
+        GLboolean("transpose", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniformMatrix3fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(3 x 3, "value")..GLsizei.IN("count", ""),
-        GLboolean.IN("transpose", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(3 x 3, "value")..GLsizei("count", ""),
+        GLboolean("transpose", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL20")..void(
         "ProgramUniformMatrix4fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(4 x 4, "value")..GLsizei.IN("count", ""),
-        GLboolean.IN("transpose", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(4 x 4, "value")..GLsizei("count", ""),
+        GLboolean("transpose", ""),
+        GLfloat.const.p("value", "")
     )
 
     /*
@@ -1837,66 +1837,66 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "ProgramUniformMatrix2x3fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(2 x 3, "value")..GLsizei.IN("count", ""),
-        GLboolean.IN("transpose", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(2 x 3, "value")..GLsizei("count", ""),
+        GLboolean("transpose", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL21")..void(
         "ProgramUniformMatrix3x2fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(3 x 2, "value")..GLsizei.IN("count", ""),
-        GLboolean.IN("transpose", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(3 x 2, "value")..GLsizei("count", ""),
+        GLboolean("transpose", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL21")..void(
         "ProgramUniformMatrix2x4fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(2 x 4, "value")..GLsizei.IN("count", ""),
-        GLboolean.IN("transpose", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(2 x 4, "value")..GLsizei("count", ""),
+        GLboolean("transpose", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL21")..void(
         "ProgramUniformMatrix4x2fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(4 x 2, "value")..GLsizei.IN("count", ""),
-        GLboolean.IN("transpose", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(4 x 2, "value")..GLsizei("count", ""),
+        GLboolean("transpose", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL21")..void(
         "ProgramUniformMatrix3x4fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(3 x 4, "value")..GLsizei.IN("count", ""),
-        GLboolean.IN("transpose", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(3 x 4, "value")..GLsizei("count", ""),
+        GLboolean("transpose", ""),
+        GLfloat.const.p("value", "")
     )
 
     DependsOn("OpenGL21")..void(
         "ProgramUniformMatrix4x3fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(4 x 3, "value")..GLsizei.IN("count", ""),
-        GLboolean.IN("transpose", ""),
-        GLfloat.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(4 x 3, "value")..GLsizei("count", ""),
+        GLboolean("transpose", ""),
+        GLfloat.const.p("value", "")
     )
 
     /*
@@ -1909,10 +1909,10 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "TextureBufferEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("internalformat", ""),
-        GLuint.IN("buffer", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("internalformat", ""),
+        GLuint("buffer", "")
     )
 
     /*
@@ -1925,10 +1925,10 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "MultiTexBufferEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("internalformat", ""),
-        GLuint.IN("buffer", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("internalformat", ""),
+        GLuint("buffer", "")
     )
 
     /*
@@ -1941,40 +1941,40 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "TextureParameterIivEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLint.const.p.IN("params", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLint.const.p("params", "")
     )
 
     DependsOn("GL_EXT_texture_integer")..void(
         "TextureParameterIuivEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLuint.const.p.IN("params", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLuint.const.p("params", "")
     )
 
     DependsOn("GL_EXT_texture_integer")..void(
         "GetTextureParameterIivEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     DependsOn("GL_EXT_texture_integer")..void(
         "GetTextureParameterIuivEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLuint.p.OUT("params", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLuint.p("params", "")
     )
 
     /*
@@ -1987,40 +1987,40 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "MultiTexParameterIivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLint.const.p.IN("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLint.const.p("params", "")
     )
 
     DependsOn("GL_EXT_texture_integer")..void(
         "MultiTexParameterIuivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(4)..GLuint.const.p.IN("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(4)..GLuint.const.p("params", "")
     )
 
     DependsOn("GL_EXT_texture_integer")..void(
         "GetMultiTexParameterIivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     DependsOn("GL_EXT_texture_integer")..void(
         "GetMultiTexParameterIuivEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLuint.p.OUT("params", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLuint.p("params", "")
     )
 
     /*
@@ -2032,82 +2032,82 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "ProgramUniform1uiEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLuint.IN("v0", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLuint("v0", "")
     )
 
     DependsOn("GL_EXT_gpu_shader4")..void(
         "ProgramUniform2uiEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLuint.IN("v0", ""),
-        GLuint.IN("v1", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLuint("v0", ""),
+        GLuint("v1", "")
     )
 
     DependsOn("GL_EXT_gpu_shader4")..void(
         "ProgramUniform3uiEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLuint.IN("v0", ""),
-        GLuint.IN("v1", ""),
-        GLuint.IN("v2", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLuint("v0", ""),
+        GLuint("v1", ""),
+        GLuint("v2", "")
     )
 
     DependsOn("GL_EXT_gpu_shader4")..void(
         "ProgramUniform4uiEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        GLuint.IN("v0", ""),
-        GLuint.IN("v1", ""),
-        GLuint.IN("v2", ""),
-        GLuint.IN("v3", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        GLuint("v0", ""),
+        GLuint("v1", ""),
+        GLuint("v2", ""),
+        GLuint("v3", "")
     )
 
     DependsOn("GL_EXT_gpu_shader4")..void(
         "ProgramUniform1uivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize("value")..GLsizei.IN("count", ""),
-        GLuint.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize("value")..GLsizei("count", ""),
+        GLuint.const.p("value", "")
     )
 
     DependsOn("GL_EXT_gpu_shader4")..void(
         "ProgramUniform2uivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(2, "value")..GLsizei.IN("count", ""),
-        GLuint.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(2, "value")..GLsizei("count", ""),
+        GLuint.const.p("value", "")
     )
 
     DependsOn("GL_EXT_gpu_shader4")..void(
         "ProgramUniform3uivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(3, "value")..GLsizei.IN("count", ""),
-        GLuint.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(3, "value")..GLsizei("count", ""),
+        GLuint.const.p("value", "")
     )
 
     DependsOn("GL_EXT_gpu_shader4")..void(
         "ProgramUniform4uivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLint.IN("location", ""),
-        AutoSize(4, "value")..GLsizei.IN("count", ""),
-        GLuint.const.p.IN("value", "")
+        GLuint("program", ""),
+        GLint("location", ""),
+        AutoSize(4, "value")..GLsizei("count", ""),
+        GLuint.const.p("value", "")
     )
 
     /*
@@ -2119,11 +2119,11 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "NamedProgramLocalParameters4fvEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        AutoSize(4, "params")..GLsizei.IN("count", ""),
-        GLfloat.const.p.IN("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        AutoSize(4, "params")..GLsizei("count", ""),
+        GLfloat.const.p("params", "")
     )
 
     /*
@@ -2135,88 +2135,88 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "NamedProgramLocalParameterI4iEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        GLint.IN("x", ""),
-        GLint.IN("y", ""),
-        GLint.IN("z", ""),
-        GLint.IN("w", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        GLint("x", ""),
+        GLint("y", ""),
+        GLint("z", ""),
+        GLint("w", "")
     )
 
     DependsOn("GL_NV_gpu_program4")..void(
         "NamedProgramLocalParameterI4ivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(4)..GLint.const.p.IN("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(4)..GLint.const.p("params", "")
     )
 
     DependsOn("GL_NV_gpu_program4")..void(
         "NamedProgramLocalParametersI4ivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        AutoSize(4, "params")..GLsizei.IN("count", ""),
-        GLint.const.p.IN("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        AutoSize(4, "params")..GLsizei("count", ""),
+        GLint.const.p("params", "")
     )
 
     DependsOn("GL_NV_gpu_program4")..void(
         "NamedProgramLocalParameterI4uiEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        GLuint.IN("x", ""),
-        GLuint.IN("y", ""),
-        GLuint.IN("z", ""),
-        GLuint.IN("w", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        GLuint("x", ""),
+        GLuint("y", ""),
+        GLuint("z", ""),
+        GLuint("w", "")
     )
 
     DependsOn("GL_NV_gpu_program4")..void(
         "NamedProgramLocalParameterI4uivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(4)..GLuint.const.p.IN("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(4)..GLuint.const.p("params", "")
     )
 
     DependsOn("GL_NV_gpu_program4")..void(
         "NamedProgramLocalParametersI4uivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        AutoSize(4, "params")..GLsizei.IN("count", ""),
-        GLuint.const.p.IN("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        AutoSize(4, "params")..GLsizei("count", ""),
+        GLuint.const.p("params", "")
     )
 
     DependsOn("GL_NV_gpu_program4")..void(
         "GetNamedProgramLocalParameterIivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(4)..GLint.p.OUT("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(4)..GLint.p("params", "")
     )
 
     DependsOn("GL_NV_gpu_program4")..void(
         "GetNamedProgramLocalParameterIuivEXT",
         "",
 
-        GLuint.IN("program", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("index", ""),
-        Check(4)..GLuint.p.OUT("params", "")
+        GLuint("program", ""),
+        GLenum("target", ""),
+        GLuint("index", ""),
+        Check(4)..GLuint.p("params", "")
     )
 
     /*
@@ -2228,19 +2228,19 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "NamedRenderbufferStorageEXT",
         "",
 
-        GLuint.IN("renderbuffer", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", "")
+        GLuint("renderbuffer", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", "")
     )
 
     DependsOn("OpenGL30")..void(
         "GetNamedRenderbufferParameterivEXT",
         "",
 
-        GLuint.IN("renderbuffer", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLuint("renderbuffer", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     /*
@@ -2252,11 +2252,11 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "NamedRenderbufferStorageMultisampleEXT",
         "",
 
-        GLuint.IN("renderbuffer", ""),
-        GLsizei.IN("samples", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", "")
+        GLuint("renderbuffer", ""),
+        GLsizei("samples", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", "")
     )
 
     /*
@@ -2269,12 +2269,12 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "NamedRenderbufferStorageMultisampleCoverageEXT",
         "",
 
-        GLuint.IN("renderbuffer", ""),
-        GLsizei.IN("coverageSamples", ""),
-        GLsizei.IN("colorSamples", ""),
-        GLenum.IN("internalformat", ""),
-        GLsizei.IN("width", ""),
-        GLsizei.IN("height", "")
+        GLuint("renderbuffer", ""),
+        GLsizei("coverageSamples", ""),
+        GLsizei("colorSamples", ""),
+        GLenum("internalformat", ""),
+        GLsizei("width", ""),
+        GLsizei("height", "")
     )
 
     /*
@@ -2286,62 +2286,62 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "CheckNamedFramebufferStatusEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("target", "")
+        GLuint("framebuffer", ""),
+        GLenum("target", "")
     )
 
     DependsOn("OpenGL30")..void(
         "NamedFramebufferTexture1DEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("textarget", ""),
-        GLuint.IN("texture", ""),
-        GLint.IN("level", "")
+        GLuint("framebuffer", ""),
+        GLenum("attachment", ""),
+        GLenum("textarget", ""),
+        GLuint("texture", ""),
+        GLint("level", "")
     )
 
     DependsOn("OpenGL30")..void(
         "NamedFramebufferTexture2DEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("textarget", ""),
-        GLuint.IN("texture", ""),
-        GLint.IN("level", "")
+        GLuint("framebuffer", ""),
+        GLenum("attachment", ""),
+        GLenum("textarget", ""),
+        GLuint("texture", ""),
+        GLint("level", "")
     )
 
     DependsOn("OpenGL30")..void(
         "NamedFramebufferTexture3DEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("textarget", ""),
-        GLuint.IN("texture", ""),
-        GLint.IN("level", ""),
-        GLint.IN("zoffset", "")
+        GLuint("framebuffer", ""),
+        GLenum("attachment", ""),
+        GLenum("textarget", ""),
+        GLuint("texture", ""),
+        GLint("level", ""),
+        GLint("zoffset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "NamedFramebufferRenderbufferEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("renderbuffertarget", ""),
-        GLuint.IN("renderbuffer", "")
+        GLuint("framebuffer", ""),
+        GLenum("attachment", ""),
+        GLenum("renderbuffertarget", ""),
+        GLuint("renderbuffer", "")
     )
 
     DependsOn("OpenGL30")..void(
         "GetNamedFramebufferAttachmentParameterivEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("attachment", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("params", "")
+        GLuint("framebuffer", ""),
+        GLenum("attachment", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("params", "")
     )
 
     /*
@@ -2353,8 +2353,8 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "GenerateTextureMipmapEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", "")
+        GLuint("texture", ""),
+        GLenum("target", "")
     )
 
     /*
@@ -2366,8 +2366,8 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "GenerateMultiTexMipmapEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", "")
+        GLenum("texunit", ""),
+        GLenum("target", "")
     )
 
     // OpenGL 3.0: New framebuffer commands
@@ -2376,25 +2376,25 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "FramebufferDrawBufferEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("mode", "")
+        GLuint("framebuffer", ""),
+        GLenum("mode", "")
     )
 
     DependsOn("OpenGL30")..void(
         "FramebufferDrawBuffersEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        AutoSize("bufs")..GLsizei.IN("n", ""),
-        GLenum.const.p.IN("bufs", "")
+        GLuint("framebuffer", ""),
+        AutoSize("bufs")..GLsizei("n", ""),
+        GLenum.const.p("bufs", "")
     )
 
     DependsOn("OpenGL30")..void(
         "FramebufferReadBufferEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("mode", "")
+        GLuint("framebuffer", ""),
+        GLenum("mode", "")
     )
 
     // OpenGL 3.0: New framebuffer query
@@ -2403,9 +2403,9 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "GetFramebufferParameterivEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("param", "")
+        GLuint("framebuffer", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("param", "")
     )
 
     // OpenGL 3.0: New buffer data copy command
@@ -2414,11 +2414,11 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "NamedCopyBufferSubDataEXT",
         "",
 
-        GLuint.IN("readBuffer", ""),
-        GLuint.IN("writeBuffer", ""),
-        GLintptr.IN("readOffset", ""),
-        GLintptr.IN("writeOffset", ""),
-        GLsizeiptr.IN("size", "")
+        GLuint("readBuffer", ""),
+        GLuint("writeBuffer", ""),
+        GLintptr("readOffset", ""),
+        GLintptr("writeOffset", ""),
+        GLsizeiptr("size", "")
     )
 
     /*
@@ -2431,32 +2431,32 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "NamedFramebufferTextureEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("attachment", ""),
-        GLuint.IN("texture", ""),
-        GLint.IN("level", "")
+        GLuint("framebuffer", ""),
+        GLenum("attachment", ""),
+        GLuint("texture", ""),
+        GLint("level", "")
     )
 
     DependsOn("ext.contains(\"GL_EXT_geometry_shader4\") || ext.contains(\"GL_NV_gpu_program4\")")..void(
         "NamedFramebufferTextureLayerEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("attachment", ""),
-        GLuint.IN("texture", ""),
-        GLint.IN("level", ""),
-        GLint.IN("layer", "")
+        GLuint("framebuffer", ""),
+        GLenum("attachment", ""),
+        GLuint("texture", ""),
+        GLint("level", ""),
+        GLint("layer", "")
     )
 
     DependsOn("ext.contains(\"GL_EXT_geometry_shader4\") || ext.contains(\"GL_NV_gpu_program4\")")..void(
         "NamedFramebufferTextureFaceEXT",
         "",
 
-        GLuint.IN("framebuffer", ""),
-        GLenum.IN("attachment", ""),
-        GLuint.IN("texture", ""),
-        GLint.IN("level", ""),
-        GLenum.IN("face", "")
+        GLuint("framebuffer", ""),
+        GLenum("attachment", ""),
+        GLuint("texture", ""),
+        GLint("level", ""),
+        GLenum("face", "")
     )
 
     /*
@@ -2469,9 +2469,9 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "TextureRenderbufferEXT",
         "",
 
-        GLuint.IN("texture", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("renderbuffer", "")
+        GLuint("texture", ""),
+        GLenum("target", ""),
+        GLuint("renderbuffer", "")
     )
 
     /*
@@ -2484,9 +2484,9 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "MultiTexRenderbufferEXT",
         "",
 
-        GLenum.IN("texunit", ""),
-        GLenum.IN("target", ""),
-        GLuint.IN("renderbuffer", "")
+        GLenum("texunit", ""),
+        GLenum("target", ""),
+        GLuint("renderbuffer", "")
     )
 
     /*
@@ -2500,131 +2500,131 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "VertexArrayVertexOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLint.IN("size", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLint("size", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArrayColorOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLint.IN("size", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLint("size", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArrayEdgeFlagOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArrayIndexOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArrayNormalOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArrayTexCoordOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLint.IN("size", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLint("size", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArrayMultiTexCoordOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLenum.IN("texunit", ""),
-        GLint.IN("size", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLenum("texunit", ""),
+        GLint("size", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArrayFogCoordOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArraySecondaryColorOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLint.IN("size", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLint("size", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArrayVertexAttribOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLuint.IN("index", ""),
-        GLint.IN("size", ""),
-        GLenum.IN("type", ""),
-        GLboolean.IN("normalized", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLuint("index", ""),
+        GLint("size", ""),
+        GLenum("type", ""),
+        GLboolean("normalized", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     DependsOn("OpenGL30")..void(
         "VertexArrayVertexAttribIOffsetEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("buffer", ""),
-        GLuint.IN("index", ""),
-        GLint.IN("size", ""),
-        GLenum.IN("type", ""),
-        GLsizei.IN("stride", ""),
-        GLintptr.IN("offset", "")
+        GLuint("vaobj", ""),
+        GLuint("buffer", ""),
+        GLuint("index", ""),
+        GLint("size", ""),
+        GLenum("type", ""),
+        GLsizei("stride", ""),
+        GLintptr("offset", "")
     )
 
     /*
@@ -2637,16 +2637,16 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "EnableVertexArrayEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLenum.IN("array", "")
+        GLuint("vaobj", ""),
+        GLenum("array", "")
     )
 
     DependsOn("OpenGL30")..void(
         "DisableVertexArrayEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLenum.IN("array", "")
+        GLuint("vaobj", ""),
+        GLenum("array", "")
     )
 
     /*
@@ -2659,16 +2659,16 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "EnableVertexArrayAttribEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("index", "")
+        GLuint("vaobj", ""),
+        GLuint("index", "")
     )
 
     DependsOn("OpenGL30")..void(
         "DisableVertexArrayAttribEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("index", "")
+        GLuint("vaobj", ""),
+        GLuint("index", "")
     )
 
     // OpenGL 3.0: New queries for vertex array objects
@@ -2677,38 +2677,38 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "GetVertexArrayIntegervEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("param", "")
+        GLuint("vaobj", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("param", "")
     )
 
     DependsOn("OpenGL30")..void(
         "GetVertexArrayPointervEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..void.p.p.OUT("param", "")
+        GLuint("vaobj", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..void.p.p("param", "")
     )
 
     DependsOn("OpenGL30")..void(
         "GetVertexArrayIntegeri_vEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("index", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..GLint.p.OUT("param", "")
+        GLuint("vaobj", ""),
+        GLuint("index", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..GLint.p("param", "")
     )
 
     DependsOn("OpenGL30")..void(
         "GetVertexArrayPointeri_vEXT",
         "",
 
-        GLuint.IN("vaobj", ""),
-        GLuint.IN("index", ""),
-        GLenum.IN("pname", ""),
-        Check(1)..ReturnParam..void.p.p.OUT("param", "")
+        GLuint("vaobj", ""),
+        GLuint("index", ""),
+        GLenum("pname", ""),
+        Check(1)..ReturnParam..void.p.p("param", "")
     )
 
     /*
@@ -2720,18 +2720,18 @@ void loadTexture(GLint texobj, GLint width, GLint height, void *data)
         "MapNamedBufferRangeEXT",
         "",
 
-        GLuint.IN("buffer", ""),
-        GLintptr.IN("offset", ""),
-        GLsizeiptr.IN("length", ""),
-        GLbitfield.IN("access", "")
+        GLuint("buffer", ""),
+        GLintptr("offset", ""),
+        GLsizeiptr("length", ""),
+        GLbitfield("access", "")
     )
 
     DependsOn("OpenGL30")..void(
         "FlushMappedNamedBufferRangeEXT",
         "",
 
-        GLuint.IN("buffer", ""),
-        GLintptr.IN("offset", ""),
-        GLsizeiptr.IN("length", "")
+        GLuint("buffer", ""),
+        GLintptr("offset", ""),
+        GLsizeiptr("length", "")
     )
 }

@@ -21,9 +21,9 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>Description</h5>
  * 
- * <p>The parameters {@code basePipelineHandle} and {@code basePipelineIndex} are described in more detail in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-pipeline-derivatives">Pipeline Derivatives</a>.</p>
+ * <p>The parameters {@code basePipelineHandle} and {@code basePipelineIndex} are described in more detail in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#pipelines-pipeline-derivatives">Pipeline Derivatives</a>.</p>
  * 
- * <p>{@code pStages} points to an array of {@link VkPipelineShaderStageCreateInfo} structures, which were previously described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-compute">Compute Pipelines</a>.</p>
+ * <p>{@code pStages} points to an array of {@link VkPipelineShaderStageCreateInfo} structures, which were previously described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#pipelines-compute">Compute Pipelines</a>.</p>
  * 
  * <p>{@code pDynamicState} points to a structure of type {@link VkPipelineDynamicStateCreateInfo}.</p>
  * 
@@ -49,14 +49,14 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If {@code pStages} includes tessellation shader stages, and the shader code of both contain an {@code OpExecutionMode} instruction that specifies the out patch size in the pipeline, they <b>must</b> both specify the same patch size</li>
  * <li>If {@code pStages} includes tessellation shader stages, the {@code topology} member of {@code pInputAssembly} <b>must</b> be {@link VK10#VK_PRIMITIVE_TOPOLOGY_PATCH_LIST PRIMITIVE_TOPOLOGY_PATCH_LIST}</li>
  * <li>If the {@code topology} member of {@code pInputAssembly} is {@link VK10#VK_PRIMITIVE_TOPOLOGY_PATCH_LIST PRIMITIVE_TOPOLOGY_PATCH_LIST}, {@code pStages} <b>must</b> include tessellation shader stages</li>
- * <li>If {@code pStages} includes a geometry shader stage, and does not include any tessellation shader stages, its shader code <b>must</b> contain an {@code OpExecutionMode} instruction that specifies an input primitive type that is <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-geometry-execution">compatible</a> with the primitive topology specified in {@code pInputAssembly}</li>
- * <li>If {@code pStages} includes a geometry shader stage, and also includes tessellation shader stages, its shader code <b>must</b> contain an {@code OpExecutionMode} instruction that specifies an input primitive type that is <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-geometry-execution">compatible</a> with the primitive topology that is output by the tessellation stages</li>
+ * <li>If {@code pStages} includes a geometry shader stage, and does not include any tessellation shader stages, its shader code <b>must</b> contain an {@code OpExecutionMode} instruction that specifies an input primitive type that is <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-geometry-execution">compatible</a> with the primitive topology specified in {@code pInputAssembly}</li>
+ * <li>If {@code pStages} includes a geometry shader stage, and also includes tessellation shader stages, its shader code <b>must</b> contain an {@code OpExecutionMode} instruction that specifies an input primitive type that is <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-geometry-execution">compatible</a> with the primitive topology that is output by the tessellation stages</li>
  * <li>If {@code pStages} includes a fragment shader stage and a geometry shader stage, and the fragment shader code reads from an input variable that is decorated with {@code PrimitiveID}, then the geometry shader code <b>must</b> write to a matching output variable, decorated with {@code PrimitiveID}, in all execution paths</li>
  * <li>If {@code pStages} includes a fragment shader stage, its shader code <b>must</b> not read from any input attachment that is defined as {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} in {@code subpass}</li>
- * <li>The shader code for the entry points identified by {@code pStages}, and the rest of the state identified by this structure <b>must</b> adhere to the pipeline linking rules described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#interfaces">Shader Interfaces</a> chapter</li>
+ * <li>The shader code for the entry points identified by {@code pStages}, and the rest of the state identified by this structure <b>must</b> adhere to the pipeline linking rules described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#interfaces">Shader Interfaces</a> chapter</li>
  * <li>If rasterization is not disabled and {@code subpass} uses a depth/stencil attachment in {@code renderPass} that has a layout of {@link VK10#VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} or {@link VK11#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL} in the {@link VkAttachmentReference} defined by {@code subpass}, the {@code depthWriteEnable} member of {@code pDepthStencilState} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
  * <li>If rasterization is not disabled and {@code subpass} uses a depth/stencil attachment in {@code renderPass} that has a layout of {@link VK10#VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} or {@link VK11#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL} in the {@link VkAttachmentReference} defined by {@code subpass}, the {@code failOp}, {@code passOp} and {@code depthFailOp} members of each of the {@code front} and {@code back} members of {@code pDepthStencilState} <b>must</b> be {@link VK10#VK_STENCIL_OP_KEEP STENCIL_OP_KEEP}</li>
- * <li>If rasterization is not disabled and the subpass uses color attachments, then for each color attachment in the subpass the {@code blendEnable} member of the corresponding element of the {@code pAttachment} member of {@code pColorBlendState} <b>must</b> be {@link VK10#VK_FALSE FALSE} if the attached image&#8217;s <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features">format features</a> does not contain the {@link VK10#VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT}.</li>
+ * <li>If rasterization is not disabled and the subpass uses color attachments, then for each color attachment in the subpass the {@code blendEnable} member of the corresponding element of the {@code pAttachment} member of {@code pColorBlendState} <b>must</b> be {@link VK10#VK_FALSE FALSE} if the attached image&#8217;s <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features">format features</a> does not contain {@link VK10#VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT}.</li>
  * <li>If rasterization is not disabled and the subpass uses color attachments, the {@code attachmentCount} member of {@code pColorBlendState} <b>must</b> be equal to the {@code colorAttachmentCount} used to create {@code subpass}</li>
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link VK10#VK_DYNAMIC_STATE_VIEWPORT DYNAMIC_STATE_VIEWPORT}, the {@code pViewports} member of {@code pViewportState} <b>must</b> be a valid pointer to an array of {@code pViewportState}{@code ::viewportCount} valid {@link VkViewport} structures</li>
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link VK10#VK_DYNAMIC_STATE_SCISSOR DYNAMIC_STATE_SCISSOR}, the {@code pScissors} member of {@code pViewportState} <b>must</b> be a valid pointer to an array of {@code pViewportState}{@code ::scissorCount} {@link VkRect2D} structures</li>
@@ -71,11 +71,12 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link EXTSampleLocations#VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT}, and the {@code sampleLocationsEnable} member of a {@link VkPipelineSampleLocationsStateCreateInfoEXT} structure chained to the {@code pNext} chain of {@code pMultisampleState} is {@link VK10#VK_TRUE TRUE}, {@code sampleLocationsInfo.sampleLocationGridSize.height} <b>must</b> evenly divide {@link VkMultisamplePropertiesEXT}{@code ::sampleLocationGridSize}.height as returned by {@link EXTSampleLocations#vkGetPhysicalDeviceMultisamplePropertiesEXT GetPhysicalDeviceMultisamplePropertiesEXT} with a {@code samples} parameter equaling {@code rasterizationSamples}</li>
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link EXTSampleLocations#VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT}, and the {@code sampleLocationsEnable} member of a {@link VkPipelineSampleLocationsStateCreateInfoEXT} structure chained to the {@code pNext} chain of {@code pMultisampleState} is {@link VK10#VK_TRUE TRUE}, {@code sampleLocationsInfo.sampleLocationsPerPixel} <b>must</b> equal {@code rasterizationSamples}</li>
  * <li>If the {@code sampleLocationsEnable} member of a {@link VkPipelineSampleLocationsStateCreateInfoEXT} structure chained to the {@code pNext} chain of {@code pMultisampleState} is {@link VK10#VK_TRUE TRUE}, the fragment shader code <b>must</b> not statically use the extended instruction {@code InterpolateAtSample}</li>
- * <li>{@code layout} <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-pipelinelayout-consistency">consistent</a> with all shaders specified in {@code pStages}</li>
- * <li>If {@code subpass} uses color and/or depth/stencil attachments, then the {@code rasterizationSamples} member of {@code pMultisampleState} <b>must</b> equal the maximum of the sample counts of those subpass attachments</li>
- * <li>If {@code subpass} has a depth/stencil attachment and depth test, stencil test, or depth bounds test are enabled, then the {@code rasterizationSamples} member of {@code pMultisampleState} <b>must</b> be the same as the sample count of the depth/stencil attachment</li>
- * <li>If {@code subpass} has any color attachments, then the {@code rasterizationSamples} member of {@code pMultisampleState} <b>must</b> be greater than or equal to the sample count for those subpass attachments</li>
- * <li>If {@code subpass} does not use any color and/or depth/stencil attachments, then the {@code rasterizationSamples} member of {@code pMultisampleState} <b>must</b> follow the rules for a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-noattachments">zero-attachment subpass</a></li>
+ * <li>{@code layout} <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-pipelinelayout-consistency">consistent</a> with all shaders specified in {@code pStages}</li>
+ * <li>If neither the {@code VK_AMD_mixed_attachment_samples} nor the {@code VK_NV_framebuffer_mixed_samples} extensions are enabled, and if {@code subpass} uses color and/or depth/stencil attachments, then the {@code rasterizationSamples} member of {@code pMultisampleState} <b>must</b> be the same as the sample count for those subpass attachments</li>
+ * <li>If the {@code VK_AMD_mixed_attachment_samples} extension is enabled, and if {@code subpass} uses color and/or depth/stencil attachments, then the {@code rasterizationSamples} member of {@code pMultisampleState} <b>must</b> equal the maximum of the sample counts of those subpass attachments</li>
+ * <li>If the {@code VK_NV_framebuffer_mixed_samples} extension is enabled, and if {@code subpass} has a depth/stencil attachment and depth test, stencil test, or depth bounds test are enabled, then the {@code rasterizationSamples} member of {@code pMultisampleState} <b>must</b> be the same as the sample count of the depth/stencil attachment</li>
+ * <li>If the {@code VK_NV_framebuffer_mixed_samples} extension is enabled, and if {@code subpass} has any color attachments, then the {@code rasterizationSamples} member of {@code pMultisampleState} <b>must</b> be greater than or equal to the sample count for those subpass attachments</li>
+ * <li>If {@code subpass} does not use any color and/or depth/stencil attachments, then the {@code rasterizationSamples} member of {@code pMultisampleState} <b>must</b> follow the rules for a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-noattachments">zero-attachment subpass</a></li>
  * <li>{@code subpass} <b>must</b> be a valid subpass within {@code renderPass}</li>
  * <li>If the {@code renderPass} has multiview enabled and {@code subpass} has more than one bit set in the view mask and {@code multiviewTessellationShader} is not enabled, then {@code pStages} <b>must</b> not include tessellation shaders.</li>
  * <li>If the {@code renderPass} has multiview enabled and {@code subpass} has more than one bit set in the view mask and {@code multiviewGeometryShader} is not enabled, then {@code pStages} <b>must</b> not include a geometry shader.</li>
@@ -87,13 +88,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link NVClipSpaceWScaling#VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV DYNAMIC_STATE_VIEWPORT_W_SCALING_NV}, and the {@code viewportWScalingEnable} member of a {@link VkPipelineViewportWScalingStateCreateInfoNV} structure, chained to the {@code pNext} chain of {@code pViewportState}, is {@link VK10#VK_TRUE TRUE}, the {@code pViewportWScalings} member of the {@link VkPipelineViewportWScalingStateCreateInfoNV} <b>must</b> be a pointer to an array of {@link VkPipelineViewportWScalingStateCreateInfoNV}{@code ::viewportCount} valid {@link VkViewportWScalingNV} structures</li>
  * <li>If {@code pStages} includes a vertex shader stage, {@code pVertexInputState} <b>must</b> be a valid pointer to a valid {@link VkPipelineVertexInputStateCreateInfo} structure</li>
  * <li>If {@code pStages} includes a vertex shader stage, {@code pInputAssemblyState} <b>must</b> be a valid pointer to a valid {@link VkPipelineInputAssemblyStateCreateInfo} structure</li>
+ * <li>The {@code Xfb} execution mode <b>can</b> be specified by only one shader stage in {@code pStages}</li>
+ * <li>If any shader stage in {@code pStages} specifies {@code Xfb} execution mode it <b>must</b> be the last vertex processing stage</li>
+ * <li>If a {@link VkPipelineRasterizationStateStreamCreateInfoEXT}{@code ::rasterizationStream} value other than zero is specified, all variables in the output interface of the entry point being compiled decorated with {@code Position}, {@code PointSize}, {@code ClipDistance}, or {@code CullDistance} <b>must</b> all be decorated with identical {@code Stream} values that match the {@code rasterizationStream}</li>
+ * <li>If {@link VkPipelineRasterizationStateStreamCreateInfoEXT}{@code ::rasterizationStream} is zero, or not specified, all variables in the output interface of the entry point being compiled decorated with {@code Position}, {@code PointSize}, {@code ClipDistance}, or {@code CullDistance} <b>must</b> all be decorated with a {@code Stream} value of zero, or <b>must</b> not specify the {@code Stream} decoration</li>
+ * <li>If the last vertex processing stage is a geometry shader, and that geometry shader uses the {@code GeometryStreams} capability, then {@link VkPhysicalDeviceTransformFeedbackFeaturesEXT}{@code ::geometryStreams} feature <b>must</b> be enabled</li>
+ * <li>If there are any mesh shader stages in the pipeline there <b>must</b> not be any shader stage in the pipeline with a {@code Xfb} execution mode.</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link VK10#VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO}</li>
- * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkPipelineDiscardRectangleStateCreateInfoEXT} or {@link VkPipelineRepresentativeFragmentTestStateCreateInfoNV}</li>
+ * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkPipelineCreationFeedbackCreateInfoEXT}, {@link VkPipelineDiscardRectangleStateCreateInfoEXT}, or {@link VkPipelineRepresentativeFragmentTestStateCreateInfoNV}</li>
  * <li>Each {@code sType} member in the {@code pNext} chain <b>must</b> be unique</li>
  * <li>{@code flags} <b>must</b> be a valid combination of {@code VkPipelineCreateFlagBits} values</li>
  * <li>{@code pStages} <b>must</b> be a valid pointer to an array of {@code stageCount} valid {@link VkPipelineShaderStageCreateInfo} structures</li>
@@ -118,7 +125,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code stageCount} &ndash; the number of entries in the {@code pStages} array.</li>
  * <li>{@code pStages} &ndash; an array of size {@code stageCount} structures of type {@link VkPipelineShaderStageCreateInfo} describing the set of the shader stages to be included in the graphics pipeline.</li>
  * <li>{@code pVertexInputState} &ndash; a pointer to an instance of the {@link VkPipelineVertexInputStateCreateInfo} structure. It is ignored if the pipeline includes a mesh shader stage.</li>
- * <li>{@code pInputAssemblyState} &ndash; a pointer to an instance of the {@link VkPipelineInputAssemblyStateCreateInfo} structure which determines input assembly behavior, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#drawing">Drawing Commands</a>. It is ignored if the pipeline includes a mesh shader stage.</li>
+ * <li>{@code pInputAssemblyState} &ndash; a pointer to an instance of the {@link VkPipelineInputAssemblyStateCreateInfo} structure which determines input assembly behavior, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#drawing">Drawing Commands</a>. It is ignored if the pipeline includes a mesh shader stage.</li>
  * <li>{@code pTessellationState} &ndash; a pointer to an instance of the {@link VkPipelineTessellationStateCreateInfo} structure, and is ignored if the pipeline does not include a tessellation control shader stage and tessellation evaluation shader stage.</li>
  * <li>{@code pViewportState} &ndash; a pointer to an instance of the {@link VkPipelineViewportStateCreateInfo} structure, and is ignored if the pipeline has rasterization disabled.</li>
  * <li>{@code pRasterizationState} &ndash; a pointer to an instance of the {@link VkPipelineRasterizationStateCreateInfo} structure.</li>
@@ -127,7 +134,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code pColorBlendState} &ndash; a pointer to an instance of the {@link VkPipelineColorBlendStateCreateInfo} structure, and is ignored if the pipeline has rasterization disabled or if the subpass of the render pass the pipeline is created against does not use any color attachments.</li>
  * <li>{@code pDynamicState} &ndash; a pointer to {@link VkPipelineDynamicStateCreateInfo} and is used to indicate which properties of the pipeline state object are dynamic and <b>can</b> be changed independently of the pipeline state. This <b>can</b> be {@code NULL}, which means no state in the pipeline is considered dynamic.</li>
  * <li>{@code layout} &ndash; the description of binding locations used by both the pipeline and descriptor sets used with the pipeline.</li>
- * <li>{@code renderPass} &ndash; a handle to a render pass object describing the environment in which the pipeline will be used; the pipeline <b>must</b> only be used with an instance of any render pass compatible with the one provided. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">Render Pass Compatibility</a> for more information.</li>
+ * <li>{@code renderPass} &ndash; a handle to a render pass object describing the environment in which the pipeline will be used; the pipeline <b>must</b> only be used with an instance of any render pass compatible with the one provided. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-compatibility">Render Pass Compatibility</a> for more information.</li>
  * <li>{@code subpass} &ndash; the index of the subpass in the render pass where this pipeline will be used.</li>
  * <li>{@code basePipelineHandle} &ndash; a pipeline to derive from.</li>
  * <li>{@code basePipelineIndex} &ndash; an index into the {@code pCreateInfos} parameter to use as a pipeline to derive from.</li>
@@ -141,16 +148,16 @@ import static org.lwjgl.system.MemoryStack.*;
  *     void const * pNext;
  *     VkPipelineCreateFlags flags;
  *     uint32_t stageCount;
- *     {@link VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo const} * pStages;
- *     {@link VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo const} * pVertexInputState;
- *     {@link VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo const} * pInputAssemblyState;
- *     {@link VkPipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo const} * pTessellationState;
- *     {@link VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo const} * pViewportState;
- *     {@link VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo const} * pRasterizationState;
- *     {@link VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo const} * pMultisampleState;
- *     {@link VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo const} * pDepthStencilState;
- *     {@link VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo const} * pColorBlendState;
- *     {@link VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo const} * pDynamicState;
+ *     {@link VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo} const * pStages;
+ *     {@link VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo} const * pVertexInputState;
+ *     {@link VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo} const * pInputAssemblyState;
+ *     {@link VkPipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo} const * pTessellationState;
+ *     {@link VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo} const * pViewportState;
+ *     {@link VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo} const * pRasterizationState;
+ *     {@link VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo} const * pMultisampleState;
+ *     {@link VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo} const * pDepthStencilState;
+ *     {@link VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo} const * pColorBlendState;
+ *     {@link VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo} const * pDynamicState;
  *     VkPipelineLayout layout;
  *     VkRenderPass renderPass;
  *     uint32_t subpass;
@@ -235,18 +242,14 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
         BASEPIPELINEINDEX = layout.offsetof(18);
     }
 
-    VkGraphicsPipelineCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkGraphicsPipelineCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkGraphicsPipelineCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkGraphicsPipelineCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -412,30 +415,31 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
 
     // -----------------------------------
 
-    /** Returns a new {@link VkGraphicsPipelineCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkGraphicsPipelineCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkGraphicsPipelineCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkGraphicsPipelineCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkGraphicsPipelineCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkGraphicsPipelineCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkGraphicsPipelineCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkGraphicsPipelineCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkGraphicsPipelineCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkGraphicsPipelineCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkGraphicsPipelineCreateInfo create() {
-        return new VkGraphicsPipelineCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkGraphicsPipelineCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkGraphicsPipelineCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkGraphicsPipelineCreateInfo} instance for the specified memory address. */
     public static VkGraphicsPipelineCreateInfo create(long address) {
-        return new VkGraphicsPipelineCreateInfo(address, null);
+        return wrap(VkGraphicsPipelineCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkGraphicsPipelineCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkGraphicsPipelineCreateInfo.class, address);
     }
 
     /**
@@ -444,7 +448,7 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkGraphicsPipelineCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -453,7 +457,7 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkGraphicsPipelineCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -462,7 +466,8 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkGraphicsPipelineCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -472,43 +477,43 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkGraphicsPipelineCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkGraphicsPipelineCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkGraphicsPipelineCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkGraphicsPipelineCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkGraphicsPipelineCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkGraphicsPipelineCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkGraphicsPipelineCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkGraphicsPipelineCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkGraphicsPipelineCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkGraphicsPipelineCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkGraphicsPipelineCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkGraphicsPipelineCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkGraphicsPipelineCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkGraphicsPipelineCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkGraphicsPipelineCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkGraphicsPipelineCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -536,7 +541,7 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkGraphicsPipelineCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -546,19 +551,19 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkGraphicsPipelineCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkGraphicsPipelineCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkGraphicsPipelineCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkGraphicsPipelineCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkGraphicsPipelineCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkGraphicsPipelineCreateInfo.FLAGS); }
     /** Unsafe version of {@link #stageCount}. */
-    public static int nstageCount(long struct) { return memGetInt(struct + VkGraphicsPipelineCreateInfo.STAGECOUNT); }
+    public static int nstageCount(long struct) { return UNSAFE.getInt(null, struct + VkGraphicsPipelineCreateInfo.STAGECOUNT); }
     /** Unsafe version of {@link #pStages}. */
     public static VkPipelineShaderStageCreateInfo.Buffer npStages(long struct) { return VkPipelineShaderStageCreateInfo.create(memGetAddress(struct + VkGraphicsPipelineCreateInfo.PSTAGES), nstageCount(struct)); }
     /** Unsafe version of {@link #pVertexInputState}. */
@@ -580,24 +585,24 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
     /** Unsafe version of {@link #pDynamicState}. */
     @Nullable public static VkPipelineDynamicStateCreateInfo npDynamicState(long struct) { return VkPipelineDynamicStateCreateInfo.createSafe(memGetAddress(struct + VkGraphicsPipelineCreateInfo.PDYNAMICSTATE)); }
     /** Unsafe version of {@link #layout}. */
-    public static long nlayout(long struct) { return memGetLong(struct + VkGraphicsPipelineCreateInfo.LAYOUT); }
+    public static long nlayout(long struct) { return UNSAFE.getLong(null, struct + VkGraphicsPipelineCreateInfo.LAYOUT); }
     /** Unsafe version of {@link #renderPass}. */
-    public static long nrenderPass(long struct) { return memGetLong(struct + VkGraphicsPipelineCreateInfo.RENDERPASS); }
+    public static long nrenderPass(long struct) { return UNSAFE.getLong(null, struct + VkGraphicsPipelineCreateInfo.RENDERPASS); }
     /** Unsafe version of {@link #subpass}. */
-    public static int nsubpass(long struct) { return memGetInt(struct + VkGraphicsPipelineCreateInfo.SUBPASS); }
+    public static int nsubpass(long struct) { return UNSAFE.getInt(null, struct + VkGraphicsPipelineCreateInfo.SUBPASS); }
     /** Unsafe version of {@link #basePipelineHandle}. */
-    public static long nbasePipelineHandle(long struct) { return memGetLong(struct + VkGraphicsPipelineCreateInfo.BASEPIPELINEHANDLE); }
+    public static long nbasePipelineHandle(long struct) { return UNSAFE.getLong(null, struct + VkGraphicsPipelineCreateInfo.BASEPIPELINEHANDLE); }
     /** Unsafe version of {@link #basePipelineIndex}. */
-    public static int nbasePipelineIndex(long struct) { return memGetInt(struct + VkGraphicsPipelineCreateInfo.BASEPIPELINEINDEX); }
+    public static int nbasePipelineIndex(long struct) { return UNSAFE.getInt(null, struct + VkGraphicsPipelineCreateInfo.BASEPIPELINEINDEX); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkGraphicsPipelineCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkGraphicsPipelineCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkGraphicsPipelineCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkGraphicsPipelineCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkGraphicsPipelineCreateInfo.FLAGS, value); }
     /** Sets the specified value to the {@code stageCount} field of the specified {@code struct}. */
-    public static void nstageCount(long struct, int value) { memPutInt(struct + VkGraphicsPipelineCreateInfo.STAGECOUNT, value); }
+    public static void nstageCount(long struct, int value) { UNSAFE.putInt(null, struct + VkGraphicsPipelineCreateInfo.STAGECOUNT, value); }
     /** Unsafe version of {@link #pStages(VkPipelineShaderStageCreateInfo.Buffer) pStages}. */
     public static void npStages(long struct, VkPipelineShaderStageCreateInfo.Buffer value) { memPutAddress(struct + VkGraphicsPipelineCreateInfo.PSTAGES, value.address()); nstageCount(struct, value.remaining()); }
     /** Unsafe version of {@link #pVertexInputState(VkPipelineVertexInputStateCreateInfo) pVertexInputState}. */
@@ -619,15 +624,15 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
     /** Unsafe version of {@link #pDynamicState(VkPipelineDynamicStateCreateInfo) pDynamicState}. */
     public static void npDynamicState(long struct, @Nullable VkPipelineDynamicStateCreateInfo value) { memPutAddress(struct + VkGraphicsPipelineCreateInfo.PDYNAMICSTATE, memAddressSafe(value)); }
     /** Unsafe version of {@link #layout(long) layout}. */
-    public static void nlayout(long struct, long value) { memPutLong(struct + VkGraphicsPipelineCreateInfo.LAYOUT, value); }
+    public static void nlayout(long struct, long value) { UNSAFE.putLong(null, struct + VkGraphicsPipelineCreateInfo.LAYOUT, value); }
     /** Unsafe version of {@link #renderPass(long) renderPass}. */
-    public static void nrenderPass(long struct, long value) { memPutLong(struct + VkGraphicsPipelineCreateInfo.RENDERPASS, value); }
+    public static void nrenderPass(long struct, long value) { UNSAFE.putLong(null, struct + VkGraphicsPipelineCreateInfo.RENDERPASS, value); }
     /** Unsafe version of {@link #subpass(int) subpass}. */
-    public static void nsubpass(long struct, int value) { memPutInt(struct + VkGraphicsPipelineCreateInfo.SUBPASS, value); }
+    public static void nsubpass(long struct, int value) { UNSAFE.putInt(null, struct + VkGraphicsPipelineCreateInfo.SUBPASS, value); }
     /** Unsafe version of {@link #basePipelineHandle(long) basePipelineHandle}. */
-    public static void nbasePipelineHandle(long struct, long value) { memPutLong(struct + VkGraphicsPipelineCreateInfo.BASEPIPELINEHANDLE, value); }
+    public static void nbasePipelineHandle(long struct, long value) { UNSAFE.putLong(null, struct + VkGraphicsPipelineCreateInfo.BASEPIPELINEHANDLE, value); }
     /** Unsafe version of {@link #basePipelineIndex(int) basePipelineIndex}. */
-    public static void nbasePipelineIndex(long struct, int value) { memPutInt(struct + VkGraphicsPipelineCreateInfo.BASEPIPELINEINDEX, value); }
+    public static void nbasePipelineIndex(long struct, int value) { UNSAFE.putInt(null, struct + VkGraphicsPipelineCreateInfo.BASEPIPELINEINDEX, value); }
 
     /**
      * Validates pointer members that should not be {@code NULL}.
@@ -662,7 +667,7 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -671,8 +676,10 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
     /** An array of {@link VkGraphicsPipelineCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkGraphicsPipelineCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkGraphicsPipelineCreateInfo ELEMENT_FACTORY = VkGraphicsPipelineCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkGraphicsPipelineCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkGraphicsPipelineCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -698,18 +705,8 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkGraphicsPipelineCreateInfo newInstance(long address) {
-            return new VkGraphicsPipelineCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkGraphicsPipelineCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

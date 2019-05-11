@@ -26,48 +26,48 @@ val WGL_NV_swap_group = "WGLNVSwapGroup".nativeClassWGL("WGL_NV_swap_group", pos
         "JoinSwapGroupNV",
         "",
 
-        HDC.IN("hDC", ""),
-        GLuint.IN("group", "")
+        HDC("hDC", ""),
+        GLuint("group", "")
     )
 
     BOOL(
         "BindSwapBarrierNV",
         "",
 
-        GLuint.IN("group", ""),
-        GLuint.IN("barrier", "")
+        GLuint("group", ""),
+        GLuint("barrier", "")
     )
 
     BOOL(
         "QuerySwapGroupNV",
         "",
 
-        HDC.IN("hDC", ""),
-        Check(1)..GLuint.p.OUT("group", ""),
-        Check(1)..GLuint.p.OUT("barrier", "")
+        HDC("hDC", ""),
+        Check(1)..GLuint.p("group", ""),
+        Check(1)..GLuint.p("barrier", "")
     )
 
     BOOL(
         "QueryMaxSwapGroupsNV",
         "",
 
-        HDC.IN("hDC", ""),
-        Check(1)..GLuint.p.OUT("maxGroups", ""),
-        Check(1)..GLuint.p.OUT("maxBarriers", "")
+        HDC("hDC", ""),
+        Check(1)..GLuint.p("maxGroups", ""),
+        Check(1)..GLuint.p("maxBarriers", "")
     )
 
     BOOL(
         "QueryFrameCountNV",
         "",
 
-        HDC.IN("hDC", ""),
-        Check(1)..GLuint.p.OUT("count", "")
+        HDC("hDC", ""),
+        Check(1)..GLuint.p("count", "")
     )
 
     BOOL(
         "ResetFrameCountNV",
         "",
 
-        HDC.IN("hDC", "")
+        HDC("hDC", "")
     )
 }

@@ -40,9 +40,8 @@ public final class APIUtil {
      */
     public static final PrintStream DEBUG_STREAM = getDebugStream();
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "resource", "UseOfSystemOutOrSystemErr"})
     private static PrintStream getDebugStream() {
-        @SuppressWarnings("UseOfSystemOutOrSystemErr")
         PrintStream debugStream = System.err;
 
         Object state = Configuration.DEBUG_STREAM.get();
@@ -89,10 +88,10 @@ public final class APIUtil {
         if (url != null) {
             String classURL = url.toString();
             if (classURL.startsWith("jar:")) {
-                try (InputStream stream = new URL(classURL.substring(0, classURL.lastIndexOf("!") + 1) + '/' + JarFile.MANIFEST_NAME).openStream()) {
+                try (InputStream stream = new URL(classURL.substring(0, classURL.lastIndexOf('!') + 1) + '/' + JarFile.MANIFEST_NAME).openStream()) {
                     return Optional.ofNullable(new Manifest(stream).getMainAttributes().getValue(attributeName));
                 } catch (Exception e) {
-                    e.printStackTrace(APIUtil.DEBUG_STREAM);
+                    e.printStackTrace(DEBUG_STREAM);
                 }
             }
         }
@@ -145,29 +144,30 @@ public final class APIUtil {
 
     @Nullable
     public static ByteBuffer apiGetMappedBuffer(@Nullable ByteBuffer buffer, long mappedAddress, int capacity) {
-        return buffer == null || memAddress(buffer) != mappedAddress || buffer.capacity() != capacity
-            ? memByteBufferSafe(mappedAddress, capacity)
-            : buffer;
+        if (buffer != null && memAddress(buffer) == mappedAddress && buffer.capacity() == capacity) {
+            return buffer;
+        }
+        return mappedAddress == NULL ? null : wrap(BUFFER_BYTE, mappedAddress, capacity).order(NATIVE_ORDER);
     }
 
     public static long apiGetBytes(int elements, int elementShift) {
-        return Integer.toUnsignedLong(elements) << elementShift;
+        return (elements & 0xFFFF_FFFFL) << elementShift;
     }
 
-    public static void apiCheckAllocation(int elements, long bytes, long maxBytes) {
-        if (!DEBUG) {
-            return;
+    public static long apiCheckAllocation(int elements, long bytes, long maxBytes) {
+        if (DEBUG) {
+            if (elements < 0) {
+                throw new IllegalArgumentException("Invalid number of elements");
+            }
+            if ((maxBytes + Long.MIN_VALUE) < (bytes + Long.MIN_VALUE)) { // unsigned comparison
+                throw new IllegalArgumentException("The request allocation is too large");
+            }
         }
-        if (elements < 0) {
-            throw new IllegalArgumentException("Invalid number of elements");
-        }
-        if ((maxBytes + Long.MIN_VALUE) < (bytes + Long.MIN_VALUE)) { // unsigned comparison
-            throw new IllegalArgumentException("The request allocation is too large");
-        }
+        return bytes;
     }
 
     /** A data class for API versioning information. */
-    public static class APIVersion {
+    public static class APIVersion implements Comparable<APIVersion> {
 
         /** Returns the API major version. */
         public final int major;
@@ -203,6 +203,45 @@ public final class APIUtil {
                 sb.append(" (").append(implementation).append(')');
             }
             return sb.toString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof APIVersion)) {
+                return false;
+            }
+
+            APIVersion that = (APIVersion)o;
+
+            return this.major == that.major &&
+                   this.minor == that.major &&
+                   Objects.equals(this.revision, that.revision) &&
+                   Objects.equals(this.implementation, that.implementation);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = major;
+            result = 31 * result + minor;
+            result = 31 * result + (revision != null ? revision.hashCode() : 0);
+            result = 31 * result + (implementation != null ? implementation.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public int compareTo(APIVersion other) {
+            if (this.major != other.major) {
+                return Integer.compare(this.major, other.major);
+            }
+
+            if (this.minor != other.minor) {
+                return Integer.compare(this.minor, other.minor);
+            }
+
+            return 0;
         }
     }
 
@@ -291,6 +330,7 @@ public final class APIUtil {
      */
     public static Map<Integer, String> apiClassTokens(@Nullable BiPredicate<Field, Integer> filter, @Nullable Map<Integer, String> target, Class<?>... tokenClasses) {
         if (target == null) {
+            //noinspection AssignmentToMethodParameter
             target = new HashMap<>(64);
         }
 
@@ -333,13 +373,13 @@ public final class APIUtil {
      * @return the pointer array address on the stack
      */
     public static long apiArray(MemoryStack stack, long... addresses) {
-        PointerBuffer pointers = stack.mallocPointer(addresses.length);
+        PointerBuffer pointers = memPointerBuffer(stack.nmalloc(POINTER_SIZE, addresses.length << POINTER_SHIFT), addresses.length);
 
         for (long address : addresses) {
             pointers.put(address);
         }
 
-        return memAddress0(pointers);
+        return pointers.address;
     }
 
     /**
@@ -351,13 +391,13 @@ public final class APIUtil {
      * @return the pointer array address on the stack
      */
     public static long apiArray(MemoryStack stack, ByteBuffer... buffers) {
-        PointerBuffer pointers = stack.mallocPointer(buffers.length);
+        PointerBuffer pointers = memPointerBuffer(stack.nmalloc(POINTER_SIZE, buffers.length << POINTER_SHIFT), buffers.length);
 
         for (ByteBuffer buffer : buffers) {
             pointers.put(buffer);
         }
 
-        return memAddress0(pointers);
+        return pointers.address;
     }
 
     /**
@@ -403,7 +443,7 @@ public final class APIUtil {
             pointers.put(encoder.encode(s, true));
         }
 
-        return memAddress0(pointers);
+        return pointers.address;
     }
 
     /**
@@ -430,7 +470,7 @@ public final class APIUtil {
             lengths.put(buffer.capacity());
         }
 
-        return memAddress0(pointers);
+        return pointers.address;
     }
 
     /**
@@ -457,7 +497,7 @@ public final class APIUtil {
             lengths.put(buffer.capacity());
         }
 
-        return memAddress0(pointers);
+        return pointers.address;
     }
 
     /**
@@ -468,7 +508,7 @@ public final class APIUtil {
      */
     public static void apiArrayFree(long pointers, int length) {
         for (int i = length; --i >= 0; ) {
-            nmemFree(memGetAddress(pointers + (i << POINTER_SHIFT)));
+            nmemFree(memGetAddress(pointers + Integer.toUnsignedLong(i) * POINTER_SIZE));
         }
     }
 

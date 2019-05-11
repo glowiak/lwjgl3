@@ -20,9 +20,9 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>Description</h5>
  * 
- * <p>The first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes">access scope</a> is limited to access types in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks">source access mask</a> specified by {@code srcAccessMask}.</p>
+ * <p>The first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes">access scope</a> is limited to access types in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks">source access mask</a> specified by {@code srcAccessMask}.</p>
  * 
- * <p>The second <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes">access scope</a> is limited to access types in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks">destination access mask</a> specified by {@code dstAccessMask}.</p>
+ * <p>The second <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes">access scope</a> is limited to access types in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks">destination access mask</a> specified by {@code dstAccessMask}.</p>
  * 
  * <h5>Valid Usage (Implicit)</h5>
  * 
@@ -42,8 +42,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <ul>
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
- * <li>{@code srcAccessMask} &ndash; a bitmask of {@code VkAccessFlagBits} specifying a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks">source access mask</a>.</li>
- * <li>{@code dstAccessMask} &ndash; a bitmask of {@code VkAccessFlagBits} specifying a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks">destination access mask</a>.</li>
+ * <li>{@code srcAccessMask} &ndash; a bitmask of {@code VkAccessFlagBits} specifying a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks">source access mask</a>.</li>
+ * <li>{@code dstAccessMask} &ndash; a bitmask of {@code VkAccessFlagBits} specifying a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks">destination access mask</a>.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -88,18 +88,14 @@ public class VkMemoryBarrier extends Struct implements NativeResource {
         DSTACCESSMASK = layout.offsetof(3);
     }
 
-    VkMemoryBarrier(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkMemoryBarrier} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkMemoryBarrier} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkMemoryBarrier(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -156,30 +152,31 @@ public class VkMemoryBarrier extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkMemoryBarrier} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkMemoryBarrier} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkMemoryBarrier malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkMemoryBarrier.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkMemoryBarrier} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkMemoryBarrier} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkMemoryBarrier calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkMemoryBarrier.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkMemoryBarrier} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkMemoryBarrier} instance allocated with {@link BufferUtils}. */
     public static VkMemoryBarrier create() {
-        return new VkMemoryBarrier(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkMemoryBarrier.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkMemoryBarrier} instance for the specified memory address. */
+    /** Returns a new {@code VkMemoryBarrier} instance for the specified memory address. */
     public static VkMemoryBarrier create(long address) {
-        return new VkMemoryBarrier(address, null);
+        return wrap(VkMemoryBarrier.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkMemoryBarrier createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkMemoryBarrier.class, address);
     }
 
     /**
@@ -188,7 +185,7 @@ public class VkMemoryBarrier extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkMemoryBarrier.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -197,7 +194,7 @@ public class VkMemoryBarrier extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkMemoryBarrier.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -206,7 +203,8 @@ public class VkMemoryBarrier extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkMemoryBarrier.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -216,43 +214,43 @@ public class VkMemoryBarrier extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkMemoryBarrier.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkMemoryBarrier.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkMemoryBarrier} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkMemoryBarrier} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkMemoryBarrier mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkMemoryBarrier} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkMemoryBarrier} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkMemoryBarrier callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkMemoryBarrier} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkMemoryBarrier} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkMemoryBarrier mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkMemoryBarrier.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkMemoryBarrier} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkMemoryBarrier} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkMemoryBarrier callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkMemoryBarrier.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -280,7 +278,7 @@ public class VkMemoryBarrier extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkMemoryBarrier.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -290,36 +288,38 @@ public class VkMemoryBarrier extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkMemoryBarrier.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkMemoryBarrier.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkMemoryBarrier.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkMemoryBarrier.PNEXT); }
     /** Unsafe version of {@link #srcAccessMask}. */
-    public static int nsrcAccessMask(long struct) { return memGetInt(struct + VkMemoryBarrier.SRCACCESSMASK); }
+    public static int nsrcAccessMask(long struct) { return UNSAFE.getInt(null, struct + VkMemoryBarrier.SRCACCESSMASK); }
     /** Unsafe version of {@link #dstAccessMask}. */
-    public static int ndstAccessMask(long struct) { return memGetInt(struct + VkMemoryBarrier.DSTACCESSMASK); }
+    public static int ndstAccessMask(long struct) { return UNSAFE.getInt(null, struct + VkMemoryBarrier.DSTACCESSMASK); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkMemoryBarrier.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkMemoryBarrier.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkMemoryBarrier.PNEXT, value); }
     /** Unsafe version of {@link #srcAccessMask(int) srcAccessMask}. */
-    public static void nsrcAccessMask(long struct, int value) { memPutInt(struct + VkMemoryBarrier.SRCACCESSMASK, value); }
+    public static void nsrcAccessMask(long struct, int value) { UNSAFE.putInt(null, struct + VkMemoryBarrier.SRCACCESSMASK, value); }
     /** Unsafe version of {@link #dstAccessMask(int) dstAccessMask}. */
-    public static void ndstAccessMask(long struct, int value) { memPutInt(struct + VkMemoryBarrier.DSTACCESSMASK, value); }
+    public static void ndstAccessMask(long struct, int value) { UNSAFE.putInt(null, struct + VkMemoryBarrier.DSTACCESSMASK, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkMemoryBarrier} structs. */
     public static class Buffer extends StructBuffer<VkMemoryBarrier, Buffer> implements NativeResource {
 
+        private static final VkMemoryBarrier ELEMENT_FACTORY = VkMemoryBarrier.create(-1L);
+
         /**
-         * Creates a new {@link VkMemoryBarrier.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkMemoryBarrier.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -345,18 +345,8 @@ public class VkMemoryBarrier extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkMemoryBarrier newInstance(long address) {
-            return new VkMemoryBarrier(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkMemoryBarrier getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

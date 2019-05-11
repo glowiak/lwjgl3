@@ -32,12 +32,12 @@ private enum class VKFunctionType {
 
 private val Func.type: VKFunctionType
     get() = when {
-        name == "vkGetInstanceProcAddr"         -> PROC // dlsym/GetProcAddress
-        parameters[0].nativeType !is ObjectType -> GLOBAL // vkGetInstanceProcAddr: VK_NULL_HANDLE
+        name == "vkGetInstanceProcAddr"                 -> PROC // dlsym/GetProcAddress
+        parameters[0].nativeType !is WrappedPointerType -> GLOBAL // vkGetInstanceProcAddr: VK_NULL_HANDLE
         parameters[0].nativeType.let {
             it === VkInstance || it === VkPhysicalDevice
-        }                                       -> INSTANCE // vkGetInstanceProcAddr: instance handle
-        else                                    -> DEVICE // vkGetDeviceProcAddr: device handle
+        }                                               -> INSTANCE // vkGetInstanceProcAddr: instance handle
+        else                                            -> DEVICE // vkGetDeviceProcAddr: device handle
     }
 
 private val Func.isInstanceFunction get() = type === INSTANCE && !has<Macro>()
@@ -58,7 +58,7 @@ val VK_BINDING_INSTANCE = Generator.register(object : APIBinding(
         writer.println(if (function.has<Capabilities>())
             "${function.get<Capabilities>().expression}.${function.name};"
         else
-            "${function.getParams { it.nativeType is ObjectType }.first().name}.getCapabilities().${function.name};"
+            "${function.getParams { it.nativeType is WrappedPointerType }.first().name}.getCapabilities().${function.name};"
         )
     }
 
@@ -129,20 +129,18 @@ val VK_BINDING_INSTANCE = Generator.register(object : APIBinding(
         val instanceCommands = LinkedHashSet<String>()
         classes.asSequence()
             .filter { it.hasNativeFunctions }
-            .forEach { it ->
+            .forEach {
                 val functions = it.functions.asSequence()
-                    .filter {
-                        if (it.isInstanceFunction) {
-                            if (!instanceCommands.contains(it.name)) {
-                                instanceCommands.add(it.name)
+                    .filter { cmd ->
+                        if (cmd.isInstanceFunction) {
+                            if (!instanceCommands.contains(cmd.name)) {
+                                instanceCommands.add(cmd.name)
                                 return@filter true
                             }
                         }
                         false
                     }
-                    .joinToString(",\n$t$t") {
-                        it.name
-                    }
+                    .joinToString(",\n$t$t") { cmd -> cmd.name }
 
                 if (functions.isNotEmpty()) {
                     println("\n$t// ${it.templateName}")

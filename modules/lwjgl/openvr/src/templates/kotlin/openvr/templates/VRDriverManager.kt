@@ -10,25 +10,21 @@ import openvr.*
 val VRDriverManager = "VRDriverManager".nativeClass(
     Module.OPENVR,
     prefixMethod = "VRDriverManager_",
-    library = OPENVR_LIBRARY,
     binding = OPENVR_FNTABLE_BINDING
 ) {
     documentation =
         """
         """
 
-    uint32_t(
-        "GetDriverCount",
-        ""
-    )
+    uint32_t("GetDriverCount", "", void())
 
     uint32_t(
         "GetDriverName",
         "",
 
-        DriverId_t.IN("nDriver", ""),
-        Return(RESULT, includesNT = true)..nullable..charASCII.p.OUT("pchValue", ""),
-        AutoSize("pchValue")..uint32_t.IN("unBufferSize", ""),
+        DriverId_t("nDriver", ""),
+        Return(RESULT, includesNT = true)..nullable..charASCII.p("pchValue", ""),
+        AutoSize("pchValue")..uint32_t("unBufferSize", ""),
 
         returnDoc = "the length of the number of bytes necessary to hold this string including the trailing null"
     )
@@ -37,6 +33,6 @@ val VRDriverManager = "VRDriverManager".nativeClass(
         "GetDriverHandle",
         "Returns the property container handle for the specified driver.",
 
-        charASCII.p.IN("pchDriverName", "the driver name")
+        charASCII.const.p("pchDriverName", "the driver name")
     )
 }

@@ -16,6 +16,23 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
+ * Base structure for a read-only pointer chain.
+ * 
+ * <h5>Description</h5>
+ * 
+ * <p>{@link VkBaseInStructure} can be used to facilitate iterating through a read-only structure pointer chain.</p>
+ * 
+ * <h5>See Also</h5>
+ * 
+ * <p>{@link VkBaseInStructure}</p>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the structure type of the structure being iterated through.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to the next structure in a structure chain.</li>
+ * </ul>
+ * 
  * <h3>Layout</h3>
  * 
  * <pre><code>
@@ -50,18 +67,14 @@ public class VkBaseInStructure extends Struct implements NativeResource {
         PNEXT = layout.offsetof(1);
     }
 
-    VkBaseInStructure(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkBaseInStructure} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkBaseInStructure} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkBaseInStructure(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -105,30 +118,31 @@ public class VkBaseInStructure extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkBaseInStructure} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkBaseInStructure} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkBaseInStructure malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkBaseInStructure.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkBaseInStructure} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkBaseInStructure} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkBaseInStructure calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkBaseInStructure.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkBaseInStructure} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkBaseInStructure} instance allocated with {@link BufferUtils}. */
     public static VkBaseInStructure create() {
-        return new VkBaseInStructure(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkBaseInStructure.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkBaseInStructure} instance for the specified memory address. */
+    /** Returns a new {@code VkBaseInStructure} instance for the specified memory address. */
     public static VkBaseInStructure create(long address) {
-        return new VkBaseInStructure(address, null);
+        return wrap(VkBaseInStructure.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkBaseInStructure createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkBaseInStructure.class, address);
     }
 
     /**
@@ -137,7 +151,7 @@ public class VkBaseInStructure extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBaseInStructure.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -146,7 +160,7 @@ public class VkBaseInStructure extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBaseInStructure.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -155,7 +169,8 @@ public class VkBaseInStructure extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBaseInStructure.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -165,43 +180,43 @@ public class VkBaseInStructure extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBaseInStructure.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkBaseInStructure.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkBaseInStructure} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkBaseInStructure} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkBaseInStructure mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkBaseInStructure} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkBaseInStructure} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkBaseInStructure callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkBaseInStructure} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkBaseInStructure} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkBaseInStructure mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkBaseInStructure.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkBaseInStructure} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkBaseInStructure} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkBaseInStructure callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkBaseInStructure.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -229,7 +244,7 @@ public class VkBaseInStructure extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBaseInStructure.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -239,18 +254,18 @@ public class VkBaseInStructure extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkBaseInStructure.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkBaseInStructure.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkBaseInStructure.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     @Nullable public static VkBaseInStructure npNext(long struct) { return VkBaseInStructure.createSafe(memGetAddress(struct + VkBaseInStructure.PNEXT)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkBaseInStructure.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkBaseInStructure.STYPE, value); }
     /** Unsafe version of {@link #pNext(VkBaseInStructure) pNext}. */
     public static void npNext(long struct, @Nullable VkBaseInStructure value) { memPutAddress(struct + VkBaseInStructure.PNEXT, memAddressSafe(value)); }
 
@@ -259,8 +274,10 @@ public class VkBaseInStructure extends Struct implements NativeResource {
     /** An array of {@link VkBaseInStructure} structs. */
     public static class Buffer extends StructBuffer<VkBaseInStructure, Buffer> implements NativeResource {
 
+        private static final VkBaseInStructure ELEMENT_FACTORY = VkBaseInStructure.create(-1L);
+
         /**
-         * Creates a new {@link VkBaseInStructure.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkBaseInStructure.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -286,18 +303,8 @@ public class VkBaseInStructure extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkBaseInStructure newInstance(long address) {
-            return new VkBaseInStructure(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkBaseInStructure getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

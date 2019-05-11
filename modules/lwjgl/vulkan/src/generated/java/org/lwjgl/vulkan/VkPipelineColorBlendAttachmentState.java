@@ -21,15 +21,15 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-dualSrcBlend">dual source blending</a> feature is not enabled, {@code srcColorBlendFactor} <b>must</b> not be {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, or {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA}</li>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-dualSrcBlend">dual source blending</a> feature is not enabled, {@code dstColorBlendFactor} <b>must</b> not be {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, or {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA}</li>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-dualSrcBlend">dual source blending</a> feature is not enabled, {@code srcAlphaBlendFactor} <b>must</b> not be {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, or {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA}</li>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-dualSrcBlend">dual source blending</a> feature is not enabled, {@code dstAlphaBlendFactor} <b>must</b> not be {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, or {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA}</li>
- * <li>If either of {@code colorBlendOp} or {@code alphaBlendOp} is an <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced">advanced blend operation</a>, then {@code colorBlendOp} <b>must</b> equal {@code alphaBlendOp}</li>
- * <li>If {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}{@code ::advancedBlendIndependentBlend} is {@link VK10#VK_FALSE FALSE} and {@code colorBlendOp} is an <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced">advanced blend operation</a>, then {@code colorBlendOp} <b>must</b> be the same for all attachments.</li>
- * <li>If {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}{@code ::advancedBlendIndependentBlend} is {@link VK10#VK_FALSE FALSE} and {@code alphaBlendOp} is an <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced">advanced blend operation</a>, then {@code alphaBlendOp} <b>must</b> be the same for all attachments.</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dualSrcBlend">dual source blending</a> feature is not enabled, {@code srcColorBlendFactor} <b>must</b> not be {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, or {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA}</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dualSrcBlend">dual source blending</a> feature is not enabled, {@code dstColorBlendFactor} <b>must</b> not be {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, or {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA}</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dualSrcBlend">dual source blending</a> feature is not enabled, {@code srcAlphaBlendFactor} <b>must</b> not be {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, or {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA}</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dualSrcBlend">dual source blending</a> feature is not enabled, {@code dstAlphaBlendFactor} <b>must</b> not be {@link VK10#VK_BLEND_FACTOR_SRC1_COLOR BLEND_FACTOR_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR BLEND_FACTOR_ONE_MINUS_SRC1_COLOR}, {@link VK10#VK_BLEND_FACTOR_SRC1_ALPHA BLEND_FACTOR_SRC1_ALPHA}, or {@link VK10#VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA}</li>
+ * <li>If either of {@code colorBlendOp} or {@code alphaBlendOp} is an <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-blend-advanced">advanced blend operation</a>, then {@code colorBlendOp} <b>must</b> equal {@code alphaBlendOp}</li>
+ * <li>If {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}{@code ::advancedBlendIndependentBlend} is {@link VK10#VK_FALSE FALSE} and {@code colorBlendOp} is an <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-blend-advanced">advanced blend operation</a>, then {@code colorBlendOp} <b>must</b> be the same for all attachments.</li>
+ * <li>If {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}{@code ::advancedBlendIndependentBlend} is {@link VK10#VK_FALSE FALSE} and {@code alphaBlendOp} is an <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-blend-advanced">advanced blend operation</a>, then {@code alphaBlendOp} <b>must</b> be the same for all attachments.</li>
  * <li>If {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}{@code ::advancedBlendAllOperations} is {@link VK10#VK_FALSE FALSE}, then {@code colorBlendOp} <b>must</b> not be {@link EXTBlendOperationAdvanced#VK_BLEND_OP_ZERO_EXT BLEND_OP_ZERO_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_SRC_EXT BLEND_OP_SRC_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_DST_EXT BLEND_OP_DST_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_SRC_OVER_EXT BLEND_OP_SRC_OVER_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_DST_OVER_EXT BLEND_OP_DST_OVER_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_SRC_IN_EXT BLEND_OP_SRC_IN_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_DST_IN_EXT BLEND_OP_DST_IN_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_SRC_OUT_EXT BLEND_OP_SRC_OUT_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_DST_OUT_EXT BLEND_OP_DST_OUT_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_SRC_ATOP_EXT BLEND_OP_SRC_ATOP_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_DST_ATOP_EXT BLEND_OP_DST_ATOP_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_XOR_EXT BLEND_OP_XOR_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_INVERT_EXT BLEND_OP_INVERT_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_INVERT_RGB_EXT BLEND_OP_INVERT_RGB_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_LINEARDODGE_EXT BLEND_OP_LINEARDODGE_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_LINEARBURN_EXT BLEND_OP_LINEARBURN_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_VIVIDLIGHT_EXT BLEND_OP_VIVIDLIGHT_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_LINEARLIGHT_EXT BLEND_OP_LINEARLIGHT_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_PINLIGHT_EXT BLEND_OP_PINLIGHT_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_HARDMIX_EXT BLEND_OP_HARDMIX_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_PLUS_EXT BLEND_OP_PLUS_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_PLUS_CLAMPED_EXT BLEND_OP_PLUS_CLAMPED_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT BLEND_OP_PLUS_CLAMPED_ALPHA_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_PLUS_DARKER_EXT BLEND_OP_PLUS_DARKER_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_MINUS_EXT BLEND_OP_MINUS_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_MINUS_CLAMPED_EXT BLEND_OP_MINUS_CLAMPED_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_CONTRAST_EXT BLEND_OP_CONTRAST_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_INVERT_OVG_EXT BLEND_OP_INVERT_OVG_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_RED_EXT BLEND_OP_RED_EXT}, {@link EXTBlendOperationAdvanced#VK_BLEND_OP_GREEN_EXT BLEND_OP_GREEN_EXT}, or {@link EXTBlendOperationAdvanced#VK_BLEND_OP_BLUE_EXT BLEND_OP_BLUE_EXT}</li>
- * <li>If {@code colorBlendOp} or {@code alphaBlendOp} is an <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced">advanced blend operation</a>, then {@link VkSubpassDescription}{@code ::colorAttachmentCount} of the subpass this pipeline is compiled against <b>must</b> be less than or equal to {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}::advancedBlendMaxColorAttachments</li>
+ * <li>If {@code colorBlendOp} or {@code alphaBlendOp} is an <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-blend-advanced">advanced blend operation</a>, then {@link VkSubpassDescription}{@code ::colorAttachmentCount} of the subpass this pipeline is compiled against <b>must</b> be less than or equal to {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}::advancedBlendMaxColorAttachments</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -58,7 +58,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code srcAlphaBlendFactor} &ndash; selects which blend factor is used to determine the source factor <code>S<sub>a</sub></code>.</li>
  * <li>{@code dstAlphaBlendFactor} &ndash; selects which blend factor is used to determine the destination factor <code>D<sub>a</sub></code>.</li>
  * <li>{@code alphaBlendOp} &ndash; selects which blend operation is use to calculate the alpha values to write to the color attachment.</li>
- * <li>{@code colorWriteMask} &ndash; a bitmask of {@code VkColorComponentFlagBits} specifying which of the R, G, B, and/or A components are enabled for writing, as described for the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-color-write-mask">Color Write Mask</a>.</li>
+ * <li>{@code colorWriteMask} &ndash; a bitmask of {@code VkColorComponentFlagBits} specifying which of the R, G, B, and/or A components are enabled for writing, as described for the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-color-write-mask">Color Write Mask</a>.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -119,18 +119,14 @@ public class VkPipelineColorBlendAttachmentState extends Struct implements Nativ
         COLORWRITEMASK = layout.offsetof(7);
     }
 
-    VkPipelineColorBlendAttachmentState(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPipelineColorBlendAttachmentState} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPipelineColorBlendAttachmentState} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPipelineColorBlendAttachmentState(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -215,30 +211,31 @@ public class VkPipelineColorBlendAttachmentState extends Struct implements Nativ
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineColorBlendAttachmentState} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineColorBlendAttachmentState} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPipelineColorBlendAttachmentState malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPipelineColorBlendAttachmentState.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineColorBlendAttachmentState} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineColorBlendAttachmentState} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPipelineColorBlendAttachmentState calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPipelineColorBlendAttachmentState.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineColorBlendAttachmentState} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPipelineColorBlendAttachmentState} instance allocated with {@link BufferUtils}. */
     public static VkPipelineColorBlendAttachmentState create() {
-        return new VkPipelineColorBlendAttachmentState(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPipelineColorBlendAttachmentState.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPipelineColorBlendAttachmentState} instance for the specified memory address. */
+    /** Returns a new {@code VkPipelineColorBlendAttachmentState} instance for the specified memory address. */
     public static VkPipelineColorBlendAttachmentState create(long address) {
-        return new VkPipelineColorBlendAttachmentState(address, null);
+        return wrap(VkPipelineColorBlendAttachmentState.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineColorBlendAttachmentState createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPipelineColorBlendAttachmentState.class, address);
     }
 
     /**
@@ -247,7 +244,7 @@ public class VkPipelineColorBlendAttachmentState extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendAttachmentState.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -256,7 +253,7 @@ public class VkPipelineColorBlendAttachmentState extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendAttachmentState.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -265,7 +262,8 @@ public class VkPipelineColorBlendAttachmentState extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendAttachmentState.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -275,43 +273,43 @@ public class VkPipelineColorBlendAttachmentState extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendAttachmentState.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineColorBlendAttachmentState.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineColorBlendAttachmentState} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPipelineColorBlendAttachmentState} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPipelineColorBlendAttachmentState mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPipelineColorBlendAttachmentState} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPipelineColorBlendAttachmentState} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPipelineColorBlendAttachmentState callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPipelineColorBlendAttachmentState} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPipelineColorBlendAttachmentState} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineColorBlendAttachmentState mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPipelineColorBlendAttachmentState.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPipelineColorBlendAttachmentState} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPipelineColorBlendAttachmentState} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineColorBlendAttachmentState callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPipelineColorBlendAttachmentState.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -339,7 +337,7 @@ public class VkPipelineColorBlendAttachmentState extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendAttachmentState.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -349,52 +347,54 @@ public class VkPipelineColorBlendAttachmentState extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkPipelineColorBlendAttachmentState.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #blendEnable}. */
-    public static int nblendEnable(long struct) { return memGetInt(struct + VkPipelineColorBlendAttachmentState.BLENDENABLE); }
+    public static int nblendEnable(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendAttachmentState.BLENDENABLE); }
     /** Unsafe version of {@link #srcColorBlendFactor}. */
-    public static int nsrcColorBlendFactor(long struct) { return memGetInt(struct + VkPipelineColorBlendAttachmentState.SRCCOLORBLENDFACTOR); }
+    public static int nsrcColorBlendFactor(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendAttachmentState.SRCCOLORBLENDFACTOR); }
     /** Unsafe version of {@link #dstColorBlendFactor}. */
-    public static int ndstColorBlendFactor(long struct) { return memGetInt(struct + VkPipelineColorBlendAttachmentState.DSTCOLORBLENDFACTOR); }
+    public static int ndstColorBlendFactor(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendAttachmentState.DSTCOLORBLENDFACTOR); }
     /** Unsafe version of {@link #colorBlendOp}. */
-    public static int ncolorBlendOp(long struct) { return memGetInt(struct + VkPipelineColorBlendAttachmentState.COLORBLENDOP); }
+    public static int ncolorBlendOp(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendAttachmentState.COLORBLENDOP); }
     /** Unsafe version of {@link #srcAlphaBlendFactor}. */
-    public static int nsrcAlphaBlendFactor(long struct) { return memGetInt(struct + VkPipelineColorBlendAttachmentState.SRCALPHABLENDFACTOR); }
+    public static int nsrcAlphaBlendFactor(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendAttachmentState.SRCALPHABLENDFACTOR); }
     /** Unsafe version of {@link #dstAlphaBlendFactor}. */
-    public static int ndstAlphaBlendFactor(long struct) { return memGetInt(struct + VkPipelineColorBlendAttachmentState.DSTALPHABLENDFACTOR); }
+    public static int ndstAlphaBlendFactor(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendAttachmentState.DSTALPHABLENDFACTOR); }
     /** Unsafe version of {@link #alphaBlendOp}. */
-    public static int nalphaBlendOp(long struct) { return memGetInt(struct + VkPipelineColorBlendAttachmentState.ALPHABLENDOP); }
+    public static int nalphaBlendOp(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendAttachmentState.ALPHABLENDOP); }
     /** Unsafe version of {@link #colorWriteMask}. */
-    public static int ncolorWriteMask(long struct) { return memGetInt(struct + VkPipelineColorBlendAttachmentState.COLORWRITEMASK); }
+    public static int ncolorWriteMask(long struct) { return UNSAFE.getInt(null, struct + VkPipelineColorBlendAttachmentState.COLORWRITEMASK); }
 
     /** Unsafe version of {@link #blendEnable(boolean) blendEnable}. */
-    public static void nblendEnable(long struct, int value) { memPutInt(struct + VkPipelineColorBlendAttachmentState.BLENDENABLE, value); }
+    public static void nblendEnable(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendAttachmentState.BLENDENABLE, value); }
     /** Unsafe version of {@link #srcColorBlendFactor(int) srcColorBlendFactor}. */
-    public static void nsrcColorBlendFactor(long struct, int value) { memPutInt(struct + VkPipelineColorBlendAttachmentState.SRCCOLORBLENDFACTOR, value); }
+    public static void nsrcColorBlendFactor(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendAttachmentState.SRCCOLORBLENDFACTOR, value); }
     /** Unsafe version of {@link #dstColorBlendFactor(int) dstColorBlendFactor}. */
-    public static void ndstColorBlendFactor(long struct, int value) { memPutInt(struct + VkPipelineColorBlendAttachmentState.DSTCOLORBLENDFACTOR, value); }
+    public static void ndstColorBlendFactor(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendAttachmentState.DSTCOLORBLENDFACTOR, value); }
     /** Unsafe version of {@link #colorBlendOp(int) colorBlendOp}. */
-    public static void ncolorBlendOp(long struct, int value) { memPutInt(struct + VkPipelineColorBlendAttachmentState.COLORBLENDOP, value); }
+    public static void ncolorBlendOp(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendAttachmentState.COLORBLENDOP, value); }
     /** Unsafe version of {@link #srcAlphaBlendFactor(int) srcAlphaBlendFactor}. */
-    public static void nsrcAlphaBlendFactor(long struct, int value) { memPutInt(struct + VkPipelineColorBlendAttachmentState.SRCALPHABLENDFACTOR, value); }
+    public static void nsrcAlphaBlendFactor(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendAttachmentState.SRCALPHABLENDFACTOR, value); }
     /** Unsafe version of {@link #dstAlphaBlendFactor(int) dstAlphaBlendFactor}. */
-    public static void ndstAlphaBlendFactor(long struct, int value) { memPutInt(struct + VkPipelineColorBlendAttachmentState.DSTALPHABLENDFACTOR, value); }
+    public static void ndstAlphaBlendFactor(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendAttachmentState.DSTALPHABLENDFACTOR, value); }
     /** Unsafe version of {@link #alphaBlendOp(int) alphaBlendOp}. */
-    public static void nalphaBlendOp(long struct, int value) { memPutInt(struct + VkPipelineColorBlendAttachmentState.ALPHABLENDOP, value); }
+    public static void nalphaBlendOp(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendAttachmentState.ALPHABLENDOP, value); }
     /** Unsafe version of {@link #colorWriteMask(int) colorWriteMask}. */
-    public static void ncolorWriteMask(long struct, int value) { memPutInt(struct + VkPipelineColorBlendAttachmentState.COLORWRITEMASK, value); }
+    public static void ncolorWriteMask(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineColorBlendAttachmentState.COLORWRITEMASK, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPipelineColorBlendAttachmentState} structs. */
     public static class Buffer extends StructBuffer<VkPipelineColorBlendAttachmentState, Buffer> implements NativeResource {
 
+        private static final VkPipelineColorBlendAttachmentState ELEMENT_FACTORY = VkPipelineColorBlendAttachmentState.create(-1L);
+
         /**
-         * Creates a new {@link VkPipelineColorBlendAttachmentState.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPipelineColorBlendAttachmentState.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -420,18 +420,8 @@ public class VkPipelineColorBlendAttachmentState extends Struct implements Nativ
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPipelineColorBlendAttachmentState newInstance(long address) {
-            return new VkPipelineColorBlendAttachmentState(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPipelineColorBlendAttachmentState getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code blendEnable} field. */

@@ -60,18 +60,14 @@ public class AIVertexWeight extends Struct implements NativeResource {
         MWEIGHT = layout.offsetof(1);
     }
 
-    AIVertexWeight(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link AIVertexWeight} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code AIVertexWeight} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public AIVertexWeight(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -113,30 +109,31 @@ public class AIVertexWeight extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link AIVertexWeight} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIVertexWeight} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static AIVertexWeight malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(AIVertexWeight.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link AIVertexWeight} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIVertexWeight} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static AIVertexWeight calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(AIVertexWeight.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link AIVertexWeight} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code AIVertexWeight} instance allocated with {@link BufferUtils}. */
     public static AIVertexWeight create() {
-        return new AIVertexWeight(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(AIVertexWeight.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link AIVertexWeight} instance for the specified memory address. */
+    /** Returns a new {@code AIVertexWeight} instance for the specified memory address. */
     public static AIVertexWeight create(long address) {
-        return new AIVertexWeight(address, null);
+        return wrap(AIVertexWeight.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIVertexWeight createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(AIVertexWeight.class, address);
     }
 
     /**
@@ -145,7 +142,7 @@ public class AIVertexWeight extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIVertexWeight.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -154,7 +151,7 @@ public class AIVertexWeight extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIVertexWeight.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -163,7 +160,8 @@ public class AIVertexWeight extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIVertexWeight.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -173,43 +171,43 @@ public class AIVertexWeight extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIVertexWeight.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIVertexWeight.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link AIVertexWeight} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code AIVertexWeight} instance allocated on the thread-local {@link MemoryStack}. */
     public static AIVertexWeight mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link AIVertexWeight} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code AIVertexWeight} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static AIVertexWeight callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link AIVertexWeight} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code AIVertexWeight} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static AIVertexWeight mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(AIVertexWeight.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link AIVertexWeight} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code AIVertexWeight} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static AIVertexWeight callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(AIVertexWeight.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -237,7 +235,7 @@ public class AIVertexWeight extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIVertexWeight.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -247,28 +245,30 @@ public class AIVertexWeight extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIVertexWeight.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #mVertexId}. */
-    public static int nmVertexId(long struct) { return memGetInt(struct + AIVertexWeight.MVERTEXID); }
+    public static int nmVertexId(long struct) { return UNSAFE.getInt(null, struct + AIVertexWeight.MVERTEXID); }
     /** Unsafe version of {@link #mWeight}. */
-    public static float nmWeight(long struct) { return memGetFloat(struct + AIVertexWeight.MWEIGHT); }
+    public static float nmWeight(long struct) { return UNSAFE.getFloat(null, struct + AIVertexWeight.MWEIGHT); }
 
     /** Unsafe version of {@link #mVertexId(int) mVertexId}. */
-    public static void nmVertexId(long struct, int value) { memPutInt(struct + AIVertexWeight.MVERTEXID, value); }
+    public static void nmVertexId(long struct, int value) { UNSAFE.putInt(null, struct + AIVertexWeight.MVERTEXID, value); }
     /** Unsafe version of {@link #mWeight(float) mWeight}. */
-    public static void nmWeight(long struct, float value) { memPutFloat(struct + AIVertexWeight.MWEIGHT, value); }
+    public static void nmWeight(long struct, float value) { UNSAFE.putFloat(null, struct + AIVertexWeight.MWEIGHT, value); }
 
     // -----------------------------------
 
     /** An array of {@link AIVertexWeight} structs. */
     public static class Buffer extends StructBuffer<AIVertexWeight, Buffer> implements NativeResource {
 
+        private static final AIVertexWeight ELEMENT_FACTORY = AIVertexWeight.create(-1L);
+
         /**
-         * Creates a new {@link AIVertexWeight.Buffer} instance backed by the specified container.
+         * Creates a new {@code AIVertexWeight.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -294,18 +294,8 @@ public class AIVertexWeight extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected AIVertexWeight newInstance(long address) {
-            return new AIVertexWeight(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected AIVertexWeight getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code mVertexId} field. */

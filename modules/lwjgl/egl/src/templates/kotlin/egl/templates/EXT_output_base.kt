@@ -45,79 +45,79 @@ val EXT_output_base = "EXTOutputBase".nativeClassEGL("EXT_output_base", postfix 
         "GetOutputLayersEXT",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        nullable..noneTerminated..EGLAttrib.const.p.IN("attrib_list", ""),
-        nullable..EGLOutputLayerEXT.p.OUT("layers", ""),
-        AutoSize("layers")..EGLint.IN("max_layers", ""),
-        Check(1)..EGLint.p.OUT("num_layers", "")
+        EGLDisplay("dpy", ""),
+        nullable..noneTerminated..EGLAttrib.const.p("attrib_list", ""),
+        nullable..EGLOutputLayerEXT.p("layers", ""),
+        AutoSize("layers")..EGLint("max_layers", ""),
+        Check(1)..EGLint.p("num_layers", "")
     )
 
     EGLBoolean(
         "GetOutputPortsEXT",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        nullable..noneTerminated..EGLAttrib.const.p.IN("attrib_list", ""),
-        nullable..EGLOutputPortEXT.p.OUT("ports", ""),
-        AutoSize("ports")..EGLint.IN("max_ports", ""),
-        Check(1)..EGLint.p.OUT("num_ports", "")
+        EGLDisplay("dpy", ""),
+        nullable..noneTerminated..EGLAttrib.const.p("attrib_list", ""),
+        nullable..EGLOutputPortEXT.p("ports", ""),
+        AutoSize("ports")..EGLint("max_ports", ""),
+        Check(1)..EGLint.p("num_ports", "")
     )
 
     EGLBoolean(
         "OutputLayerAttribEXT",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLOutputLayerEXT.IN("layer", ""),
-        EGLint.IN("attribute", ""),
-        EGLAttrib.IN("value", "")
+        EGLDisplay("dpy", ""),
+        EGLOutputLayerEXT("layer", ""),
+        EGLint("attribute", ""),
+        EGLAttrib("value", "")
     )
 
     EGLBoolean(
         "QueryOutputLayerAttribEXT",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLOutputLayerEXT.IN("layer", ""),
-        EGLint.IN("attribute", ""),
-        Check(1)..EGLAttrib.p.OUT("value", "")
+        EGLDisplay("dpy", ""),
+        EGLOutputLayerEXT("layer", ""),
+        EGLint("attribute", ""),
+        Check(1)..EGLAttrib.p("value", "")
     )
 
     charASCII.p(
         "QueryOutputLayerStringEXT",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLOutputLayerEXT.IN("layer", ""),
-        EGLint.IN("name", "")
+        EGLDisplay("dpy", ""),
+        EGLOutputLayerEXT("layer", ""),
+        EGLint("name", "")
     )
 
     EGLBoolean(
         "OutputPortAttribEXT",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLOutputPortEXT.IN("port", ""),
-        EGLint.IN("attribute", ""),
-        EGLAttrib.IN("value", "")
+        EGLDisplay("dpy", ""),
+        EGLOutputPortEXT("port", ""),
+        EGLint("attribute", ""),
+        EGLAttrib("value", "")
     )
 
     EGLBoolean(
         "QueryOutputPortAttribEXT",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLOutputPortEXT.IN("port", ""),
-        EGLint.IN("attribute", ""),
-        Check(1)..EGLAttrib.p.OUT("value", "")
+        EGLDisplay("dpy", ""),
+        EGLOutputPortEXT("port", ""),
+        EGLint("attribute", ""),
+        Check(1)..EGLAttrib.p("value", "")
     )
 
     charASCII.p(
         "QueryOutputPortStringEXT",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLOutputPortEXT.IN("port", ""),
-        EGLint.IN("name", "")
+        EGLDisplay("dpy", ""),
+        EGLOutputPortEXT("port", ""),
+        EGLint("name", "")
     )
 }

@@ -20,7 +20,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>Description</h5>
  * 
- * <p>If the {@link VkPhysicalDeviceMeshShaderFeaturesNV} structure is included in the {@code pNext} chain of flink:VkPhysicalDeviceFeatures2, it is filled with a value indicating whether the feature is supported. {@link VkPhysicalDeviceMeshShaderFeaturesNV} <b>can</b> also be used in {@code pNext} chain of {@link VkDeviceCreateInfo} to enable the features.</p>
+ * <p>If the {@link VkPhysicalDeviceMeshShaderFeaturesNV} structure is included in the {@code pNext} chain of {@link VkPhysicalDeviceFeatures2}, it is filled with a value indicating whether the feature is supported. {@link VkPhysicalDeviceMeshShaderFeaturesNV} <b>can</b> also be used in {@code pNext} chain of {@link VkDeviceCreateInfo} to enable the features.</p>
  * 
  * <h5>Valid Usage (Implicit)</h5>
  * 
@@ -77,18 +77,14 @@ public class VkPhysicalDeviceMeshShaderFeaturesNV extends Struct implements Nati
         MESHSHADER = layout.offsetof(3);
     }
 
-    VkPhysicalDeviceMeshShaderFeaturesNV(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDeviceMeshShaderFeaturesNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceMeshShaderFeaturesNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceMeshShaderFeaturesNV(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -145,30 +141,31 @@ public class VkPhysicalDeviceMeshShaderFeaturesNV extends Struct implements Nati
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceMeshShaderFeaturesNV malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPhysicalDeviceMeshShaderFeaturesNV.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceMeshShaderFeaturesNV calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPhysicalDeviceMeshShaderFeaturesNV.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated with {@link BufferUtils}. */
     public static VkPhysicalDeviceMeshShaderFeaturesNV create() {
-        return new VkPhysicalDeviceMeshShaderFeaturesNV(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDeviceMeshShaderFeaturesNV.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPhysicalDeviceMeshShaderFeaturesNV} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceMeshShaderFeaturesNV} instance for the specified memory address. */
     public static VkPhysicalDeviceMeshShaderFeaturesNV create(long address) {
-        return new VkPhysicalDeviceMeshShaderFeaturesNV(address, null);
+        return wrap(VkPhysicalDeviceMeshShaderFeaturesNV.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceMeshShaderFeaturesNV createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceMeshShaderFeaturesNV.class, address);
     }
 
     /**
@@ -177,7 +174,7 @@ public class VkPhysicalDeviceMeshShaderFeaturesNV extends Struct implements Nati
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMeshShaderFeaturesNV.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -186,7 +183,7 @@ public class VkPhysicalDeviceMeshShaderFeaturesNV extends Struct implements Nati
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMeshShaderFeaturesNV.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -195,7 +192,8 @@ public class VkPhysicalDeviceMeshShaderFeaturesNV extends Struct implements Nati
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMeshShaderFeaturesNV.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -205,43 +203,43 @@ public class VkPhysicalDeviceMeshShaderFeaturesNV extends Struct implements Nati
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMeshShaderFeaturesNV.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceMeshShaderFeaturesNV.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPhysicalDeviceMeshShaderFeaturesNV mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPhysicalDeviceMeshShaderFeaturesNV callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceMeshShaderFeaturesNV mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPhysicalDeviceMeshShaderFeaturesNV.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPhysicalDeviceMeshShaderFeaturesNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceMeshShaderFeaturesNV callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPhysicalDeviceMeshShaderFeaturesNV.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -269,7 +267,7 @@ public class VkPhysicalDeviceMeshShaderFeaturesNV extends Struct implements Nati
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMeshShaderFeaturesNV.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -279,36 +277,38 @@ public class VkPhysicalDeviceMeshShaderFeaturesNV extends Struct implements Nati
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMeshShaderFeaturesNV.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPhysicalDeviceMeshShaderFeaturesNV.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceMeshShaderFeaturesNV.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPhysicalDeviceMeshShaderFeaturesNV.PNEXT); }
     /** Unsafe version of {@link #taskShader}. */
-    public static int ntaskShader(long struct) { return memGetInt(struct + VkPhysicalDeviceMeshShaderFeaturesNV.TASKSHADER); }
+    public static int ntaskShader(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceMeshShaderFeaturesNV.TASKSHADER); }
     /** Unsafe version of {@link #meshShader}. */
-    public static int nmeshShader(long struct) { return memGetInt(struct + VkPhysicalDeviceMeshShaderFeaturesNV.MESHSHADER); }
+    public static int nmeshShader(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceMeshShaderFeaturesNV.MESHSHADER); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPhysicalDeviceMeshShaderFeaturesNV.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceMeshShaderFeaturesNV.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPhysicalDeviceMeshShaderFeaturesNV.PNEXT, value); }
     /** Unsafe version of {@link #taskShader(boolean) taskShader}. */
-    public static void ntaskShader(long struct, int value) { memPutInt(struct + VkPhysicalDeviceMeshShaderFeaturesNV.TASKSHADER, value); }
+    public static void ntaskShader(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceMeshShaderFeaturesNV.TASKSHADER, value); }
     /** Unsafe version of {@link #meshShader(boolean) meshShader}. */
-    public static void nmeshShader(long struct, int value) { memPutInt(struct + VkPhysicalDeviceMeshShaderFeaturesNV.MESHSHADER, value); }
+    public static void nmeshShader(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceMeshShaderFeaturesNV.MESHSHADER, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPhysicalDeviceMeshShaderFeaturesNV} structs. */
     public static class Buffer extends StructBuffer<VkPhysicalDeviceMeshShaderFeaturesNV, Buffer> implements NativeResource {
 
+        private static final VkPhysicalDeviceMeshShaderFeaturesNV ELEMENT_FACTORY = VkPhysicalDeviceMeshShaderFeaturesNV.create(-1L);
+
         /**
-         * Creates a new {@link VkPhysicalDeviceMeshShaderFeaturesNV.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceMeshShaderFeaturesNV.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -334,18 +334,8 @@ public class VkPhysicalDeviceMeshShaderFeaturesNV extends Struct implements Nati
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDeviceMeshShaderFeaturesNV newInstance(long address) {
-            return new VkPhysicalDeviceMeshShaderFeaturesNV(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPhysicalDeviceMeshShaderFeaturesNV getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

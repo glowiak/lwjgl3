@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>Description</h5>
  * 
- * <p>Applications <b>must</b> ensure that all accesses to memory that backs image subresources used as attachments in a given renderpass instance either happen-before the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops">load operations</a> for those attachments, or happen-after the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops">store operations</a> for those attachments.</p>
+ * <p>Applications <b>must</b> ensure that all accesses to memory that backs image subresources used as attachments in a given renderpass instance either happen-before the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-load-store-ops">load operations</a> for those attachments, or happen-after the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-load-store-ops">store operations</a> for those attachments.</p>
  * 
  * <p>For depth/stencil attachments, each aspect <b>can</b> be used separately as attachments and non-attachments as long as the non-attachment accesses are also via an image subresource in either the {@link VK11#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL} layout or the {@link VK11#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL} layout, and the attachment resource uses whichever of those two layouts the image accesses do not. Use of non-attachment aspects in this case is only well defined if the attachment is used in the subpass where the non-attachment access is being made, or the layout of the image subresource is constant throughout the entire render pass instance, including the {@code initialLayout} and {@code finalLayout}.</p>
  * 
@@ -38,10 +38,15 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code attachmentCount} <b>must</b> be equal to the attachment count specified in {@code renderPass}</li>
  * <li>Each element of {@code pAttachments} that is used as a color attachment or resolve attachment by {@code renderPass} <b>must</b> have been created with a {@code usage} value including {@link VK10#VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT IMAGE_USAGE_COLOR_ATTACHMENT_BIT}</li>
  * <li>Each element of {@code pAttachments} that is used as a depth/stencil attachment by {@code renderPass} <b>must</b> have been created with a {@code usage} value including {@link VK10#VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT}</li>
+ * <li>Each element of {@code pAttachments} that is used as a depth/stencil resolve attachment by {@code renderPass} <b>must</b> have been created with a {@code usage} value including {@link VK10#VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT}</li>
  * <li>Each element of {@code pAttachments} that is used as an input attachment by {@code renderPass} <b>must</b> have been created with a {@code usage} value including {@link VK10#VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT IMAGE_USAGE_INPUT_ATTACHMENT_BIT}</li>
+ * <li>Each element of {@code pAttachments} that is used as a fragment density map attachment by {@code renderPass} <b>must</b> not have been created with a {@code flags} value including {@link EXTFragmentDensityMap#VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT IMAGE_CREATE_SUBSAMPLED_BIT_EXT}.</li>
+ * <li>If {@code renderPass} has a fragment density map attachment and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-nonsubsampledimages">non-subsample image feature</a> is not enabled, each element of {@code pAttachments} <b>must</b> have been created with a {@code flags} value including {@link EXTFragmentDensityMap#VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT IMAGE_CREATE_SUBSAMPLED_BIT_EXT} unless that element is the fragment density map attachment.</li>
  * <li>Each element of {@code pAttachments} <b>must</b> have been created with an {@code VkFormat} value that matches the {@code VkFormat} specified by the corresponding {@link VkAttachmentDescription} in {@code renderPass}</li>
  * <li>Each element of {@code pAttachments} <b>must</b> have been created with a {@code samples} value that matches the {@code samples} value specified by the corresponding {@link VkAttachmentDescription} in {@code renderPass}</li>
- * <li>Each element of {@code pAttachments} <b>must</b> have dimensions at least as large as the corresponding framebuffer dimension</li>
+ * <li>Each element of {@code pAttachments} <b>must</b> have dimensions at least as large as the corresponding framebuffer dimension except for any element that is referenced by {@code fragmentDensityMapAttachment}</li>
+ * <li>An element of {@code pAttachments} that is referenced by {@code fragmentDensityMapAttachment} <b>must</b> have a width at least as large as {@code ceil(width / maxFragmentDensityTexelSize.width)}</li>
+ * <li>An element of {@code pAttachments} that is referenced by {@code fragmentDensityMapAttachment} <b>must</b> have a height at least as large as {@code ceil(height / maxFragmentDensityTexelSize.height)}</li>
  * <li>Each element of {@code pAttachments} <b>must</b> only specify a single mip level</li>
  * <li>Each element of {@code pAttachments} <b>must</b> have been created with the identity swizzle</li>
  * <li>{@code width} <b>must</b> be greater than 0.</li>
@@ -51,6 +56,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code layers} <b>must</b> be greater than 0.</li>
  * <li>{@code layers} <b>must</b> be less than or equal to {@link VkPhysicalDeviceLimits}{@code ::maxFramebufferLayers}</li>
  * <li>Each element of {@code pAttachments} that is a 2D or 2D array image view taken from a 3D image <b>must</b> not be a depth/stencil format</li>
+ * <li>If {@code renderPass} was specified with non-zero view masks, {@code layers} <b>must</b> be greater than or equal to the greatest position of any bit included in any of those view masks</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -74,7 +80,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
  * <li>{@code flags} &ndash; reserved for future use.</li>
- * <li>{@code renderPass} &ndash; a render pass that defines what render passes the framebuffer will be compatible with. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">Render Pass Compatibility</a> for details.</li>
+ * <li>{@code renderPass} &ndash; a render pass that defines what render passes the framebuffer will be compatible with. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-compatibility">Render Pass Compatibility</a> for details.</li>
  * <li>{@code attachmentCount} &ndash; the number of attachments.</li>
  * <li>{@code pAttachments} &ndash; an array of {@code VkImageView} handles, each of which will be used as the corresponding attachment in a render pass instance.</li>
  * <li>{@code width} &ndash; {@code width}, {@code height} and {@code layers} define the dimensions of the framebuffer. If the render pass uses multiview, then {@code layers} <b>must</b> be one and each attachment requires a number of layers that is greater than the maximum bit index set in the view mask in the subpasses in which it is used.</li>
@@ -144,18 +150,14 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
         LAYERS = layout.offsetof(8);
     }
 
-    VkFramebufferCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkFramebufferCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkFramebufferCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkFramebufferCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -244,30 +246,31 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkFramebufferCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkFramebufferCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkFramebufferCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkFramebufferCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkFramebufferCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkFramebufferCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkFramebufferCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkFramebufferCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkFramebufferCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkFramebufferCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkFramebufferCreateInfo create() {
-        return new VkFramebufferCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkFramebufferCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkFramebufferCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkFramebufferCreateInfo} instance for the specified memory address. */
     public static VkFramebufferCreateInfo create(long address) {
-        return new VkFramebufferCreateInfo(address, null);
+        return wrap(VkFramebufferCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkFramebufferCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkFramebufferCreateInfo.class, address);
     }
 
     /**
@@ -276,7 +279,7 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkFramebufferCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -285,7 +288,7 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkFramebufferCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -294,7 +297,8 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkFramebufferCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -304,43 +308,43 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkFramebufferCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkFramebufferCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkFramebufferCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkFramebufferCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkFramebufferCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkFramebufferCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkFramebufferCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkFramebufferCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkFramebufferCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkFramebufferCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkFramebufferCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkFramebufferCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkFramebufferCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkFramebufferCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkFramebufferCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkFramebufferCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -368,7 +372,7 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkFramebufferCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -378,48 +382,48 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkFramebufferCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkFramebufferCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkFramebufferCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkFramebufferCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkFramebufferCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkFramebufferCreateInfo.FLAGS); }
     /** Unsafe version of {@link #renderPass}. */
-    public static long nrenderPass(long struct) { return memGetLong(struct + VkFramebufferCreateInfo.RENDERPASS); }
+    public static long nrenderPass(long struct) { return UNSAFE.getLong(null, struct + VkFramebufferCreateInfo.RENDERPASS); }
     /** Unsafe version of {@link #attachmentCount}. */
-    public static int nattachmentCount(long struct) { return memGetInt(struct + VkFramebufferCreateInfo.ATTACHMENTCOUNT); }
+    public static int nattachmentCount(long struct) { return UNSAFE.getInt(null, struct + VkFramebufferCreateInfo.ATTACHMENTCOUNT); }
     /** Unsafe version of {@link #pAttachments() pAttachments}. */
     @Nullable public static LongBuffer npAttachments(long struct) { return memLongBufferSafe(memGetAddress(struct + VkFramebufferCreateInfo.PATTACHMENTS), nattachmentCount(struct)); }
     /** Unsafe version of {@link #width}. */
-    public static int nwidth(long struct) { return memGetInt(struct + VkFramebufferCreateInfo.WIDTH); }
+    public static int nwidth(long struct) { return UNSAFE.getInt(null, struct + VkFramebufferCreateInfo.WIDTH); }
     /** Unsafe version of {@link #height}. */
-    public static int nheight(long struct) { return memGetInt(struct + VkFramebufferCreateInfo.HEIGHT); }
+    public static int nheight(long struct) { return UNSAFE.getInt(null, struct + VkFramebufferCreateInfo.HEIGHT); }
     /** Unsafe version of {@link #layers}. */
-    public static int nlayers(long struct) { return memGetInt(struct + VkFramebufferCreateInfo.LAYERS); }
+    public static int nlayers(long struct) { return UNSAFE.getInt(null, struct + VkFramebufferCreateInfo.LAYERS); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkFramebufferCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkFramebufferCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkFramebufferCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkFramebufferCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkFramebufferCreateInfo.FLAGS, value); }
     /** Unsafe version of {@link #renderPass(long) renderPass}. */
-    public static void nrenderPass(long struct, long value) { memPutLong(struct + VkFramebufferCreateInfo.RENDERPASS, value); }
+    public static void nrenderPass(long struct, long value) { UNSAFE.putLong(null, struct + VkFramebufferCreateInfo.RENDERPASS, value); }
     /** Sets the specified value to the {@code attachmentCount} field of the specified {@code struct}. */
-    public static void nattachmentCount(long struct, int value) { memPutInt(struct + VkFramebufferCreateInfo.ATTACHMENTCOUNT, value); }
+    public static void nattachmentCount(long struct, int value) { UNSAFE.putInt(null, struct + VkFramebufferCreateInfo.ATTACHMENTCOUNT, value); }
     /** Unsafe version of {@link #pAttachments(LongBuffer) pAttachments}. */
     public static void npAttachments(long struct, @Nullable LongBuffer value) { memPutAddress(struct + VkFramebufferCreateInfo.PATTACHMENTS, memAddressSafe(value)); nattachmentCount(struct, value == null ? 0 : value.remaining()); }
     /** Unsafe version of {@link #width(int) width}. */
-    public static void nwidth(long struct, int value) { memPutInt(struct + VkFramebufferCreateInfo.WIDTH, value); }
+    public static void nwidth(long struct, int value) { UNSAFE.putInt(null, struct + VkFramebufferCreateInfo.WIDTH, value); }
     /** Unsafe version of {@link #height(int) height}. */
-    public static void nheight(long struct, int value) { memPutInt(struct + VkFramebufferCreateInfo.HEIGHT, value); }
+    public static void nheight(long struct, int value) { UNSAFE.putInt(null, struct + VkFramebufferCreateInfo.HEIGHT, value); }
     /** Unsafe version of {@link #layers(int) layers}. */
-    public static void nlayers(long struct, int value) { memPutInt(struct + VkFramebufferCreateInfo.LAYERS, value); }
+    public static void nlayers(long struct, int value) { UNSAFE.putInt(null, struct + VkFramebufferCreateInfo.LAYERS, value); }
 
     /**
      * Validates pointer members that should not be {@code NULL}.
@@ -440,7 +444,7 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -449,8 +453,10 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
     /** An array of {@link VkFramebufferCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkFramebufferCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkFramebufferCreateInfo ELEMENT_FACTORY = VkFramebufferCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkFramebufferCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkFramebufferCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -476,18 +482,8 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkFramebufferCreateInfo newInstance(long address) {
-            return new VkFramebufferCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkFramebufferCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

@@ -127,18 +127,14 @@ public class NkStyleSelectable extends Struct implements NativeResource {
         DRAW_END = layout.offsetof(20);
     }
 
-    NkStyleSelectable(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link NkStyleSelectable} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code NkStyleSelectable} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public NkStyleSelectable(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -349,30 +345,31 @@ public class NkStyleSelectable extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link NkStyleSelectable} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code NkStyleSelectable} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static NkStyleSelectable malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(NkStyleSelectable.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link NkStyleSelectable} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code NkStyleSelectable} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static NkStyleSelectable calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(NkStyleSelectable.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link NkStyleSelectable} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code NkStyleSelectable} instance allocated with {@link BufferUtils}. */
     public static NkStyleSelectable create() {
-        return new NkStyleSelectable(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(NkStyleSelectable.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link NkStyleSelectable} instance for the specified memory address. */
+    /** Returns a new {@code NkStyleSelectable} instance for the specified memory address. */
     public static NkStyleSelectable create(long address) {
-        return new NkStyleSelectable(address, null);
+        return wrap(NkStyleSelectable.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkStyleSelectable createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(NkStyleSelectable.class, address);
     }
 
     /**
@@ -381,7 +378,7 @@ public class NkStyleSelectable extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkStyleSelectable.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -390,7 +387,7 @@ public class NkStyleSelectable extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkStyleSelectable.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -399,7 +396,8 @@ public class NkStyleSelectable extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkStyleSelectable.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -409,43 +407,43 @@ public class NkStyleSelectable extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkStyleSelectable.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkStyleSelectable.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link NkStyleSelectable} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code NkStyleSelectable} instance allocated on the thread-local {@link MemoryStack}. */
     public static NkStyleSelectable mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link NkStyleSelectable} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code NkStyleSelectable} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static NkStyleSelectable callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link NkStyleSelectable} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code NkStyleSelectable} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static NkStyleSelectable mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(NkStyleSelectable.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link NkStyleSelectable} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code NkStyleSelectable} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static NkStyleSelectable callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(NkStyleSelectable.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -473,7 +471,7 @@ public class NkStyleSelectable extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkStyleSelectable.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -483,7 +481,7 @@ public class NkStyleSelectable extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static NkStyleSelectable.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -515,9 +513,9 @@ public class NkStyleSelectable extends Struct implements NativeResource {
     /** Unsafe version of {@link #text_background}. */
     public static NkColor ntext_background(long struct) { return NkColor.create(struct + NkStyleSelectable.TEXT_BACKGROUND); }
     /** Unsafe version of {@link #text_alignment}. */
-    public static int ntext_alignment(long struct) { return memGetInt(struct + NkStyleSelectable.TEXT_ALIGNMENT); }
+    public static int ntext_alignment(long struct) { return UNSAFE.getInt(null, struct + NkStyleSelectable.TEXT_ALIGNMENT); }
     /** Unsafe version of {@link #rounding}. */
-    public static float nrounding(long struct) { return memGetFloat(struct + NkStyleSelectable.ROUNDING); }
+    public static float nrounding(long struct) { return UNSAFE.getFloat(null, struct + NkStyleSelectable.ROUNDING); }
     /** Unsafe version of {@link #padding}. */
     public static NkVec2 npadding(long struct) { return NkVec2.create(struct + NkStyleSelectable.PADDING); }
     /** Unsafe version of {@link #touch_padding}. */
@@ -558,9 +556,9 @@ public class NkStyleSelectable extends Struct implements NativeResource {
     /** Unsafe version of {@link #text_background(NkColor) text_background}. */
     public static void ntext_background(long struct, NkColor value) { memCopy(value.address(), struct + NkStyleSelectable.TEXT_BACKGROUND, NkColor.SIZEOF); }
     /** Unsafe version of {@link #text_alignment(int) text_alignment}. */
-    public static void ntext_alignment(long struct, int value) { memPutInt(struct + NkStyleSelectable.TEXT_ALIGNMENT, value); }
+    public static void ntext_alignment(long struct, int value) { UNSAFE.putInt(null, struct + NkStyleSelectable.TEXT_ALIGNMENT, value); }
     /** Unsafe version of {@link #rounding(float) rounding}. */
-    public static void nrounding(long struct, float value) { memPutFloat(struct + NkStyleSelectable.ROUNDING, value); }
+    public static void nrounding(long struct, float value) { UNSAFE.putFloat(null, struct + NkStyleSelectable.ROUNDING, value); }
     /** Unsafe version of {@link #padding(NkVec2) padding}. */
     public static void npadding(long struct, NkVec2 value) { memCopy(value.address(), struct + NkStyleSelectable.PADDING, NkVec2.SIZEOF); }
     /** Unsafe version of {@link #touch_padding(NkVec2) touch_padding}. */
@@ -579,8 +577,10 @@ public class NkStyleSelectable extends Struct implements NativeResource {
     /** An array of {@link NkStyleSelectable} structs. */
     public static class Buffer extends StructBuffer<NkStyleSelectable, Buffer> implements NativeResource {
 
+        private static final NkStyleSelectable ELEMENT_FACTORY = NkStyleSelectable.create(-1L);
+
         /**
-         * Creates a new {@link NkStyleSelectable.Buffer} instance backed by the specified container.
+         * Creates a new {@code NkStyleSelectable.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -606,18 +606,8 @@ public class NkStyleSelectable extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected NkStyleSelectable newInstance(long address) {
-            return new NkStyleSelectable(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected NkStyleSelectable getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link NkStyleItem} view of the {@code normal} field. */

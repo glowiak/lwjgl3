@@ -70,18 +70,14 @@ public class VRControllerState extends Struct implements NativeResource {
         RAXIS = layout.offsetof(3);
     }
 
-    VRControllerState(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VRControllerState} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VRControllerState} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VRControllerState(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -143,30 +139,31 @@ public class VRControllerState extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VRControllerState} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VRControllerState} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VRControllerState malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VRControllerState.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VRControllerState} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VRControllerState} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VRControllerState calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VRControllerState.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VRControllerState} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VRControllerState} instance allocated with {@link BufferUtils}. */
     public static VRControllerState create() {
-        return new VRControllerState(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VRControllerState.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VRControllerState} instance for the specified memory address. */
+    /** Returns a new {@code VRControllerState} instance for the specified memory address. */
     public static VRControllerState create(long address) {
-        return new VRControllerState(address, null);
+        return wrap(VRControllerState.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VRControllerState createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VRControllerState.class, address);
     }
 
     /**
@@ -175,7 +172,7 @@ public class VRControllerState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRControllerState.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -184,7 +181,7 @@ public class VRControllerState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRControllerState.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -193,7 +190,8 @@ public class VRControllerState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRControllerState.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -203,43 +201,43 @@ public class VRControllerState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRControllerState.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VRControllerState.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VRControllerState} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VRControllerState} instance allocated on the thread-local {@link MemoryStack}. */
     public static VRControllerState mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VRControllerState} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VRControllerState} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VRControllerState callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VRControllerState} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VRControllerState} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VRControllerState mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VRControllerState.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VRControllerState} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VRControllerState} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VRControllerState callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VRControllerState.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -267,7 +265,7 @@ public class VRControllerState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRControllerState.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -277,17 +275,17 @@ public class VRControllerState extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VRControllerState.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #unPacketNum}. */
-    public static int nunPacketNum(long struct) { return memGetInt(struct + VRControllerState.UNPACKETNUM); }
+    public static int nunPacketNum(long struct) { return UNSAFE.getInt(null, struct + VRControllerState.UNPACKETNUM); }
     /** Unsafe version of {@link #ulButtonPressed}. */
-    public static long nulButtonPressed(long struct) { return memGetLong(struct + VRControllerState.ULBUTTONPRESSED); }
+    public static long nulButtonPressed(long struct) { return UNSAFE.getLong(null, struct + VRControllerState.ULBUTTONPRESSED); }
     /** Unsafe version of {@link #ulButtonTouched}. */
-    public static long nulButtonTouched(long struct) { return memGetLong(struct + VRControllerState.ULBUTTONTOUCHED); }
+    public static long nulButtonTouched(long struct) { return UNSAFE.getLong(null, struct + VRControllerState.ULBUTTONTOUCHED); }
     /** Unsafe version of {@link #rAxis}. */
     public static VRControllerAxis.Buffer nrAxis(long struct) { return VRControllerAxis.create(struct + VRControllerState.RAXIS, 5); }
     /** Unsafe version of {@link #rAxis(int) rAxis}. */
@@ -296,11 +294,11 @@ public class VRControllerState extends Struct implements NativeResource {
     }
 
     /** Unsafe version of {@link #unPacketNum(int) unPacketNum}. */
-    public static void nunPacketNum(long struct, int value) { memPutInt(struct + VRControllerState.UNPACKETNUM, value); }
+    public static void nunPacketNum(long struct, int value) { UNSAFE.putInt(null, struct + VRControllerState.UNPACKETNUM, value); }
     /** Unsafe version of {@link #ulButtonPressed(long) ulButtonPressed}. */
-    public static void nulButtonPressed(long struct, long value) { memPutLong(struct + VRControllerState.ULBUTTONPRESSED, value); }
+    public static void nulButtonPressed(long struct, long value) { UNSAFE.putLong(null, struct + VRControllerState.ULBUTTONPRESSED, value); }
     /** Unsafe version of {@link #ulButtonTouched(long) ulButtonTouched}. */
-    public static void nulButtonTouched(long struct, long value) { memPutLong(struct + VRControllerState.ULBUTTONTOUCHED, value); }
+    public static void nulButtonTouched(long struct, long value) { UNSAFE.putLong(null, struct + VRControllerState.ULBUTTONTOUCHED, value); }
     /** Unsafe version of {@link #rAxis(VRControllerAxis.Buffer) rAxis}. */
     public static void nrAxis(long struct, VRControllerAxis.Buffer value) {
         if (CHECKS) { checkGT(value, 5); }
@@ -316,8 +314,10 @@ public class VRControllerState extends Struct implements NativeResource {
     /** An array of {@link VRControllerState} structs. */
     public static class Buffer extends StructBuffer<VRControllerState, Buffer> implements NativeResource {
 
+        private static final VRControllerState ELEMENT_FACTORY = VRControllerState.create(-1L);
+
         /**
-         * Creates a new {@link VRControllerState.Buffer} instance backed by the specified container.
+         * Creates a new {@code VRControllerState.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -343,18 +343,8 @@ public class VRControllerState extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VRControllerState newInstance(long address) {
-            return new VRControllerState(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VRControllerState getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code unPacketNum} field. */

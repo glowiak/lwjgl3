@@ -8,7 +8,7 @@ import org.lwjgl.generator.*
 import remotery.*
 
 // Prefixed with an underscore to avoid a nameclash with the Remotery type
-val _Remotery = "Remotery".nativeClass(Module.REMOTERY, prefix = "RMT_", library = REMOTERY_LIBRARY) {
+val _Remotery = "Remotery".nativeClass(Module.REMOTERY, prefix = "RMT_") {
     remoteryIncludes("c")
 
     documentation =
@@ -99,49 +99,43 @@ val _Remotery = "Remotery".nativeClass(Module.REMOTERY, prefix = "RMT_", library
         "RMTSF_Recursive".enum("Merge sample with parent if it's the same sample")
     ).noPrefix().javaDocLinks
 
-    rmtSettings.p(
-        "Settings",
-        ""
-    )
+    rmtSettings.p("Settings", "", void())
 
     rmtError(
         "CreateGlobalInstance",
         "",
 
-        Check(1)..Remotery.p.p.OUT("remotery", "")
+        Check(1)..Remotery.p.p("remotery", "")
     )
 
     void(
         "DestroyGlobalInstance",
         "",
 
-        Remotery.p.IN("remotery", "")
+        Remotery.p("remotery", "")
     )
 
     void(
         "SetGlobalInstance",
         "",
 
-        Remotery.p.IN("remotery", "")
+        Remotery.p("remotery", "")
     )
 
-    Remotery.p(
-        "GetGlobalInstance",
-        ""
-    )
+    Remotery.p("GetGlobalInstance", "", void())
 
     void(
         "SetCurrentThreadName",
         "",
 
-        rmtPStr.IN("thread_name", "")
+        rmtPStr("thread_name", "")
     )
 
     void(
         "LogText",
         "",
 
-        rmtPStr.IN("text", "")
+        rmtPStr("text", "")
     )
 
     Code(
@@ -150,9 +144,9 @@ val _Remotery = "Remotery".nativeClass(Module.REMOTERY, prefix = "RMT_", library
         "BeginCPUSample",
         "",
 
-        rmtPStr.IN("name", ""),
-        rmtU32.IN("flags", "", rmtSampleFlags),
-        Check(1)..nullable..rmtU32.p.INOUT("hash_cache", "")
+        rmtPStr("name", ""),
+        rmtU32("flags", "", rmtSampleFlags),
+        Check(1)..nullable..rmtU32.p("hash_cache", "")
     )
 
     void(

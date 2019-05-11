@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <dl>
  * <dt>1</dt>
- * <dd>For all bitmasks of {@code VkSampleCountFlagBits}, the sample count limits defined above represent the minimum supported sample counts for each image type. Individual images <b>may</b> support additional sample counts, which are queried using {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-supported-sample-counts">Supported Sample Counts</a>.</dd>
+ * <dd>For all bitmasks of {@code VkSampleCountFlagBits}, the sample count limits defined above represent the minimum supported sample counts for each image type. Individual images <b>may</b> support additional sample counts, which are queried using {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties} as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-supported-sample-counts">Supported Sample Counts</a>.</dd>
  * </dl>
  * 
  * <h5>See Also</h5>
@@ -42,72 +42,67 @@ import static org.lwjgl.system.MemoryUtil.*;
  * <li>{@code maxPushConstantsSize} &ndash; the maximum size, in bytes, of the pool of push constant memory. For each of the push constant ranges indicated by the {@code pPushConstantRanges} member of the {@link VkPipelineLayoutCreateInfo} structure, <code>(offset + size)</code> <b>must</b> be less than or equal to this limit.</li>
  * <li>{@code maxMemoryAllocationCount} &ndash; the maximum number of device memory allocations, as created by {@link VK10#vkAllocateMemory AllocateMemory}, which <b>can</b> simultaneously exist.</li>
  * <li>{@code maxSamplerAllocationCount} &ndash; the maximum number of sampler objects, as created by {@link VK10#vkCreateSampler CreateSampler}, which <b>can</b> simultaneously exist on a device.</li>
- * <li>{@code bufferImageGranularity} &ndash; the granularity, in bytes, at which buffer or linear image resources, and optimal image resources <b>can</b> be bound to adjacent offsets in the same {@code VkDeviceMemory} object without aliasing. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-bufferimagegranularity">Buffer-Image Granularity</a> for more details.</li>
+ * <li>{@code bufferImageGranularity} &ndash; the granularity, in bytes, at which buffer or linear image resources, and optimal image resources <b>can</b> be bound to adjacent offsets in the same {@code VkDeviceMemory} object without aliasing. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-bufferimagegranularity">Buffer-Image Granularity</a> for more details.</li>
  * <li>{@code sparseAddressSpaceSize} &ndash; the total amount of address space available, in bytes, for sparse memory resources. This is an upper bound on the sum of the size of all sparse resources, regardless of whether any memory is bound to them.</li>
- * <li>{@code maxBoundDescriptorSets} &ndash; the maximum number of descriptor sets that <b>can</b> be simultaneously used by a pipeline. All {@code DescriptorSet} decorations in shader modules <b>must</b> have a value less than {@code maxBoundDescriptorSets}. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sets">the “Descriptor Sets” section</a>.</li>
- * <li>{@code maxPerStageDescriptorSamplers} &ndash; the maximum number of samplers that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLER DESCRIPTOR_TYPE_SAMPLER} or {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampler">the “Sampler” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler">the “Combined Image Sampler” section</a>.</li>
- * <li>{@code maxPerStageDescriptorUniformBuffers} &ndash; the maximum number of uniform buffers that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbuffer">the “Uniform Buffer” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic">the “Dynamic Uniform Buffer” section</a>.</li>
- * <li>{@code maxPerStageDescriptorStorageBuffers} &ndash; the maximum number of storage buffers that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a pipeline shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebuffer">the “Storage Buffer” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic">the “Dynamic Storage Buffer” section</a>.</li>
- * <li>{@code maxPerStageDescriptorSampledImages} &ndash; the maximum number of sampled images that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE}, or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a pipeline shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler">the “Combined Image Sampler” section</a>, <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampledimage">the “Sampled Image” section</a>, and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer">the “Uniform Texel Buffer” section</a>.</li>
- * <li>{@code maxPerStageDescriptorStorageImages} &ndash; the maximum number of storage images that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a pipeline shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storageimage">the “Storage Image” section</a>, and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer">the “Storage Texel Buffer” section</a>.</li>
- * <li>{@code maxPerStageDescriptorInputAttachments} &ndash; the maximum number of input attachments that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a pipeline shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. These are only supported for the fragment stage. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-inputattachment">the “Input Attachment” section</a>.</li>
+ * <li>{@code maxBoundDescriptorSets} &ndash; the maximum number of descriptor sets that <b>can</b> be simultaneously used by a pipeline. All {@code DescriptorSet} decorations in shader modules <b>must</b> have a value less than {@code maxBoundDescriptorSets}. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sets">Descriptor Sets</a>.</li>
+ * <li>{@code maxPerStageDescriptorSamplers} &ndash; the maximum number of samplers that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLER DESCRIPTOR_TYPE_SAMPLER} or {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampler">Sampler</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler">Combined Image Sampler</a>.</li>
+ * <li>{@code maxPerStageDescriptorUniformBuffers} &ndash; the maximum number of uniform buffers that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbuffer">Uniform Buffer</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic">Dynamic Uniform Buffer</a>.</li>
+ * <li>{@code maxPerStageDescriptorStorageBuffers} &ndash; the maximum number of storage buffers that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a pipeline shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebuffer">Storage Buffer</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic">Dynamic Storage Buffer</a>.</li>
+ * <li>{@code maxPerStageDescriptorSampledImages} &ndash; the maximum number of sampled images that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE}, or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a pipeline shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler">Combined Image Sampler</a>, <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampledimage">Sampled Image</a>, and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer">Uniform Texel Buffer</a>.</li>
+ * <li>{@code maxPerStageDescriptorStorageImages} &ndash; the maximum number of storage images that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a pipeline shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage">Storage Image</a>, and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer">Storage Texel Buffer</a>.</li>
+ * <li>{@code maxPerStageDescriptorInputAttachments} &ndash; the maximum number of input attachments that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. A descriptor is accessible to a pipeline shader stage when the {@code stageFlags} member of the {@link VkDescriptorSetLayoutBinding} structure has the bit for that shader stage set. These are only supported for the fragment stage. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-inputattachment">Input Attachment</a>.</li>
  * <li>{@code maxPerStageResources} &ndash; the maximum number of resources that <b>can</b> be accessible to a single shader stage in a pipeline layout. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE}, {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER}, {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER}, {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER}, {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER}, {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC}, {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC}, or {@link VK10#VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. For the fragment shader stage the framebuffer color attachments also count against this limit.</li>
- * <li>{@code maxDescriptorSetSamplers} &ndash; the maximum number of samplers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLER DESCRIPTOR_TYPE_SAMPLER} or {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampler">the “Sampler” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler">the “Combined Image Sampler” section</a>.</li>
- * <li>{@code maxDescriptorSetUniformBuffers} &ndash; the maximum number of uniform buffers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbuffer">the “Uniform Buffer” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic">the “Dynamic Uniform Buffer” section</a>.</li>
- * <li>{@code maxDescriptorSetUniformBuffersDynamic} &ndash; the maximum number of dynamic uniform buffers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic">the “Dynamic Uniform Buffer” section</a>.</li>
- * <li>{@code maxDescriptorSetStorageBuffers} &ndash; the maximum number of storage buffers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebuffer">the “Storage Buffer” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic">the “Dynamic Storage Buffer” section</a>.</li>
- * <li>{@code maxDescriptorSetStorageBuffersDynamic} &ndash; the maximum number of dynamic storage buffers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic">the “Dynamic Storage Buffer” section</a>.</li>
- * <li>{@code maxDescriptorSetSampledImages} &ndash; the maximum number of sampled images that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE}, or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler">the “Combined Image Sampler” section</a>, <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampledimage">the “Sampled Image” section</a>, and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer">the “Uniform Texel Buffer” section</a>.</li>
- * <li>{@code maxDescriptorSetStorageImages} &ndash; the maximum number of storage images that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storageimage">the “Storage Image” section</a>, and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer">the “Storage Texel Buffer” section</a>.</li>
- * <li>{@code maxDescriptorSetInputAttachments} &ndash; the maximum number of input attachments that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-inputattachment">the “Input Attachment” section</a>.</li>
- * <li>{@code maxVertexInputAttributes} &ndash; the maximum number of vertex input attributes that <b>can</b> be specified for a graphics pipeline. These are described in the array of {@link VkVertexInputAttributeDescription} structures that are provided at graphics pipeline creation time via the {@code pVertexAttributeDescriptions} member of the {@link VkPipelineVertexInputStateCreateInfo} structure. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-attrib">the “Vertex Attributes” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input">the “Vertex Input Description” section</a>.</li>
- * <li>{@code maxVertexInputBindings} &ndash; the maximum number of vertex buffers that <b>can</b> be specified for providing vertex attributes to a graphics pipeline. These are described in the array of {@link VkVertexInputBindingDescription} structures that are provided at graphics pipeline creation time via the {@code pVertexBindingDescriptions} member of the {@link VkPipelineVertexInputStateCreateInfo} structure. The {@code binding} member of {@link VkVertexInputBindingDescription} <b>must</b> be less than this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input">the “Vertex Input Description” section</a>.</li>
- * <li>{@code maxVertexInputAttributeOffset} &ndash; the maximum vertex input attribute offset that <b>can</b> be added to the vertex input binding stride. The {@code offset} member of the {@link VkVertexInputAttributeDescription} structure <b>must</b> be less than or equal to this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input">the “Vertex Input Description” section</a>.</li>
- * <li>{@code maxVertexInputBindingStride} &ndash; the maximum vertex input binding stride that <b>can</b> be specified in a vertex input binding. The {@code stride} member of the {@link VkVertexInputBindingDescription} structure <b>must</b> be less than or equal to this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input">the “Vertex Input Description” section</a>.</li>
- * <li>{@code maxVertexOutputComponents} &ndash; the maximum number of components of output variables which <b>can</b> be output by a vertex shader. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-vertex">the “Vertex Shaders” section</a>.</li>
- * <li>{@code maxTessellationGenerationLevel} &ndash; the maximum tessellation generation level supported by the fixed-function tessellation primitive generator. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#tessellation">the “Tessellation” chapter</a>.</li>
- * <li>{@code maxTessellationPatchSize} &ndash; the maximum patch size, in vertices, of patches that <b>can</b> be processed by the tessellation control shader and tessellation primitive generator. The {@code patchControlPoints} member of the {@link VkPipelineTessellationStateCreateInfo} structure specified at pipeline creation time and the value provided in the {@code OutputVertices} execution mode of shader modules <b>must</b> be less than or equal to this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#tessellation">the “Tessellation” chapter</a>.</li>
+ * <li>{@code maxDescriptorSetSamplers} &ndash; the maximum number of samplers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLER DESCRIPTOR_TYPE_SAMPLER} or {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampler">Sampler</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler">Combined Image Sampler</a>.</li>
+ * <li>{@code maxDescriptorSetUniformBuffers} &ndash; the maximum number of uniform buffers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbuffer">Uniform Buffer</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic">Dynamic Uniform Buffer</a>.</li>
+ * <li>{@code maxDescriptorSetUniformBuffersDynamic} &ndash; the maximum number of dynamic uniform buffers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic">Dynamic Uniform Buffer</a>.</li>
+ * <li>{@code maxDescriptorSetStorageBuffers} &ndash; the maximum number of storage buffers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebuffer">Storage Buffer</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic">Dynamic Storage Buffer</a>.</li>
+ * <li>{@code maxDescriptorSetStorageBuffersDynamic} &ndash; the maximum number of dynamic storage buffers that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic">Dynamic Storage Buffer</a>.</li>
+ * <li>{@code maxDescriptorSetSampledImages} &ndash; the maximum number of sampled images that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE}, or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler">Combined Image Sampler</a>, <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampledimage">Sampled Image</a>, and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer">Uniform Texel Buffer</a>.</li>
+ * <li>{@code maxDescriptorSetStorageImages} &ndash; the maximum number of storage images that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage">Storage Image</a>, and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer">Storage Texel Buffer</a>.</li>
+ * <li>{@code maxDescriptorSetInputAttachments} &ndash; the maximum number of input attachments that <b>can</b> be included in descriptor bindings in a pipeline layout across all pipeline shader stages and descriptor set numbers. Descriptors with a type of {@link VK10#VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT} count against this limit. Only descriptors in descriptor set layouts created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} bit set count against this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-inputattachment">Input Attachment</a>.</li>
+ * <li>{@code maxVertexInputAttributes} &ndash; the maximum number of vertex input attributes that <b>can</b> be specified for a graphics pipeline. These are described in the array of {@link VkVertexInputAttributeDescription} structures that are provided at graphics pipeline creation time via the {@code pVertexAttributeDescriptions} member of the {@link VkPipelineVertexInputStateCreateInfo} structure. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-attrib">Vertex Attributes</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input">Vertex Input Description</a>.</li>
+ * <li>{@code maxVertexInputBindings} &ndash; the maximum number of vertex buffers that <b>can</b> be specified for providing vertex attributes to a graphics pipeline. These are described in the array of {@link VkVertexInputBindingDescription} structures that are provided at graphics pipeline creation time via the {@code pVertexBindingDescriptions} member of the {@link VkPipelineVertexInputStateCreateInfo} structure. The {@code binding} member of {@link VkVertexInputBindingDescription} <b>must</b> be less than this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input">Vertex Input Description</a>.</li>
+ * <li>{@code maxVertexInputAttributeOffset} &ndash; the maximum vertex input attribute offset that <b>can</b> be added to the vertex input binding stride. The {@code offset} member of the {@link VkVertexInputAttributeDescription} structure <b>must</b> be less than or equal to this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input">Vertex Input Description</a>.</li>
+ * <li>{@code maxVertexInputBindingStride} &ndash; the maximum vertex input binding stride that <b>can</b> be specified in a vertex input binding. The {@code stride} member of the {@link VkVertexInputBindingDescription} structure <b>must</b> be less than or equal to this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input">Vertex Input Description</a>.</li>
+ * <li>{@code maxVertexOutputComponents} &ndash; the maximum number of components of output variables which <b>can</b> be output by a vertex shader. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-vertex">Vertex Shaders</a>.</li>
+ * <li>{@code maxTessellationGenerationLevel} &ndash; the maximum tessellation generation level supported by the fixed-function tessellation primitive generator. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#tessellation">Tessellation</a>.</li>
+ * <li>{@code maxTessellationPatchSize} &ndash; the maximum patch size, in vertices, of patches that <b>can</b> be processed by the tessellation control shader and tessellation primitive generator. The {@code patchControlPoints} member of the {@link VkPipelineTessellationStateCreateInfo} structure specified at pipeline creation time and the value provided in the {@code OutputVertices} execution mode of shader modules <b>must</b> be less than or equal to this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#tessellation">Tessellation</a>.</li>
  * <li>{@code maxTessellationControlPerVertexInputComponents} &ndash; the maximum number of components of input variables which <b>can</b> be provided as per-vertex inputs to the tessellation control shader stage.</li>
  * <li>{@code maxTessellationControlPerVertexOutputComponents} &ndash; the maximum number of components of per-vertex output variables which <b>can</b> be output from the tessellation control shader stage.</li>
  * <li>{@code maxTessellationControlPerPatchOutputComponents} &ndash; the maximum number of components of per-patch output variables which <b>can</b> be output from the tessellation control shader stage.</li>
  * <li>{@code maxTessellationControlTotalOutputComponents} &ndash; the maximum total number of components of per-vertex and per-patch output variables which <b>can</b> be output from the tessellation control shader stage.</li>
  * <li>{@code maxTessellationEvaluationInputComponents} &ndash; the maximum number of components of input variables which <b>can</b> be provided as per-vertex inputs to the tessellation evaluation shader stage.</li>
  * <li>{@code maxTessellationEvaluationOutputComponents} &ndash; the maximum number of components of per-vertex output variables which <b>can</b> be output from the tessellation evaluation shader stage.</li>
- * <li>{@code maxGeometryShaderInvocations} &ndash; the maximum invocation count supported for instanced geometry shaders. The value provided in the {@code Invocations} execution mode of shader modules <b>must</b> be less than or equal to this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#geometry">the “Geometry Shading” chapter</a>.</li>
+ * <li>{@code maxGeometryShaderInvocations} &ndash; the maximum invocation count supported for instanced geometry shaders. The value provided in the {@code Invocations} execution mode of shader modules <b>must</b> be less than or equal to this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#geometry">Geometry Shading</a>.</li>
  * <li>{@code maxGeometryInputComponents} &ndash; the maximum number of components of input variables which <b>can</b> be provided as inputs to the geometry shader stage.</li>
  * <li>{@code maxGeometryOutputComponents} &ndash; the maximum number of components of output variables which <b>can</b> be output from the geometry shader stage.</li>
  * <li>{@code maxGeometryOutputVertices} &ndash; the maximum number of vertices which <b>can</b> be emitted by any geometry shader.</li>
  * <li>{@code maxGeometryTotalOutputComponents} &ndash; the maximum total number of components of output, across all emitted vertices, which <b>can</b> be output from the geometry shader stage.</li>
  * <li>{@code maxFragmentInputComponents} &ndash; the maximum number of components of input variables which <b>can</b> be provided as inputs to the fragment shader stage.</li>
  * <li>{@code maxFragmentOutputAttachments} &ndash; the maximum number of output attachments which <b>can</b> be written to by the fragment shader stage.</li>
- * <li>{@code maxFragmentDualSrcAttachments} &ndash; the maximum number of output attachments which <b>can</b> be written to by the fragment shader stage when blending is enabled and one of the dual source blend modes is in use. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-dsb">the “Dual-Source Blending” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-dualSrcBlend">dualSrcBlend</a>.</li>
+ * <li>{@code maxFragmentDualSrcAttachments} &ndash; the maximum number of output attachments which <b>can</b> be written to by the fragment shader stage when blending is enabled and one of the dual source blend modes is in use. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-dsb">Dual-Source Blending</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dualSrcBlend">dualSrcBlend</a>.</li>
  * <li>{@code maxFragmentCombinedOutputResources} &ndash; the total number of storage buffers, storage images, and output buffers which <b>can</b> be used in the fragment shader stage.</li>
- * <li>{@code maxComputeSharedMemorySize} &ndash; the maximum total storage size, in bytes, of all variables declared with the {@code WorkgroupLocal} storage class in shader modules (or with the {@code shared} storage qualifier in GLSL) in the compute shader stage.</li>
- * <li>{@code maxComputeWorkGroupCount} &ndash; the maximum number of local workgroups that <b>can</b> be dispatched by a single dispatch command. These three values represent the maximum number of local workgroups for the X, Y, and Z dimensions, respectively. The workgroup count parameters to the dispatch commands <b>must</b> be less than or equal to the corresponding limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#dispatch">the “Dispatching Commands” chapter</a>.</li>
+ * <li>{@code maxComputeSharedMemorySize} &ndash; the maximum total storage size, in bytes, available for variables declared with the {@code Workgroup} storage class in shader modules (or with the {@code shared} storage qualifier in GLSL) in the compute shader stage. The amount of storage consumed by the variables declared with the {@code Workgroup} storage class is implementation-dependent. However, the amount of storage consumed may not exceed the largest block size that would be obtained if all active variables declared with {@code Workgroup} storage class were assigned offsets in an arbitrary order by successively taking the smallest valid offset according to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#interfaces-resources-layout-std430">Standard Storage Buffer Layout</a> rules. (This is equivalent to using the GLSL std430 layout rules.)</li>
+ * <li>{@code maxComputeWorkGroupCount} &ndash; the maximum number of local workgroups that <b>can</b> be dispatched by a single dispatch command. These three values represent the maximum number of local workgroups for the X, Y, and Z dimensions, respectively. The workgroup count parameters to the dispatch commands <b>must</b> be less than or equal to the corresponding limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#dispatch">Dispatching Commands</a>.</li>
  * <li>{@code maxComputeWorkGroupInvocations} &ndash; the maximum total number of compute shader invocations in a single local workgroup. The product of the X, Y, and Z sizes as specified by the {@code LocalSize} execution mode in shader modules and by the object decorated by the {@code WorkgroupSize} decoration <b>must</b> be less than or equal to this limit.</li>
  * <li>{@code maxComputeWorkGroupSize} &ndash; the maximum size of a local compute workgroup, per dimension. These three values represent the maximum local workgroup size in the X, Y, and Z dimensions, respectively. The {@code x}, {@code y}, and {@code z} sizes specified by the {@code LocalSize} execution mode and by the object decorated by the {@code WorkgroupSize} decoration in shader modules <b>must</b> be less than or equal to the corresponding limit.</li>
- * <li>{@code subPixelPrecisionBits} &ndash; the number of bits of subpixel precision in framebuffer coordinates <code>x<sub>f</sub></code> and <code>y<sub>f</sub></code>. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast">the “Rasterization” chapter</a>.</li>
+ * <li>{@code subPixelPrecisionBits} &ndash; the number of bits of subpixel precision in framebuffer coordinates <code>x<sub>f</sub></code> and <code>y<sub>f</sub></code>. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast">Rasterization</a>.</li>
  * <li>{@code subTexelPrecisionBits} &ndash; the number of bits of precision in the division along an axis of an image used for minification and magnification filters. <code>2<sup>subTexelPrecisionBits</sup></code> is the actual number of divisions along each axis of the image represented. Sub-texel values calculated during image sampling will snap to these locations when generating the filtered results.</li>
- * <li>{@code mipmapPrecisionBits} &ndash; the number of bits of division that the LOD calculation for mipmap fetching get snapped to when determining the contribution from each mip level to the mip filtered results. <code>2<sup>mipmapPrecisionBits</sup></code> is the actual number of divisions.
- * 
- * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
- * 
- * <p>For example, if this value is 2 bits then when linearly filtering between two levels, each level could: contribute: 0%, 33%, 66%, or 100% (this is just an example and the amount of contribution <b>should</b> be covered by different equations in the spec).</p>
- * </div></li>
- * <li>{@code maxDrawIndexedIndexValue} &ndash; the maximum index value that <b>can</b> be used for indexed draw calls when using 32-bit indices. This excludes the primitive restart index value of 0xFFFFFFFF. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-fullDrawIndexUint32">fullDrawIndexUint32</a>.</li>
- * <li>{@code maxDrawIndirectCount} &ndash; the maximum draw count that is supported for indirect draw calls. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-multiDrawIndirect">multiDrawIndirect</a>.</li>
- * <li>{@code maxSamplerLodBias} &ndash; the maximum absolute sampler LOD bias. The sum of the {@code mipLodBias} member of the {@link VkSamplerCreateInfo} structure and the {@code Bias} operand of image sampling operations in shader modules (or 0 if no {@code Bias} operand is provided to an image sampling operation) are clamped to the range <code>[-maxSamplerLodBias,+maxSamplerLodBias]</code>. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-mipLodBias">samplers-mipLodBias</a>.</li>
- * <li>{@code maxSamplerAnisotropy} &ndash; the maximum degree of sampler anisotropy. The maximum degree of anisotropic filtering used for an image sampling operation is the minimum of the {@code maxAnisotropy} member of the {@link VkSamplerCreateInfo} structure and this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-maxAnisotropy">samplers-maxAnisotropy</a>.</li>
+ * <li>{@code mipmapPrecisionBits} &ndash; the number of bits of division that the LOD calculation for mipmap fetching get snapped to when determining the contribution from each mip level to the mip filtered results. <code>2<sup>mipmapPrecisionBits</sup></code> is the actual number of divisions.</li>
+ * <li>{@code maxDrawIndexedIndexValue} &ndash; the maximum index value that <b>can</b> be used for indexed draw calls when using 32-bit indices. This excludes the primitive restart index value of 0xFFFFFFFF. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-fullDrawIndexUint32">fullDrawIndexUint32</a>.</li>
+ * <li>{@code maxDrawIndirectCount} &ndash; the maximum draw count that is supported for indirect draw calls. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiDrawIndirect">multiDrawIndirect</a>.</li>
+ * <li>{@code maxSamplerLodBias} &ndash; the maximum absolute sampler LOD bias. The sum of the {@code mipLodBias} member of the {@link VkSamplerCreateInfo} structure and the {@code Bias} operand of image sampling operations in shader modules (or 0 if no {@code Bias} operand is provided to an image sampling operation) are clamped to the range <code>[-maxSamplerLodBias,+maxSamplerLodBias]</code>. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-mipLodBias">samplers-mipLodBias</a>.</li>
+ * <li>{@code maxSamplerAnisotropy} &ndash; the maximum degree of sampler anisotropy. The maximum degree of anisotropic filtering used for an image sampling operation is the minimum of the {@code maxAnisotropy} member of the {@link VkSamplerCreateInfo} structure and this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-maxAnisotropy">samplers-maxAnisotropy</a>.</li>
  * <li>{@code maxViewports} &ndash; the maximum number of active viewports. The {@code viewportCount} member of the {@link VkPipelineViewportStateCreateInfo} structure that is provided at pipeline creation <b>must</b> be less than or equal to this limit.</li>
- * <li>{@code maxViewportDimensions} &ndash; are the maximum viewport dimensions in the X (width) and Y (height) dimensions, respectively. The maximum viewport dimensions <b>must</b> be greater than or equal to the largest image which <b>can</b> be created and used as a framebuffer attachment. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-viewport">Controlling the Viewport</a>.</li>
- * <li>{@code viewportBoundsRange} &ndash; the <code>[minimum, maximum]</code> range that the corners of a viewport <b>must</b> be contained in. This range <b>must</b> be at least <code>[-2 × size, 2 × size - 1]</code>, where <code>size = max(maxViewportDimensions[0], maxViewportDimensions[1])</code>. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-viewport">Controlling the Viewport</a>.
+ * <li>{@code maxViewportDimensions} &ndash; are the maximum viewport dimensions in the X (width) and Y (height) dimensions, respectively. The maximum viewport dimensions <b>must</b> be greater than or equal to the largest image which <b>can</b> be created and used as a framebuffer attachment. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vertexpostproc-viewport">Controlling the Viewport</a>.</li>
+ * <li>{@code viewportBoundsRange} &ndash; the <code>[minimum, maximum]</code> range that the corners of a viewport <b>must</b> be contained in. This range <b>must</b> be at least <code>[-2 × size, 2 × size - 1]</code>, where <code>size = max(maxViewportDimensions[0], maxViewportDimensions[1])</code>. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vertexpostproc-viewport">Controlling the Viewport</a>.
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
  * <p>The intent of the {@code viewportBoundsRange} limit is to allow a maximum sized viewport to be arbitrarily shifted relative to the output target as long as at least some portion intersects. This would give a bounds limit of <code>[-size + 1, 2 × size - 1]</code> which would allow all possible non-empty-set intersections of the output target and the viewport. Since these numbers are typically powers of two, picking the signed number range using the smallest possible number of bits ends up with the specified range.</p>
  * </div></li>
  * <li>{@code viewportSubPixelBits} &ndash; the number of bits of subpixel precision for viewport bounds. The subpixel precision that floating-point viewport bounds are interpreted at is given by this limit.</li>
- * <li>{@code minMemoryMapAlignment} &ndash; the minimum required: alignment, in bytes, of host visible memory allocations within the host address space. When mapping a memory allocation with {@link VK10#vkMapMemory MapMemory}, subtracting {@code offset} bytes from the returned pointer will always produce an integer multiple of this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-hostaccess">the “Host Access to Device Memory Objects” section</a>.</li>
+ * <li>{@code minMemoryMapAlignment} &ndash; the minimum required: alignment, in bytes, of host visible memory allocations within the host address space. When mapping a memory allocation with {@link VK10#vkMapMemory MapMemory}, subtracting {@code offset} bytes from the returned pointer will always produce an integer multiple of this limit. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-device-hostaccess">Host Access to Device Memory Objects</a>.</li>
  * <li>{@code minTexelBufferOffsetAlignment} &ndash; the minimum required: alignment, in bytes, for the {@code offset} member of the {@link VkBufferViewCreateInfo} structure for texel buffers. When a buffer view is created for a buffer which was created with {@link VK10#VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT} or {@link VK10#VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT} set in the {@code usage} member of the {@link VkBufferCreateInfo} structure, the {@code offset} <b>must</b> be an integer multiple of this limit.</li>
  * <li>{@code minUniformBufferOffsetAlignment} &ndash; the minimum required: alignment, in bytes, for the {@code offset} member of the {@link VkDescriptorBufferInfo} structure for uniform buffers. When a descriptor of type {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC} is updated, the {@code offset} <b>must</b> be an integer multiple of this limit. Similarly, dynamic offsets for uniform buffers <b>must</b> be multiples of this limit.</li>
  * <li>{@code minStorageBufferOffsetAlignment} &ndash; the minimum required: alignment, in bytes, for the {@code offset} member of the {@link VkDescriptorBufferInfo} structure for storage buffers. When a descriptor of type {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} is updated, the {@code offset} <b>must</b> be an integer multiple of this limit. Similarly, dynamic offsets for storage buffers <b>must</b> be multiples of this limit.</li>
@@ -132,21 +127,21 @@ import static org.lwjgl.system.MemoryUtil.*;
  * <li>{@code sampledImageStencilSampleCounts} &ndash; a bitmask<sup>1</sup> of {@code VkSampleCountFlagBits} indicating the sample supported for all 2D images created with {@link VK10#VK_IMAGE_TILING_OPTIMAL IMAGE_TILING_OPTIMAL}, {@code usage} containing {@link VK10#VK_IMAGE_USAGE_SAMPLED_BIT IMAGE_USAGE_SAMPLED_BIT}, and a stencil format.</li>
  * <li>{@code storageImageSampleCounts} &ndash; a bitmask<sup>1</sup> of {@code VkSampleCountFlagBits} indicating the sample counts supported for all 2D images created with {@link VK10#VK_IMAGE_TILING_OPTIMAL IMAGE_TILING_OPTIMAL}, and {@code usage} containing {@link VK10#VK_IMAGE_USAGE_STORAGE_BIT IMAGE_USAGE_STORAGE_BIT}.</li>
  * <li>{@code maxSampleMaskWords} &ndash; the maximum number of array elements of a variable decorated with the {@code SampleMask} built-in decoration.</li>
- * <li>{@code timestampComputeAndGraphics} &ndash; specifies support for timestamps on all graphics and compute queues. If this limit is set to {@link VK10#VK_TRUE TRUE}, all queues that advertise the {@link VK10#VK_QUEUE_GRAPHICS_BIT QUEUE_GRAPHICS_BIT} or {@link VK10#VK_QUEUE_COMPUTE_BIT QUEUE_COMPUTE_BIT} in the {@link VkQueueFamilyProperties}{@code ::queueFlags} support {@link VkQueueFamilyProperties}{@code ::timestampValidBits} of at least 36. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-timestamps">Timestamp Queries</a>.</li>
- * <li>{@code timestampPeriod} &ndash; the number of nanoseconds required: for a timestamp query to be incremented by 1. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-timestamps">Timestamp Queries</a>.</li>
+ * <li>{@code timestampComputeAndGraphics} &ndash; specifies support for timestamps on all graphics and compute queues. If this limit is set to {@link VK10#VK_TRUE TRUE}, all queues that advertise the {@link VK10#VK_QUEUE_GRAPHICS_BIT QUEUE_GRAPHICS_BIT} or {@link VK10#VK_QUEUE_COMPUTE_BIT QUEUE_COMPUTE_BIT} in the {@link VkQueueFamilyProperties}{@code ::queueFlags} support {@link VkQueueFamilyProperties}{@code ::timestampValidBits} of at least 36. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-timestamps">Timestamp Queries</a>.</li>
+ * <li>{@code timestampPeriod} &ndash; the number of nanoseconds required: for a timestamp query to be incremented by 1. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-timestamps">Timestamp Queries</a>.</li>
  * <li>{@code maxClipDistances} &ndash; the maximum number of clip distances that <b>can</b> be used in a single shader stage. The size of any array declared with the {@code ClipDistance} built-in decoration in a shader module <b>must</b> be less than or equal to this limit.</li>
  * <li>{@code maxCullDistances} &ndash; the maximum number of cull distances that <b>can</b> be used in a single shader stage. The size of any array declared with the {@code CullDistance} built-in decoration in a shader module <b>must</b> be less than or equal to this limit.</li>
  * <li>{@code maxCombinedClipAndCullDistances} &ndash; the maximum combined number of clip and cull distances that <b>can</b> be used in a single shader stage. The sum of the sizes of any pair of arrays declared with the {@code ClipDistance} and {@code CullDistance} built-in decoration used by a single shader stage in a shader module <b>must</b> be less than or equal to this limit.</li>
- * <li>{@code discreteQueuePriorities} &ndash; the number of discrete priorities that <b>can</b> be assigned to a queue based on the value of each member of {@link VkDeviceQueueCreateInfo}{@code ::pQueuePriorities}. This <b>must</b> be at least 2, and levels <b>must</b> be spread evenly over the range, with at least one level at 1.0, and another at 0.0. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-priority">the “Queue Priority” section</a>.</li>
+ * <li>{@code discreteQueuePriorities} &ndash; the number of discrete priorities that <b>can</b> be assigned to a queue based on the value of each member of {@link VkDeviceQueueCreateInfo}{@code ::pQueuePriorities}. This <b>must</b> be at least 2, and levels <b>must</b> be spread evenly over the range, with at least one level at 1.0, and another at 0.0. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-priority">Queue Priority</a>.</li>
  * <li>{@code pointSizeRange} &ndash; the range <code>[minimum,maximum]</code> of supported sizes for points. Values written to variables decorated with the {@code PointSize} built-in decoration are clamped to this range.</li>
- * <li>{@code lineWidthRange} &ndash; the range <code>[minimum,maximum]</code> of supported widths for lines. Values specified by the {@code lineWidth} member of the {@link VkPipelineRasterizationStateCreateInfo} or the {@code lineWidth} parameter to {@link VK10#vkCmdSetLineWidth CmdSetLineWidth} are clamped to this range.</li>
+ * <li>{@code lineWidthRange} &ndash; the range <code>[minimum,maximum]</code> of supported widths for lines. Values specified by the {@code lineWidth} member of the {@link VkPipelineRasterizationStateCreateInfo} or the {@code lineWidth} parameter to {@code vkCmdSetLineWidth} are clamped to this range.</li>
  * <li>{@code pointSizeGranularity} &ndash; the granularity of supported point sizes. Not all point sizes in the range defined by {@code pointSizeRange} are supported. This limit specifies the granularity (or increment) between successive supported point sizes.</li>
  * <li>{@code lineWidthGranularity} &ndash; the granularity of supported line widths. Not all line widths in the range defined by {@code lineWidthRange} are supported. This limit specifies the granularity (or increment) between successive supported line widths.</li>
- * <li>{@code strictLines} &ndash; specifies whether lines are rasterized according to the preferred method of rasterization. If set to {@link VK10#VK_FALSE FALSE}, lines <b>may</b> be rasterized under a relaxed set of rules. If set to {@link VK10#VK_TRUE TRUE}, lines are rasterized as per the strict definition. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-lines-basic">Basic Line Segment Rasterization</a>.</li>
- * <li>{@code standardSampleLocations} &ndash; specifies whether rasterization uses the standard sample locations as documented in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-multisampling">Multisampling</a>. If set to {@link VK10#VK_TRUE TRUE}, the implementation uses the documented sample locations. If set to {@link VK10#VK_FALSE FALSE}, the implementation <b>may</b> use different sample locations.</li>
- * <li>{@code optimalBufferCopyOffsetAlignment} &ndash; the optimal buffer offset alignment in bytes for {@link VK10#vkCmdCopyBufferToImage CmdCopyBufferToImage} and {@link VK10#vkCmdCopyImageToBuffer CmdCopyImageToBuffer}. The per texel alignment requirements are enforced, but applications <b>should</b> use the optimal alignment for optimal performance and power use.</li>
- * <li>{@code optimalBufferCopyRowPitchAlignment} &ndash; the optimal buffer row pitch alignment in bytes for {@link VK10#vkCmdCopyBufferToImage CmdCopyBufferToImage} and {@link VK10#vkCmdCopyImageToBuffer CmdCopyImageToBuffer}. Row pitch is the number of bytes between texels with the same X coordinate in adjacent rows (Y coordinates differ by one). The per texel alignment requirements are enforced, but applications <b>should</b> use the optimal alignment for optimal performance and power use.</li>
- * <li>{@code nonCoherentAtomSize} &ndash; the size and alignment in bytes that bounds concurrent access to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-hostaccess">host-mapped device memory</a>.</li>
+ * <li>{@code strictLines} &ndash; specifies whether lines are rasterized according to the preferred method of rasterization. If set to {@link VK10#VK_FALSE FALSE}, lines <b>may</b> be rasterized under a relaxed set of rules. If set to {@link VK10#VK_TRUE TRUE}, lines are rasterized as per the strict definition. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-lines-basic">Basic Line Segment Rasterization</a>.</li>
+ * <li>{@code standardSampleLocations} &ndash; specifies whether rasterization uses the standard sample locations as documented in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-multisampling">Multisampling</a>. If set to {@link VK10#VK_TRUE TRUE}, the implementation uses the documented sample locations. If set to {@link VK10#VK_FALSE FALSE}, the implementation <b>may</b> use different sample locations.</li>
+ * <li>{@code optimalBufferCopyOffsetAlignment} &ndash; the optimal buffer offset alignment in bytes for {@code vkCmdCopyBufferToImage} and {@code vkCmdCopyImageToBuffer}. The per texel alignment requirements are enforced, but applications <b>should</b> use the optimal alignment for optimal performance and power use.</li>
+ * <li>{@code optimalBufferCopyRowPitchAlignment} &ndash; the optimal buffer row pitch alignment in bytes for {@code vkCmdCopyBufferToImage} and {@code vkCmdCopyImageToBuffer}. Row pitch is the number of bytes between texels with the same X coordinate in adjacent rows (Y coordinates differ by one). The per texel alignment requirements are enforced, but applications <b>should</b> use the optimal alignment for optimal performance and power use.</li>
+ * <li>{@code nonCoherentAtomSize} &ndash; the size and alignment in bytes that bounds concurrent access to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-device-hostaccess">host-mapped device memory</a>.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -599,18 +594,14 @@ public class VkPhysicalDeviceLimits extends Struct {
         NONCOHERENTATOMSIZE = layout.offsetof(105);
     }
 
-    VkPhysicalDeviceLimits(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDeviceLimits} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceLimits} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceLimits(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -945,15 +936,15 @@ public class VkPhysicalDeviceLimits extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceLimits} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceLimits} instance for the specified memory address. */
     public static VkPhysicalDeviceLimits create(long address) {
-        return new VkPhysicalDeviceLimits(address, null);
+        return wrap(VkPhysicalDeviceLimits.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceLimits createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceLimits.class, address);
     }
 
     /**
@@ -963,261 +954,263 @@ public class VkPhysicalDeviceLimits extends Struct {
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceLimits.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceLimits.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #maxImageDimension1D}. */
-    public static int nmaxImageDimension1D(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXIMAGEDIMENSION1D); }
+    public static int nmaxImageDimension1D(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXIMAGEDIMENSION1D); }
     /** Unsafe version of {@link #maxImageDimension2D}. */
-    public static int nmaxImageDimension2D(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXIMAGEDIMENSION2D); }
+    public static int nmaxImageDimension2D(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXIMAGEDIMENSION2D); }
     /** Unsafe version of {@link #maxImageDimension3D}. */
-    public static int nmaxImageDimension3D(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXIMAGEDIMENSION3D); }
+    public static int nmaxImageDimension3D(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXIMAGEDIMENSION3D); }
     /** Unsafe version of {@link #maxImageDimensionCube}. */
-    public static int nmaxImageDimensionCube(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXIMAGEDIMENSIONCUBE); }
+    public static int nmaxImageDimensionCube(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXIMAGEDIMENSIONCUBE); }
     /** Unsafe version of {@link #maxImageArrayLayers}. */
-    public static int nmaxImageArrayLayers(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXIMAGEARRAYLAYERS); }
+    public static int nmaxImageArrayLayers(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXIMAGEARRAYLAYERS); }
     /** Unsafe version of {@link #maxTexelBufferElements}. */
-    public static int nmaxTexelBufferElements(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTEXELBUFFERELEMENTS); }
+    public static int nmaxTexelBufferElements(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTEXELBUFFERELEMENTS); }
     /** Unsafe version of {@link #maxUniformBufferRange}. */
-    public static int nmaxUniformBufferRange(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXUNIFORMBUFFERRANGE); }
+    public static int nmaxUniformBufferRange(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXUNIFORMBUFFERRANGE); }
     /** Unsafe version of {@link #maxStorageBufferRange}. */
-    public static int nmaxStorageBufferRange(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXSTORAGEBUFFERRANGE); }
+    public static int nmaxStorageBufferRange(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXSTORAGEBUFFERRANGE); }
     /** Unsafe version of {@link #maxPushConstantsSize}. */
-    public static int nmaxPushConstantsSize(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXPUSHCONSTANTSSIZE); }
+    public static int nmaxPushConstantsSize(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXPUSHCONSTANTSSIZE); }
     /** Unsafe version of {@link #maxMemoryAllocationCount}. */
-    public static int nmaxMemoryAllocationCount(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXMEMORYALLOCATIONCOUNT); }
+    public static int nmaxMemoryAllocationCount(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXMEMORYALLOCATIONCOUNT); }
     /** Unsafe version of {@link #maxSamplerAllocationCount}. */
-    public static int nmaxSamplerAllocationCount(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXSAMPLERALLOCATIONCOUNT); }
+    public static int nmaxSamplerAllocationCount(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXSAMPLERALLOCATIONCOUNT); }
     /** Unsafe version of {@link #bufferImageGranularity}. */
-    public static long nbufferImageGranularity(long struct) { return memGetLong(struct + VkPhysicalDeviceLimits.BUFFERIMAGEGRANULARITY); }
+    public static long nbufferImageGranularity(long struct) { return UNSAFE.getLong(null, struct + VkPhysicalDeviceLimits.BUFFERIMAGEGRANULARITY); }
     /** Unsafe version of {@link #sparseAddressSpaceSize}. */
-    public static long nsparseAddressSpaceSize(long struct) { return memGetLong(struct + VkPhysicalDeviceLimits.SPARSEADDRESSSPACESIZE); }
+    public static long nsparseAddressSpaceSize(long struct) { return UNSAFE.getLong(null, struct + VkPhysicalDeviceLimits.SPARSEADDRESSSPACESIZE); }
     /** Unsafe version of {@link #maxBoundDescriptorSets}. */
-    public static int nmaxBoundDescriptorSets(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXBOUNDDESCRIPTORSETS); }
+    public static int nmaxBoundDescriptorSets(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXBOUNDDESCRIPTORSETS); }
     /** Unsafe version of {@link #maxPerStageDescriptorSamplers}. */
-    public static int nmaxPerStageDescriptorSamplers(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORSAMPLERS); }
+    public static int nmaxPerStageDescriptorSamplers(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORSAMPLERS); }
     /** Unsafe version of {@link #maxPerStageDescriptorUniformBuffers}. */
-    public static int nmaxPerStageDescriptorUniformBuffers(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORUNIFORMBUFFERS); }
+    public static int nmaxPerStageDescriptorUniformBuffers(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORUNIFORMBUFFERS); }
     /** Unsafe version of {@link #maxPerStageDescriptorStorageBuffers}. */
-    public static int nmaxPerStageDescriptorStorageBuffers(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORSTORAGEBUFFERS); }
+    public static int nmaxPerStageDescriptorStorageBuffers(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORSTORAGEBUFFERS); }
     /** Unsafe version of {@link #maxPerStageDescriptorSampledImages}. */
-    public static int nmaxPerStageDescriptorSampledImages(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORSAMPLEDIMAGES); }
+    public static int nmaxPerStageDescriptorSampledImages(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORSAMPLEDIMAGES); }
     /** Unsafe version of {@link #maxPerStageDescriptorStorageImages}. */
-    public static int nmaxPerStageDescriptorStorageImages(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORSTORAGEIMAGES); }
+    public static int nmaxPerStageDescriptorStorageImages(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORSTORAGEIMAGES); }
     /** Unsafe version of {@link #maxPerStageDescriptorInputAttachments}. */
-    public static int nmaxPerStageDescriptorInputAttachments(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORINPUTATTACHMENTS); }
+    public static int nmaxPerStageDescriptorInputAttachments(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXPERSTAGEDESCRIPTORINPUTATTACHMENTS); }
     /** Unsafe version of {@link #maxPerStageResources}. */
-    public static int nmaxPerStageResources(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXPERSTAGERESOURCES); }
+    public static int nmaxPerStageResources(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXPERSTAGERESOURCES); }
     /** Unsafe version of {@link #maxDescriptorSetSamplers}. */
-    public static int nmaxDescriptorSetSamplers(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSAMPLERS); }
+    public static int nmaxDescriptorSetSamplers(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSAMPLERS); }
     /** Unsafe version of {@link #maxDescriptorSetUniformBuffers}. */
-    public static int nmaxDescriptorSetUniformBuffers(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETUNIFORMBUFFERS); }
+    public static int nmaxDescriptorSetUniformBuffers(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETUNIFORMBUFFERS); }
     /** Unsafe version of {@link #maxDescriptorSetUniformBuffersDynamic}. */
-    public static int nmaxDescriptorSetUniformBuffersDynamic(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETUNIFORMBUFFERSDYNAMIC); }
+    public static int nmaxDescriptorSetUniformBuffersDynamic(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETUNIFORMBUFFERSDYNAMIC); }
     /** Unsafe version of {@link #maxDescriptorSetStorageBuffers}. */
-    public static int nmaxDescriptorSetStorageBuffers(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSTORAGEBUFFERS); }
+    public static int nmaxDescriptorSetStorageBuffers(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSTORAGEBUFFERS); }
     /** Unsafe version of {@link #maxDescriptorSetStorageBuffersDynamic}. */
-    public static int nmaxDescriptorSetStorageBuffersDynamic(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSTORAGEBUFFERSDYNAMIC); }
+    public static int nmaxDescriptorSetStorageBuffersDynamic(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSTORAGEBUFFERSDYNAMIC); }
     /** Unsafe version of {@link #maxDescriptorSetSampledImages}. */
-    public static int nmaxDescriptorSetSampledImages(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSAMPLEDIMAGES); }
+    public static int nmaxDescriptorSetSampledImages(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSAMPLEDIMAGES); }
     /** Unsafe version of {@link #maxDescriptorSetStorageImages}. */
-    public static int nmaxDescriptorSetStorageImages(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSTORAGEIMAGES); }
+    public static int nmaxDescriptorSetStorageImages(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETSTORAGEIMAGES); }
     /** Unsafe version of {@link #maxDescriptorSetInputAttachments}. */
-    public static int nmaxDescriptorSetInputAttachments(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETINPUTATTACHMENTS); }
+    public static int nmaxDescriptorSetInputAttachments(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDESCRIPTORSETINPUTATTACHMENTS); }
     /** Unsafe version of {@link #maxVertexInputAttributes}. */
-    public static int nmaxVertexInputAttributes(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXVERTEXINPUTATTRIBUTES); }
+    public static int nmaxVertexInputAttributes(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXVERTEXINPUTATTRIBUTES); }
     /** Unsafe version of {@link #maxVertexInputBindings}. */
-    public static int nmaxVertexInputBindings(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXVERTEXINPUTBINDINGS); }
+    public static int nmaxVertexInputBindings(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXVERTEXINPUTBINDINGS); }
     /** Unsafe version of {@link #maxVertexInputAttributeOffset}. */
-    public static int nmaxVertexInputAttributeOffset(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXVERTEXINPUTATTRIBUTEOFFSET); }
+    public static int nmaxVertexInputAttributeOffset(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXVERTEXINPUTATTRIBUTEOFFSET); }
     /** Unsafe version of {@link #maxVertexInputBindingStride}. */
-    public static int nmaxVertexInputBindingStride(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXVERTEXINPUTBINDINGSTRIDE); }
+    public static int nmaxVertexInputBindingStride(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXVERTEXINPUTBINDINGSTRIDE); }
     /** Unsafe version of {@link #maxVertexOutputComponents}. */
-    public static int nmaxVertexOutputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXVERTEXOUTPUTCOMPONENTS); }
+    public static int nmaxVertexOutputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXVERTEXOUTPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxTessellationGenerationLevel}. */
-    public static int nmaxTessellationGenerationLevel(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTESSELLATIONGENERATIONLEVEL); }
+    public static int nmaxTessellationGenerationLevel(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTESSELLATIONGENERATIONLEVEL); }
     /** Unsafe version of {@link #maxTessellationPatchSize}. */
-    public static int nmaxTessellationPatchSize(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTESSELLATIONPATCHSIZE); }
+    public static int nmaxTessellationPatchSize(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTESSELLATIONPATCHSIZE); }
     /** Unsafe version of {@link #maxTessellationControlPerVertexInputComponents}. */
-    public static int nmaxTessellationControlPerVertexInputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTESSELLATIONCONTROLPERVERTEXINPUTCOMPONENTS); }
+    public static int nmaxTessellationControlPerVertexInputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTESSELLATIONCONTROLPERVERTEXINPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxTessellationControlPerVertexOutputComponents}. */
-    public static int nmaxTessellationControlPerVertexOutputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTESSELLATIONCONTROLPERVERTEXOUTPUTCOMPONENTS); }
+    public static int nmaxTessellationControlPerVertexOutputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTESSELLATIONCONTROLPERVERTEXOUTPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxTessellationControlPerPatchOutputComponents}. */
-    public static int nmaxTessellationControlPerPatchOutputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTESSELLATIONCONTROLPERPATCHOUTPUTCOMPONENTS); }
+    public static int nmaxTessellationControlPerPatchOutputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTESSELLATIONCONTROLPERPATCHOUTPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxTessellationControlTotalOutputComponents}. */
-    public static int nmaxTessellationControlTotalOutputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTESSELLATIONCONTROLTOTALOUTPUTCOMPONENTS); }
+    public static int nmaxTessellationControlTotalOutputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTESSELLATIONCONTROLTOTALOUTPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxTessellationEvaluationInputComponents}. */
-    public static int nmaxTessellationEvaluationInputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTESSELLATIONEVALUATIONINPUTCOMPONENTS); }
+    public static int nmaxTessellationEvaluationInputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTESSELLATIONEVALUATIONINPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxTessellationEvaluationOutputComponents}. */
-    public static int nmaxTessellationEvaluationOutputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTESSELLATIONEVALUATIONOUTPUTCOMPONENTS); }
+    public static int nmaxTessellationEvaluationOutputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTESSELLATIONEVALUATIONOUTPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxGeometryShaderInvocations}. */
-    public static int nmaxGeometryShaderInvocations(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXGEOMETRYSHADERINVOCATIONS); }
+    public static int nmaxGeometryShaderInvocations(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXGEOMETRYSHADERINVOCATIONS); }
     /** Unsafe version of {@link #maxGeometryInputComponents}. */
-    public static int nmaxGeometryInputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXGEOMETRYINPUTCOMPONENTS); }
+    public static int nmaxGeometryInputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXGEOMETRYINPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxGeometryOutputComponents}. */
-    public static int nmaxGeometryOutputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXGEOMETRYOUTPUTCOMPONENTS); }
+    public static int nmaxGeometryOutputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXGEOMETRYOUTPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxGeometryOutputVertices}. */
-    public static int nmaxGeometryOutputVertices(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXGEOMETRYOUTPUTVERTICES); }
+    public static int nmaxGeometryOutputVertices(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXGEOMETRYOUTPUTVERTICES); }
     /** Unsafe version of {@link #maxGeometryTotalOutputComponents}. */
-    public static int nmaxGeometryTotalOutputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXGEOMETRYTOTALOUTPUTCOMPONENTS); }
+    public static int nmaxGeometryTotalOutputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXGEOMETRYTOTALOUTPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxFragmentInputComponents}. */
-    public static int nmaxFragmentInputComponents(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXFRAGMENTINPUTCOMPONENTS); }
+    public static int nmaxFragmentInputComponents(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXFRAGMENTINPUTCOMPONENTS); }
     /** Unsafe version of {@link #maxFragmentOutputAttachments}. */
-    public static int nmaxFragmentOutputAttachments(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXFRAGMENTOUTPUTATTACHMENTS); }
+    public static int nmaxFragmentOutputAttachments(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXFRAGMENTOUTPUTATTACHMENTS); }
     /** Unsafe version of {@link #maxFragmentDualSrcAttachments}. */
-    public static int nmaxFragmentDualSrcAttachments(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXFRAGMENTDUALSRCATTACHMENTS); }
+    public static int nmaxFragmentDualSrcAttachments(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXFRAGMENTDUALSRCATTACHMENTS); }
     /** Unsafe version of {@link #maxFragmentCombinedOutputResources}. */
-    public static int nmaxFragmentCombinedOutputResources(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXFRAGMENTCOMBINEDOUTPUTRESOURCES); }
+    public static int nmaxFragmentCombinedOutputResources(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXFRAGMENTCOMBINEDOUTPUTRESOURCES); }
     /** Unsafe version of {@link #maxComputeSharedMemorySize}. */
-    public static int nmaxComputeSharedMemorySize(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXCOMPUTESHAREDMEMORYSIZE); }
+    public static int nmaxComputeSharedMemorySize(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXCOMPUTESHAREDMEMORYSIZE); }
     /** Unsafe version of {@link #maxComputeWorkGroupCount}. */
     public static IntBuffer nmaxComputeWorkGroupCount(long struct) { return memIntBuffer(struct + VkPhysicalDeviceLimits.MAXCOMPUTEWORKGROUPCOUNT, 3); }
     /** Unsafe version of {@link #maxComputeWorkGroupCount(int) maxComputeWorkGroupCount}. */
     public static int nmaxComputeWorkGroupCount(long struct, int index) {
-        return memGetInt(struct + VkPhysicalDeviceLimits.MAXCOMPUTEWORKGROUPCOUNT + check(index, 3) * 4);
+        return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXCOMPUTEWORKGROUPCOUNT + check(index, 3) * 4);
     }
     /** Unsafe version of {@link #maxComputeWorkGroupInvocations}. */
-    public static int nmaxComputeWorkGroupInvocations(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXCOMPUTEWORKGROUPINVOCATIONS); }
+    public static int nmaxComputeWorkGroupInvocations(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXCOMPUTEWORKGROUPINVOCATIONS); }
     /** Unsafe version of {@link #maxComputeWorkGroupSize}. */
     public static IntBuffer nmaxComputeWorkGroupSize(long struct) { return memIntBuffer(struct + VkPhysicalDeviceLimits.MAXCOMPUTEWORKGROUPSIZE, 3); }
     /** Unsafe version of {@link #maxComputeWorkGroupSize(int) maxComputeWorkGroupSize}. */
     public static int nmaxComputeWorkGroupSize(long struct, int index) {
-        return memGetInt(struct + VkPhysicalDeviceLimits.MAXCOMPUTEWORKGROUPSIZE + check(index, 3) * 4);
+        return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXCOMPUTEWORKGROUPSIZE + check(index, 3) * 4);
     }
     /** Unsafe version of {@link #subPixelPrecisionBits}. */
-    public static int nsubPixelPrecisionBits(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.SUBPIXELPRECISIONBITS); }
+    public static int nsubPixelPrecisionBits(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.SUBPIXELPRECISIONBITS); }
     /** Unsafe version of {@link #subTexelPrecisionBits}. */
-    public static int nsubTexelPrecisionBits(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.SUBTEXELPRECISIONBITS); }
+    public static int nsubTexelPrecisionBits(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.SUBTEXELPRECISIONBITS); }
     /** Unsafe version of {@link #mipmapPrecisionBits}. */
-    public static int nmipmapPrecisionBits(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MIPMAPPRECISIONBITS); }
+    public static int nmipmapPrecisionBits(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MIPMAPPRECISIONBITS); }
     /** Unsafe version of {@link #maxDrawIndexedIndexValue}. */
-    public static int nmaxDrawIndexedIndexValue(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDRAWINDEXEDINDEXVALUE); }
+    public static int nmaxDrawIndexedIndexValue(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDRAWINDEXEDINDEXVALUE); }
     /** Unsafe version of {@link #maxDrawIndirectCount}. */
-    public static int nmaxDrawIndirectCount(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXDRAWINDIRECTCOUNT); }
+    public static int nmaxDrawIndirectCount(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXDRAWINDIRECTCOUNT); }
     /** Unsafe version of {@link #maxSamplerLodBias}. */
-    public static float nmaxSamplerLodBias(long struct) { return memGetFloat(struct + VkPhysicalDeviceLimits.MAXSAMPLERLODBIAS); }
+    public static float nmaxSamplerLodBias(long struct) { return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.MAXSAMPLERLODBIAS); }
     /** Unsafe version of {@link #maxSamplerAnisotropy}. */
-    public static float nmaxSamplerAnisotropy(long struct) { return memGetFloat(struct + VkPhysicalDeviceLimits.MAXSAMPLERANISOTROPY); }
+    public static float nmaxSamplerAnisotropy(long struct) { return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.MAXSAMPLERANISOTROPY); }
     /** Unsafe version of {@link #maxViewports}. */
-    public static int nmaxViewports(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXVIEWPORTS); }
+    public static int nmaxViewports(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXVIEWPORTS); }
     /** Unsafe version of {@link #maxViewportDimensions}. */
     public static IntBuffer nmaxViewportDimensions(long struct) { return memIntBuffer(struct + VkPhysicalDeviceLimits.MAXVIEWPORTDIMENSIONS, 2); }
     /** Unsafe version of {@link #maxViewportDimensions(int) maxViewportDimensions}. */
     public static int nmaxViewportDimensions(long struct, int index) {
-        return memGetInt(struct + VkPhysicalDeviceLimits.MAXVIEWPORTDIMENSIONS + check(index, 2) * 4);
+        return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXVIEWPORTDIMENSIONS + check(index, 2) * 4);
     }
     /** Unsafe version of {@link #viewportBoundsRange}. */
     public static FloatBuffer nviewportBoundsRange(long struct) { return memFloatBuffer(struct + VkPhysicalDeviceLimits.VIEWPORTBOUNDSRANGE, 2); }
     /** Unsafe version of {@link #viewportBoundsRange(int) viewportBoundsRange}. */
     public static float nviewportBoundsRange(long struct, int index) {
-        return memGetFloat(struct + VkPhysicalDeviceLimits.VIEWPORTBOUNDSRANGE + check(index, 2) * 4);
+        return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.VIEWPORTBOUNDSRANGE + check(index, 2) * 4);
     }
     /** Unsafe version of {@link #viewportSubPixelBits}. */
-    public static int nviewportSubPixelBits(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.VIEWPORTSUBPIXELBITS); }
+    public static int nviewportSubPixelBits(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.VIEWPORTSUBPIXELBITS); }
     /** Unsafe version of {@link #minMemoryMapAlignment}. */
     public static long nminMemoryMapAlignment(long struct) { return memGetAddress(struct + VkPhysicalDeviceLimits.MINMEMORYMAPALIGNMENT); }
     /** Unsafe version of {@link #minTexelBufferOffsetAlignment}. */
-    public static long nminTexelBufferOffsetAlignment(long struct) { return memGetLong(struct + VkPhysicalDeviceLimits.MINTEXELBUFFEROFFSETALIGNMENT); }
+    public static long nminTexelBufferOffsetAlignment(long struct) { return UNSAFE.getLong(null, struct + VkPhysicalDeviceLimits.MINTEXELBUFFEROFFSETALIGNMENT); }
     /** Unsafe version of {@link #minUniformBufferOffsetAlignment}. */
-    public static long nminUniformBufferOffsetAlignment(long struct) { return memGetLong(struct + VkPhysicalDeviceLimits.MINUNIFORMBUFFEROFFSETALIGNMENT); }
+    public static long nminUniformBufferOffsetAlignment(long struct) { return UNSAFE.getLong(null, struct + VkPhysicalDeviceLimits.MINUNIFORMBUFFEROFFSETALIGNMENT); }
     /** Unsafe version of {@link #minStorageBufferOffsetAlignment}. */
-    public static long nminStorageBufferOffsetAlignment(long struct) { return memGetLong(struct + VkPhysicalDeviceLimits.MINSTORAGEBUFFEROFFSETALIGNMENT); }
+    public static long nminStorageBufferOffsetAlignment(long struct) { return UNSAFE.getLong(null, struct + VkPhysicalDeviceLimits.MINSTORAGEBUFFEROFFSETALIGNMENT); }
     /** Unsafe version of {@link #minTexelOffset}. */
-    public static int nminTexelOffset(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MINTEXELOFFSET); }
+    public static int nminTexelOffset(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MINTEXELOFFSET); }
     /** Unsafe version of {@link #maxTexelOffset}. */
-    public static int nmaxTexelOffset(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTEXELOFFSET); }
+    public static int nmaxTexelOffset(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTEXELOFFSET); }
     /** Unsafe version of {@link #minTexelGatherOffset}. */
-    public static int nminTexelGatherOffset(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MINTEXELGATHEROFFSET); }
+    public static int nminTexelGatherOffset(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MINTEXELGATHEROFFSET); }
     /** Unsafe version of {@link #maxTexelGatherOffset}. */
-    public static int nmaxTexelGatherOffset(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXTEXELGATHEROFFSET); }
+    public static int nmaxTexelGatherOffset(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXTEXELGATHEROFFSET); }
     /** Unsafe version of {@link #minInterpolationOffset}. */
-    public static float nminInterpolationOffset(long struct) { return memGetFloat(struct + VkPhysicalDeviceLimits.MININTERPOLATIONOFFSET); }
+    public static float nminInterpolationOffset(long struct) { return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.MININTERPOLATIONOFFSET); }
     /** Unsafe version of {@link #maxInterpolationOffset}. */
-    public static float nmaxInterpolationOffset(long struct) { return memGetFloat(struct + VkPhysicalDeviceLimits.MAXINTERPOLATIONOFFSET); }
+    public static float nmaxInterpolationOffset(long struct) { return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.MAXINTERPOLATIONOFFSET); }
     /** Unsafe version of {@link #subPixelInterpolationOffsetBits}. */
-    public static int nsubPixelInterpolationOffsetBits(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.SUBPIXELINTERPOLATIONOFFSETBITS); }
+    public static int nsubPixelInterpolationOffsetBits(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.SUBPIXELINTERPOLATIONOFFSETBITS); }
     /** Unsafe version of {@link #maxFramebufferWidth}. */
-    public static int nmaxFramebufferWidth(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXFRAMEBUFFERWIDTH); }
+    public static int nmaxFramebufferWidth(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXFRAMEBUFFERWIDTH); }
     /** Unsafe version of {@link #maxFramebufferHeight}. */
-    public static int nmaxFramebufferHeight(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXFRAMEBUFFERHEIGHT); }
+    public static int nmaxFramebufferHeight(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXFRAMEBUFFERHEIGHT); }
     /** Unsafe version of {@link #maxFramebufferLayers}. */
-    public static int nmaxFramebufferLayers(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXFRAMEBUFFERLAYERS); }
+    public static int nmaxFramebufferLayers(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXFRAMEBUFFERLAYERS); }
     /** Unsafe version of {@link #framebufferColorSampleCounts}. */
-    public static int nframebufferColorSampleCounts(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.FRAMEBUFFERCOLORSAMPLECOUNTS); }
+    public static int nframebufferColorSampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.FRAMEBUFFERCOLORSAMPLECOUNTS); }
     /** Unsafe version of {@link #framebufferDepthSampleCounts}. */
-    public static int nframebufferDepthSampleCounts(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.FRAMEBUFFERDEPTHSAMPLECOUNTS); }
+    public static int nframebufferDepthSampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.FRAMEBUFFERDEPTHSAMPLECOUNTS); }
     /** Unsafe version of {@link #framebufferStencilSampleCounts}. */
-    public static int nframebufferStencilSampleCounts(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.FRAMEBUFFERSTENCILSAMPLECOUNTS); }
+    public static int nframebufferStencilSampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.FRAMEBUFFERSTENCILSAMPLECOUNTS); }
     /** Unsafe version of {@link #framebufferNoAttachmentsSampleCounts}. */
-    public static int nframebufferNoAttachmentsSampleCounts(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.FRAMEBUFFERNOATTACHMENTSSAMPLECOUNTS); }
+    public static int nframebufferNoAttachmentsSampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.FRAMEBUFFERNOATTACHMENTSSAMPLECOUNTS); }
     /** Unsafe version of {@link #maxColorAttachments}. */
-    public static int nmaxColorAttachments(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXCOLORATTACHMENTS); }
+    public static int nmaxColorAttachments(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXCOLORATTACHMENTS); }
     /** Unsafe version of {@link #sampledImageColorSampleCounts}. */
-    public static int nsampledImageColorSampleCounts(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.SAMPLEDIMAGECOLORSAMPLECOUNTS); }
+    public static int nsampledImageColorSampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.SAMPLEDIMAGECOLORSAMPLECOUNTS); }
     /** Unsafe version of {@link #sampledImageIntegerSampleCounts}. */
-    public static int nsampledImageIntegerSampleCounts(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.SAMPLEDIMAGEINTEGERSAMPLECOUNTS); }
+    public static int nsampledImageIntegerSampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.SAMPLEDIMAGEINTEGERSAMPLECOUNTS); }
     /** Unsafe version of {@link #sampledImageDepthSampleCounts}. */
-    public static int nsampledImageDepthSampleCounts(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.SAMPLEDIMAGEDEPTHSAMPLECOUNTS); }
+    public static int nsampledImageDepthSampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.SAMPLEDIMAGEDEPTHSAMPLECOUNTS); }
     /** Unsafe version of {@link #sampledImageStencilSampleCounts}. */
-    public static int nsampledImageStencilSampleCounts(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.SAMPLEDIMAGESTENCILSAMPLECOUNTS); }
+    public static int nsampledImageStencilSampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.SAMPLEDIMAGESTENCILSAMPLECOUNTS); }
     /** Unsafe version of {@link #storageImageSampleCounts}. */
-    public static int nstorageImageSampleCounts(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.STORAGEIMAGESAMPLECOUNTS); }
+    public static int nstorageImageSampleCounts(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.STORAGEIMAGESAMPLECOUNTS); }
     /** Unsafe version of {@link #maxSampleMaskWords}. */
-    public static int nmaxSampleMaskWords(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXSAMPLEMASKWORDS); }
+    public static int nmaxSampleMaskWords(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXSAMPLEMASKWORDS); }
     /** Unsafe version of {@link #timestampComputeAndGraphics}. */
-    public static int ntimestampComputeAndGraphics(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.TIMESTAMPCOMPUTEANDGRAPHICS); }
+    public static int ntimestampComputeAndGraphics(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.TIMESTAMPCOMPUTEANDGRAPHICS); }
     /** Unsafe version of {@link #timestampPeriod}. */
-    public static float ntimestampPeriod(long struct) { return memGetFloat(struct + VkPhysicalDeviceLimits.TIMESTAMPPERIOD); }
+    public static float ntimestampPeriod(long struct) { return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.TIMESTAMPPERIOD); }
     /** Unsafe version of {@link #maxClipDistances}. */
-    public static int nmaxClipDistances(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXCLIPDISTANCES); }
+    public static int nmaxClipDistances(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXCLIPDISTANCES); }
     /** Unsafe version of {@link #maxCullDistances}. */
-    public static int nmaxCullDistances(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXCULLDISTANCES); }
+    public static int nmaxCullDistances(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXCULLDISTANCES); }
     /** Unsafe version of {@link #maxCombinedClipAndCullDistances}. */
-    public static int nmaxCombinedClipAndCullDistances(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.MAXCOMBINEDCLIPANDCULLDISTANCES); }
+    public static int nmaxCombinedClipAndCullDistances(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.MAXCOMBINEDCLIPANDCULLDISTANCES); }
     /** Unsafe version of {@link #discreteQueuePriorities}. */
-    public static int ndiscreteQueuePriorities(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.DISCRETEQUEUEPRIORITIES); }
+    public static int ndiscreteQueuePriorities(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.DISCRETEQUEUEPRIORITIES); }
     /** Unsafe version of {@link #pointSizeRange}. */
     public static FloatBuffer npointSizeRange(long struct) { return memFloatBuffer(struct + VkPhysicalDeviceLimits.POINTSIZERANGE, 2); }
     /** Unsafe version of {@link #pointSizeRange(int) pointSizeRange}. */
     public static float npointSizeRange(long struct, int index) {
-        return memGetFloat(struct + VkPhysicalDeviceLimits.POINTSIZERANGE + check(index, 2) * 4);
+        return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.POINTSIZERANGE + check(index, 2) * 4);
     }
     /** Unsafe version of {@link #lineWidthRange}. */
     public static FloatBuffer nlineWidthRange(long struct) { return memFloatBuffer(struct + VkPhysicalDeviceLimits.LINEWIDTHRANGE, 2); }
     /** Unsafe version of {@link #lineWidthRange(int) lineWidthRange}. */
     public static float nlineWidthRange(long struct, int index) {
-        return memGetFloat(struct + VkPhysicalDeviceLimits.LINEWIDTHRANGE + check(index, 2) * 4);
+        return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.LINEWIDTHRANGE + check(index, 2) * 4);
     }
     /** Unsafe version of {@link #pointSizeGranularity}. */
-    public static float npointSizeGranularity(long struct) { return memGetFloat(struct + VkPhysicalDeviceLimits.POINTSIZEGRANULARITY); }
+    public static float npointSizeGranularity(long struct) { return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.POINTSIZEGRANULARITY); }
     /** Unsafe version of {@link #lineWidthGranularity}. */
-    public static float nlineWidthGranularity(long struct) { return memGetFloat(struct + VkPhysicalDeviceLimits.LINEWIDTHGRANULARITY); }
+    public static float nlineWidthGranularity(long struct) { return UNSAFE.getFloat(null, struct + VkPhysicalDeviceLimits.LINEWIDTHGRANULARITY); }
     /** Unsafe version of {@link #strictLines}. */
-    public static int nstrictLines(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.STRICTLINES); }
+    public static int nstrictLines(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.STRICTLINES); }
     /** Unsafe version of {@link #standardSampleLocations}. */
-    public static int nstandardSampleLocations(long struct) { return memGetInt(struct + VkPhysicalDeviceLimits.STANDARDSAMPLELOCATIONS); }
+    public static int nstandardSampleLocations(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceLimits.STANDARDSAMPLELOCATIONS); }
     /** Unsafe version of {@link #optimalBufferCopyOffsetAlignment}. */
-    public static long noptimalBufferCopyOffsetAlignment(long struct) { return memGetLong(struct + VkPhysicalDeviceLimits.OPTIMALBUFFERCOPYOFFSETALIGNMENT); }
+    public static long noptimalBufferCopyOffsetAlignment(long struct) { return UNSAFE.getLong(null, struct + VkPhysicalDeviceLimits.OPTIMALBUFFERCOPYOFFSETALIGNMENT); }
     /** Unsafe version of {@link #optimalBufferCopyRowPitchAlignment}. */
-    public static long noptimalBufferCopyRowPitchAlignment(long struct) { return memGetLong(struct + VkPhysicalDeviceLimits.OPTIMALBUFFERCOPYROWPITCHALIGNMENT); }
+    public static long noptimalBufferCopyRowPitchAlignment(long struct) { return UNSAFE.getLong(null, struct + VkPhysicalDeviceLimits.OPTIMALBUFFERCOPYROWPITCHALIGNMENT); }
     /** Unsafe version of {@link #nonCoherentAtomSize}. */
-    public static long nnonCoherentAtomSize(long struct) { return memGetLong(struct + VkPhysicalDeviceLimits.NONCOHERENTATOMSIZE); }
+    public static long nnonCoherentAtomSize(long struct) { return UNSAFE.getLong(null, struct + VkPhysicalDeviceLimits.NONCOHERENTATOMSIZE); }
 
     // -----------------------------------
 
     /** An array of {@link VkPhysicalDeviceLimits} structs. */
     public static class Buffer extends StructBuffer<VkPhysicalDeviceLimits, Buffer> {
 
+        private static final VkPhysicalDeviceLimits ELEMENT_FACTORY = VkPhysicalDeviceLimits.create(-1L);
+
         /**
-         * Creates a new {@link VkPhysicalDeviceLimits.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceLimits.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -1243,18 +1236,8 @@ public class VkPhysicalDeviceLimits extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDeviceLimits newInstance(long address) {
-            return new VkPhysicalDeviceLimits(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPhysicalDeviceLimits getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code maxImageDimension1D} field. */

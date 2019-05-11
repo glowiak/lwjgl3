@@ -13,8 +13,11 @@ import org.lwjgl.system.*;
 
 import static org.lwjgl.system.Checks.*;
 import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.*;
 
 /**
+ * Unstable/private API.
+ * 
  * <h3>Layout</h3>
  * 
  * <pre><code>
@@ -24,18 +27,18 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     float margin[6];
  *     float border[6];
  *     float padding[6];
- *     YGDirection direction;
+ *     YGDirection direction : 2;
+ *     bool didUseLegacyFlag : 1;
+ *     bool doesLegacyStretchFlagAffectsLayout : 1;
+ *     bool hadOverflow : 1;
  *     uint32_t computedFlexBasisGeneration;
  *     {@link YGFloatOptional YGFloatOptional} computedFlexBasis;
- *     bool hadOverflow;
  *     uint32_t generationCount;
  *     YGDirection lastOwnerDirection;
  *     uint32_t nextCachedMeasurementsIndex;
  *     {@link YGCachedMeasurement YGCachedMeasurement} cachedMeasurements[16];
  *     float measuredDimensions[2];
  *     {@link YGCachedMeasurement YGCachedMeasurement} cachedLayout;
- *     bool didUseLegacyFlag;
- *     bool doesLegacyStretchFlagAffectsLayout;
  * }</code></pre>
  */
 public class YGLayout extends Struct {
@@ -53,74 +56,50 @@ public class YGLayout extends Struct {
         MARGIN,
         BORDER,
         PADDING,
-        DIRECTION,
         COMPUTEDFLEXBASISGENERATION,
         COMPUTEDFLEXBASIS,
-        HADOVERFLOW,
         GENERATIONCOUNT,
         LASTOWNERDIRECTION,
         NEXTCACHEDMEASUREMENTSINDEX,
         CACHEDMEASUREMENTS,
         MEASUREDDIMENSIONS,
-        CACHEDLAYOUT,
-        DIDUSELEGACYFLAG,
-        DOESLEGACYSTRETCHFLAGAFFECTSLAYOUT;
+        CACHEDLAYOUT;
 
     static {
-        Layout layout = __struct(
-            __array(4, 4),
-            __array(4, 2),
-            __array(4, 6),
-            __array(4, 6),
-            __array(4, 6),
-            __member(4),
-            __member(4),
-            __member(YGFloatOptional.SIZEOF, YGFloatOptional.ALIGNOF),
-            __member(1),
-            __member(4),
-            __member(4),
-            __member(4),
-            __array(YGCachedMeasurement.SIZEOF, YGCachedMeasurement.ALIGNOF, 16),
-            __array(4, 2),
-            __member(YGCachedMeasurement.SIZEOF, YGCachedMeasurement.ALIGNOF),
-            __member(1),
-            __member(1)
-        );
+        LibYoga.initialize();
 
-        SIZEOF = layout.getSize();
-        ALIGNOF = layout.getAlignment();
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer offsets = stack.mallocInt(14);
+            SIZEOF = offsets(memAddress(offsets));
 
-        POSITIONS = layout.offsetof(0);
-        DIMENSIONS = layout.offsetof(1);
-        MARGIN = layout.offsetof(2);
-        BORDER = layout.offsetof(3);
-        PADDING = layout.offsetof(4);
-        DIRECTION = layout.offsetof(5);
-        COMPUTEDFLEXBASISGENERATION = layout.offsetof(6);
-        COMPUTEDFLEXBASIS = layout.offsetof(7);
-        HADOVERFLOW = layout.offsetof(8);
-        GENERATIONCOUNT = layout.offsetof(9);
-        LASTOWNERDIRECTION = layout.offsetof(10);
-        NEXTCACHEDMEASUREMENTSINDEX = layout.offsetof(11);
-        CACHEDMEASUREMENTS = layout.offsetof(12);
-        MEASUREDDIMENSIONS = layout.offsetof(13);
-        CACHEDLAYOUT = layout.offsetof(14);
-        DIDUSELEGACYFLAG = layout.offsetof(15);
-        DOESLEGACYSTRETCHFLAGAFFECTSLAYOUT = layout.offsetof(16);
+            POSITIONS = offsets.get(0);
+            DIMENSIONS = offsets.get(1);
+            MARGIN = offsets.get(2);
+            BORDER = offsets.get(3);
+            PADDING = offsets.get(4);
+            COMPUTEDFLEXBASISGENERATION = offsets.get(5);
+            COMPUTEDFLEXBASIS = offsets.get(6);
+            GENERATIONCOUNT = offsets.get(7);
+            LASTOWNERDIRECTION = offsets.get(8);
+            NEXTCACHEDMEASUREMENTSINDEX = offsets.get(9);
+            CACHEDMEASUREMENTS = offsets.get(10);
+            MEASUREDDIMENSIONS = offsets.get(11);
+            CACHEDLAYOUT = offsets.get(12);
+
+            ALIGNOF = offsets.get(13);
+        }
     }
 
-    YGLayout(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
+    private static native int offsets(long buffer);
 
     /**
-     * Creates a {@link YGLayout} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code YGLayout} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public YGLayout(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -154,14 +133,20 @@ public class YGLayout extends Struct {
     /** Returns the value of the {@code direction} field. */
     @NativeType("YGDirection")
     public int direction() { return ndirection(address()); }
+    /** Returns the value of the {@code didUseLegacyFlag} field. */
+    @NativeType("bool")
+    public boolean didUseLegacyFlag() { return ndidUseLegacyFlag(address()); }
+    /** Returns the value of the {@code doesLegacyStretchFlagAffectsLayout} field. */
+    @NativeType("bool")
+    public boolean doesLegacyStretchFlagAffectsLayout() { return ndoesLegacyStretchFlagAffectsLayout(address()); }
+    /** Returns the value of the {@code hadOverflow} field. */
+    @NativeType("bool")
+    public boolean hadOverflow() { return nhadOverflow(address()); }
     /** Returns the value of the {@code computedFlexBasisGeneration} field. */
     @NativeType("uint32_t")
     public int computedFlexBasisGeneration() { return ncomputedFlexBasisGeneration(address()); }
     /** Returns a {@link YGFloatOptional} view of the {@code computedFlexBasis} field. */
     public YGFloatOptional computedFlexBasis() { return ncomputedFlexBasis(address()); }
-    /** Returns the value of the {@code hadOverflow} field. */
-    @NativeType("bool")
-    public boolean hadOverflow() { return nhadOverflow(address()); }
     /** Returns the value of the {@code generationCount} field. */
     @NativeType("uint32_t")
     public int generationCount() { return ngenerationCount(address()); }
@@ -183,24 +168,18 @@ public class YGLayout extends Struct {
     public float measuredDimensions(int index) { return nmeasuredDimensions(address(), index); }
     /** Returns a {@link YGCachedMeasurement} view of the {@code cachedLayout} field. */
     public YGCachedMeasurement cachedLayout() { return ncachedLayout(address()); }
-    /** Returns the value of the {@code didUseLegacyFlag} field. */
-    @NativeType("bool")
-    public boolean didUseLegacyFlag() { return ndidUseLegacyFlag(address()); }
-    /** Returns the value of the {@code doesLegacyStretchFlagAffectsLayout} field. */
-    @NativeType("bool")
-    public boolean doesLegacyStretchFlagAffectsLayout() { return ndoesLegacyStretchFlagAffectsLayout(address()); }
 
     // -----------------------------------
 
-    /** Returns a new {@link YGLayout} instance for the specified memory address. */
+    /** Returns a new {@code YGLayout} instance for the specified memory address. */
     public static YGLayout create(long address) {
-        return new YGLayout(address, null);
+        return wrap(YGLayout.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static YGLayout createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(YGLayout.class, address);
     }
 
     /**
@@ -210,13 +189,13 @@ public class YGLayout extends Struct {
      * @param capacity the buffer capacity
      */
     public static YGLayout.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static YGLayout.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
@@ -225,46 +204,50 @@ public class YGLayout extends Struct {
     public static FloatBuffer npositions(long struct) { return memFloatBuffer(struct + YGLayout.POSITIONS, 4); }
     /** Unsafe version of {@link #positions(int) positions}. */
     public static float npositions(long struct, int index) {
-        return memGetFloat(struct + YGLayout.POSITIONS + check(index, 4) * 4);
+        return UNSAFE.getFloat(null, struct + YGLayout.POSITIONS + check(index, 4) * 4);
     }
     /** Unsafe version of {@link #dimensions}. */
     public static FloatBuffer ndimensions(long struct) { return memFloatBuffer(struct + YGLayout.DIMENSIONS, 2); }
     /** Unsafe version of {@link #dimensions(int) dimensions}. */
     public static float ndimensions(long struct, int index) {
-        return memGetFloat(struct + YGLayout.DIMENSIONS + check(index, 2) * 4);
+        return UNSAFE.getFloat(null, struct + YGLayout.DIMENSIONS + check(index, 2) * 4);
     }
     /** Unsafe version of {@link #margin}. */
     public static FloatBuffer nmargin(long struct) { return memFloatBuffer(struct + YGLayout.MARGIN, 6); }
     /** Unsafe version of {@link #margin(int) margin}. */
     public static float nmargin(long struct, int index) {
-        return memGetFloat(struct + YGLayout.MARGIN + check(index, 6) * 4);
+        return UNSAFE.getFloat(null, struct + YGLayout.MARGIN + check(index, 6) * 4);
     }
     /** Unsafe version of {@link #border}. */
     public static FloatBuffer nborder(long struct) { return memFloatBuffer(struct + YGLayout.BORDER, 6); }
     /** Unsafe version of {@link #border(int) border}. */
     public static float nborder(long struct, int index) {
-        return memGetFloat(struct + YGLayout.BORDER + check(index, 6) * 4);
+        return UNSAFE.getFloat(null, struct + YGLayout.BORDER + check(index, 6) * 4);
     }
     /** Unsafe version of {@link #padding}. */
     public static FloatBuffer npadding(long struct) { return memFloatBuffer(struct + YGLayout.PADDING, 6); }
     /** Unsafe version of {@link #padding(int) padding}. */
     public static float npadding(long struct, int index) {
-        return memGetFloat(struct + YGLayout.PADDING + check(index, 6) * 4);
+        return UNSAFE.getFloat(null, struct + YGLayout.PADDING + check(index, 6) * 4);
     }
     /** Unsafe version of {@link #direction}. */
-    public static int ndirection(long struct) { return memGetInt(struct + YGLayout.DIRECTION); }
+    public static native int ndirection(long struct);
+    /** Unsafe version of {@link #didUseLegacyFlag}. */
+    public static native boolean ndidUseLegacyFlag(long struct);
+    /** Unsafe version of {@link #doesLegacyStretchFlagAffectsLayout}. */
+    public static native boolean ndoesLegacyStretchFlagAffectsLayout(long struct);
+    /** Unsafe version of {@link #hadOverflow}. */
+    public static native boolean nhadOverflow(long struct);
     /** Unsafe version of {@link #computedFlexBasisGeneration}. */
-    public static int ncomputedFlexBasisGeneration(long struct) { return memGetInt(struct + YGLayout.COMPUTEDFLEXBASISGENERATION); }
+    public static int ncomputedFlexBasisGeneration(long struct) { return UNSAFE.getInt(null, struct + YGLayout.COMPUTEDFLEXBASISGENERATION); }
     /** Unsafe version of {@link #computedFlexBasis}. */
     public static YGFloatOptional ncomputedFlexBasis(long struct) { return YGFloatOptional.create(struct + YGLayout.COMPUTEDFLEXBASIS); }
-    /** Unsafe version of {@link #hadOverflow}. */
-    public static boolean nhadOverflow(long struct) { return memGetByte(struct + YGLayout.HADOVERFLOW) != 0; }
     /** Unsafe version of {@link #generationCount}. */
-    public static int ngenerationCount(long struct) { return memGetInt(struct + YGLayout.GENERATIONCOUNT); }
+    public static int ngenerationCount(long struct) { return UNSAFE.getInt(null, struct + YGLayout.GENERATIONCOUNT); }
     /** Unsafe version of {@link #lastOwnerDirection}. */
-    public static int nlastOwnerDirection(long struct) { return memGetInt(struct + YGLayout.LASTOWNERDIRECTION); }
+    public static int nlastOwnerDirection(long struct) { return UNSAFE.getInt(null, struct + YGLayout.LASTOWNERDIRECTION); }
     /** Unsafe version of {@link #nextCachedMeasurementsIndex}. */
-    public static int nnextCachedMeasurementsIndex(long struct) { return memGetInt(struct + YGLayout.NEXTCACHEDMEASUREMENTSINDEX); }
+    public static int nnextCachedMeasurementsIndex(long struct) { return UNSAFE.getInt(null, struct + YGLayout.NEXTCACHEDMEASUREMENTSINDEX); }
     /** Unsafe version of {@link #cachedMeasurements}. */
     public static YGCachedMeasurement.Buffer ncachedMeasurements(long struct) { return YGCachedMeasurement.create(struct + YGLayout.CACHEDMEASUREMENTS, 16); }
     /** Unsafe version of {@link #cachedMeasurements(int) cachedMeasurements}. */
@@ -275,22 +258,20 @@ public class YGLayout extends Struct {
     public static FloatBuffer nmeasuredDimensions(long struct) { return memFloatBuffer(struct + YGLayout.MEASUREDDIMENSIONS, 2); }
     /** Unsafe version of {@link #measuredDimensions(int) measuredDimensions}. */
     public static float nmeasuredDimensions(long struct, int index) {
-        return memGetFloat(struct + YGLayout.MEASUREDDIMENSIONS + check(index, 2) * 4);
+        return UNSAFE.getFloat(null, struct + YGLayout.MEASUREDDIMENSIONS + check(index, 2) * 4);
     }
     /** Unsafe version of {@link #cachedLayout}. */
     public static YGCachedMeasurement ncachedLayout(long struct) { return YGCachedMeasurement.create(struct + YGLayout.CACHEDLAYOUT); }
-    /** Unsafe version of {@link #didUseLegacyFlag}. */
-    public static boolean ndidUseLegacyFlag(long struct) { return memGetByte(struct + YGLayout.DIDUSELEGACYFLAG) != 0; }
-    /** Unsafe version of {@link #doesLegacyStretchFlagAffectsLayout}. */
-    public static boolean ndoesLegacyStretchFlagAffectsLayout(long struct) { return memGetByte(struct + YGLayout.DOESLEGACYSTRETCHFLAGAFFECTSLAYOUT) != 0; }
 
     // -----------------------------------
 
     /** An array of {@link YGLayout} structs. */
     public static class Buffer extends StructBuffer<YGLayout, Buffer> {
 
+        private static final YGLayout ELEMENT_FACTORY = YGLayout.create(-1L);
+
         /**
-         * Creates a new {@link YGLayout.Buffer} instance backed by the specified container.
+         * Creates a new {@code YGLayout.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -316,18 +297,8 @@ public class YGLayout extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected YGLayout newInstance(long address) {
-            return new YGLayout(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected YGLayout getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link FloatBuffer} view of the {@code positions} field. */
@@ -358,14 +329,20 @@ public class YGLayout extends Struct {
         /** Returns the value of the {@code direction} field. */
         @NativeType("YGDirection")
         public int direction() { return YGLayout.ndirection(address()); }
+        /** Returns the value of the {@code didUseLegacyFlag} field. */
+        @NativeType("bool")
+        public boolean didUseLegacyFlag() { return YGLayout.ndidUseLegacyFlag(address()); }
+        /** Returns the value of the {@code doesLegacyStretchFlagAffectsLayout} field. */
+        @NativeType("bool")
+        public boolean doesLegacyStretchFlagAffectsLayout() { return YGLayout.ndoesLegacyStretchFlagAffectsLayout(address()); }
+        /** Returns the value of the {@code hadOverflow} field. */
+        @NativeType("bool")
+        public boolean hadOverflow() { return YGLayout.nhadOverflow(address()); }
         /** Returns the value of the {@code computedFlexBasisGeneration} field. */
         @NativeType("uint32_t")
         public int computedFlexBasisGeneration() { return YGLayout.ncomputedFlexBasisGeneration(address()); }
         /** Returns a {@link YGFloatOptional} view of the {@code computedFlexBasis} field. */
         public YGFloatOptional computedFlexBasis() { return YGLayout.ncomputedFlexBasis(address()); }
-        /** Returns the value of the {@code hadOverflow} field. */
-        @NativeType("bool")
-        public boolean hadOverflow() { return YGLayout.nhadOverflow(address()); }
         /** Returns the value of the {@code generationCount} field. */
         @NativeType("uint32_t")
         public int generationCount() { return YGLayout.ngenerationCount(address()); }
@@ -387,12 +364,6 @@ public class YGLayout extends Struct {
         public float measuredDimensions(int index) { return YGLayout.nmeasuredDimensions(address(), index); }
         /** Returns a {@link YGCachedMeasurement} view of the {@code cachedLayout} field. */
         public YGCachedMeasurement cachedLayout() { return YGLayout.ncachedLayout(address()); }
-        /** Returns the value of the {@code didUseLegacyFlag} field. */
-        @NativeType("bool")
-        public boolean didUseLegacyFlag() { return YGLayout.ndidUseLegacyFlag(address()); }
-        /** Returns the value of the {@code doesLegacyStretchFlagAffectsLayout} field. */
-        @NativeType("bool")
-        public boolean doesLegacyStretchFlagAffectsLayout() { return YGLayout.ndoesLegacyStretchFlagAffectsLayout(address()); }
 
     }
 

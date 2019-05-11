@@ -68,6 +68,8 @@ import static org.lwjgl.system.MemoryStack.*;
  *     float m_flCompositorUpdateEndMs;
  *     float m_flCompositorRenderStartMs;
  *     {@link TrackedDevicePose TrackedDevicePose_t} m_HmdPose;
+ *     uint32_t m_nNumVSyncsReadyForUse;
+ *     uint32_t m_nNumVSyncsToFirstView;
  * }</code></pre>
  */
 @NativeType("struct Compositor_FrameTiming")
@@ -104,7 +106,9 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
         M_FLCOMPOSITORUPDATESTARTMS,
         M_FLCOMPOSITORUPDATEENDMS,
         M_FLCOMPOSITORRENDERSTARTMS,
-        M_HMDPOSE;
+        M_HMDPOSE,
+        M_NNUMVSYNCSREADYFORUSE,
+        M_NNUMVSYNCSTOFIRSTVIEW;
 
     static {
         Layout layout = __struct(
@@ -131,7 +135,9 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
             __member(4),
             __member(4),
             __member(4),
-            __member(TrackedDevicePose.SIZEOF, TrackedDevicePose.ALIGNOF)
+            __member(TrackedDevicePose.SIZEOF, TrackedDevicePose.ALIGNOF),
+            __member(4),
+            __member(4)
         );
 
         SIZEOF = layout.getSize();
@@ -161,20 +167,18 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
         M_FLCOMPOSITORUPDATEENDMS = layout.offsetof(21);
         M_FLCOMPOSITORRENDERSTARTMS = layout.offsetof(22);
         M_HMDPOSE = layout.offsetof(23);
-    }
-
-    CompositorFrameTiming(long address, @Nullable ByteBuffer container) {
-        super(address, container);
+        M_NNUMVSYNCSREADYFORUSE = layout.offsetof(24);
+        M_NNUMVSYNCSTOFIRSTVIEW = layout.offsetof(25);
     }
 
     /**
-     * Creates a {@link CompositorFrameTiming} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code CompositorFrameTiming} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public CompositorFrameTiming(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -237,33 +241,40 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
     public TrackedDevicePose m_HmdPose() { return nm_HmdPose(address()); }
     /** Passes the {@code m_HmdPose} field to the specified {@link java.util.function.Consumer Consumer}. */
     public CompositorFrameTiming m_HmdPose(java.util.function.Consumer<TrackedDevicePose> consumer) { consumer.accept(m_HmdPose()); return this; }
+    /** Returns the value of the {@code m_nNumVSyncsReadyForUse} field. */
+    @NativeType("uint32_t")
+    public int m_nNumVSyncsReadyForUse() { return nm_nNumVSyncsReadyForUse(address()); }
+    /** Returns the value of the {@code m_nNumVSyncsToFirstView} field. */
+    @NativeType("uint32_t")
+    public int m_nNumVSyncsToFirstView() { return nm_nNumVSyncsToFirstView(address()); }
 
     // -----------------------------------
 
-    /** Returns a new {@link CompositorFrameTiming} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code CompositorFrameTiming} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static CompositorFrameTiming malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(CompositorFrameTiming.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link CompositorFrameTiming} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code CompositorFrameTiming} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static CompositorFrameTiming calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(CompositorFrameTiming.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link CompositorFrameTiming} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code CompositorFrameTiming} instance allocated with {@link BufferUtils}. */
     public static CompositorFrameTiming create() {
-        return new CompositorFrameTiming(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(CompositorFrameTiming.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link CompositorFrameTiming} instance for the specified memory address. */
+    /** Returns a new {@code CompositorFrameTiming} instance for the specified memory address. */
     public static CompositorFrameTiming create(long address) {
-        return new CompositorFrameTiming(address, null);
+        return wrap(CompositorFrameTiming.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static CompositorFrameTiming createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(CompositorFrameTiming.class, address);
     }
 
     /**
@@ -272,7 +283,7 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CompositorFrameTiming.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -281,7 +292,7 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CompositorFrameTiming.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -290,7 +301,8 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CompositorFrameTiming.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -300,43 +312,43 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CompositorFrameTiming.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static CompositorFrameTiming.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link CompositorFrameTiming} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code CompositorFrameTiming} instance allocated on the thread-local {@link MemoryStack}. */
     public static CompositorFrameTiming mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link CompositorFrameTiming} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code CompositorFrameTiming} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static CompositorFrameTiming callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link CompositorFrameTiming} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code CompositorFrameTiming} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static CompositorFrameTiming mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(CompositorFrameTiming.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link CompositorFrameTiming} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code CompositorFrameTiming} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static CompositorFrameTiming callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(CompositorFrameTiming.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -364,7 +376,7 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CompositorFrameTiming.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -374,67 +386,73 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CompositorFrameTiming.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #m_nSize}. */
-    public static int nm_nSize(long struct) { return memGetInt(struct + CompositorFrameTiming.M_NSIZE); }
+    public static int nm_nSize(long struct) { return UNSAFE.getInt(null, struct + CompositorFrameTiming.M_NSIZE); }
     /** Unsafe version of {@link #m_nFrameIndex}. */
-    public static int nm_nFrameIndex(long struct) { return memGetInt(struct + CompositorFrameTiming.M_NFRAMEINDEX); }
+    public static int nm_nFrameIndex(long struct) { return UNSAFE.getInt(null, struct + CompositorFrameTiming.M_NFRAMEINDEX); }
     /** Unsafe version of {@link #m_nNumFramePresents}. */
-    public static int nm_nNumFramePresents(long struct) { return memGetInt(struct + CompositorFrameTiming.M_NNUMFRAMEPRESENTS); }
+    public static int nm_nNumFramePresents(long struct) { return UNSAFE.getInt(null, struct + CompositorFrameTiming.M_NNUMFRAMEPRESENTS); }
     /** Unsafe version of {@link #m_nNumMisPresented}. */
-    public static int nm_nNumMisPresented(long struct) { return memGetInt(struct + CompositorFrameTiming.M_NNUMMISPRESENTED); }
+    public static int nm_nNumMisPresented(long struct) { return UNSAFE.getInt(null, struct + CompositorFrameTiming.M_NNUMMISPRESENTED); }
     /** Unsafe version of {@link #m_nNumDroppedFrames}. */
-    public static int nm_nNumDroppedFrames(long struct) { return memGetInt(struct + CompositorFrameTiming.M_NNUMDROPPEDFRAMES); }
+    public static int nm_nNumDroppedFrames(long struct) { return UNSAFE.getInt(null, struct + CompositorFrameTiming.M_NNUMDROPPEDFRAMES); }
     /** Unsafe version of {@link #m_nReprojectionFlags}. */
-    public static int nm_nReprojectionFlags(long struct) { return memGetInt(struct + CompositorFrameTiming.M_NREPROJECTIONFLAGS); }
+    public static int nm_nReprojectionFlags(long struct) { return UNSAFE.getInt(null, struct + CompositorFrameTiming.M_NREPROJECTIONFLAGS); }
     /** Unsafe version of {@link #m_flSystemTimeInSeconds}. */
-    public static double nm_flSystemTimeInSeconds(long struct) { return memGetDouble(struct + CompositorFrameTiming.M_FLSYSTEMTIMEINSECONDS); }
+    public static double nm_flSystemTimeInSeconds(long struct) { return UNSAFE.getDouble(null, struct + CompositorFrameTiming.M_FLSYSTEMTIMEINSECONDS); }
     /** Unsafe version of {@link #m_flPreSubmitGpuMs}. */
-    public static float nm_flPreSubmitGpuMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLPRESUBMITGPUMS); }
+    public static float nm_flPreSubmitGpuMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLPRESUBMITGPUMS); }
     /** Unsafe version of {@link #m_flPostSubmitGpuMs}. */
-    public static float nm_flPostSubmitGpuMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLPOSTSUBMITGPUMS); }
+    public static float nm_flPostSubmitGpuMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLPOSTSUBMITGPUMS); }
     /** Unsafe version of {@link #m_flTotalRenderGpuMs}. */
-    public static float nm_flTotalRenderGpuMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLTOTALRENDERGPUMS); }
+    public static float nm_flTotalRenderGpuMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLTOTALRENDERGPUMS); }
     /** Unsafe version of {@link #m_flCompositorRenderGpuMs}. */
-    public static float nm_flCompositorRenderGpuMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLCOMPOSITORRENDERGPUMS); }
+    public static float nm_flCompositorRenderGpuMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLCOMPOSITORRENDERGPUMS); }
     /** Unsafe version of {@link #m_flCompositorRenderCpuMs}. */
-    public static float nm_flCompositorRenderCpuMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLCOMPOSITORRENDERCPUMS); }
+    public static float nm_flCompositorRenderCpuMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLCOMPOSITORRENDERCPUMS); }
     /** Unsafe version of {@link #m_flCompositorIdleCpuMs}. */
-    public static float nm_flCompositorIdleCpuMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLCOMPOSITORIDLECPUMS); }
+    public static float nm_flCompositorIdleCpuMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLCOMPOSITORIDLECPUMS); }
     /** Unsafe version of {@link #m_flClientFrameIntervalMs}. */
-    public static float nm_flClientFrameIntervalMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLCLIENTFRAMEINTERVALMS); }
+    public static float nm_flClientFrameIntervalMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLCLIENTFRAMEINTERVALMS); }
     /** Unsafe version of {@link #m_flPresentCallCpuMs}. */
-    public static float nm_flPresentCallCpuMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLPRESENTCALLCPUMS); }
+    public static float nm_flPresentCallCpuMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLPRESENTCALLCPUMS); }
     /** Unsafe version of {@link #m_flWaitForPresentCpuMs}. */
-    public static float nm_flWaitForPresentCpuMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLWAITFORPRESENTCPUMS); }
+    public static float nm_flWaitForPresentCpuMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLWAITFORPRESENTCPUMS); }
     /** Unsafe version of {@link #m_flSubmitFrameMs}. */
-    public static float nm_flSubmitFrameMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLSUBMITFRAMEMS); }
+    public static float nm_flSubmitFrameMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLSUBMITFRAMEMS); }
     /** Unsafe version of {@link #m_flWaitGetPosesCalledMs}. */
-    public static float nm_flWaitGetPosesCalledMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLWAITGETPOSESCALLEDMS); }
+    public static float nm_flWaitGetPosesCalledMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLWAITGETPOSESCALLEDMS); }
     /** Unsafe version of {@link #m_flNewPosesReadyMs}. */
-    public static float nm_flNewPosesReadyMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLNEWPOSESREADYMS); }
+    public static float nm_flNewPosesReadyMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLNEWPOSESREADYMS); }
     /** Unsafe version of {@link #m_flNewFrameReadyMs}. */
-    public static float nm_flNewFrameReadyMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLNEWFRAMEREADYMS); }
+    public static float nm_flNewFrameReadyMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLNEWFRAMEREADYMS); }
     /** Unsafe version of {@link #m_flCompositorUpdateStartMs}. */
-    public static float nm_flCompositorUpdateStartMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLCOMPOSITORUPDATESTARTMS); }
+    public static float nm_flCompositorUpdateStartMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLCOMPOSITORUPDATESTARTMS); }
     /** Unsafe version of {@link #m_flCompositorUpdateEndMs}. */
-    public static float nm_flCompositorUpdateEndMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLCOMPOSITORUPDATEENDMS); }
+    public static float nm_flCompositorUpdateEndMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLCOMPOSITORUPDATEENDMS); }
     /** Unsafe version of {@link #m_flCompositorRenderStartMs}. */
-    public static float nm_flCompositorRenderStartMs(long struct) { return memGetFloat(struct + CompositorFrameTiming.M_FLCOMPOSITORRENDERSTARTMS); }
+    public static float nm_flCompositorRenderStartMs(long struct) { return UNSAFE.getFloat(null, struct + CompositorFrameTiming.M_FLCOMPOSITORRENDERSTARTMS); }
     /** Unsafe version of {@link #m_HmdPose}. */
     public static TrackedDevicePose nm_HmdPose(long struct) { return TrackedDevicePose.create(struct + CompositorFrameTiming.M_HMDPOSE); }
+    /** Unsafe version of {@link #m_nNumVSyncsReadyForUse}. */
+    public static int nm_nNumVSyncsReadyForUse(long struct) { return UNSAFE.getInt(null, struct + CompositorFrameTiming.M_NNUMVSYNCSREADYFORUSE); }
+    /** Unsafe version of {@link #m_nNumVSyncsToFirstView}. */
+    public static int nm_nNumVSyncsToFirstView(long struct) { return UNSAFE.getInt(null, struct + CompositorFrameTiming.M_NNUMVSYNCSTOFIRSTVIEW); }
 
     // -----------------------------------
 
     /** An array of {@link CompositorFrameTiming} structs. */
     public static class Buffer extends StructBuffer<CompositorFrameTiming, Buffer> implements NativeResource {
 
+        private static final CompositorFrameTiming ELEMENT_FACTORY = CompositorFrameTiming.create(-1L);
+
         /**
-         * Creates a new {@link CompositorFrameTiming.Buffer} instance backed by the specified container.
+         * Creates a new {@code CompositorFrameTiming.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -460,18 +478,8 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected CompositorFrameTiming newInstance(long address) {
-            return new CompositorFrameTiming(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected CompositorFrameTiming getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code m_nSize} field. */
@@ -531,6 +539,12 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
         public TrackedDevicePose m_HmdPose() { return CompositorFrameTiming.nm_HmdPose(address()); }
         /** Passes the {@code m_HmdPose} field to the specified {@link java.util.function.Consumer Consumer}. */
         public CompositorFrameTiming.Buffer m_HmdPose(java.util.function.Consumer<TrackedDevicePose> consumer) { consumer.accept(m_HmdPose()); return this; }
+        /** Returns the value of the {@code m_nNumVSyncsReadyForUse} field. */
+        @NativeType("uint32_t")
+        public int m_nNumVSyncsReadyForUse() { return CompositorFrameTiming.nm_nNumVSyncsReadyForUse(address()); }
+        /** Returns the value of the {@code m_nNumVSyncsToFirstView} field. */
+        @NativeType("uint32_t")
+        public int m_nNumVSyncsToFirstView() { return CompositorFrameTiming.nm_nNumVSyncsToFirstView(address()); }
 
     }
 

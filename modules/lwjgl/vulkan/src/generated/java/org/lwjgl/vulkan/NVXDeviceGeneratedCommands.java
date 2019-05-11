@@ -262,14 +262,14 @@ public class NVXDeviceGeneratedCommands {
      * <table class="lwjgl">
      * <thead><tr><th>Token type</th><th>Equivalent command</th></tr></thead>
      * <tbody>
-     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX}</td><td>{@link VK10#vkCmdBindPipeline CmdBindPipeline}</td></tr>
-     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX}</td><td>{@link VK10#vkCmdBindDescriptorSets CmdBindDescriptorSets}</td></tr>
-     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX}</td><td>{@link VK10#vkCmdBindIndexBuffer CmdBindIndexBuffer}</td></tr>
-     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX}</td><td>{@link VK10#vkCmdBindVertexBuffers CmdBindVertexBuffers}</td></tr>
-     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX}</td><td>{@link VK10#vkCmdPushConstants CmdPushConstants}</td></tr>
-     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX}</td><td>{@link VK10#vkCmdDrawIndexedIndirect CmdDrawIndexedIndirect}</td></tr>
-     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX}</td><td>{@link VK10#vkCmdDrawIndirect CmdDrawIndirect}</td></tr>
-     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX}</td><td>{@link VK10#vkCmdDispatchIndirect CmdDispatchIndirect}</td></tr>
+     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX}</td><td>{@code vkCmdBindPipeline}</td></tr>
+     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX}</td><td>{@code vkCmdBindDescriptorSets}</td></tr>
+     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX}</td><td>{@code vkCmdBindIndexBuffer}</td></tr>
+     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX}</td><td>{@code vkCmdBindVertexBuffers}</td></tr>
+     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX}</td><td>{@code vkCmdPushConstants}</td></tr>
+     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX}</td><td>{@code vkCmdDrawIndexedIndirect}</td></tr>
+     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX}</td><td>{@code vkCmdDrawIndirect}</td></tr>
+     * <tr><td>{@link #VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX}</td><td>{@code vkCmdDispatchIndirect}</td></tr>
      * </tbody>
      * </table>
      * 
@@ -343,7 +343,7 @@ public class NVXDeviceGeneratedCommands {
             check(__functionAddress);
             VkCmdProcessCommandsInfoNVX.validate(pProcessCommandsInfo);
         }
-        callPPV(__functionAddress, commandBuffer.address(), pProcessCommandsInfo);
+        callPPV(commandBuffer.address(), pProcessCommandsInfo, __functionAddress);
     }
 
     /**
@@ -363,7 +363,7 @@ public class NVXDeviceGeneratedCommands {
      * <ul>
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
      * <li>{@code pProcessCommandsInfo} <b>must</b> be a valid pointer to a valid {@link VkCmdProcessCommandsInfoNVX} structure</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
      * <li>This command <b>must</b> only be called inside of a render pass instance</li>
      * </ul>
@@ -378,7 +378,7 @@ public class NVXDeviceGeneratedCommands {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Primary Secondary</td><td>Inside</td><td>Graphics Compute</td><td></td></tr></tbody>
      * </table>
      * 
@@ -401,7 +401,7 @@ public class NVXDeviceGeneratedCommands {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, commandBuffer.address(), pReserveSpaceInfo);
+        callPPV(commandBuffer.address(), pReserveSpaceInfo, __functionAddress);
     }
 
     /**
@@ -428,7 +428,7 @@ public class NVXDeviceGeneratedCommands {
      * <ul>
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
      * <li>{@code pReserveSpaceInfo} <b>must</b> be a valid pointer to a valid {@link VkCmdReserveSpaceForCommandsInfoNVX} structure</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
      * <li>This command <b>must</b> only be called inside of a render pass instance</li>
      * <li>{@code commandBuffer} <b>must</b> be a secondary {@code VkCommandBuffer}</li>
@@ -444,7 +444,7 @@ public class NVXDeviceGeneratedCommands {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Secondary</td><td>Inside</td><td>Graphics Compute</td><td></td></tr></tbody>
      * </table>
      * 
@@ -468,7 +468,7 @@ public class NVXDeviceGeneratedCommands {
             VkIndirectCommandsLayoutCreateInfoNVX.validate(pCreateInfo);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo, pAllocator, pIndirectCommandsLayout);
+        return callPPPPI(device.address(), pCreateInfo, pAllocator, pIndirectCommandsLayout, __functionAddress);
     }
 
     /**
@@ -514,7 +514,7 @@ public class NVXDeviceGeneratedCommands {
      *
      * @param device                  the logical device that creates the indirect command layout.
      * @param pCreateInfo             a pointer to an instance of the {@link VkIndirectCommandsLayoutCreateInfoNVX} structure containing parameters affecting creation of the indirect command layout.
-     * @param pAllocator              controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator              controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pIndirectCommandsLayout points to a {@code VkIndirectCommandsLayoutNVX} handle in which the resulting indirect command layout is returned.
      */
     @NativeType("VkResult")
@@ -534,7 +534,7 @@ public class NVXDeviceGeneratedCommands {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, device.address(), indirectCommandsLayout, pAllocator);
+        callPJPV(device.address(), indirectCommandsLayout, pAllocator, __functionAddress);
     }
 
     /**
@@ -573,7 +573,7 @@ public class NVXDeviceGeneratedCommands {
      *
      * @param device                 the logical device that destroys the layout.
      * @param indirectCommandsLayout the table to destroy.
-     * @param pAllocator             controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator             controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
     public static void vkDestroyIndirectCommandsLayoutNVX(VkDevice device, @NativeType("VkIndirectCommandsLayoutNVX") long indirectCommandsLayout, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroyIndirectCommandsLayoutNVX(device, indirectCommandsLayout, memAddressSafe(pAllocator));
@@ -589,7 +589,7 @@ public class NVXDeviceGeneratedCommands {
             VkObjectTableCreateInfoNVX.validate(pCreateInfo);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo, pAllocator, pObjectTable);
+        return callPPPPI(device.address(), pCreateInfo, pAllocator, pObjectTable, __functionAddress);
     }
 
     /**
@@ -635,7 +635,7 @@ public class NVXDeviceGeneratedCommands {
      *
      * @param device       the logical device that creates the object table.
      * @param pCreateInfo  a pointer to an instance of the {@link VkObjectTableCreateInfoNVX} structure containing parameters affecting creation of the table.
-     * @param pAllocator   controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator   controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pObjectTable points to a {@code VkObjectTableNVX} handle in which the resulting object table is returned.
      */
     @NativeType("VkResult")
@@ -655,7 +655,7 @@ public class NVXDeviceGeneratedCommands {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, device.address(), objectTable, pAllocator);
+        callPJPV(device.address(), objectTable, pAllocator, __functionAddress);
     }
 
     /**
@@ -700,7 +700,7 @@ public class NVXDeviceGeneratedCommands {
      *
      * @param device      the logical device that destroys the table.
      * @param objectTable the table to destroy.
-     * @param pAllocator  controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator  controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
     public static void vkDestroyObjectTableNVX(VkDevice device, @NativeType("VkObjectTableNVX") long objectTable, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroyObjectTableNVX(device, objectTable, memAddressSafe(pAllocator));
@@ -718,7 +718,7 @@ public class NVXDeviceGeneratedCommands {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPPI(__functionAddress, device.address(), objectTable, objectCount, ppObjectTableEntries, pObjectIndices);
+        return callPJPPI(device.address(), objectTable, objectCount, ppObjectTableEntries, pObjectIndices, __functionAddress);
     }
 
     /**
@@ -726,7 +726,7 @@ public class NVXDeviceGeneratedCommands {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>Resource bindings of Vulkan objects are registered at an arbitrary ftext:uint32_t index within an object table. As long as the object table references such objects, they <b>must</b> not be deleted.</p>
+     * <p>Resource bindings of Vulkan objects are registered at an arbitrary {@code uint32_t} index within an object table. As long as the object table references such objects, they <b>must</b> not be deleted.</p>
      * 
      * <pre><code>
      * VkResult vkRegisterObjectsNVX(
@@ -804,7 +804,7 @@ public class NVXDeviceGeneratedCommands {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPPI(__functionAddress, device.address(), objectTable, objectCount, pObjectEntryTypes, pObjectIndices);
+        return callPJPPI(device.address(), objectTable, objectCount, pObjectEntryTypes, pObjectIndices, __functionAddress);
     }
 
     /**
@@ -881,7 +881,7 @@ public class NVXDeviceGeneratedCommands {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, physicalDevice.address(), pFeatures, pLimits);
+        callPPPV(physicalDevice.address(), pFeatures, pLimits, __functionAddress);
     }
 
     /**
@@ -927,7 +927,7 @@ public class NVXDeviceGeneratedCommands {
             VkIndirectCommandsLayoutCreateInfoNVX.validate(pCreateInfo.address());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pIndirectCommandsLayout);
+        return callPPPPI(device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pIndirectCommandsLayout, __functionAddress);
     }
 
     /** Array version of: {@link #vkCreateObjectTableNVX CreateObjectTableNVX} */
@@ -940,7 +940,7 @@ public class NVXDeviceGeneratedCommands {
             VkObjectTableCreateInfoNVX.validate(pCreateInfo.address());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pObjectTable);
+        return callPPPPI(device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pObjectTable, __functionAddress);
     }
 
     /** Array version of: {@link #vkRegisterObjectsNVX RegisterObjectsNVX} */
@@ -951,7 +951,7 @@ public class NVXDeviceGeneratedCommands {
             check(__functionAddress);
             check(pObjectIndices, ppObjectTableEntries.remaining());
         }
-        return callPJPPI(__functionAddress, device.address(), objectTable, ppObjectTableEntries.remaining(), memAddress(ppObjectTableEntries), pObjectIndices);
+        return callPJPPI(device.address(), objectTable, ppObjectTableEntries.remaining(), memAddress(ppObjectTableEntries), pObjectIndices, __functionAddress);
     }
 
     /** Array version of: {@link #vkUnregisterObjectsNVX UnregisterObjectsNVX} */
@@ -962,7 +962,7 @@ public class NVXDeviceGeneratedCommands {
             check(__functionAddress);
             check(pObjectIndices, pObjectEntryTypes.length);
         }
-        return callPJPPI(__functionAddress, device.address(), objectTable, pObjectEntryTypes.length, pObjectEntryTypes, pObjectIndices);
+        return callPJPPI(device.address(), objectTable, pObjectEntryTypes.length, pObjectEntryTypes, pObjectIndices, __functionAddress);
     }
 
 }

@@ -40,7 +40,7 @@ public class GLX14 extends GLX13 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPP(__functionAddress, procName);
+        return callPP(procName, __functionAddress);
     }
 
     /**
@@ -97,8 +97,9 @@ public class GLX14 extends GLX13 {
     public static long glXGetProcAddress(@NativeType("GLchar const *") CharSequence procName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer procNameEncoded = stack.ASCII(procName);
-            return nglXGetProcAddress(memAddress(procNameEncoded));
+            stack.nASCII(procName, true);
+            long procNameEncoded = stack.getPointerAddress();
+            return nglXGetProcAddress(procNameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }

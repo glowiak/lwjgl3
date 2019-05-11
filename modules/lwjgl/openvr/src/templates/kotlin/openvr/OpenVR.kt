@@ -20,7 +20,7 @@ private fun PrintWriter.generateCapabilitiesClass(nativeClass: NativeClass) {
         .joinToString(",\n$t$t$t", prefix = "$t$t$t", postfix = ";"))
 
     println("\n$t${t}public ${nativeClass.capabilitiesClass}(long tableAddress) {")
-    println("$t$t${t}PointerBuffer table = MemoryUtil.memPointerBuffer(tableAddress, ${nativeClass.functions.count()});")
+    println("$t$t${t}PointerBuffer table = memPointerBuffer(tableAddress, ${nativeClass.functions.count()});")
     println(nativeClass.functions
         .mapIndexed { i, function -> "${function.simpleName} = table.get($i);" }
         .joinToString("\n$t$t$t", prefix = "$t$t$t"))
@@ -55,25 +55,26 @@ val OPENVR_FNTABLE_BINDING: APIBinding = Generator.register(object : APIBinding(
         generateJavaPreamble()
         println("public final class OpenVR {\n")
 
+        // in COpenVRContext order
         val interfaces = arrayOf(
             VRSystem,
 
-            VRApplications,
             VRChaperone,
             VRChaperoneSetup,
             VRCompositor,
-            VRDriverManager,
-            VRExtendedDisplay,
-            VRNotifications,
             VROverlay,
-            VRRenderModels,
             VRResources,
-            VRScreenshots,
+            VRRenderModels,
+            VRExtendedDisplay,
             VRSettings,
+            VRApplications,
             VRTrackedCamera,
+            VRScreenshots,
+            VRDriverManager,
             VRInput,
             VRIOBuffer,
-            VRSpatialAnchors
+            VRSpatialAnchors,
+            VRNotifications
         )
 
         println(interfaces.joinToString("\n$t", prefix = t) { "@Nullable public static ${it.capabilitiesClass} ${it.capabilitiesField};" })

@@ -49,18 +49,14 @@ public class NkBufferMarker extends Struct {
         OFFSET = layout.offsetof(1);
     }
 
-    NkBufferMarker(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link NkBufferMarker} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code NkBufferMarker} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public NkBufferMarker(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -74,15 +70,15 @@ public class NkBufferMarker extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link NkBufferMarker} instance for the specified memory address. */
+    /** Returns a new {@code NkBufferMarker} instance for the specified memory address. */
     public static NkBufferMarker create(long address) {
-        return new NkBufferMarker(address, null);
+        return wrap(NkBufferMarker.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkBufferMarker createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(NkBufferMarker.class, address);
     }
 
     /**
@@ -92,19 +88,19 @@ public class NkBufferMarker extends Struct {
      * @param capacity the buffer capacity
      */
     public static NkBufferMarker.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkBufferMarker.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #active}. */
-    public static int nactive(long struct) { return memGetInt(struct + NkBufferMarker.ACTIVE); }
+    public static int nactive(long struct) { return UNSAFE.getInt(null, struct + NkBufferMarker.ACTIVE); }
     /** Unsafe version of {@link #offset}. */
     public static long noffset(long struct) { return memGetAddress(struct + NkBufferMarker.OFFSET); }
 
@@ -113,8 +109,10 @@ public class NkBufferMarker extends Struct {
     /** An array of {@link NkBufferMarker} structs. */
     public static class Buffer extends StructBuffer<NkBufferMarker, Buffer> {
 
+        private static final NkBufferMarker ELEMENT_FACTORY = NkBufferMarker.create(-1L);
+
         /**
-         * Creates a new {@link NkBufferMarker.Buffer} instance backed by the specified container.
+         * Creates a new {@code NkBufferMarker.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -140,18 +138,8 @@ public class NkBufferMarker extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected NkBufferMarker newInstance(long address) {
-            return new NkBufferMarker(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected NkBufferMarker getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code active} field. */

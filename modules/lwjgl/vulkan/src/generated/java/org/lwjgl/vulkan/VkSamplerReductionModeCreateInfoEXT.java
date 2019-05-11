@@ -75,18 +75,14 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
         REDUCTIONMODE = layout.offsetof(2);
     }
 
-    VkSamplerReductionModeCreateInfoEXT(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkSamplerReductionModeCreateInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkSamplerReductionModeCreateInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkSamplerReductionModeCreateInfoEXT(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -136,30 +132,31 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSamplerReductionModeCreateInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSamplerReductionModeCreateInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkSamplerReductionModeCreateInfoEXT malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkSamplerReductionModeCreateInfoEXT.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkSamplerReductionModeCreateInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSamplerReductionModeCreateInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkSamplerReductionModeCreateInfoEXT calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkSamplerReductionModeCreateInfoEXT.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkSamplerReductionModeCreateInfoEXT} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkSamplerReductionModeCreateInfoEXT} instance allocated with {@link BufferUtils}. */
     public static VkSamplerReductionModeCreateInfoEXT create() {
-        return new VkSamplerReductionModeCreateInfoEXT(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkSamplerReductionModeCreateInfoEXT.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkSamplerReductionModeCreateInfoEXT} instance for the specified memory address. */
+    /** Returns a new {@code VkSamplerReductionModeCreateInfoEXT} instance for the specified memory address. */
     public static VkSamplerReductionModeCreateInfoEXT create(long address) {
-        return new VkSamplerReductionModeCreateInfoEXT(address, null);
+        return wrap(VkSamplerReductionModeCreateInfoEXT.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSamplerReductionModeCreateInfoEXT createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkSamplerReductionModeCreateInfoEXT.class, address);
     }
 
     /**
@@ -168,7 +165,7 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkSamplerReductionModeCreateInfoEXT.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -177,7 +174,7 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkSamplerReductionModeCreateInfoEXT.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -186,7 +183,8 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkSamplerReductionModeCreateInfoEXT.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -196,43 +194,43 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkSamplerReductionModeCreateInfoEXT.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSamplerReductionModeCreateInfoEXT.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSamplerReductionModeCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkSamplerReductionModeCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkSamplerReductionModeCreateInfoEXT mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkSamplerReductionModeCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkSamplerReductionModeCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkSamplerReductionModeCreateInfoEXT callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkSamplerReductionModeCreateInfoEXT} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkSamplerReductionModeCreateInfoEXT} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSamplerReductionModeCreateInfoEXT mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkSamplerReductionModeCreateInfoEXT.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkSamplerReductionModeCreateInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkSamplerReductionModeCreateInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSamplerReductionModeCreateInfoEXT callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkSamplerReductionModeCreateInfoEXT.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -260,7 +258,7 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkSamplerReductionModeCreateInfoEXT.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -270,32 +268,34 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkSamplerReductionModeCreateInfoEXT.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkSamplerReductionModeCreateInfoEXT.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkSamplerReductionModeCreateInfoEXT.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkSamplerReductionModeCreateInfoEXT.PNEXT); }
     /** Unsafe version of {@link #reductionMode}. */
-    public static int nreductionMode(long struct) { return memGetInt(struct + VkSamplerReductionModeCreateInfoEXT.REDUCTIONMODE); }
+    public static int nreductionMode(long struct) { return UNSAFE.getInt(null, struct + VkSamplerReductionModeCreateInfoEXT.REDUCTIONMODE); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkSamplerReductionModeCreateInfoEXT.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerReductionModeCreateInfoEXT.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkSamplerReductionModeCreateInfoEXT.PNEXT, value); }
     /** Unsafe version of {@link #reductionMode(int) reductionMode}. */
-    public static void nreductionMode(long struct, int value) { memPutInt(struct + VkSamplerReductionModeCreateInfoEXT.REDUCTIONMODE, value); }
+    public static void nreductionMode(long struct, int value) { UNSAFE.putInt(null, struct + VkSamplerReductionModeCreateInfoEXT.REDUCTIONMODE, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkSamplerReductionModeCreateInfoEXT} structs. */
     public static class Buffer extends StructBuffer<VkSamplerReductionModeCreateInfoEXT, Buffer> implements NativeResource {
 
+        private static final VkSamplerReductionModeCreateInfoEXT ELEMENT_FACTORY = VkSamplerReductionModeCreateInfoEXT.create(-1L);
+
         /**
-         * Creates a new {@link VkSamplerReductionModeCreateInfoEXT.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkSamplerReductionModeCreateInfoEXT.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -321,18 +321,8 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkSamplerReductionModeCreateInfoEXT newInstance(long address) {
-            return new VkSamplerReductionModeCreateInfoEXT(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkSamplerReductionModeCreateInfoEXT getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

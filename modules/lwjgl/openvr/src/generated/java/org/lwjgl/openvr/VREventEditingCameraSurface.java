@@ -49,18 +49,14 @@ public class VREventEditingCameraSurface extends Struct {
         NVISUALMODE = layout.offsetof(1);
     }
 
-    VREventEditingCameraSurface(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VREventEditingCameraSurface} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VREventEditingCameraSurface} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VREventEditingCameraSurface(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -75,15 +71,15 @@ public class VREventEditingCameraSurface extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link VREventEditingCameraSurface} instance for the specified memory address. */
+    /** Returns a new {@code VREventEditingCameraSurface} instance for the specified memory address. */
     public static VREventEditingCameraSurface create(long address) {
-        return new VREventEditingCameraSurface(address, null);
+        return wrap(VREventEditingCameraSurface.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VREventEditingCameraSurface createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VREventEditingCameraSurface.class, address);
     }
 
     /**
@@ -93,29 +89,31 @@ public class VREventEditingCameraSurface extends Struct {
      * @param capacity the buffer capacity
      */
     public static VREventEditingCameraSurface.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VREventEditingCameraSurface.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #overlayHandle}. */
-    public static long noverlayHandle(long struct) { return memGetLong(struct + VREventEditingCameraSurface.OVERLAYHANDLE); }
+    public static long noverlayHandle(long struct) { return UNSAFE.getLong(null, struct + VREventEditingCameraSurface.OVERLAYHANDLE); }
     /** Unsafe version of {@link #nVisualMode}. */
-    public static int nnVisualMode(long struct) { return memGetInt(struct + VREventEditingCameraSurface.NVISUALMODE); }
+    public static int nnVisualMode(long struct) { return UNSAFE.getInt(null, struct + VREventEditingCameraSurface.NVISUALMODE); }
 
     // -----------------------------------
 
     /** An array of {@link VREventEditingCameraSurface} structs. */
     public static class Buffer extends StructBuffer<VREventEditingCameraSurface, Buffer> {
 
+        private static final VREventEditingCameraSurface ELEMENT_FACTORY = VREventEditingCameraSurface.create(-1L);
+
         /**
-         * Creates a new {@link VREventEditingCameraSurface.Buffer} instance backed by the specified container.
+         * Creates a new {@code VREventEditingCameraSurface.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -141,18 +139,8 @@ public class VREventEditingCameraSurface extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VREventEditingCameraSurface newInstance(long address) {
-            return new VREventEditingCameraSurface(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VREventEditingCameraSurface getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code overlayHandle} field. */

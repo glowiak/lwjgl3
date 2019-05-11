@@ -49,18 +49,14 @@ public class AIPropertyStore extends Struct implements NativeResource {
         SENTINEL = layout.offsetof(0);
     }
 
-    AIPropertyStore(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link AIPropertyStore} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code AIPropertyStore} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public AIPropertyStore(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -87,30 +83,31 @@ public class AIPropertyStore extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link AIPropertyStore} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIPropertyStore} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static AIPropertyStore malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(AIPropertyStore.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link AIPropertyStore} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIPropertyStore} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static AIPropertyStore calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(AIPropertyStore.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link AIPropertyStore} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code AIPropertyStore} instance allocated with {@link BufferUtils}. */
     public static AIPropertyStore create() {
-        return new AIPropertyStore(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(AIPropertyStore.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link AIPropertyStore} instance for the specified memory address. */
+    /** Returns a new {@code AIPropertyStore} instance for the specified memory address. */
     public static AIPropertyStore create(long address) {
-        return new AIPropertyStore(address, null);
+        return wrap(AIPropertyStore.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIPropertyStore createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(AIPropertyStore.class, address);
     }
 
     /**
@@ -119,7 +116,7 @@ public class AIPropertyStore extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIPropertyStore.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -128,7 +125,7 @@ public class AIPropertyStore extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIPropertyStore.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -137,7 +134,8 @@ public class AIPropertyStore extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIPropertyStore.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -147,43 +145,43 @@ public class AIPropertyStore extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIPropertyStore.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIPropertyStore.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link AIPropertyStore} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code AIPropertyStore} instance allocated on the thread-local {@link MemoryStack}. */
     public static AIPropertyStore mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link AIPropertyStore} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code AIPropertyStore} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static AIPropertyStore callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link AIPropertyStore} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code AIPropertyStore} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static AIPropertyStore mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(AIPropertyStore.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link AIPropertyStore} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code AIPropertyStore} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static AIPropertyStore callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(AIPropertyStore.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -211,7 +209,7 @@ public class AIPropertyStore extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIPropertyStore.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -221,24 +219,26 @@ public class AIPropertyStore extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIPropertyStore.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sentinel}. */
-    public static byte nsentinel(long struct) { return memGetByte(struct + AIPropertyStore.SENTINEL); }
+    public static byte nsentinel(long struct) { return UNSAFE.getByte(null, struct + AIPropertyStore.SENTINEL); }
 
     /** Unsafe version of {@link #sentinel(byte) sentinel}. */
-    public static void nsentinel(long struct, byte value) { memPutByte(struct + AIPropertyStore.SENTINEL, value); }
+    public static void nsentinel(long struct, byte value) { UNSAFE.putByte(null, struct + AIPropertyStore.SENTINEL, value); }
 
     // -----------------------------------
 
     /** An array of {@link AIPropertyStore} structs. */
     public static class Buffer extends StructBuffer<AIPropertyStore, Buffer> implements NativeResource {
 
+        private static final AIPropertyStore ELEMENT_FACTORY = AIPropertyStore.create(-1L);
+
         /**
-         * Creates a new {@link AIPropertyStore.Buffer} instance backed by the specified container.
+         * Creates a new {@code AIPropertyStore.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -264,18 +264,8 @@ public class AIPropertyStore extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected AIPropertyStore newInstance(long address) {
-            return new AIPropertyStore(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected AIPropertyStore getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sentinel} field. */

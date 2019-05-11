@@ -30,7 +30,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, pchActionManifestPath);
+        return callPI(pchActionManifestPath, __functionAddress);
     }
 
     /**
@@ -59,8 +59,9 @@ public class VRInput {
     public static int VRInput_SetActionManifestPath(@NativeType("char const *") CharSequence pchActionManifestPath) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchActionManifestPathEncoded = stack.ASCII(pchActionManifestPath);
-            return nVRInput_SetActionManifestPath(memAddress(pchActionManifestPathEncoded));
+            stack.nASCII(pchActionManifestPath, true);
+            long pchActionManifestPathEncoded = stack.getPointerAddress();
+            return nVRInput_SetActionManifestPath(pchActionManifestPathEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -74,7 +75,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, pchActionSetName, pHandle);
+        return callPPI(pchActionSetName, pHandle, __functionAddress);
     }
 
     /** Returns a handle for an action set. This handle is used for all performance-sensitive calls. */
@@ -95,8 +96,9 @@ public class VRInput {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchActionSetNameEncoded = stack.ASCII(pchActionSetName);
-            return nVRInput_GetActionSetHandle(memAddress(pchActionSetNameEncoded), memAddress(pHandle));
+            stack.nASCII(pchActionSetName, true);
+            long pchActionSetNameEncoded = stack.getPointerAddress();
+            return nVRInput_GetActionSetHandle(pchActionSetNameEncoded, memAddress(pHandle));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -110,7 +112,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, pchActionName, pHandle);
+        return callPPI(pchActionName, pHandle, __functionAddress);
     }
 
     /** Returns a handle for an action. This handle is used for all performance-sensitive calls. */
@@ -131,8 +133,9 @@ public class VRInput {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchActionNameEncoded = stack.ASCII(pchActionName);
-            return nVRInput_GetActionHandle(memAddress(pchActionNameEncoded), memAddress(pHandle));
+            stack.nASCII(pchActionName, true);
+            long pchActionNameEncoded = stack.getPointerAddress();
+            return nVRInput_GetActionHandle(pchActionNameEncoded, memAddress(pHandle));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -146,7 +149,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, pchInputSourcePath, pHandle);
+        return callPPI(pchInputSourcePath, pHandle, __functionAddress);
     }
 
     /** Returns a handle for any path in the input system. E.g. {@code /user/hand/right}. */
@@ -167,8 +170,9 @@ public class VRInput {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchInputSourcePathEncoded = stack.ASCII(pchInputSourcePath);
-            return nVRInput_GetInputSourceHandle(memAddress(pchInputSourcePathEncoded), memAddress(pHandle));
+            stack.nASCII(pchInputSourcePath, true);
+            long pchInputSourcePathEncoded = stack.getPointerAddress();
+            return nVRInput_GetInputSourceHandle(pchInputSourcePathEncoded, memAddress(pHandle));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -182,7 +186,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, pSets, unSizeOfVRSelectedActionSet_t, unSetCount);
+        return callPI(pSets, unSizeOfVRSelectedActionSet_t, unSetCount, __functionAddress);
     }
 
     /**
@@ -202,7 +206,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJPJI(__functionAddress, action, pActionData, unActionDataSize, ulRestrictToDevice);
+        return callJPJI(action, pActionData, unActionDataSize, ulRestrictToDevice, __functionAddress);
     }
 
     /**
@@ -210,8 +214,17 @@ public class VRInput {
      * than digital.
      */
     @NativeType("EVRInputError")
-    public static int VRInput_GetDigitalActionData(@NativeType("VRActionHandle_t") long action, @NativeType("InputDigitalActionData_t *") InputDigitalActionData.Buffer pActionData, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
-        return nVRInput_GetDigitalActionData(action, pActionData.address(), pActionData.remaining(), ulRestrictToDevice);
+    public static int VRInput_GetDigitalActionData(@NativeType("VRActionHandle_t") long action, @NativeType("InputDigitalActionData_t *") InputDigitalActionData pActionData, @NativeType("uint32_t") int unActionDataSize, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
+        return nVRInput_GetDigitalActionData(action, pActionData.address(), unActionDataSize, ulRestrictToDevice);
+    }
+
+    /**
+     * Reads the state of a digital action given its handle. This will return {@link VR#EVRInputError_VRInputError_WrongType} if the type of action is something other
+     * than digital.
+     */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetDigitalActionData(@NativeType("VRActionHandle_t") long action, @NativeType("InputDigitalActionData_t *") InputDigitalActionData pActionData, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
+        return nVRInput_GetDigitalActionData(action, pActionData.address(), InputDigitalActionData.SIZEOF, ulRestrictToDevice);
     }
 
     // --- [ VRInput_GetAnalogActionData ] ---
@@ -222,7 +235,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJPJI(__functionAddress, action, pActionData, unActionDataSize, ulRestrictToDevice);
+        return callJPJI(action, pActionData, unActionDataSize, ulRestrictToDevice, __functionAddress);
     }
 
     /**
@@ -230,8 +243,17 @@ public class VRInput {
      * than analog.
      */
     @NativeType("EVRInputError")
-    public static int VRInput_GetAnalogActionData(@NativeType("VRActionHandle_t") long action, @NativeType("InputAnalogActionData_t *") InputAnalogActionData.Buffer pActionData, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
-        return nVRInput_GetAnalogActionData(action, pActionData.address(), pActionData.remaining(), ulRestrictToDevice);
+    public static int VRInput_GetAnalogActionData(@NativeType("VRActionHandle_t") long action, @NativeType("InputAnalogActionData_t *") InputAnalogActionData pActionData, @NativeType("uint32_t") int unActionDataSize, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
+        return nVRInput_GetAnalogActionData(action, pActionData.address(), unActionDataSize, ulRestrictToDevice);
+    }
+
+    /**
+     * Reads the state of an analog action given its handle. This will return {@link VR#EVRInputError_VRInputError_WrongType} if the type of action is something other
+     * than analog.
+     */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetAnalogActionData(@NativeType("VRActionHandle_t") long action, @NativeType("InputAnalogActionData_t *") InputAnalogActionData pActionData, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
+        return nVRInput_GetAnalogActionData(action, pActionData.address(), InputAnalogActionData.SIZEOF, ulRestrictToDevice);
     }
 
     // --- [ VRInput_GetPoseActionData ] ---
@@ -242,7 +264,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJPJI(__functionAddress, action, eOrigin, fPredictedSecondsFromNow, pActionData, unActionDataSize, ulRestrictToDevice);
+        return callJPJI(action, eOrigin, fPredictedSecondsFromNow, pActionData, unActionDataSize, ulRestrictToDevice, __functionAddress);
     }
 
     /**
@@ -251,93 +273,222 @@ public class VRInput {
      * @param eOrigin one of:<br><table><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseSeated}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseStanding}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated}</td></tr></table>
      */
     @NativeType("EVRInputError")
-    public static int VRInput_GetPoseActionData(@NativeType("VRActionHandle_t") long action, @NativeType("ETrackingUniverseOrigin") int eOrigin, float fPredictedSecondsFromNow, @NativeType("InputPoseActionData_t *") InputPoseActionData.Buffer pActionData, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
-        return nVRInput_GetPoseActionData(action, eOrigin, fPredictedSecondsFromNow, pActionData.address(), pActionData.remaining(), ulRestrictToDevice);
+    public static int VRInput_GetPoseActionData(@NativeType("VRActionHandle_t") long action, @NativeType("ETrackingUniverseOrigin") int eOrigin, float fPredictedSecondsFromNow, @NativeType("InputPoseActionData_t *") InputPoseActionData pActionData, @NativeType("uint32_t") int unActionDataSize, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
+        return nVRInput_GetPoseActionData(action, eOrigin, fPredictedSecondsFromNow, pActionData.address(), unActionDataSize, ulRestrictToDevice);
+    }
+
+    /**
+     * Reads the state of a pose action given its handle.
+     *
+     * @param eOrigin one of:<br><table><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseSeated}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseStanding}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated}</td></tr></table>
+     */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetPoseActionData(@NativeType("VRActionHandle_t") long action, @NativeType("ETrackingUniverseOrigin") int eOrigin, float fPredictedSecondsFromNow, @NativeType("InputPoseActionData_t *") InputPoseActionData pActionData, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
+        return nVRInput_GetPoseActionData(action, eOrigin, fPredictedSecondsFromNow, pActionData.address(), InputPoseActionData.SIZEOF, ulRestrictToDevice);
     }
 
     // --- [ VRInput_GetSkeletalActionData ] ---
 
     /** Unsafe version of: {@link #VRInput_GetSkeletalActionData GetSkeletalActionData} */
-    public static int nVRInput_GetSkeletalActionData(long action, long pActionData, int unActionDataSize, long ulRestrictToDevice) {
+    public static int nVRInput_GetSkeletalActionData(long action, long pActionData, int unActionDataSize) {
         long __functionAddress = OpenVR.VRInput.GetSkeletalActionData;
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJPJI(__functionAddress, action, pActionData, unActionDataSize, ulRestrictToDevice);
+        return callJPI(action, pActionData, unActionDataSize, __functionAddress);
     }
 
     /** Reads the state of a skeletal action given its handle. */
     @NativeType("EVRInputError")
-    public static int VRInput_GetSkeletalActionData(@NativeType("VRActionHandle_t") long action, @NativeType("InputSkeletalActionData_t *") InputSkeletalActionData.Buffer pActionData, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
-        return nVRInput_GetSkeletalActionData(action, pActionData.address(), pActionData.remaining(), ulRestrictToDevice);
+    public static int VRInput_GetSkeletalActionData(@NativeType("VRActionHandle_t") long action, @NativeType("InputSkeletalActionData_t *") InputSkeletalActionData pActionData, @NativeType("uint32_t") int unActionDataSize) {
+        return nVRInput_GetSkeletalActionData(action, pActionData.address(), unActionDataSize);
+    }
+
+    /** Reads the state of a skeletal action given its handle. */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetSkeletalActionData(@NativeType("VRActionHandle_t") long action, @NativeType("InputSkeletalActionData_t *") InputSkeletalActionData pActionData) {
+        return nVRInput_GetSkeletalActionData(action, pActionData.address(), InputSkeletalActionData.SIZEOF);
+    }
+
+    // --- [ VRInput_GetBoneCount ] ---
+
+    /** Unsafe version of: {@link #VRInput_GetBoneCount GetBoneCount} */
+    public static int nVRInput_GetBoneCount(long action, long pBoneCount) {
+        long __functionAddress = OpenVR.VRInput.GetBoneCount;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        return callJPI(action, pBoneCount, __functionAddress);
+    }
+
+    /** Reads the number of bones in skeleton associated with the given action. */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetBoneCount(@NativeType("VRActionHandle_t") long action, @NativeType("uint32_t *") IntBuffer pBoneCount) {
+        if (CHECKS) {
+            check(pBoneCount, 1);
+        }
+        return nVRInput_GetBoneCount(action, memAddress(pBoneCount));
+    }
+
+    // --- [ VRInput_GetBoneHierarchy ] ---
+
+    /** Unsafe version of: {@link #VRInput_GetBoneHierarchy GetBoneHierarchy} */
+    public static int nVRInput_GetBoneHierarchy(long action, long pParentIndices, int unIndexArrayCount) {
+        long __functionAddress = OpenVR.VRInput.GetBoneHierarchy;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        return callJPI(action, pParentIndices, unIndexArrayCount, __functionAddress);
+    }
+
+    /** Fills the given array with the index of each bone's parent in the skeleton associated with the given action. */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetBoneHierarchy(@NativeType("VRActionHandle_t") long action, @NativeType("BoneIndex_t *") IntBuffer pParentIndices) {
+        return nVRInput_GetBoneHierarchy(action, memAddress(pParentIndices), pParentIndices.remaining());
+    }
+
+    // --- [ VRInput_GetBoneName ] ---
+
+    /** Unsafe version of: {@link #VRInput_GetBoneName GetBoneName} */
+    public static int nVRInput_GetBoneName(long action, int nBoneIndex, long pchBoneName, int unNameBufferSize) {
+        long __functionAddress = OpenVR.VRInput.GetBoneName;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        return callJPI(action, nBoneIndex, pchBoneName, unNameBufferSize, __functionAddress);
+    }
+
+    /** Fills the given buffer with the name of the bone at the given index in the skeleton associated with the given action. */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetBoneName(@NativeType("VRActionHandle_t") long action, @NativeType("BoneIndex_t") int nBoneIndex, @NativeType("char *") ByteBuffer pchBoneName) {
+        return nVRInput_GetBoneName(action, nBoneIndex, memAddress(pchBoneName), pchBoneName.remaining());
+    }
+
+    // --- [ VRInput_GetSkeletalReferenceTransforms ] ---
+
+    /** Unsafe version of: {@link #VRInput_GetSkeletalReferenceTransforms GetSkeletalReferenceTransforms} */
+    public static int nVRInput_GetSkeletalReferenceTransforms(long action, int eTransformSpace, int eReferencePose, long pTransformArray, int unTransformArrayCount) {
+        long __functionAddress = OpenVR.VRInput.GetSkeletalReferenceTransforms;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        return callJPI(action, eTransformSpace, eReferencePose, pTransformArray, unTransformArrayCount, __functionAddress);
+    }
+
+    /**
+     * Fills the given buffer with the transforms for a specific static skeletal reference pose.
+     *
+     * @param eTransformSpace one of:<br><table><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Model}</td></tr><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Parent}</td></tr></table>
+     * @param eReferencePose  one of:<br><table><tr><td>{@link VR#EVRSkeletalReferencePose_VRSkeletalReferencePose_BindPose}</td></tr><tr><td>{@link VR#EVRSkeletalReferencePose_VRSkeletalReferencePose_OpenHand}</td></tr><tr><td>{@link VR#EVRSkeletalReferencePose_VRSkeletalReferencePose_Fist}</td></tr><tr><td>{@link VR#EVRSkeletalReferencePose_VRSkeletalReferencePose_GripLimit}</td></tr></table>
+     */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetSkeletalReferenceTransforms(@NativeType("VRActionHandle_t") long action, @NativeType("EVRSkeletalTransformSpace") int eTransformSpace, @NativeType("EVRSkeletalReferencePose") int eReferencePose, @NativeType("VRBoneTransform_t *") VRBoneTransform.Buffer pTransformArray) {
+        return nVRInput_GetSkeletalReferenceTransforms(action, eTransformSpace, eReferencePose, pTransformArray.address(), pTransformArray.remaining());
+    }
+
+    // --- [ VRInput_GetSkeletalTrackingLevel ] ---
+
+    /** Unsafe version of: {@link #VRInput_GetSkeletalTrackingLevel GetSkeletalTrackingLevel} */
+    public static int nVRInput_GetSkeletalTrackingLevel(long action, long pSkeletalTrackingLevel) {
+        long __functionAddress = OpenVR.VRInput.GetSkeletalTrackingLevel;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        return callJPI(action, pSkeletalTrackingLevel, __functionAddress);
+    }
+
+    /** Reads the level of accuracy to which the controller is able to track the user to recreate a skeletal pose. */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetSkeletalTrackingLevel(@NativeType("VRActionHandle_t") long action, @NativeType("EVRSkeletalTrackingLevel *") IntBuffer pSkeletalTrackingLevel) {
+        if (CHECKS) {
+            check(pSkeletalTrackingLevel, 1);
+        }
+        return nVRInput_GetSkeletalTrackingLevel(action, memAddress(pSkeletalTrackingLevel));
     }
 
     // --- [ VRInput_GetSkeletalBoneData ] ---
 
     /** Unsafe version of: {@link #VRInput_GetSkeletalBoneData GetSkeletalBoneData} */
-    public static int nVRInput_GetSkeletalBoneData(long action, int eTransformSpace, int eMotionRange, long pTransformArray, int unTransformArrayCount, long ulRestrictToDevice) {
+    public static int nVRInput_GetSkeletalBoneData(long action, int eTransformSpace, int eMotionRange, long pTransformArray, int unTransformArrayCount) {
         long __functionAddress = OpenVR.VRInput.GetSkeletalBoneData;
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJPJI(__functionAddress, action, eTransformSpace, eMotionRange, pTransformArray, unTransformArrayCount, ulRestrictToDevice);
+        return callJPI(action, eTransformSpace, eMotionRange, pTransformArray, unTransformArrayCount, __functionAddress);
     }
 
     /**
      * Reads the state of the skeletal bone data associated with this action and copies it into the given buffer.
      *
-     * @param eTransformSpace one of:<br><table><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Model}</td></tr><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Parent}</td></tr><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Additive}</td></tr></table>
+     * @param eTransformSpace one of:<br><table><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Model}</td></tr><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Parent}</td></tr></table>
      * @param eMotionRange    one of:<br><table><tr><td>{@link VR#EVRSkeletalMotionRange_VRSkeletalMotionRange_WithController}</td></tr><tr><td>{@link VR#EVRSkeletalMotionRange_VRSkeletalMotionRange_WithoutController}</td></tr></table>
      */
     @NativeType("EVRInputError")
-    public static int VRInput_GetSkeletalBoneData(@NativeType("VRActionHandle_t") long action, @NativeType("EVRSkeletalTransformSpace") int eTransformSpace, @NativeType("EVRSkeletalMotionRange") int eMotionRange, @NativeType("VRBoneTransform_t *") VRBoneTransform.Buffer pTransformArray, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
-        return nVRInput_GetSkeletalBoneData(action, eTransformSpace, eMotionRange, pTransformArray.address(), pTransformArray.remaining(), ulRestrictToDevice);
+    public static int VRInput_GetSkeletalBoneData(@NativeType("VRActionHandle_t") long action, @NativeType("EVRSkeletalTransformSpace") int eTransformSpace, @NativeType("EVRSkeletalMotionRange") int eMotionRange, @NativeType("VRBoneTransform_t *") VRBoneTransform.Buffer pTransformArray) {
+        return nVRInput_GetSkeletalBoneData(action, eTransformSpace, eMotionRange, pTransformArray.address(), pTransformArray.remaining());
+    }
+
+    // --- [ VRInput_GetSkeletalSummaryData ] ---
+
+    /** Unsafe version of: {@link #VRInput_GetSkeletalSummaryData GetSkeletalSummaryData} */
+    public static int nVRInput_GetSkeletalSummaryData(long action, long pSkeletalSummaryData) {
+        long __functionAddress = OpenVR.VRInput.GetSkeletalSummaryData;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        return callJPI(action, pSkeletalSummaryData, __functionAddress);
+    }
+
+    /** Reads summary information about the current pose of the skeleton associated with the given action. */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetSkeletalSummaryData(@NativeType("VRActionHandle_t") long action, @NativeType("VRSkeletalSummaryData_t *") VRSkeletalSummaryData pSkeletalSummaryData) {
+        return nVRInput_GetSkeletalSummaryData(action, pSkeletalSummaryData.address());
     }
 
     // --- [ VRInput_GetSkeletalBoneDataCompressed ] ---
 
     /** Unsafe version of: {@link #VRInput_GetSkeletalBoneDataCompressed GetSkeletalBoneDataCompressed} */
-    public static int nVRInput_GetSkeletalBoneDataCompressed(long action, int eTransformSpace, int eMotionRange, long pvCompressedData, int unCompressedSize, long punRequiredCompressedSize, long ulRestrictToDevice) {
+    public static int nVRInput_GetSkeletalBoneDataCompressed(long action, int eMotionRange, long pvCompressedData, int unCompressedSize, long punRequiredCompressedSize) {
         long __functionAddress = OpenVR.VRInput.GetSkeletalBoneDataCompressed;
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJPPJI(__functionAddress, action, eTransformSpace, eMotionRange, pvCompressedData, unCompressedSize, punRequiredCompressedSize, ulRestrictToDevice);
+        return callJPPI(action, eMotionRange, pvCompressedData, unCompressedSize, punRequiredCompressedSize, __functionAddress);
     }
 
     /**
      * Reads the state of the skeletal bone data in a compressed form that is suitable for sending over the network. The required buffer size will never
      * exceed ({@code sizeof(VR_BoneTransform_t)*boneCount + 2}). Usually the size will be much smaller.
      *
-     * @param eTransformSpace one of:<br><table><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Model}</td></tr><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Parent}</td></tr><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Additive}</td></tr></table>
-     * @param eMotionRange    one of:<br><table><tr><td>{@link VR#EVRSkeletalMotionRange_VRSkeletalMotionRange_WithController}</td></tr><tr><td>{@link VR#EVRSkeletalMotionRange_VRSkeletalMotionRange_WithoutController}</td></tr></table>
+     * @param eMotionRange one of:<br><table><tr><td>{@link VR#EVRSkeletalMotionRange_VRSkeletalMotionRange_WithController}</td></tr><tr><td>{@link VR#EVRSkeletalMotionRange_VRSkeletalMotionRange_WithoutController}</td></tr></table>
      */
     @NativeType("EVRInputError")
-    public static int VRInput_GetSkeletalBoneDataCompressed(@NativeType("VRActionHandle_t") long action, @NativeType("EVRSkeletalTransformSpace") int eTransformSpace, @NativeType("EVRSkeletalMotionRange") int eMotionRange, @Nullable @NativeType("void *") ByteBuffer pvCompressedData, @Nullable @NativeType("uint32_t *") IntBuffer punRequiredCompressedSize, @NativeType("VRInputValueHandle_t") long ulRestrictToDevice) {
+    public static int VRInput_GetSkeletalBoneDataCompressed(@NativeType("VRActionHandle_t") long action, @NativeType("EVRSkeletalMotionRange") int eMotionRange, @Nullable @NativeType("void *") ByteBuffer pvCompressedData, @Nullable @NativeType("uint32_t *") IntBuffer punRequiredCompressedSize) {
         if (CHECKS) {
             checkSafe(punRequiredCompressedSize, 1);
         }
-        return nVRInput_GetSkeletalBoneDataCompressed(action, eTransformSpace, eMotionRange, memAddressSafe(pvCompressedData), remainingSafe(pvCompressedData), memAddressSafe(punRequiredCompressedSize), ulRestrictToDevice);
+        return nVRInput_GetSkeletalBoneDataCompressed(action, eMotionRange, memAddressSafe(pvCompressedData), remainingSafe(pvCompressedData), memAddressSafe(punRequiredCompressedSize));
     }
 
-    // --- [ VRInput_UncompressSkeletalActionData ] ---
+    // --- [ VRInput_DecompressSkeletalBoneData ] ---
 
-    /** Unsafe version of: {@link #VRInput_UncompressSkeletalActionData UncompressSkeletalActionData} */
-    public static int nVRInput_UncompressSkeletalActionData(long pvCompressedBuffer, int unCompressedBufferSize, long peTransformSpace, long pTransformArray, int unTransformArrayCount) {
-        long __functionAddress = OpenVR.VRInput.UncompressSkeletalActionData;
+    /** Unsafe version of: {@link #VRInput_DecompressSkeletalBoneData DecompressSkeletalBoneData} */
+    public static int nVRInput_DecompressSkeletalBoneData(long pvCompressedBuffer, int unCompressedBufferSize, int eTransformSpace, long pTransformArray, int unTransformArrayCount) {
+        long __functionAddress = OpenVR.VRInput.DecompressSkeletalBoneData;
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, pvCompressedBuffer, unCompressedBufferSize, peTransformSpace, pTransformArray, unTransformArrayCount);
+        return callPPI(pvCompressedBuffer, unCompressedBufferSize, eTransformSpace, pTransformArray, unTransformArrayCount, __functionAddress);
     }
 
-    /** Turns a compressed buffer from {@link #VRInput_GetSkeletalBoneDataCompressed GetSkeletalBoneDataCompressed} and turns it back into a bone transform array. */
+    /**
+     * Turns a compressed buffer from {@link #VRInput_GetSkeletalBoneDataCompressed GetSkeletalBoneDataCompressed} and turns it back into a bone transform array.
+     *
+     * @param eTransformSpace one of:<br><table><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Model}</td></tr><tr><td>{@link VR#EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Parent}</td></tr></table>
+     */
     @NativeType("EVRInputError")
-    public static int VRInput_UncompressSkeletalActionData(@NativeType("void *") ByteBuffer pvCompressedBuffer, @NativeType("EVRSkeletalTransformSpace *") IntBuffer peTransformSpace, @NativeType("VRBoneTransform_t *") VRBoneTransform.Buffer pTransformArray) {
-        if (CHECKS) {
-            check(peTransformSpace, 1);
-        }
-        return nVRInput_UncompressSkeletalActionData(memAddress(pvCompressedBuffer), pvCompressedBuffer.remaining(), memAddress(peTransformSpace), pTransformArray.address(), pTransformArray.remaining());
+    public static int VRInput_DecompressSkeletalBoneData(@NativeType("void *") ByteBuffer pvCompressedBuffer, @NativeType("EVRSkeletalTransformSpace") int eTransformSpace, @NativeType("VRBoneTransform_t *") VRBoneTransform.Buffer pTransformArray) {
+        return nVRInput_DecompressSkeletalBoneData(memAddress(pvCompressedBuffer), pvCompressedBuffer.remaining(), eTransformSpace, pTransformArray.address(), pTransformArray.remaining());
     }
 
     // --- [ VRInput_TriggerHapticVibrationAction ] ---
@@ -349,7 +500,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJJI(__functionAddress, action, fStartSecondsFromNow, fDurationSeconds, fFrequency, fAmplitude, ulRestrictToDevice);
+        return callJJI(action, fStartSecondsFromNow, fDurationSeconds, fFrequency, fAmplitude, ulRestrictToDevice, __functionAddress);
     }
 
     // --- [ VRInput_GetActionOrigins ] ---
@@ -360,7 +511,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJJPI(__functionAddress, actionSetHandle, digitalActionHandle, originsOut, originOutCount);
+        return callJJPI(actionSetHandle, digitalActionHandle, originsOut, originOutCount, __functionAddress);
     }
 
     /** Retrieve origin handles for an action. */
@@ -372,18 +523,23 @@ public class VRInput {
     // --- [ VRInput_GetOriginLocalizedName ] ---
 
     /** Unsafe version of: {@link #VRInput_GetOriginLocalizedName GetOriginLocalizedName} */
-    public static int nVRInput_GetOriginLocalizedName(long origin, long pchNameArray, int unNameArraySize) {
+    public static int nVRInput_GetOriginLocalizedName(long origin, long pchNameArray, int unNameArraySize, int unStringSectionsToInclude) {
         long __functionAddress = OpenVR.VRInput.GetOriginLocalizedName;
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJPI(__functionAddress, origin, pchNameArray, unNameArraySize);
+        return callJPI(origin, pchNameArray, unNameArraySize, unStringSectionsToInclude, __functionAddress);
     }
 
-    /** Retrieves the name of the origin in the current language. */
+    /**
+     * Retrieves the name of the origin in the current language.
+     *
+     * @param unStringSectionsToInclude a bitfield of values in {@code EVRInputStringBits} that allows the application to specify which parts of the origin's information it wants a string
+     *                                  for. One or more of:<br><table><tr><td>{@link VR#EVRInputStringBits_VRInputString_Hand}</td></tr><tr><td>{@link VR#EVRInputStringBits_VRInputString_ControllerType}</td></tr><tr><td>{@link VR#EVRInputStringBits_VRInputString_InputSource}</td></tr><tr><td>{@link VR#EVRInputStringBits_VRInputString_All}</td></tr></table>
+     */
     @NativeType("EVRInputError")
-    public static int VRInput_GetOriginLocalizedName(@NativeType("VRInputValueHandle_t") long origin, @NativeType("char *") ByteBuffer pchNameArray) {
-        return nVRInput_GetOriginLocalizedName(origin, memAddress(pchNameArray), pchNameArray.remaining());
+    public static int VRInput_GetOriginLocalizedName(@NativeType("VRInputValueHandle_t") long origin, @NativeType("char *") ByteBuffer pchNameArray, @NativeType("int32_t") int unStringSectionsToInclude) {
+        return nVRInput_GetOriginLocalizedName(origin, memAddress(pchNameArray), pchNameArray.remaining(), unStringSectionsToInclude);
     }
 
     // --- [ VRInput_GetOriginTrackedDeviceInfo ] ---
@@ -394,13 +550,19 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJPI(__functionAddress, origin, pOriginInfo, unOriginInfoSize);
+        return callJPI(origin, pOriginInfo, unOriginInfoSize, __functionAddress);
     }
 
     /** Retrieves useful information for the origin of this action. */
     @NativeType("EVRInputError")
-    public static int VRInput_GetOriginTrackedDeviceInfo(@NativeType("VRInputValueHandle_t") long origin, @NativeType("InputOriginInfo_t *") InputOriginInfo.Buffer pOriginInfo) {
-        return nVRInput_GetOriginTrackedDeviceInfo(origin, pOriginInfo.address(), pOriginInfo.remaining());
+    public static int VRInput_GetOriginTrackedDeviceInfo(@NativeType("VRInputValueHandle_t") long origin, @NativeType("InputOriginInfo_t *") InputOriginInfo pOriginInfo, @NativeType("uint32_t") int unOriginInfoSize) {
+        return nVRInput_GetOriginTrackedDeviceInfo(origin, pOriginInfo.address(), unOriginInfoSize);
+    }
+
+    /** Retrieves useful information for the origin of this action. */
+    @NativeType("EVRInputError")
+    public static int VRInput_GetOriginTrackedDeviceInfo(@NativeType("VRInputValueHandle_t") long origin, @NativeType("InputOriginInfo_t *") InputOriginInfo pOriginInfo) {
+        return nVRInput_GetOriginTrackedDeviceInfo(origin, pOriginInfo.address(), InputOriginInfo.SIZEOF);
     }
 
     // --- [ VRInput_ShowActionOrigins ] ---
@@ -412,7 +574,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callJJI(__functionAddress, actionSetHandle, ulActionHandle);
+        return callJJI(actionSetHandle, ulActionHandle, __functionAddress);
     }
 
     // --- [ VRInput_ShowBindingsForActionSet ] ---
@@ -423,7 +585,7 @@ public class VRInput {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJI(__functionAddress, pSets, unSizeOfVRSelectedActionSet_t, unSetCount, originToHighlight);
+        return callPJI(pSets, unSizeOfVRSelectedActionSet_t, unSetCount, originToHighlight, __functionAddress);
     }
 
     /** Shows the current binding all the actions in the specified action sets. */

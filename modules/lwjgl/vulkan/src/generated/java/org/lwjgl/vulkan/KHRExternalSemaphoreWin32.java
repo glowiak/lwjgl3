@@ -92,7 +92,7 @@ public class KHRExternalSemaphoreWin32 {
             check(__functionAddress);
             VkImportSemaphoreWin32HandleInfoKHR.validate(pImportSemaphoreWin32HandleInfo);
         }
-        return callPPI(__functionAddress, device.address(), pImportSemaphoreWin32HandleInfo);
+        return callPPI(device.address(), pImportSemaphoreWin32HandleInfo, __functionAddress);
     }
 
     /**
@@ -109,7 +109,7 @@ public class KHRExternalSemaphoreWin32 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>Importing a semaphore payload from Windows handles does not transfer ownership of the handle to the Vulkan implementation. For handle types defined as NT handles, the application <b>must</b> release ownership using the fname:CloseHandle system call when the handle is no longer needed.</p>
+     * <p>Importing a semaphore payload from Windows handles does not transfer ownership of the handle to the Vulkan implementation. For handle types defined as NT handles, the application <b>must</b> release ownership using the {@code CloseHandle} system call when the handle is no longer needed.</p>
      * 
      * <p>Applications <b>can</b> import the same semaphore payload into multiple instances of Vulkan, into the same instance from which it was exported, and multiple times into a given Vulkan instance.</p>
      * 
@@ -154,7 +154,7 @@ public class KHRExternalSemaphoreWin32 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, device.address(), pGetWin32HandleInfo, pHandle);
+        return callPPPI(device.address(), pGetWin32HandleInfo, pHandle, __functionAddress);
     }
 
     /**
@@ -172,9 +172,9 @@ public class KHRExternalSemaphoreWin32 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>For handle types defined as NT handles, the handles returned by {@link #vkGetSemaphoreWin32HandleKHR GetSemaphoreWin32HandleKHR} are owned by the application. To avoid leaking resources, the application <b>must</b> release ownership of them using the fname:CloseHandle system call when they are no longer needed.</p>
+     * <p>For handle types defined as NT handles, the handles returned by {@code vkGetSemaphoreWin32HandleKHR} are owned by the application. To avoid leaking resources, the application <b>must</b> release ownership of them using the {@code CloseHandle} system call when they are no longer needed.</p>
      * 
-     * <p>Exporting a Windows handle from a semaphore <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore Payloads</a>.</p>
+     * <p>Exporting a Windows handle from a semaphore <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore Payloads</a>.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 

@@ -221,8 +221,9 @@ public class INTELPerformanceQuery {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer queryNameEncoded = stack.ASCII(queryName);
-            nglGetPerfQueryIdByNameINTEL(memAddress(queryNameEncoded), memAddress(queryId));
+            stack.nASCII(queryName, true);
+            long queryNameEncoded = stack.getPointerAddress();
+            nglGetPerfQueryIdByNameINTEL(queryNameEncoded, memAddress(queryId));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -232,9 +233,10 @@ public class INTELPerformanceQuery {
     public static int glGetPerfQueryIdByNameINTEL(@NativeType("GLchar *") CharSequence queryName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer queryNameEncoded = stack.ASCII(queryName);
+            stack.nASCII(queryName, true);
+            long queryNameEncoded = stack.getPointerAddress();
             IntBuffer queryId = stack.callocInt(1);
-            nglGetPerfQueryIdByNameINTEL(memAddress(queryNameEncoded), memAddress(queryId));
+            nglGetPerfQueryIdByNameINTEL(queryNameEncoded, memAddress(queryId));
             return queryId.get(0);
         } finally {
             stack.setPointer(stackPointer);
@@ -262,7 +264,7 @@ public class INTELPerformanceQuery {
             check(__functionAddress);
             check(queryHandle, 1);
         }
-        callPV(__functionAddress, queryId, queryHandle);
+        callPV(queryId, queryHandle, __functionAddress);
     }
 
     /** Array version of: {@link #glGetFirstPerfQueryIdINTEL GetFirstPerfQueryIdINTEL} */
@@ -272,7 +274,7 @@ public class INTELPerformanceQuery {
             check(__functionAddress);
             check(queryId, 1);
         }
-        callPV(__functionAddress, queryId);
+        callPV(queryId, __functionAddress);
     }
 
     /** Array version of: {@link #glGetNextPerfQueryIdINTEL GetNextPerfQueryIdINTEL} */
@@ -282,7 +284,7 @@ public class INTELPerformanceQuery {
             check(__functionAddress);
             check(nextQueryId, 1);
         }
-        callPV(__functionAddress, queryId, nextQueryId);
+        callPV(queryId, nextQueryId, __functionAddress);
     }
 
     /** Array version of: {@link #glGetPerfCounterInfoINTEL GetPerfCounterInfoINTEL} */
@@ -296,7 +298,7 @@ public class INTELPerformanceQuery {
             check(counterDataTypeEnum, 1);
             check(rawCounterMaxValue, 1);
         }
-        callPPPPPPPV(__functionAddress, queryId, counterId, counterName.remaining(), memAddress(counterName), counterDesc.remaining(), memAddress(counterDesc), counterOffset, counterDataSize, counterTypeEnum, counterDataTypeEnum, rawCounterMaxValue);
+        callPPPPPPPV(queryId, counterId, counterName.remaining(), memAddress(counterName), counterDesc.remaining(), memAddress(counterDesc), counterOffset, counterDataSize, counterTypeEnum, counterDataTypeEnum, rawCounterMaxValue, __functionAddress);
     }
 
     /** Array version of: {@link #glGetPerfQueryDataINTEL GetPerfQueryDataINTEL} */
@@ -306,7 +308,7 @@ public class INTELPerformanceQuery {
             check(__functionAddress);
             check(bytesWritten, 1);
         }
-        callPPV(__functionAddress, queryHandle, flags, data.remaining(), memAddress(data), bytesWritten);
+        callPPV(queryHandle, flags, data.remaining(), memAddress(data), bytesWritten, __functionAddress);
     }
 
     /** Array version of: {@link #glGetPerfQueryIdByNameINTEL GetPerfQueryIdByNameINTEL} */
@@ -317,7 +319,7 @@ public class INTELPerformanceQuery {
             checkNT1(queryName);
             check(queryId, 1);
         }
-        callPPV(__functionAddress, memAddress(queryName), queryId);
+        callPPV(memAddress(queryName), queryId, __functionAddress);
     }
 
     /** Array version of: {@link #glGetPerfQueryIdByNameINTEL GetPerfQueryIdByNameINTEL} */
@@ -329,8 +331,9 @@ public class INTELPerformanceQuery {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer queryNameEncoded = stack.ASCII(queryName);
-            callPPV(__functionAddress, memAddress(queryNameEncoded), queryId);
+            stack.nASCII(queryName, true);
+            long queryNameEncoded = stack.getPointerAddress();
+            callPPV(queryNameEncoded, queryId, __functionAddress);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -346,7 +349,7 @@ public class INTELPerformanceQuery {
             check(noInstances, 1);
             check(capsMask, 1);
         }
-        callPPPPPV(__functionAddress, queryId, queryName.remaining(), memAddress(queryName), dataSize, noCounters, noInstances, capsMask);
+        callPPPPPV(queryId, queryName.remaining(), memAddress(queryName), dataSize, noCounters, noInstances, capsMask, __functionAddress);
     }
 
 }

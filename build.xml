@@ -133,7 +133,7 @@
             <compilerarg value="-Xno-call-assertions"/>
             <compilerarg value="-Xno-param-assertions"/>
             <compilerarg value="-Xreport-perf"/>
-            <compilerarg value="-Xprogressive"/>
+            <compilerarg value="-progressive"/>
 
             <src path="${src.generator}/kotlin"/>
         </kotlinc>
@@ -145,11 +145,8 @@
             srcdir="${src.generator}/java"
             includes="org/lwjgl/**"
 
-            taskname="javac: Generator Tools &amp; Doclets"
-        >
-            <classpath path="${java.home}/../lib/tools.jar" unless:set="jdk9"/>
-            <classpath path="${env.JAVA8_HOME}/lib/tools.jar" if:set="env.JAVA8_HOME"/>
-        </lwjgl.javac>
+            taskname="javac: Generator Tools"
+        />
     </target>
 
     <target name="compile-templates" description="Compiles the Templates module" depends="-compile-generator">
@@ -167,22 +164,11 @@
             </and>
         </condition>
 
-        <local name="opencl_types"/>
-        <condition property="opencl_types">
-            <and>
-                <isfalse value="${binding.opencl}"/>
-                <istrue value="${binding.opengl}"/>
-            </and>
-        </condition>
-
         <local name="opengl_types"/>
         <condition property="opengl_types">
             <and>
                 <isfalse value="${binding.opengl}"/>
-                <or>
-                    <istrue value="${binding.glfw}"/>
-                    <istrue value="${binding.opencl}"/>
-                </or>
+                <istrue value="${binding.glfw}"/>
             </and>
         </condition>
 
@@ -208,7 +194,7 @@
             <compilerarg value="-Xno-call-assertions"/>
             <compilerarg value="-Xno-param-assertions"/>
             <compilerarg value="-Xreport-perf"/>
-            <compilerarg value="-Xprogressive"/>
+            <compilerarg value="-progressive"/>
 
             <src path="${core.kotlin.path}/dyncall"/>
             <src path="${core.kotlin.path}/jni"/>
@@ -221,7 +207,6 @@
             <src path="${module.templatepath}"/>
 
             <src path="${module.lwjgl}/egl/src/templates/kotlin/egl/EGLTypes.kt" if:set="egl_types"/>
-            <src path="${module.lwjgl}/opencl/src/templates/kotlin/opencl/CLTypes.kt" if:set="opencl_types"/>
             <src path="${module.lwjgl}/opengl/src/templates/kotlin/opengl/GLTypes.kt" if:set="opengl_types"/>
             <src path="${module.lwjgl}/opengl/src/templates/kotlin/opengl/GLXTypes.kt" if:set="opengl_types"/>
             <src path="${module.lwjgl}/opengl/src/templates/kotlin/opengl/WGLTypes.kt" if:set="opengl_types"/>
@@ -291,7 +276,7 @@
             <classpath>
                 <pathelement path="${bin.generator}"/>
                 <pathelement path="${bin.templates}"/>
-                <pathelement path="${kotlinc}/lib/kotlin-runtime.jar"/>
+                <pathelement path="${kotlinc}/lib/kotlin-stdlib.jar"/>
             </classpath>
 
             <jvmarg line="${generator.bindings}"/>
@@ -335,12 +320,10 @@
                 <pathelement path="${module.lwjgl}/core/src/generated/java/"/>
             </src>
             <include name="**"/>
-
-            <!-- Supresses internal API (e.g. Unsafe) usage warnings -->
-            <compilerarg value="-XDignore.symbol.file=true"/>
         </lwjgl.javac>
 
         <mkdir dir="${bin.lwjgl}/core/META-INF/versions/9" if:set="jdk9"/>
+        <mkdir dir="${bin.lwjgl}/core/META-INF/versions/10" if:set="jdk10"/>
         <delete file="${bin.lwjgl}/core/META-INF/versions/9/module-info.class" quiet="true" if:set="jdk9"/>
         <lwjgl.javac9
             destdir="${bin.lwjgl}/core/META-INF/versions/9"
@@ -352,15 +335,30 @@
             taskname="javac: Core - Java 9"
             if:set="jdk9"
         />
+        <lwjgl.javac10
+            destdir="${bin.lwjgl}/core/META-INF/versions/10"
+            classpath="${bin.lwjgl}/core"
+
+            srcdir="${module.lwjgl}/core/src/main/java10"
+            includes="**"
+
+            taskname="javac: Core - Java 10"
+            if:set="jdk10"
+        />
 
         <parallel threadsPerProcessor="1">
             <compileBinding binding="assimp"/>
             <compileBinding binding="bgfx"/>
+            <compileBinding binding="bullet"/>
+            <compileBinding binding="cuda"/>
             <compileBinding binding="egl"/>
             <compileBinding binding="jawt"/>
             <compileBinding binding="jemalloc"/>
+            <compileBinding binding="libdivide"/>
+            <compileBinding binding="llvm"/>
             <compileBinding binding="lmdb"/>
             <compileBinding binding="lz4"/>
+            <compileBinding binding="meow"/>
             <compileBinding binding="nanovg"/>
             <compileBinding binding="nfd"/>
             <compileBinding binding="nuklear"/>
@@ -368,6 +366,7 @@
             <compileBinding binding="openal"/>
             <compileBinding binding="opencl"/>
             <compileBinding binding="openvr"/>
+            <compileBinding binding="opus"/>
             <compileBinding binding="par"/>
             <compileBinding binding="remotery"/>
             <compileBinding binding="rpmalloc"/>
@@ -405,6 +404,58 @@
     <target name="compile-native" description="Compiles the native source code" depends="init, compile">
         <mkdir dir="${bin.native}"/>
         <antcall target="compile-native-platform"/>
+    </target>
+
+    <target name="-compile-extract">
+        <local name="extract-uptodate"/>
+        <uptodate targetfile="${bin.extract}/touch.txt" property="extract-uptodate">
+            <srcfiles dir="${src.extract}/kotlin" includes="**"/>
+        </uptodate>
+
+        <echo message="Compiling LWJGL Template Extraction Tool..." level="info" taskname="extract compilation" unless:set="extract-uptodate"/>
+        <mkdir dir="${bin.extract}"/>
+        <kotlinc moduleName="extract" output="${bin.extract}" printVersion="true" unless:set="extract-uptodate">
+            <classpath>
+                <pathelement path="${bin.lwjgl}/core/META-INF/versions/9" if:set="core.java9"/>
+                <pathelement path="${bin.lwjgl}/core/META-INF/versions/10" if:set="core.java10"/>
+                <pathelement path="${module.classpath}"/>
+                <pathelement path="${kotlinc}/lib/kotlin-stdlib.jar"/>
+                <pathelement path="${kotlinc}/lib/kotlin-stdlib-jdk7.jar"/>
+            </classpath>
+
+            <compilerarg line="-jvm-target 1.8"/>
+            <compilerarg value="-Xno-call-assertions"/>
+            <compilerarg value="-Xno-param-assertions"/>
+            <compilerarg value="-Xreport-perf"/>
+            <compilerarg value="-progressive"/>
+            <compilerarg value="-Xuse-experimental=kotlin.Experimental"/>
+            <compilerarg value="-Xuse-experimental=kotlin.contracts.ExperimentalContracts"/>
+
+            <src path="${src.extract}/kotlin"/>
+        </kotlinc>
+        <touch file="${bin.extract}/touch.txt" unless:set="extract-uptodate"/>
+    </target>
+
+    <target name="touch-extract" description="Used for touching from an IDE">
+        <touch file="${bin.extract}/touch.txt"/>
+    </target>
+
+    <target name="extract" description="Runs the LWJGL Template Extraction tool" depends="compile-native, -compile-extract">
+        <java classname="org.lwjgl.extract.MainKt" fork="true" spawn="true" taskname="LWJGL Template Extraction Tool">
+            <classpath>
+                <pathelement path="${bin.lwjgl}/core/META-INF/versions/9" if:set="core.java9"/>
+                <pathelement path="${bin.lwjgl}/core/META-INF/versions/10" if:set="core.java10"/>
+                <pathelement path="${module.classpath}"/>
+                <pathelement path="${bin.extract}"/>
+                <pathelement path="${test.resources}"/>
+                <pathelement path="${kotlinc}/lib/kotlin-stdlib.jar"/>
+                <pathelement path="${kotlinc}/lib/kotlin-stdlib-jdk7.jar"/>
+            </classpath>
+
+            <jvmarg value="-Djava.library.path=${lib}"/>
+            <jvmarg line="${jvmargs}" if:set="jvmargs"/>
+            <arg line="${args}" if:set="args"/>
+        </java>
     </target>
 
     <target name="compile-tests" description="Compiles the LWJGL test suite" depends="compile">
@@ -569,15 +620,20 @@
                 <pathelement path="${module.classpath}"/>
                 <pathelement path="${bin.test}"/>
                 <pathelement path="${lib}/java/jsr305.jar"/>
-                <pathelement path="${lib}/java/testng.jar"/>
+                <pathelement path="${lib}/java/jmh-core.jar"/>
+                <pathelement path="${lib}/java/jmh-generator-annprocess.jar"/>
                 <pathelement path="${lib}/java/joml.jar"/>
+                <pathelement path="${lib}/java/testng.jar"/>
             </classpath>
 
             <!-- Demos -->
             <include name="org/lwjgl/demo/assimp/**" if:true="${binding.assimp}"/>
             <include name="org/lwjgl/demo/bgfx/**" if:set="test.bgfx"/>
+            <include name="org/lwjgl/demo/bullet/**" if:true="${binding.bullet}"/>
+            <include name="org/lwjgl/demo/cuda/**" if:true="${binding.cuda}"/>
             <include name="org/lwjgl/demo/egl/**" if:set="test.egl"/>
             <include name="org/lwjgl/demo/glfw/**" if:set="test.glfw"/>
+            <include name="org/lwjgl/demo/llvm/**" if:true="${binding.llvm}"/>
             <include name="org/lwjgl/demo/nanovg/**" if:set="test.nanovg"/>
             <include name="org/lwjgl/demo/nuklear/**" if:set="test.nuklear"/>
 
@@ -600,6 +656,7 @@
             <include name="org/lwjgl/demo/util/*.java"/>
             <include name="org/lwjgl/demo/util/lmdb/**" if:true="${binding.lmdb}"/>
             <include name="org/lwjgl/demo/util/lz4/**" if:true="${binding.lz4}"/>
+            <include name="org/lwjgl/demo/util/meow/**" if:true="${binding.meow}"/>
             <include name="org/lwjgl/demo/util/nfd/**" if:set="test.nfd"/>
             <include name="org/lwjgl/demo/util/par/**" if:set="test.par"/>
             <include name="org/lwjgl/demo/util/tinyexr/**" if:set="test.tinyexr"/>
@@ -610,6 +667,10 @@
             <include name="org/lwjgl/demo/util/zstd/**" if:true="${binding.zstd}"/>
 
             <include name="org/lwjgl/demo/vulkan/**" if:set="test.vulkan"/>
+
+            <!-- Benchmarks -->
+            <include name="org/lwjgl/jmh/**"/>
+            <exclude name="org/lwjgl/jmh/VarHandle*" unless:set="jdk9"/>
         </lwjgl.javac>
     </target>
 
@@ -617,6 +678,7 @@
         <testng outputDir="${bin.test.html}" taskname="Tests">
             <classpath>
                 <pathelement path="${bin.lwjgl}/core/META-INF/versions/9" if:set="core.java9"/>
+                <pathelement path="${bin.lwjgl}/core/META-INF/versions/10" if:set="core.java10"/>
                 <pathelement path="${module.classpath}"/>
                 <pathelement path="${bin.test}"/>
                 <pathelement path="${lib}/java/jcommander.jar"/>
@@ -651,12 +713,16 @@
         <java classname="${class}" fork="true" failonerror="${failonerror}" spawn="${spawn}" taskname="Demo">
             <classpath>
                 <pathelement path="${bin.lwjgl}/core/META-INF/versions/9" if:set="core.java9"/>
+                <pathelement path="${bin.lwjgl}/core/META-INF/versions/10" if:set="core.java10"/>
                 <pathelement path="${module.classpath}"/>
                 <pathelement path="${bin.test}"/>
                 <pathelement path="${bin.samples}"/>
                 <pathelement path="${test.resources}"/>
                 <pathelement path="${lib}/java/testng.jar"/>
                 <pathelement path="${lib}/java/joml.jar"/>
+                <pathelement path="${lib}/java/jmh-core.jar"/>
+                <pathelement path="${lib}/java/commons-math3.jar"/>
+                <pathelement path="${lib}/java/jopt-simple.jar"/>
             </classpath>
 
             <jvmarg value="-Djava.library.path=${lib}"/>
@@ -713,7 +779,7 @@
                 <pathelement path="${lib}/java/jsr305.jar"/>
             </classpath>
 
-            <arg value="-XDignore.symbol.file=true"/> <!-- Supresses internal API (e.g. Unsafe) usage warnings -->
+            <arg value="-XDignore.symbol.file"/> <!-- Suppresses internal API (e.g. Unsafe) usage warnings -->
 
             <arg line="-Xdoclint:html,reference,syntax"/>
             <arg line="-Xmaxerrs 1000 -Xmaxwarns 1000"/>
@@ -778,7 +844,7 @@
             <srcfile/>
 
             <arg value="s3://build.lwjgl.org/${build.type}/${platform.remote}/${build.arch}/"/>
-            <arg line='--acl public-read --storage-class REDUCED_REDUNDANCY --cache-control "public, must-revalidate, proxy-revalidate, max-age=0"'/>
+            <arg line='--acl public-read --cache-control "public, must-revalidate, proxy-revalidate, max-age=0"'/>
 
             <fileset dir=".">
                 <include name="${lib}/${libraries}"/>
@@ -787,11 +853,31 @@
         </apply>
     </target>
 
-    <macrodef name="get-release">
+    <macrodef name="get-release-offline">
         <attribute name="url"/>
+        <attribute name="dest"/>
 
         <sequential>
-            <get src="https://build.lwjgl.org/${build.type}/@{url}" dest="${release}/${module}/native" verbose="false" usetimestamp="true"/>
+            <local name="base"/>
+            <basename file="@{url}" property="base"/>
+
+            <local name="available"/>
+            <available file="${lib}@{dest}/${base}" property="available"/>
+
+            <echo message="release: ${lib}${file.separator}${base} is missing" level="warning" unless:set="available"/>
+            <quiet if:set="available">
+                <copy file="${lib}@{dest}/${base}" todir="${release}/${module}/native@{dest}"/>
+            </quiet>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="get-release">
+        <attribute name="url"/>
+        <attribute name="dest" default=""/>
+
+        <sequential>
+            <get src="https://build.lwjgl.org/${build.type}/@{url}" dest="${release}/${module}/native@{dest}" verbose="false" usetimestamp="true" unless:true="${build.offline}"/>
+            <get-release-offline url="@{url}" dest="@{dest}" if:true="${build.offline}"/>
         </sequential>
     </macrodef>
 
@@ -832,6 +918,7 @@
             <lwjgl-jar destfile="${release}/${module}/${module}-natives-@{platform}.jar" title="@{title}" unless:set="platform.skip">
                 <fileset dir="${release}/${module}/native" includes="*@{extension}*"/>
                 <fileset dir="${bin.lwjgl}/@{name}.natives" includes="META-INF/versions/9/module-info.class" if:set="jdk9"/>
+                <content/>
             </lwjgl-jar>
         </sequential>
     </macrodef>
@@ -840,9 +927,14 @@
         <attribute name="name"/>
         <attribute name="title"/>
         <attribute name="native-library"/>
-        <element name="content" optional="true" implicit="true"/>
+        <element name="content" optional="true"/>
+        <element name="linux-content" optional="true"/>
+        <element name="macos-content" optional="true"/>
+        <element name="windows-content" optional="true"/>
         <sequential>
-            <mkdir dir="${release}/${module}/native"/>
+            <quiet>
+                <mkdir dir="${release}/${module}/native"/>
+            </quiet>
 
             <local name="auto-natives"/>
             <condition property="auto-natives">
@@ -872,7 +964,21 @@
                 <content/>
             </parallel>
 
-            <checksum algorithm="SHA-1" fileext=".sha1">
+            <local name="checksum.skip"/>
+            <condition property="checksum.skip">
+                <and>
+                    <istrue value="${build.offline}"/>
+                    <resourcecount when="eq" count="0">
+                        <fileset dir="${release}/${module}/native">
+                            <include name="*.dll"/>
+                            <include name="*.dylib"/>
+                            <include name="*.so"/>
+                        </fileset>
+                    </resourcecount>
+                </and>
+            </condition>
+
+            <checksum algorithm="SHA-1" fileext=".sha1" unless:set="checksum.skip">
                 <fileset dir="${release}/${module}/native">
                     <include name="*.dll"/>
                     <include name="*.dylib"/>
@@ -881,9 +987,15 @@
             </checksum>
 
             <parallel threadsPerProcessor="1" failonany="true">
-                <natives-jar name="@{name}" title="@{title}" platform="linux" extension=".so"/>
-                <natives-jar name="@{name}" title="@{title}" platform="macos" extension=".dylib"/>
-                <natives-jar name="@{name}" title="@{title}" platform="windows" extension=".dll"/>
+                <natives-jar name="@{name}" title="@{title}" platform="linux" extension=".so">
+                    <linux-content/>
+                </natives-jar>
+                <natives-jar name="@{name}" title="@{title}" platform="macos" extension=".dylib">
+                    <macos-content/>
+                </natives-jar>
+                <natives-jar name="@{name}" title="@{title}" platform="windows" extension=".dll">
+                    <windows-content/>
+                </natives-jar>
             </parallel>
         </sequential>
     </macrodef>
@@ -893,8 +1005,10 @@
         <attribute name="name"/>
         <attribute name="title"/>
         <attribute name="native-library" default=""/>
-        <attribute name="license" default="@{name}"/>
         <element name="natives" optional="true"/>
+        <element name="linux" optional="true"/>
+        <element name="macos" optional="true"/>
+        <element name="windows" optional="true"/>
         <sequential>
             <local name="module"/>
             <condition property="module" value="lwjgl" else="lwjgl-@{name}">
@@ -908,7 +1022,10 @@
 
             <!-- Bundle natives -->
             <release-natives name="@{name}" title="@{title}" native-library="@{native-library}" unless:set="java-only.binding.@{name}">
-                <natives/>
+                <content><natives/></content>
+                <linux-content><linux/></linux-content>
+                <macos-content><macos/></macos-content>
+                <windows-content><windows/></windows-content>
             </release-natives>
 
             <!-- Bundle classes -->
@@ -916,12 +1033,15 @@
                 <fileset dir="${release}/${module}/native" includes="*.sha1" unless:set="java-only.binding.@{name}"/>
                 <fileset dir="${bin.lwjgl}/@{name}" includes="**"/>
             </lwjgl-jar>
-            <delete dir="${release}/${module}/native" unless:set="java-only.binding.@{name}"/>
+            <quiet>
+                <delete dir="${release}/${module}/native" unless:set="java-only.binding.@{name}"/>
+            </quiet>
 
             <local name="hasMain"/>
             <available file="${module.lwjgl}/@{name}/src/main/java" type="dir" property="hasMain"/>
 
             <!-- Bundle javadoc -->
+            <!-- This is slow, comment out the following section for fast local builds -->
             <mkdir dir="${release}/${module}/javadoc"/>
             <javadoc
                 destdir="${release}/${module}/javadoc"
@@ -947,12 +1067,13 @@
                 <fileset dir="${module.lwjgl}/@{name}/src/main/java" includes="**" if:set="hasMain"/>
                 <fileset dir="${module.lwjgl}/@{name}/src/generated/java" includes="**"/>
 
-                <arg value="-XDignore.symbol.file=true"/> <!-- Supresses internal API (e.g. Unsafe) usage warnings -->
+                <arg value="-XDignore.symbol.file"/> <!-- Suppresses internal API (e.g. Unsafe) usage warnings -->
 
                 <arg line="-Xdoclint:html,reference,syntax"/>
                 <arg line="-Xmaxerrs 1000 -Xmaxwarns 1000"/>
+                <arg line="-notimestamp"/>
                 <arg value="-html5" if:set="jdk9"/>
-                <arg line="-J-Dfile.encoding=UTF8"/>
+                <arg line="-J-Dfile.encoding=UTF8 -J-Dline.separator=&#10;"/>
                 <arg line="--add-exports jdk.javadoc/com.sun.tools.doclets=ALL-UNNAMED" if:set="jdk9"/>
             </javadoc>
             <get-quiet name="favicon" url="https://www.lwjgl.org/favicon.ico" dest="${release}/${module}/javadoc"/>
@@ -966,22 +1087,28 @@
             <delete dir="${release}/${module}/javadoc"/>
 
             <!-- Bundle source -->
-            <copy
-                file ="${module.lwjgl}/@{name}/src/main/resources/module-info.java"
-                todir="${module.lwjgl}/@{name}/src/generated/java/META-INF/versions/9"
-                quiet="true"
-                if:set="jdk9"
-            />
+            <quiet>
+                <copy
+                    file ="${module.lwjgl}/@{name}/src/main/resources/module-info.java"
+                    todir="${module.lwjgl}/@{name}/src/generated/java/META-INF/versions/9"
+                    quiet="true"
+                    if:set="jdk9"
+                />
+            </quiet>
             <jar destfile="${release}/${module}/${module}-sources.jar" level="9">
                 <fileset dir="${module.lwjgl}/@{name}/src/main/java" includes="**" if:set="hasMain"/>
                 <fileset dir="${module.lwjgl}/@{name}/src/generated/java" includes="**"/>
             </jar>
-            <delete dir="${module.lwjgl}/@{name}/src/generated/java/META-INF" quiet="true"/>
+            <quiet>
+                <delete dir="${module.lwjgl}/@{name}/src/generated/java/META-INF" quiet="true"/>
+            </quiet>
 
             <!-- Copy license -->
-            <copy todir="${release}/${module}">
-                <fileset dir="${module.lwjgl}/@{name}" includes="@{license}*"/>
-            </copy>
+            <quiet>
+                <copy todir="${release}/${module}">
+                    <fileset dir="${module.lwjgl}/@{name}" includes="*_license.txt"/>
+                </copy>
+            </quiet>
         </sequential>
     </macrodef>
 
@@ -1005,8 +1132,12 @@
                 <equals arg1="n" arg2="${input}"/>
             </condition>
         </fail>
+
+        <!-- cleanup in case there was an earlier "release" failure -->
+        <delete dir="${module.lwjgl}/core/src/generated/java/META-INF"/>
     </target>
 
+    <!-- Set the LWJGL_BUILD_OFFLINE=true environment variable for local builds. -->
     <target name="release" depends="-check-release-jdk,clean-java,compile,-build-version">
         <local name="revision"/>
         <condition property="revision" value="build ${build.revision}" else="SNAPSHOT">
@@ -1017,7 +1148,9 @@
         <mkdir dir="${release}"/>
 
         <!-- Copy license -->
-        <copy file="LICENSE.md" tofile="${release}/LICENSE"/>
+        <quiet>
+            <copy file="LICENSE.md" tofile="${release}/LICENSE"/>
+        </quiet>
 
         <!-- Generate build.txt -->
         <echo file="${release}/build.txt" if:set="build.revision">LWJGL ${build.version} ${revision}</echo>
@@ -1038,10 +1171,15 @@
         <parallel threadcount="4" failonany="true">
 
         <!-- CORE -->
-        <copy todir="${module.lwjgl}/core/src/generated/java/META-INF/versions/9" if:set="jdk9">
-            <fileset dir="${module.lwjgl}/core/src/main/java9" includes="**"/>
-        </copy>
-        <release-module package="org.lwjgl" name="core" native-library="lwjgl" license="dyncall" title="Core"/>
+        <quiet>
+            <copy todir="${module.lwjgl}/core/src/generated/java/META-INF/versions/9" if:set="jdk9">
+                <fileset dir="${module.lwjgl}/core/src/main/java9" includes="**"/>
+            </copy>
+            <copy todir="${module.lwjgl}/core/src/generated/java/META-INF/versions/10" if:set="jdk10">
+                <fileset dir="${module.lwjgl}/core/src/main/java10" includes="**"/>
+            </copy>
+        </quiet>
+        <release-module package="org.lwjgl" name="core" native-library="lwjgl" title="Core"/>
 
         <!-- Assimp -->
         <release-module package="org.lwjgl.assimp" name="assimp" native-library="assimp" title="assimp" if:true="${binding.assimp}"/>
@@ -1049,8 +1187,14 @@
         <!-- bgfx -->
         <release-module package="org.lwjgl.bgfx" name="bgfx" native-library="bgfx" title="bgfx" if:true="${binding.bgfx}"/>
 
+        <!-- Bullet -->
+        <release-module package="org.lwjgl.bullet" name="bullet" native-library="lwjgl_bullet" title="bullet" if:true="${binding.bullet}"/>
+
+        <!-- CUDA -->
+        <release-module package="org.lwjgl.cuda" name="cuda" title="CUDA" if:true="${binding.cuda}"/>
+
         <!-- EGL -->
-        <release-module package="org.lwjgl.egl" name="egl" title="EGL" license="khronos" if:true="${binding.egl}"/>
+        <release-module package="org.lwjgl.egl" name="egl" title="EGL" if:true="${binding.egl}"/>
 
         <!-- GLFW -->
         <release-module package="org.lwjgl.glfw" name="glfw" title="GLFW" if:true="${binding.glfw}">
@@ -1075,14 +1219,23 @@
         <!-- jemalloc -->
         <release-module package="org.lwjgl.system.jemalloc" name="jemalloc" native-library="jemalloc" title="jemalloc" if:true="${binding.jemalloc}"/>
 
+        <!-- libdivide -->
+        <release-module package="org.lwjgl.util.libdivide" name="libdivide" native-library="lwjgl_libdivide" title="libdivide" if:true="${binding.libdivide}"/>
+
+        <!-- LLVM -->
+        <release-module package="org.lwjgl.llvm" name="llvm" native-library="lwjgl_llvm" title="LLVM/Clang" if:true="${binding.llvm}"/>
+
         <!-- LMDB -->
         <release-module package="org.lwjgl.util.lmdb" name="lmdb" native-library="lwjgl_lmdb" title="LMDB" if:true="${binding.lmdb}"/>
 
         <!-- lz4 -->
         <release-module package="org.lwjgl.util.lz4" name="lz4" native-library="lwjgl_lz4" title="lz4" if:true="${binding.lz4}"/>
 
+        <!-- Meow hash -->
+        <release-module package="org.lwjgl.util.meow" name="meow" native-library="lwjgl_meow" title="Meow hash" if:true="${binding.meow}"/>
+
         <!-- NanoVG -->
-        <release-module package="org.lwjgl.nanovg" name="nanovg" native-library="lwjgl_nanovg" title="NanoVG" license="nano" if:true="${binding.nanovg}"/>
+        <release-module package="org.lwjgl.nanovg" name="nanovg" native-library="lwjgl_nanovg" title="NanoVG" if:true="${binding.nanovg}"/>
 
         <!-- Native File Dialog -->
         <release-module package="org.lwjgl.util.nfd" name="nfd" native-library="lwjgl_nfd" title="Native File Dialog" if:true="${binding.nfd}"/>
@@ -1109,13 +1262,13 @@
         </release-module>
 
         <!-- OpenCL -->
-        <release-module package="org.lwjgl.opencl" name="opencl" title="OpenCL" license="khronos" if:true="${binding.opencl}"/>
+        <release-module package="org.lwjgl.opencl" name="opencl" title="OpenCL" if:true="${binding.opencl}"/>
 
         <!-- OpenGL -->
-        <release-module package="org.lwjgl.opengl" name="opengl" native-library="lwjgl_opengl" title="OpenGL" license="khronos" if:true="${binding.opengl}"/>
+        <release-module package="org.lwjgl.opengl" name="opengl" native-library="lwjgl_opengl" title="OpenGL" if:true="${binding.opengl}"/>
 
         <!-- OpenGL ES -->
-        <release-module package="org.lwjgl.opengles" name="opengles" native-library="lwjgl_opengles" title="OpenGL ES" license="khronos" if:true="${binding.opengles}"/>
+        <release-module package="org.lwjgl.opengles" name="opengles" native-library="lwjgl_opengles" title="OpenGL ES" if:true="${binding.opengles}"/>
 
         <!-- OpenVR -->
         <release-module package="org.lwjgl.openvr" name="openvr" title="OpenVR" if:true="${binding.openvr}">
@@ -1137,8 +1290,11 @@
             </natives>
         </release-module>
 
+        <!-- Opus -->
+        <release-module package="org.lwjgl.util.opus" name="opus" native-library="opus" title="Opus" if:true="${binding.opus}"/>
+
         <!-- LibOVR -->
-        <release-module package="org.lwjgl.ovr" name="ovr" title="LibOVR" license="oculus" if:true="${binding.ovr}">
+        <release-module package="org.lwjgl.ovr" name="ovr" title="LibOVR" if:true="${binding.ovr}">
             <natives>
                 <get-release url="windows/x64/lwjgl_ovr.dll"/>
                 <get-release url="windows/x86/lwjgl_ovr32.dll"/>
@@ -1173,7 +1329,7 @@
         <release-module package="org.lwjgl.util.vma" name="vma" native-library="lwjgl_vma" title="vma" if:true="${binding.vma}"/>
 
         <!-- Vulkan -->
-        <release-module package="org.lwjgl.vulkan" name="vulkan" title="Vulkan" license="khronos" if:true="${binding.vulkan}">
+        <release-module package="org.lwjgl.vulkan" name="vulkan" title="Vulkan" if:true="${binding.vulkan}">
             <natives>
                 <get-release url="macosx/x64/libMoltenVK.dylib"/>
                 <get-release url="macosx/x64/libMoltenVK.dylib.git"/>

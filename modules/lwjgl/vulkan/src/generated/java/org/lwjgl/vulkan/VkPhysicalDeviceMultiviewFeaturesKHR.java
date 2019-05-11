@@ -31,18 +31,14 @@ import static org.lwjgl.system.MemoryStack.*;
  */
 public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiviewFeatures {
 
-    VkPhysicalDeviceMultiviewFeaturesKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDeviceMultiviewFeaturesKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceMultiviewFeaturesKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceMultiviewFeaturesKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(container);
     }
 
     /** Sets the specified value to the {@code sType} field. */
@@ -93,30 +89,31 @@ public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiv
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceMultiviewFeaturesKHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPhysicalDeviceMultiviewFeaturesKHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceMultiviewFeaturesKHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPhysicalDeviceMultiviewFeaturesKHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated with {@link BufferUtils}. */
     public static VkPhysicalDeviceMultiviewFeaturesKHR create() {
-        return new VkPhysicalDeviceMultiviewFeaturesKHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDeviceMultiviewFeaturesKHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPhysicalDeviceMultiviewFeaturesKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceMultiviewFeaturesKHR} instance for the specified memory address. */
     public static VkPhysicalDeviceMultiviewFeaturesKHR create(long address) {
-        return new VkPhysicalDeviceMultiviewFeaturesKHR(address, null);
+        return wrap(VkPhysicalDeviceMultiviewFeaturesKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceMultiviewFeaturesKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceMultiviewFeaturesKHR.class, address);
     }
 
     /**
@@ -125,7 +122,7 @@ public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiv
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMultiviewFeaturesKHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -134,7 +131,7 @@ public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiv
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMultiviewFeaturesKHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -143,7 +140,8 @@ public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiv
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMultiviewFeaturesKHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -153,43 +151,43 @@ public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiv
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMultiviewFeaturesKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceMultiviewFeaturesKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPhysicalDeviceMultiviewFeaturesKHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPhysicalDeviceMultiviewFeaturesKHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceMultiviewFeaturesKHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPhysicalDeviceMultiviewFeaturesKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPhysicalDeviceMultiviewFeaturesKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceMultiviewFeaturesKHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPhysicalDeviceMultiviewFeaturesKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -217,7 +215,7 @@ public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiv
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMultiviewFeaturesKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -227,7 +225,7 @@ public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiv
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceMultiviewFeaturesKHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -235,8 +233,10 @@ public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiv
     /** An array of {@link VkPhysicalDeviceMultiviewFeaturesKHR} structs. */
     public static class Buffer extends VkPhysicalDeviceMultiviewFeatures.Buffer {
 
+        private static final VkPhysicalDeviceMultiviewFeaturesKHR ELEMENT_FACTORY = VkPhysicalDeviceMultiviewFeaturesKHR.create(-1L);
+
         /**
-         * Creates a new {@link VkPhysicalDeviceMultiviewFeaturesKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceMultiviewFeaturesKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -262,13 +262,8 @@ public class VkPhysicalDeviceMultiviewFeaturesKHR extends VkPhysicalDeviceMultiv
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDeviceMultiviewFeaturesKHR newInstance(long address) {
-            return new VkPhysicalDeviceMultiviewFeaturesKHR(address, container);
+        protected VkPhysicalDeviceMultiviewFeaturesKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Sets the specified value to the {@code sType} field. */

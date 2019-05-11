@@ -94,18 +94,14 @@ public class VkCmdReserveSpaceForCommandsInfoNVX extends Struct implements Nativ
         MAXSEQUENCESCOUNT = layout.offsetof(4);
     }
 
-    VkCmdReserveSpaceForCommandsInfoNVX(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkCmdReserveSpaceForCommandsInfoNVX} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkCmdReserveSpaceForCommandsInfoNVX} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkCmdReserveSpaceForCommandsInfoNVX(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -169,30 +165,31 @@ public class VkCmdReserveSpaceForCommandsInfoNVX extends Struct implements Nativ
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCmdReserveSpaceForCommandsInfoNVX} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCmdReserveSpaceForCommandsInfoNVX} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkCmdReserveSpaceForCommandsInfoNVX malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkCmdReserveSpaceForCommandsInfoNVX.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkCmdReserveSpaceForCommandsInfoNVX} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCmdReserveSpaceForCommandsInfoNVX} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkCmdReserveSpaceForCommandsInfoNVX calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkCmdReserveSpaceForCommandsInfoNVX.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkCmdReserveSpaceForCommandsInfoNVX} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkCmdReserveSpaceForCommandsInfoNVX} instance allocated with {@link BufferUtils}. */
     public static VkCmdReserveSpaceForCommandsInfoNVX create() {
-        return new VkCmdReserveSpaceForCommandsInfoNVX(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkCmdReserveSpaceForCommandsInfoNVX.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkCmdReserveSpaceForCommandsInfoNVX} instance for the specified memory address. */
+    /** Returns a new {@code VkCmdReserveSpaceForCommandsInfoNVX} instance for the specified memory address. */
     public static VkCmdReserveSpaceForCommandsInfoNVX create(long address) {
-        return new VkCmdReserveSpaceForCommandsInfoNVX(address, null);
+        return wrap(VkCmdReserveSpaceForCommandsInfoNVX.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCmdReserveSpaceForCommandsInfoNVX createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkCmdReserveSpaceForCommandsInfoNVX.class, address);
     }
 
     /**
@@ -201,7 +198,7 @@ public class VkCmdReserveSpaceForCommandsInfoNVX extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkCmdReserveSpaceForCommandsInfoNVX.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -210,7 +207,7 @@ public class VkCmdReserveSpaceForCommandsInfoNVX extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkCmdReserveSpaceForCommandsInfoNVX.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -219,7 +216,8 @@ public class VkCmdReserveSpaceForCommandsInfoNVX extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkCmdReserveSpaceForCommandsInfoNVX.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -229,43 +227,43 @@ public class VkCmdReserveSpaceForCommandsInfoNVX extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkCmdReserveSpaceForCommandsInfoNVX.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCmdReserveSpaceForCommandsInfoNVX.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCmdReserveSpaceForCommandsInfoNVX} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkCmdReserveSpaceForCommandsInfoNVX} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkCmdReserveSpaceForCommandsInfoNVX mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkCmdReserveSpaceForCommandsInfoNVX} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkCmdReserveSpaceForCommandsInfoNVX} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkCmdReserveSpaceForCommandsInfoNVX callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkCmdReserveSpaceForCommandsInfoNVX} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkCmdReserveSpaceForCommandsInfoNVX} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCmdReserveSpaceForCommandsInfoNVX mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkCmdReserveSpaceForCommandsInfoNVX.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkCmdReserveSpaceForCommandsInfoNVX} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkCmdReserveSpaceForCommandsInfoNVX} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCmdReserveSpaceForCommandsInfoNVX callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkCmdReserveSpaceForCommandsInfoNVX.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -293,7 +291,7 @@ public class VkCmdReserveSpaceForCommandsInfoNVX extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkCmdReserveSpaceForCommandsInfoNVX.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -303,40 +301,42 @@ public class VkCmdReserveSpaceForCommandsInfoNVX extends Struct implements Nativ
      * @param capacity the buffer capacity
      */
     public static VkCmdReserveSpaceForCommandsInfoNVX.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkCmdReserveSpaceForCommandsInfoNVX.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkCmdReserveSpaceForCommandsInfoNVX.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkCmdReserveSpaceForCommandsInfoNVX.PNEXT); }
     /** Unsafe version of {@link #objectTable}. */
-    public static long nobjectTable(long struct) { return memGetLong(struct + VkCmdReserveSpaceForCommandsInfoNVX.OBJECTTABLE); }
+    public static long nobjectTable(long struct) { return UNSAFE.getLong(null, struct + VkCmdReserveSpaceForCommandsInfoNVX.OBJECTTABLE); }
     /** Unsafe version of {@link #indirectCommandsLayout}. */
-    public static long nindirectCommandsLayout(long struct) { return memGetLong(struct + VkCmdReserveSpaceForCommandsInfoNVX.INDIRECTCOMMANDSLAYOUT); }
+    public static long nindirectCommandsLayout(long struct) { return UNSAFE.getLong(null, struct + VkCmdReserveSpaceForCommandsInfoNVX.INDIRECTCOMMANDSLAYOUT); }
     /** Unsafe version of {@link #maxSequencesCount}. */
-    public static int nmaxSequencesCount(long struct) { return memGetInt(struct + VkCmdReserveSpaceForCommandsInfoNVX.MAXSEQUENCESCOUNT); }
+    public static int nmaxSequencesCount(long struct) { return UNSAFE.getInt(null, struct + VkCmdReserveSpaceForCommandsInfoNVX.MAXSEQUENCESCOUNT); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkCmdReserveSpaceForCommandsInfoNVX.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkCmdReserveSpaceForCommandsInfoNVX.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkCmdReserveSpaceForCommandsInfoNVX.PNEXT, value); }
     /** Unsafe version of {@link #objectTable(long) objectTable}. */
-    public static void nobjectTable(long struct, long value) { memPutLong(struct + VkCmdReserveSpaceForCommandsInfoNVX.OBJECTTABLE, value); }
+    public static void nobjectTable(long struct, long value) { UNSAFE.putLong(null, struct + VkCmdReserveSpaceForCommandsInfoNVX.OBJECTTABLE, value); }
     /** Unsafe version of {@link #indirectCommandsLayout(long) indirectCommandsLayout}. */
-    public static void nindirectCommandsLayout(long struct, long value) { memPutLong(struct + VkCmdReserveSpaceForCommandsInfoNVX.INDIRECTCOMMANDSLAYOUT, value); }
+    public static void nindirectCommandsLayout(long struct, long value) { UNSAFE.putLong(null, struct + VkCmdReserveSpaceForCommandsInfoNVX.INDIRECTCOMMANDSLAYOUT, value); }
     /** Unsafe version of {@link #maxSequencesCount(int) maxSequencesCount}. */
-    public static void nmaxSequencesCount(long struct, int value) { memPutInt(struct + VkCmdReserveSpaceForCommandsInfoNVX.MAXSEQUENCESCOUNT, value); }
+    public static void nmaxSequencesCount(long struct, int value) { UNSAFE.putInt(null, struct + VkCmdReserveSpaceForCommandsInfoNVX.MAXSEQUENCESCOUNT, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkCmdReserveSpaceForCommandsInfoNVX} structs. */
     public static class Buffer extends StructBuffer<VkCmdReserveSpaceForCommandsInfoNVX, Buffer> implements NativeResource {
 
+        private static final VkCmdReserveSpaceForCommandsInfoNVX ELEMENT_FACTORY = VkCmdReserveSpaceForCommandsInfoNVX.create(-1L);
+
         /**
-         * Creates a new {@link VkCmdReserveSpaceForCommandsInfoNVX.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkCmdReserveSpaceForCommandsInfoNVX.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -362,18 +362,8 @@ public class VkCmdReserveSpaceForCommandsInfoNVX extends Struct implements Nativ
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkCmdReserveSpaceForCommandsInfoNVX newInstance(long address) {
-            return new VkCmdReserveSpaceForCommandsInfoNVX(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkCmdReserveSpaceForCommandsInfoNVX getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

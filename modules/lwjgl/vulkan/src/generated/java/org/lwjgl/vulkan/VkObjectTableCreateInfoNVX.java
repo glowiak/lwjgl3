@@ -132,18 +132,14 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
         MAXPIPELINELAYOUTS = layout.offsetof(10);
     }
 
-    VkObjectTableCreateInfoNVX(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkObjectTableCreateInfoNVX} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkObjectTableCreateInfoNVX} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkObjectTableCreateInfoNVX(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -249,30 +245,31 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
 
     // -----------------------------------
 
-    /** Returns a new {@link VkObjectTableCreateInfoNVX} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkObjectTableCreateInfoNVX} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkObjectTableCreateInfoNVX malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkObjectTableCreateInfoNVX.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkObjectTableCreateInfoNVX} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkObjectTableCreateInfoNVX} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkObjectTableCreateInfoNVX calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkObjectTableCreateInfoNVX.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkObjectTableCreateInfoNVX} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkObjectTableCreateInfoNVX} instance allocated with {@link BufferUtils}. */
     public static VkObjectTableCreateInfoNVX create() {
-        return new VkObjectTableCreateInfoNVX(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkObjectTableCreateInfoNVX.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkObjectTableCreateInfoNVX} instance for the specified memory address. */
+    /** Returns a new {@code VkObjectTableCreateInfoNVX} instance for the specified memory address. */
     public static VkObjectTableCreateInfoNVX create(long address) {
-        return new VkObjectTableCreateInfoNVX(address, null);
+        return wrap(VkObjectTableCreateInfoNVX.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkObjectTableCreateInfoNVX createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkObjectTableCreateInfoNVX.class, address);
     }
 
     /**
@@ -281,7 +278,7 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkObjectTableCreateInfoNVX.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -290,7 +287,7 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkObjectTableCreateInfoNVX.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -299,7 +296,8 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkObjectTableCreateInfoNVX.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -309,43 +307,43 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkObjectTableCreateInfoNVX.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkObjectTableCreateInfoNVX.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkObjectTableCreateInfoNVX} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkObjectTableCreateInfoNVX} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkObjectTableCreateInfoNVX mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkObjectTableCreateInfoNVX} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkObjectTableCreateInfoNVX} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkObjectTableCreateInfoNVX callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkObjectTableCreateInfoNVX} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkObjectTableCreateInfoNVX} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkObjectTableCreateInfoNVX mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkObjectTableCreateInfoNVX.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkObjectTableCreateInfoNVX} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkObjectTableCreateInfoNVX} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkObjectTableCreateInfoNVX callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkObjectTableCreateInfoNVX.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -373,7 +371,7 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkObjectTableCreateInfoNVX.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -383,17 +381,17 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkObjectTableCreateInfoNVX.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkObjectTableCreateInfoNVX.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkObjectTableCreateInfoNVX.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkObjectTableCreateInfoNVX.PNEXT); }
     /** Unsafe version of {@link #objectCount}. */
-    public static int nobjectCount(long struct) { return memGetInt(struct + VkObjectTableCreateInfoNVX.OBJECTCOUNT); }
+    public static int nobjectCount(long struct) { return UNSAFE.getInt(null, struct + VkObjectTableCreateInfoNVX.OBJECTCOUNT); }
     /** Unsafe version of {@link #pObjectEntryTypes() pObjectEntryTypes}. */
     public static IntBuffer npObjectEntryTypes(long struct) { return memIntBuffer(memGetAddress(struct + VkObjectTableCreateInfoNVX.POBJECTENTRYTYPES), nobjectCount(struct)); }
     /** Unsafe version of {@link #pObjectEntryCounts() pObjectEntryCounts}. */
@@ -401,22 +399,22 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
     /** Unsafe version of {@link #pObjectEntryUsageFlags() pObjectEntryUsageFlags}. */
     public static IntBuffer npObjectEntryUsageFlags(long struct) { return memIntBuffer(memGetAddress(struct + VkObjectTableCreateInfoNVX.POBJECTENTRYUSAGEFLAGS), nobjectCount(struct)); }
     /** Unsafe version of {@link #maxUniformBuffersPerDescriptor}. */
-    public static int nmaxUniformBuffersPerDescriptor(long struct) { return memGetInt(struct + VkObjectTableCreateInfoNVX.MAXUNIFORMBUFFERSPERDESCRIPTOR); }
+    public static int nmaxUniformBuffersPerDescriptor(long struct) { return UNSAFE.getInt(null, struct + VkObjectTableCreateInfoNVX.MAXUNIFORMBUFFERSPERDESCRIPTOR); }
     /** Unsafe version of {@link #maxStorageBuffersPerDescriptor}. */
-    public static int nmaxStorageBuffersPerDescriptor(long struct) { return memGetInt(struct + VkObjectTableCreateInfoNVX.MAXSTORAGEBUFFERSPERDESCRIPTOR); }
+    public static int nmaxStorageBuffersPerDescriptor(long struct) { return UNSAFE.getInt(null, struct + VkObjectTableCreateInfoNVX.MAXSTORAGEBUFFERSPERDESCRIPTOR); }
     /** Unsafe version of {@link #maxStorageImagesPerDescriptor}. */
-    public static int nmaxStorageImagesPerDescriptor(long struct) { return memGetInt(struct + VkObjectTableCreateInfoNVX.MAXSTORAGEIMAGESPERDESCRIPTOR); }
+    public static int nmaxStorageImagesPerDescriptor(long struct) { return UNSAFE.getInt(null, struct + VkObjectTableCreateInfoNVX.MAXSTORAGEIMAGESPERDESCRIPTOR); }
     /** Unsafe version of {@link #maxSampledImagesPerDescriptor}. */
-    public static int nmaxSampledImagesPerDescriptor(long struct) { return memGetInt(struct + VkObjectTableCreateInfoNVX.MAXSAMPLEDIMAGESPERDESCRIPTOR); }
+    public static int nmaxSampledImagesPerDescriptor(long struct) { return UNSAFE.getInt(null, struct + VkObjectTableCreateInfoNVX.MAXSAMPLEDIMAGESPERDESCRIPTOR); }
     /** Unsafe version of {@link #maxPipelineLayouts}. */
-    public static int nmaxPipelineLayouts(long struct) { return memGetInt(struct + VkObjectTableCreateInfoNVX.MAXPIPELINELAYOUTS); }
+    public static int nmaxPipelineLayouts(long struct) { return UNSAFE.getInt(null, struct + VkObjectTableCreateInfoNVX.MAXPIPELINELAYOUTS); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkObjectTableCreateInfoNVX.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkObjectTableCreateInfoNVX.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkObjectTableCreateInfoNVX.PNEXT, value); }
     /** Sets the specified value to the {@code objectCount} field of the specified {@code struct}. */
-    public static void nobjectCount(long struct, int value) { memPutInt(struct + VkObjectTableCreateInfoNVX.OBJECTCOUNT, value); }
+    public static void nobjectCount(long struct, int value) { UNSAFE.putInt(null, struct + VkObjectTableCreateInfoNVX.OBJECTCOUNT, value); }
     /** Unsafe version of {@link #pObjectEntryTypes(IntBuffer) pObjectEntryTypes}. */
     public static void npObjectEntryTypes(long struct, IntBuffer value) { memPutAddress(struct + VkObjectTableCreateInfoNVX.POBJECTENTRYTYPES, memAddress(value)); }
     /** Unsafe version of {@link #pObjectEntryCounts(IntBuffer) pObjectEntryCounts}. */
@@ -424,15 +422,15 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
     /** Unsafe version of {@link #pObjectEntryUsageFlags(IntBuffer) pObjectEntryUsageFlags}. */
     public static void npObjectEntryUsageFlags(long struct, IntBuffer value) { memPutAddress(struct + VkObjectTableCreateInfoNVX.POBJECTENTRYUSAGEFLAGS, memAddress(value)); }
     /** Unsafe version of {@link #maxUniformBuffersPerDescriptor(int) maxUniformBuffersPerDescriptor}. */
-    public static void nmaxUniformBuffersPerDescriptor(long struct, int value) { memPutInt(struct + VkObjectTableCreateInfoNVX.MAXUNIFORMBUFFERSPERDESCRIPTOR, value); }
+    public static void nmaxUniformBuffersPerDescriptor(long struct, int value) { UNSAFE.putInt(null, struct + VkObjectTableCreateInfoNVX.MAXUNIFORMBUFFERSPERDESCRIPTOR, value); }
     /** Unsafe version of {@link #maxStorageBuffersPerDescriptor(int) maxStorageBuffersPerDescriptor}. */
-    public static void nmaxStorageBuffersPerDescriptor(long struct, int value) { memPutInt(struct + VkObjectTableCreateInfoNVX.MAXSTORAGEBUFFERSPERDESCRIPTOR, value); }
+    public static void nmaxStorageBuffersPerDescriptor(long struct, int value) { UNSAFE.putInt(null, struct + VkObjectTableCreateInfoNVX.MAXSTORAGEBUFFERSPERDESCRIPTOR, value); }
     /** Unsafe version of {@link #maxStorageImagesPerDescriptor(int) maxStorageImagesPerDescriptor}. */
-    public static void nmaxStorageImagesPerDescriptor(long struct, int value) { memPutInt(struct + VkObjectTableCreateInfoNVX.MAXSTORAGEIMAGESPERDESCRIPTOR, value); }
+    public static void nmaxStorageImagesPerDescriptor(long struct, int value) { UNSAFE.putInt(null, struct + VkObjectTableCreateInfoNVX.MAXSTORAGEIMAGESPERDESCRIPTOR, value); }
     /** Unsafe version of {@link #maxSampledImagesPerDescriptor(int) maxSampledImagesPerDescriptor}. */
-    public static void nmaxSampledImagesPerDescriptor(long struct, int value) { memPutInt(struct + VkObjectTableCreateInfoNVX.MAXSAMPLEDIMAGESPERDESCRIPTOR, value); }
+    public static void nmaxSampledImagesPerDescriptor(long struct, int value) { UNSAFE.putInt(null, struct + VkObjectTableCreateInfoNVX.MAXSAMPLEDIMAGESPERDESCRIPTOR, value); }
     /** Unsafe version of {@link #maxPipelineLayouts(int) maxPipelineLayouts}. */
-    public static void nmaxPipelineLayouts(long struct, int value) { memPutInt(struct + VkObjectTableCreateInfoNVX.MAXPIPELINELAYOUTS, value); }
+    public static void nmaxPipelineLayouts(long struct, int value) { UNSAFE.putInt(null, struct + VkObjectTableCreateInfoNVX.MAXPIPELINELAYOUTS, value); }
 
     /**
      * Validates pointer members that should not be {@code NULL}.
@@ -453,7 +451,7 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -462,8 +460,10 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
     /** An array of {@link VkObjectTableCreateInfoNVX} structs. */
     public static class Buffer extends StructBuffer<VkObjectTableCreateInfoNVX, Buffer> implements NativeResource {
 
+        private static final VkObjectTableCreateInfoNVX ELEMENT_FACTORY = VkObjectTableCreateInfoNVX.create(-1L);
+
         /**
-         * Creates a new {@link VkObjectTableCreateInfoNVX.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkObjectTableCreateInfoNVX.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -489,18 +489,8 @@ public class VkObjectTableCreateInfoNVX extends Struct implements NativeResource
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkObjectTableCreateInfoNVX newInstance(long address) {
-            return new VkObjectTableCreateInfoNVX(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkObjectTableCreateInfoNVX getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

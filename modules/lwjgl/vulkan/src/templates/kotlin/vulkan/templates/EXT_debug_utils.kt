@@ -307,7 +307,7 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
             <li>#DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT specifies the most verbose output indicating all diagnostic messages from the Vulkan loader, layers, and drivers should be captured.</li>
             <li>#DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT specifies an informational message such as resource details that may be handy when debugging an application.</li>
             <li>#DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT specifies use of Vulkan that <b>may</b> expose an app bug. Such cases may not be immediately harmful, such as a fragment shader outputting to a location with no attachment. Other cases <b>may</b> point to behavior that is almost certainly bad when unintended such as using an image whose memory has not been filled. In general if you see a warning but you know that the behavior is intended/desired, then simply ignore the warning.</li>
-            <li>#DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT specifies that an error that may cause undefined results, including an application crash.</li>
+            <li>#DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT specifies that the application has violated a valid usage condition of the specification.</li>
         </ul>
 
         <h5>See Also</h5>
@@ -351,6 +351,12 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
 ￿    VkDevice                                    device,
 ￿    const VkDebugUtilsObjectNameInfoEXT*        pNameInfo);</code></pre>
 
+        <h5>Valid Usage</h5>
+        <ul>
+            <li>{@code pNameInfo}-&gt;{@code objectType} <b>must</b> not be #OBJECT_TYPE_UNKNOWN</li>
+            <li>{@code pNameInfo}-&gt;{@code objectHandle} <b>must</b> not be #NULL_HANDLE</li>
+        </ul>
+
         <h5>Valid Usage (Implicit)</h5>
         <ul>
             <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
@@ -380,8 +386,8 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         ##VkDebugUtilsObjectNameInfoEXT
         """,
 
-        VkDevice.IN("device", "the device that created the object."),
-        VkDebugUtilsObjectNameInfoEXT.const.p.IN("pNameInfo", "a pointer to an instance of the ##VkDebugUtilsObjectNameInfoEXT structure specifying the parameters of the name to set on the object.")
+        VkDevice("device", "the device that created the object."),
+        VkDebugUtilsObjectNameInfoEXT.const.p("pNameInfo", "a pointer to an instance of the ##VkDebugUtilsObjectNameInfoEXT structure specifying the parameters of the name to set on the object.")
     )
 
     VkResult(
@@ -424,8 +430,8 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         ##VkDebugUtilsObjectTagInfoEXT
         """,
 
-        VkDevice.IN("device", "the device that created the object."),
-        VkDebugUtilsObjectTagInfoEXT.const.p.IN("pTagInfo", "a pointer to an instance of the ##VkDebugUtilsObjectTagInfoEXT structure specifying the parameters of the tag to attach to the object.")
+        VkDevice("device", "the device that created the object."),
+        VkDebugUtilsObjectTagInfoEXT.const.p("pTagInfo", "a pointer to an instance of the ##VkDebugUtilsObjectTagInfoEXT structure specifying the parameters of the tag to attach to the object.")
     )
 
     void(
@@ -449,7 +455,7 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>-</td><td>-</td><td>Any</td><td>-</td></tr></tbody>
         </table>
 
@@ -457,8 +463,8 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         ##VkDebugUtilsLabelEXT
         """,
 
-        VkQueue.IN("queue", "the queue in which to start a debug label region."),
-        VkDebugUtilsLabelEXT.const.p.IN("pLabelInfo", "a pointer to an instance of the ##VkDebugUtilsLabelEXT structure specifying the parameters of the label region to open.")
+        VkQueue("queue", "the queue in which to start a debug label region."),
+        VkDebugUtilsLabelEXT.const.p("pLabelInfo", "a pointer to an instance of the ##VkDebugUtilsLabelEXT structure specifying the parameters of the label region to open.")
     )
 
     void(
@@ -478,7 +484,7 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
 
         <h5>Valid Usage</h5>
         <ul>
-            <li>There <b>must</b> be an outstanding #QueueBeginDebugUtilsLabelEXT() command prior to the #QueueEndDebugUtilsLabelEXT() on the queue</li>
+            <li>There <b>must</b> be an outstanding {@code vkQueueBeginDebugUtilsLabelEXT} command prior to the {@code vkQueueEndDebugUtilsLabelEXT} on the queue</li>
         </ul>
 
         <h5>Valid Usage (Implicit)</h5>
@@ -488,12 +494,12 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>-</td><td>-</td><td>Any</td><td>-</td></tr></tbody>
         </table>
         """,
 
-        VkQueue.IN("queue", "the queue in which a debug label region should be closed.")
+        VkQueue("queue", "the queue in which a debug label region should be closed.")
     )
 
     void(
@@ -517,7 +523,7 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>-</td><td>-</td><td>Any</td><td>-</td></tr></tbody>
         </table>
 
@@ -525,8 +531,8 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         ##VkDebugUtilsLabelEXT
         """,
 
-        VkQueue.IN("queue", "the queue into which a debug label will be inserted."),
-        VkDebugUtilsLabelEXT.const.p.IN("pLabelInfo", "a pointer to an instance of the ##VkDebugUtilsLabelEXT structure specifying the parameters of the label to insert.")
+        VkQueue("queue", "the queue into which a debug label will be inserted."),
+        VkDebugUtilsLabelEXT.const.p("pLabelInfo", "a pointer to an instance of the ##VkDebugUtilsLabelEXT structure specifying the parameters of the label to insert.")
     )
 
     void(
@@ -546,7 +552,7 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         <ul>
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
             <li>{@code pLabelInfo} <b>must</b> be a valid pointer to a valid ##VkDebugUtilsLabelEXT structure</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
         </ul>
 
@@ -557,7 +563,7 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute</td><td></td></tr></tbody>
         </table>
 
@@ -565,8 +571,8 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         ##VkDebugUtilsLabelEXT
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command is recorded."),
-        VkDebugUtilsLabelEXT.const.p.IN("pLabelInfo", "a pointer to an instance of the ##VkDebugUtilsLabelEXT structure specifying the parameters of the label region to open.")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command is recorded."),
+        VkDebugUtilsLabelEXT.const.p("pLabelInfo", "a pointer to an instance of the ##VkDebugUtilsLabelEXT structure specifying the parameters of the label region to open.")
     )
 
     void(
@@ -586,14 +592,14 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
 
         <h5>Valid Usage</h5>
         <ul>
-            <li>There <b>must</b> be an outstanding #CmdBeginDebugUtilsLabelEXT() command prior to the #CmdEndDebugUtilsLabelEXT() on the queue that {@code commandBuffer} is submitted to</li>
-            <li>If {@code commandBuffer} is a secondary command buffer, there <b>must</b> be an outstanding #CmdBeginDebugUtilsLabelEXT() command recorded to {@code commandBuffer} that has not previously been ended by a call to #CmdEndDebugUtilsLabelEXT().</li>
+            <li>There <b>must</b> be an outstanding {@code vkCmdBeginDebugUtilsLabelEXT} command prior to the {@code vkCmdEndDebugUtilsLabelEXT} on the queue that {@code commandBuffer} is submitted to</li>
+            <li>If {@code commandBuffer} is a secondary command buffer, there <b>must</b> be an outstanding {@code vkCmdBeginDebugUtilsLabelEXT} command recorded to {@code commandBuffer} that has not previously been ended by a call to {@code vkCmdEndDebugUtilsLabelEXT}.</li>
         </ul>
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
         </ul>
 
@@ -604,12 +610,12 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute</td><td></td></tr></tbody>
         </table>
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command is recorded.")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command is recorded.")
     )
 
     void(
@@ -629,7 +635,7 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         <ul>
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
             <li>{@code pLabelInfo} <b>must</b> be a valid pointer to a valid ##VkDebugUtilsLabelEXT structure</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
         </ul>
 
@@ -640,7 +646,7 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute</td><td></td></tr></tbody>
         </table>
 
@@ -648,8 +654,8 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         ##VkDebugUtilsLabelEXT
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command is recorded."),
-        VkDebugUtilsLabelEXT.const.p.IN("pLabelInfo", "")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command is recorded."),
+        VkDebugUtilsLabelEXT.const.p("pLabelInfo", "")
     )
 
     VkResult(
@@ -688,14 +694,16 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
             </ul></dd>
         </dl>
 
+        The application <b>must</b> ensure that #CreateDebugUtilsMessengerEXT() is not executed in parallel with any Vulkan command that is also called with {@code instance} or child of {@code instance} as the dispatchable argument.
+
         <h5>See Also</h5>
         ##VkAllocationCallbacks, ##VkDebugUtilsMessengerCreateInfoEXT
         """,
 
-        VkInstance.IN("instance", "the instance the messenger will be used with."),
-        VkDebugUtilsMessengerCreateInfoEXT.const.p.IN("pCreateInfo", "points to a ##VkDebugUtilsMessengerCreateInfoEXT structure which contains the callback pointer as well as defines the conditions under which this messenger will trigger the callback."),
-        nullable..VkAllocationCallbacks.const.p.IN("pAllocator", "controls host memory allocation as described in the <a target=\"_blank\" href=\"https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\\#memory-allocation\">Memory Allocation</a> chapter."),
-        Check(1)..VkDebugUtilsMessengerEXT.p.OUT("pMessenger", "a pointer to record the {@code VkDebugUtilsMessengerEXT} object created.")
+        VkInstance("instance", "the instance the messenger will be used with."),
+        VkDebugUtilsMessengerCreateInfoEXT.const.p("pCreateInfo", "points to a ##VkDebugUtilsMessengerCreateInfoEXT structure which contains the callback pointer as well as defines the conditions under which this messenger will trigger the callback."),
+        nullable..VkAllocationCallbacks.const.p("pAllocator", "controls host memory allocation as described in the <a target=\"_blank\" href=\"https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\\#memory-allocation\">Memory Allocation</a> chapter."),
+        Check(1)..VkDebugUtilsMessengerEXT.p("pMessenger", "a pointer to record the {@code VkDebugUtilsMessengerEXT} object created.")
     )
 
     void(
@@ -731,13 +739,15 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
             <li>Host access to {@code messenger} <b>must</b> be externally synchronized</li>
         </ul>
 
+        The application <b>must</b> ensure that #DestroyDebugUtilsMessengerEXT() is not executed in parallel with any Vulkan command that is also called with {@code instance} or child of {@code instance} as the dispatchable argument.
+
         <h5>See Also</h5>
         ##VkAllocationCallbacks
         """,
 
-        VkInstance.IN("instance", "the instance where the callback was created."),
-        VkDebugUtilsMessengerEXT.IN("messenger", "the {@code VkDebugUtilsMessengerEXT} object to destroy. {@code messenger} is an externally synchronized object and <b>must</b> not be used on more than one thread at a time. This means that #DestroyDebugUtilsMessengerEXT() <b>must</b> not be called when a callback is active."),
-        nullable..VkAllocationCallbacks.const.p.IN("pAllocator", "controls host memory allocation as described in the <a target=\"_blank\" href=\"https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\\#memory-allocation\">Memory Allocation</a> chapter.")
+        VkInstance("instance", "the instance where the callback was created."),
+        VkDebugUtilsMessengerEXT("messenger", "the {@code VkDebugUtilsMessengerEXT} object to destroy. {@code messenger} is an externally synchronized object and <b>must</b> not be used on more than one thread at a time. This means that {@code vkDestroyDebugUtilsMessengerEXT} <b>must</b> not be called when a callback is active."),
+        nullable..VkAllocationCallbacks.const.p("pAllocator", "controls host memory allocation as described in the <a target=\"_blank\" href=\"https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\\#memory-allocation\">Memory Allocation</a> chapter.")
     )
 
     void(
@@ -758,6 +768,11 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         <h5>Description</h5>
         The call will propagate through the layers and generate callback(s) as indicated by the message's flags. The parameters are passed on to the callback in addition to the {@code pUserData} value that was defined at the time the messenger was registered.
 
+        <h5>Valid Usage</h5>
+        <ul>
+            <li>{@code objectType} member of each element of {@code pCallbackData}-&gt;{@code pObjects} <b>must</b> not be #OBJECT_TYPE_UNKNOWN</li>
+        </ul>
+
         <h5>Valid Usage (Implicit)</h5>
         <ul>
             <li>{@code instance} <b>must</b> be a valid {@code VkInstance} handle</li>
@@ -771,9 +786,9 @@ val EXT_debug_utils = "EXTDebugUtils".nativeClassVK("EXT_debug_utils", type = "i
         ##VkDebugUtilsMessengerCallbackDataEXT
         """,
 
-        VkInstance.IN("instance", "the debug stream&#8217;s {@code VkInstance}."),
-        VkDebugUtilsMessageSeverityFlagBitsEXT.IN("messageSeverity", "the {@code VkDebugUtilsMessageSeverityFlagBitsEXT} severity of this event/message."),
-        VkDebugUtilsMessageTypeFlagsEXT.IN("messageTypes", "a bitmask of {@code VkDebugUtilsMessageTypeFlagBitsEXT} specifying which type of event(s) to identify with this message."),
-        VkDebugUtilsMessengerCallbackDataEXT.const.p.IN("pCallbackData", "contains all the callback related data in the ##VkDebugUtilsMessengerCallbackDataEXT structure.")
+        VkInstance("instance", "the debug stream&#8217;s {@code VkInstance}."),
+        VkDebugUtilsMessageSeverityFlagBitsEXT("messageSeverity", "the {@code VkDebugUtilsMessageSeverityFlagBitsEXT} severity of this event/message."),
+        VkDebugUtilsMessageTypeFlagsEXT("messageTypes", "a bitmask of {@code VkDebugUtilsMessageTypeFlagBitsEXT} specifying which type of event(s) to identify with this message."),
+        VkDebugUtilsMessengerCallbackDataEXT.const.p("pCallbackData", "contains all the callback related data in the ##VkDebugUtilsMessengerCallbackDataEXT structure.")
     )
 }

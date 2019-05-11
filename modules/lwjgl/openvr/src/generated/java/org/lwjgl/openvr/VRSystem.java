@@ -41,7 +41,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, pnWidth, pnHeight);
+        callPPV(pnWidth, pnHeight, __functionAddress);
     }
 
     /**
@@ -61,7 +61,7 @@ public class VRSystem {
     // --- [ VRSystem_GetProjectionMatrix ] ---
 
     /** Unsafe version of: {@link #VRSystem_GetProjectionMatrix GetProjectionMatrix} */
-    public static native void nVRSystem_GetProjectionMatrix(long __functionAddress, int eEye, float fNearZ, float fFarZ, long __result);
+    public static native void nVRSystem_GetProjectionMatrix(int eEye, float fNearZ, float fFarZ, long __functionAddress, long __result);
 
     /** Unsafe version of: {@link #VRSystem_GetProjectionMatrix GetProjectionMatrix} */
     public static void nVRSystem_GetProjectionMatrix(int eEye, float fNearZ, float fFarZ, long __result) {
@@ -69,7 +69,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        nVRSystem_GetProjectionMatrix(__functionAddress, eEye, fNearZ, fFarZ, __result);
+        nVRSystem_GetProjectionMatrix(eEye, fNearZ, fFarZ, __functionAddress, __result);
     }
 
     /**
@@ -80,7 +80,7 @@ public class VRSystem {
      * @param fFarZ  distance to the far clip plane in meters
      */
     @NativeType("HmdMatrix44_t")
-    public static HmdMatrix44 VRSystem_GetProjectionMatrix(@NativeType("EVREye") int eEye, float fNearZ, float fFarZ, HmdMatrix44 __result) {
+    public static HmdMatrix44 VRSystem_GetProjectionMatrix(@NativeType("EVREye") int eEye, float fNearZ, float fFarZ, @NativeType("HmdMatrix44_t") HmdMatrix44 __result) {
         nVRSystem_GetProjectionMatrix(eEye, fNearZ, fFarZ, __result.address());
         return __result;
     }
@@ -93,7 +93,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPPV(__functionAddress, eEye, pfLeft, pfRight, pfTop, pfBottom);
+        callPPPPV(eEye, pfLeft, pfRight, pfTop, pfBottom, __functionAddress);
     }
 
     /**
@@ -123,7 +123,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPZ(__functionAddress, eEye, fU, fV, pDistortionCoordinates);
+        return callPZ(eEye, fU, fV, pDistortionCoordinates, __functionAddress);
     }
 
     /**
@@ -145,7 +145,7 @@ public class VRSystem {
     // --- [ VRSystem_GetEyeToHeadTransform ] ---
 
     /** Unsafe version of: {@link #VRSystem_GetEyeToHeadTransform GetEyeToHeadTransform} */
-    public static native void nVRSystem_GetEyeToHeadTransform(long __functionAddress, int eEye, long __result);
+    public static native void nVRSystem_GetEyeToHeadTransform(int eEye, long __functionAddress, long __result);
 
     /** Unsafe version of: {@link #VRSystem_GetEyeToHeadTransform GetEyeToHeadTransform} */
     public static void nVRSystem_GetEyeToHeadTransform(int eEye, long __result) {
@@ -153,7 +153,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        nVRSystem_GetEyeToHeadTransform(__functionAddress, eEye, __result);
+        nVRSystem_GetEyeToHeadTransform(eEye, __functionAddress, __result);
     }
 
     /**
@@ -164,7 +164,7 @@ public class VRSystem {
      * @param eEye determines which eye the function should return the eye matrix for. One of:<br><table><tr><td>{@link VR#EVREye_Eye_Left}</td><td>{@link VR#EVREye_Eye_Right}</td></tr></table>
      */
     @NativeType("HmdMatrix34_t")
-    public static HmdMatrix34 VRSystem_GetEyeToHeadTransform(@NativeType("EVREye") int eEye, HmdMatrix34 __result) {
+    public static HmdMatrix34 VRSystem_GetEyeToHeadTransform(@NativeType("EVREye") int eEye, @NativeType("HmdMatrix34_t") HmdMatrix34 __result) {
         nVRSystem_GetEyeToHeadTransform(eEye, __result.address());
         return __result;
     }
@@ -177,7 +177,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPZ(__functionAddress, pfSecondsSinceLastVsync, pulFrameCounter);
+        return callPPZ(pfSecondsSinceLastVsync, pulFrameCounter, __functionAddress);
     }
 
     /**
@@ -225,7 +225,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, pnAdapterIndex);
+        callPV(pnAdapterIndex, __functionAddress);
     }
 
     /**
@@ -252,7 +252,7 @@ public class VRSystem {
             check(__functionAddress);
             check(pInstance);
         }
-        callPPV(__functionAddress, pnDevice, textureType, pInstance);
+        callPPV(pnDevice, textureType, pInstance, __functionAddress);
     }
 
     /**
@@ -318,7 +318,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callZ(__functionAddress, bIsVisibleOnDesktop);
+        return callZ(bIsVisibleOnDesktop, __functionAddress);
     }
 
     // --- [ VRSystem_GetDeviceToAbsoluteTrackingPose ] ---
@@ -329,7 +329,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, eOrigin, fPredictedSecondsToPhotonsFromNow, pTrackedDevicePoseArray, unTrackedDevicePoseArrayCount);
+        callPV(eOrigin, fPredictedSecondsToPhotonsFromNow, pTrackedDevicePoseArray, unTrackedDevicePoseArrayCount, __functionAddress);
     }
 
     /**
@@ -396,7 +396,7 @@ public class VRSystem {
      * has set from the Dashboard settings and previous calls to {@link #VRSystem_ResetSeatedZeroPose ResetSeatedZeroPose}.</p>
      */
     @NativeType("HmdMatrix34_t")
-    public static HmdMatrix34 VRSystem_GetSeatedZeroPoseToStandingAbsoluteTrackingPose(HmdMatrix34 __result) {
+    public static HmdMatrix34 VRSystem_GetSeatedZeroPoseToStandingAbsoluteTrackingPose(@NativeType("HmdMatrix34_t") HmdMatrix34 __result) {
         nVRSystem_GetSeatedZeroPoseToStandingAbsoluteTrackingPose(__result.address());
         return __result;
     }
@@ -420,7 +420,7 @@ public class VRSystem {
      * the calibrated standing coordinate system.
      */
     @NativeType("HmdMatrix34_t")
-    public static HmdMatrix34 VRSystem_GetRawZeroPoseToStandingAbsoluteTrackingPose(HmdMatrix34 __result) {
+    public static HmdMatrix34 VRSystem_GetRawZeroPoseToStandingAbsoluteTrackingPose(@NativeType("HmdMatrix34_t") HmdMatrix34 __result) {
         nVRSystem_GetRawZeroPoseToStandingAbsoluteTrackingPose(__result.address());
         return __result;
     }
@@ -433,7 +433,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, eTrackedDeviceClass, punTrackedDeviceIndexArray, unTrackedDeviceIndexArrayCount, unRelativeToTrackedDeviceIndex);
+        return callPI(eTrackedDeviceClass, punTrackedDeviceIndexArray, unTrackedDeviceIndexArrayCount, unRelativeToTrackedDeviceIndex, __functionAddress);
     }
 
     /**
@@ -458,7 +458,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callI(__functionAddress, unDeviceId);
+        return callI(unDeviceId, __functionAddress);
     }
 
     // --- [ VRSystem_ApplyTransform ] ---
@@ -469,7 +469,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, pOutputPose, pTrackedDevicePose, pTransform);
+        callPPPV(pOutputPose, pTrackedDevicePose, pTransform, __functionAddress);
     }
 
     /**
@@ -487,7 +487,7 @@ public class VRSystem {
      * 
      * <p>This function is deprecated in favor of the new {@code IVRInput} system.</p>
      *
-     * @param unDeviceType one of:<br><table><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_Invalid}</td></tr><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_LeftHand}</td></tr><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_RightHand}</td></tr><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_OptOut}</td></tr><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_Max}</td></tr></table>
+     * @param unDeviceType one of:<br><table><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_Invalid}</td></tr><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_LeftHand}</td></tr><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_RightHand}</td></tr><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_OptOut}</td></tr><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_Treadmill}</td></tr><tr><td>{@link VR#ETrackedControllerRole_TrackedControllerRole_Max}</td></tr></table>
      */
     @NativeType("TrackedDeviceIndex_t")
     public static int VRSystem_GetTrackedDeviceIndexForControllerRole(@NativeType("ETrackedControllerRole") int unDeviceType) {
@@ -495,7 +495,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callI(__functionAddress, unDeviceType);
+        return callI(unDeviceType, __functionAddress);
     }
 
     // --- [ VRSystem_GetControllerRoleForTrackedDeviceIndex ] ---
@@ -511,7 +511,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callI(__functionAddress, unDeviceIndex);
+        return callI(unDeviceIndex, __functionAddress);
     }
 
     // --- [ VRSystem_GetTrackedDeviceClass ] ---
@@ -531,7 +531,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callI(__functionAddress, unDeviceIndex);
+        return callI(unDeviceIndex, __functionAddress);
     }
 
     // --- [ VRSystem_IsTrackedDeviceConnected ] ---
@@ -547,7 +547,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callZ(__functionAddress, unDeviceIndex);
+        return callZ(unDeviceIndex, __functionAddress);
     }
 
     // --- [ VRSystem_GetBoolTrackedDeviceProperty ] ---
@@ -558,7 +558,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPZ(__functionAddress, unDeviceIndex, prop, pError);
+        return callPZ(unDeviceIndex, prop, pError, __functionAddress);
     }
 
     /**
@@ -584,7 +584,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPF(__functionAddress, unDeviceIndex, prop, pError);
+        return callPF(unDeviceIndex, prop, pError, __functionAddress);
     }
 
     /**
@@ -609,7 +609,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, unDeviceIndex, prop, pError);
+        return callPI(unDeviceIndex, prop, pError, __functionAddress);
     }
 
     /**
@@ -635,7 +635,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJ(__functionAddress, unDeviceIndex, prop, pError);
+        return callPJ(unDeviceIndex, prop, pError, __functionAddress);
     }
 
     /**
@@ -656,7 +656,7 @@ public class VRSystem {
     // --- [ VRSystem_GetMatrix34TrackedDeviceProperty ] ---
 
     /** Unsafe version of: {@link #VRSystem_GetMatrix34TrackedDeviceProperty GetMatrix34TrackedDeviceProperty} */
-    public static native void nVRSystem_GetMatrix34TrackedDeviceProperty(long __functionAddress, int unDeviceIndex, int prop, long pError, long __result);
+    public static native void nVRSystem_GetMatrix34TrackedDeviceProperty(int unDeviceIndex, int prop, long pError, long __functionAddress, long __result);
 
     /** Unsafe version of: {@link #VRSystem_GetMatrix34TrackedDeviceProperty GetMatrix34TrackedDeviceProperty} */
     public static void nVRSystem_GetMatrix34TrackedDeviceProperty(int unDeviceIndex, int prop, long pError, long __result) {
@@ -664,7 +664,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        nVRSystem_GetMatrix34TrackedDeviceProperty(__functionAddress, unDeviceIndex, prop, pError, __result);
+        nVRSystem_GetMatrix34TrackedDeviceProperty(unDeviceIndex, prop, pError, __functionAddress, __result);
     }
 
     /**
@@ -675,7 +675,7 @@ public class VRSystem {
      * @param pError        the error returned when attempting to fetch this property. This can be {@code NULL} if the caller doesn't care about the source of a property error.
      */
     @NativeType("HmdMatrix34_t")
-    public static HmdMatrix34 VRSystem_GetMatrix34TrackedDeviceProperty(@NativeType("TrackedDeviceIndex_t") int unDeviceIndex, @NativeType("ETrackedDeviceProperty") int prop, @Nullable @NativeType("ETrackedPropertyError *") IntBuffer pError, HmdMatrix34 __result) {
+    public static HmdMatrix34 VRSystem_GetMatrix34TrackedDeviceProperty(@NativeType("TrackedDeviceIndex_t") int unDeviceIndex, @NativeType("ETrackedDeviceProperty") int prop, @Nullable @NativeType("ETrackedPropertyError *") IntBuffer pError, @NativeType("HmdMatrix34_t") HmdMatrix34 __result) {
         if (CHECKS) {
             checkSafe(pError, 1);
         }
@@ -691,7 +691,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, unDeviceIndex, prop, propType, pBuffer, unBufferSize, pError);
+        return callPPI(unDeviceIndex, prop, propType, pBuffer, unBufferSize, pError, __functionAddress);
     }
 
     /**
@@ -725,7 +725,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, unDeviceIndex, prop, pchValue, unBufferSize, pError);
+        return callPPI(unDeviceIndex, prop, pchValue, unBufferSize, pError, __functionAddress);
     }
 
     /**
@@ -793,13 +793,13 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callP(__functionAddress, error);
+        return callP(error, __functionAddress);
     }
 
     /**
      * Returns a string that corresponds with the specified property error. The string will be the name of the error enum value for all valid error codes.
      *
-     * @param error the error code to return a string for. One of:<br><table><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_Success}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_WrongDataType}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_WrongDeviceClass}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_BufferTooSmall}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_UnknownProperty}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_InvalidDevice}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_CouldNotContactServer}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_ValueNotProvidedByDevice}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_StringExceedsMaximumLength}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_NotYetAvailable}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_PermissionDenied}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_InvalidOperation}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_CannotWriteToWildcards}</td></tr></table>
+     * @param error the error code to return a string for. One of:<br><table><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_Success}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_WrongDataType}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_WrongDeviceClass}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_BufferTooSmall}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_UnknownProperty}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_InvalidDevice}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_CouldNotContactServer}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_ValueNotProvidedByDevice}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_StringExceedsMaximumLength}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_NotYetAvailable}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_PermissionDenied}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_InvalidOperation}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_CannotWriteToWildcards}</td></tr><tr><td>{@link VR#ETrackedPropertyError_TrackedProp_IPCReadFailure}</td></tr></table>
      */
     @Nullable
     @NativeType("char *")
@@ -816,7 +816,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPZ(__functionAddress, pEvent, uncbVREvent);
+        return callPZ(pEvent, uncbVREvent, __functionAddress);
     }
 
     /**
@@ -848,7 +848,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPZ(__functionAddress, eOrigin, pEvent, uncbVREvent, pTrackedDevicePose);
+        return callPPZ(eOrigin, pEvent, uncbVREvent, pTrackedDevicePose, __functionAddress);
     }
 
     /**
@@ -888,13 +888,13 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callP(__functionAddress, eType);
+        return callP(eType, __functionAddress);
     }
 
     /**
      * Returns the name of an {@code EVREvent} enum value.
      *
-     * @param eType the event type to return a string for. One of:<br><table><tr><td>{@link VR#EVREventType_VREvent_None}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceActivated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceDeactivated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceUserInteractionStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceUserInteractionEnded}</td></tr><tr><td>{@link VR#EVREventType_VREvent_IpdChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_EnterStandbyMode}</td></tr><tr><td>{@link VR#EVREventType_VREvent_LeaveStandbyMode}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceRoleChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WatchdogWakeUpRequested}</td></tr><tr><td>{@link VR#EVREventType_VREvent_LensDistortionChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PropertyChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WirelessDisconnect}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WirelessReconnect}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ButtonPress}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ButtonUnpress}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ButtonTouch}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ButtonUntouch}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Press}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Unpress}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Touch}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Untouch}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Move}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_ModeSwitch1}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_ModeSwitch2}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Cancel}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MouseMove}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MouseButtonDown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MouseButtonUp}</td></tr><tr><td>{@link VR#EVREventType_VREvent_FocusEnter}</td></tr><tr><td>{@link VR#EVREventType_VREvent_FocusLeave}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Scroll}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TouchPadMove}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayFocusChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_InputFocusCaptured}</td></tr><tr><td>{@link VR#EVREventType_VREvent_InputFocusReleased}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneFocusLost}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneFocusGained}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneApplicationChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneFocusChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_InputFocusChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneApplicationSecondaryRenderingStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneApplicationUsingWrongGraphicsAdapter}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ActionBindingReloaded}</td></tr><tr><td>{@link VR#EVREventType_VREvent_HideRenderModels}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ShowRenderModels}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ConsoleOpened}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ConsoleClosed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayShown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayHidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardActivated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardDeactivated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardThumbSelected}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardRequested}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ResetDashboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_RenderToast}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ImageLoaded}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ShowKeyboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_HideKeyboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayGamepadFocusGained}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayGamepadFocusLost}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlaySharedTextureChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScreenshotTriggered}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ImageFailed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardOverlayCreated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SwitchGamepadFocus}</td></tr><tr><td>{@link VR#EVREventType_VREvent_RequestScreenshot}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScreenshotTaken}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScreenshotFailed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SubmitScreenshotToDashboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScreenshotProgressToDashboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PrimaryDashboardDeviceChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_RoomViewShown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_RoomViewHidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Notification_Shown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Notification_Hidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Notification_BeginInteraction}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Notification_Destroyed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Quit}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ProcessQuit}</td></tr><tr><td>{@link VR#EVREventType_VREvent_QuitAborted_UserPrompt}</td></tr><tr><td>{@link VR#EVREventType_VREvent_QuitAcknowledged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DriverRequestedQuit}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ChaperoneDataHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ChaperoneUniverseHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ChaperoneTempDataHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ChaperoneSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SeatedZeroPoseReset}</td></tr><tr><td>{@link VR#EVREventType_VREvent_AudioSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_BackgroundSettingHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_CameraSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ReprojectionSettingHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ModelSkinSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_EnvironmentSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PowerSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_EnableHomeAppSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SteamVRSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_LighthouseSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_NullSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_UserInterfaceSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_NotificationsSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_KeyboardSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PerfSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WebInterfaceSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackersSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_StatusUpdate}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WebInterface_InstallDriverCompleted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MCImageUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_FirmwareUpdateStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_FirmwareUpdateFinished}</td></tr><tr><td>{@link VR#EVREventType_VREvent_KeyboardClosed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_KeyboardCharInput}</td></tr><tr><td>{@link VR#EVREventType_VREvent_KeyboardDone}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationTransitionStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationTransitionAborted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationTransitionNewAppStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationListUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationMimeTypeLoad}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationTransitionNewAppLaunchComplete}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ProcessConnected}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ProcessDisconnected}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_MirrorWindowShown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_MirrorWindowHidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_ChaperoneBoundsShown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_ChaperoneBoundsHidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_StartVideoStream}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_StopVideoStream}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_PauseVideoStream}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_ResumeVideoStream}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_EditingSurface}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PerformanceTest_EnableCapture}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PerformanceTest_DisableCapture}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PerformanceTest_FidelityLevel}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MessageOverlay_Closed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MessageOverlayCloseRequested}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_HapticVibration}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_BindingLoadFailed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_BindingLoadSuccessful}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_ActionManifestReloaded}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_ActionManifestLoadFailed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SpatialAnchors_PoseUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SpatialAnchors_DescriptorUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SpatialAnchors_RequestPoseUpdate}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SpatialAnchors_RequestDescriptorUpdate}</td></tr><tr><td>{@link VR#EVREventType_VREvent_VendorSpecific_Reserved_Start}</td></tr><tr><td>{@link VR#EVREventType_VREvent_VendorSpecific_Reserved_End}</td></tr></table>
+     * @param eType the event type to return a string for. One of:<br><table><tr><td>{@link VR#EVREventType_VREvent_None}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceActivated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceDeactivated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceUserInteractionStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceUserInteractionEnded}</td></tr><tr><td>{@link VR#EVREventType_VREvent_IpdChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_EnterStandbyMode}</td></tr><tr><td>{@link VR#EVREventType_VREvent_LeaveStandbyMode}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedDeviceRoleChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WatchdogWakeUpRequested}</td></tr><tr><td>{@link VR#EVREventType_VREvent_LensDistortionChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PropertyChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WirelessDisconnect}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WirelessReconnect}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ButtonPress}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ButtonUnpress}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ButtonTouch}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ButtonUntouch}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Press}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Unpress}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Touch}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Untouch}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Move}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_ModeSwitch1}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_ModeSwitch2}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DualAnalog_Cancel}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MouseMove}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MouseButtonDown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MouseButtonUp}</td></tr><tr><td>{@link VR#EVREventType_VREvent_FocusEnter}</td></tr><tr><td>{@link VR#EVREventType_VREvent_FocusLeave}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScrollDiscrete}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TouchPadMove}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayFocusChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ReloadOverlays}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScrollSmooth}</td></tr><tr><td>{@link VR#EVREventType_VREvent_InputFocusCaptured}</td></tr><tr><td>{@link VR#EVREventType_VREvent_InputFocusReleased}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneFocusLost}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneFocusGained}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneApplicationChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneFocusChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_InputFocusChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneApplicationSecondaryRenderingStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SceneApplicationUsingWrongGraphicsAdapter}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ActionBindingReloaded}</td></tr><tr><td>{@link VR#EVREventType_VREvent_HideRenderModels}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ShowRenderModels}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ConsoleOpened}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ConsoleClosed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayShown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayHidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardActivated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardDeactivated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardRequested}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ResetDashboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_RenderToast}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ImageLoaded}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ShowKeyboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_HideKeyboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayGamepadFocusGained}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlayGamepadFocusLost}</td></tr><tr><td>{@link VR#EVREventType_VREvent_OverlaySharedTextureChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScreenshotTriggered}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ImageFailed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardOverlayCreated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SwitchGamepadFocus}</td></tr><tr><td>{@link VR#EVREventType_VREvent_RequestScreenshot}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScreenshotTaken}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScreenshotFailed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SubmitScreenshotToDashboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ScreenshotProgressToDashboard}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PrimaryDashboardDeviceChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_RoomViewShown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_RoomViewHidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ShowUI}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ShowDevTools}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Notification_Shown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Notification_Hidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Notification_BeginInteraction}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Notification_Destroyed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Quit}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ProcessQuit}</td></tr><tr><td>{@link VR#EVREventType_VREvent_QuitAborted_UserPrompt}</td></tr><tr><td>{@link VR#EVREventType_VREvent_QuitAcknowledged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DriverRequestedQuit}</td></tr><tr><td>{@link VR#EVREventType_VREvent_RestartRequested}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ChaperoneDataHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ChaperoneUniverseHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ChaperoneTempDataHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ChaperoneSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SeatedZeroPoseReset}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ChaperoneFlushCache}</td></tr><tr><td>{@link VR#EVREventType_VREvent_AudioSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_BackgroundSettingHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_CameraSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ReprojectionSettingHasChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ModelSkinSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_EnvironmentSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PowerSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_EnableHomeAppSettingsHaveChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SteamVRSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_LighthouseSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_NullSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_UserInterfaceSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_NotificationsSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_KeyboardSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PerfSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DashboardSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WebInterfaceSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackersSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_LastKnownSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_DismissedWarningsSectionSettingChanged}</td></tr><tr><td>{@link VR#EVREventType_VREvent_StatusUpdate}</td></tr><tr><td>{@link VR#EVREventType_VREvent_WebInterface_InstallDriverCompleted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MCImageUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_FirmwareUpdateStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_FirmwareUpdateFinished}</td></tr><tr><td>{@link VR#EVREventType_VREvent_KeyboardClosed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_KeyboardCharInput}</td></tr><tr><td>{@link VR#EVREventType_VREvent_KeyboardDone}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationTransitionStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationTransitionAborted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationTransitionNewAppStarted}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationListUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationMimeTypeLoad}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ApplicationTransitionNewAppLaunchComplete}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ProcessConnected}</td></tr><tr><td>{@link VR#EVREventType_VREvent_ProcessDisconnected}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_MirrorWindowShown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_MirrorWindowHidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_ChaperoneBoundsShown}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_ChaperoneBoundsHidden}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_DisplayDisconnected}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_DisplayReconnected}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_HDCPError}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_ApplicationNotResponding}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Compositor_ApplicationResumed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_StartVideoStream}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_StopVideoStream}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_PauseVideoStream}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_ResumeVideoStream}</td></tr><tr><td>{@link VR#EVREventType_VREvent_TrackedCamera_EditingSurface}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PerformanceTest_EnableCapture}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PerformanceTest_DisableCapture}</td></tr><tr><td>{@link VR#EVREventType_VREvent_PerformanceTest_FidelityLevel}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MessageOverlay_Closed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_MessageOverlayCloseRequested}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_HapticVibration}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_BindingLoadFailed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_BindingLoadSuccessful}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_ActionManifestReloaded}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_ActionManifestLoadFailed}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_ProgressUpdate}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_TrackerActivated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_Input_BindingsUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SpatialAnchors_PoseUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SpatialAnchors_DescriptorUpdated}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SpatialAnchors_RequestPoseUpdate}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SpatialAnchors_RequestDescriptorUpdate}</td></tr><tr><td>{@link VR#EVREventType_VREvent_SystemReport_Started}</td></tr><tr><td>{@link VR#EVREventType_VREvent_VendorSpecific_Reserved_Start}</td></tr><tr><td>{@link VR#EVREventType_VREvent_VendorSpecific_Reserved_End}</td></tr></table>
      */
     @Nullable
     @NativeType("char *")
@@ -906,7 +906,7 @@ public class VRSystem {
     // --- [ VRSystem_GetHiddenAreaMesh ] ---
 
     /** Unsafe version of: {@link #VRSystem_GetHiddenAreaMesh GetHiddenAreaMesh} */
-    public static native void nVRSystem_GetHiddenAreaMesh(long __functionAddress, int eEye, int type, long __result);
+    public static native void nVRSystem_GetHiddenAreaMesh(int eEye, int type, long __functionAddress, long __result);
 
     /** Unsafe version of: {@link #VRSystem_GetHiddenAreaMesh GetHiddenAreaMesh} */
     public static void nVRSystem_GetHiddenAreaMesh(int eEye, int type, long __result) {
@@ -914,7 +914,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        nVRSystem_GetHiddenAreaMesh(__functionAddress, eEye, type, __result);
+        nVRSystem_GetHiddenAreaMesh(eEye, type, __functionAddress, __result);
     }
 
     /**
@@ -932,7 +932,7 @@ public class VRSystem {
      * @param type one of:<br><table><tr><td>{@link VR#EHiddenAreaMeshType_k_eHiddenAreaMesh_Standard}</td></tr><tr><td>{@link VR#EHiddenAreaMeshType_k_eHiddenAreaMesh_Inverse}</td></tr><tr><td>{@link VR#EHiddenAreaMeshType_k_eHiddenAreaMesh_LineLoop}</td></tr><tr><td>{@link VR#EHiddenAreaMeshType_k_eHiddenAreaMesh_Max}</td></tr></table>
      */
     @NativeType("HiddenAreaMesh_t")
-    public static HiddenAreaMesh VRSystem_GetHiddenAreaMesh(@NativeType("EVREye") int eEye, @NativeType("EHiddenAreaMeshType") int type, HiddenAreaMesh __result) {
+    public static HiddenAreaMesh VRSystem_GetHiddenAreaMesh(@NativeType("EVREye") int eEye, @NativeType("EHiddenAreaMeshType") int type, @NativeType("HiddenAreaMesh_t") HiddenAreaMesh __result) {
         nVRSystem_GetHiddenAreaMesh(eEye, type, __result.address());
         return __result;
     }
@@ -945,7 +945,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPZ(__functionAddress, unControllerDeviceIndex, pControllerState, unControllerStateSize);
+        return callPZ(unControllerDeviceIndex, pControllerState, unControllerStateSize, __functionAddress);
     }
 
     /**
@@ -987,7 +987,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPZ(__functionAddress, eOrigin, unControllerDeviceIndex, pControllerState, unControllerStateSize, pTrackedDevicePose);
+        return callPPZ(eOrigin, unControllerDeviceIndex, pControllerState, unControllerStateSize, pTrackedDevicePose, __functionAddress);
     }
 
     /**
@@ -1007,6 +1007,22 @@ public class VRSystem {
         return nVRSystem_GetControllerStateWithPose(eOrigin, unControllerDeviceIndex, pControllerState.address(), unControllerStateSize, pTrackedDevicePose.address());
     }
 
+    /**
+     * Fills the supplied struct with the current state of the controller and the provided pose with the pose of the controller when the controller state was
+     * updated most recently. Use this form if you need a precise controller pose as input to your application when the user presses or releases a button.
+     * 
+     * <p>This function is deprecated in favor of the new {@code IVRInput} system.</p>
+     *
+     * @param eOrigin                 the tracking coordinate system to return the pose in. One of:<br><table><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseSeated}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseStanding}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated}</td></tr></table>
+     * @param unControllerDeviceIndex the tracked device index of the controller to get the state of
+     * @param pControllerState        a struct to fill with the controller state
+     * @param pTrackedDevicePose      a pose struct to fill with the pose of the controller when the last button event occurred
+     */
+    @NativeType("bool")
+    public static boolean VRSystem_GetControllerStateWithPose(@NativeType("ETrackingUniverseOrigin") int eOrigin, @NativeType("TrackedDeviceIndex_t") int unControllerDeviceIndex, @NativeType("VRControllerState_t *") VRControllerState pControllerState, @NativeType("TrackedDevicePose_t *") TrackedDevicePose pTrackedDevicePose) {
+        return nVRSystem_GetControllerStateWithPose(eOrigin, unControllerDeviceIndex, pControllerState.address(), VRControllerState.SIZEOF, pTrackedDevicePose.address());
+    }
+
     // --- [ VRSystem_TriggerHapticPulse ] ---
 
     /**
@@ -1024,7 +1040,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callV(__functionAddress, unControllerDeviceIndex, unAxisId, usDurationMicroSec);
+        callV(unControllerDeviceIndex, unAxisId, usDurationMicroSec, __functionAddress);
     }
 
     // --- [ VRSystem_GetButtonIdNameFromEnum ] ---
@@ -1035,7 +1051,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callP(__functionAddress, eButtonId);
+        return callP(eButtonId, __functionAddress);
     }
 
     /**
@@ -1060,7 +1076,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callP(__functionAddress, eAxisType);
+        return callP(eAxisType, __functionAddress);
     }
 
     /**
@@ -1143,7 +1159,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, unDeviceIndex, pchRequest, pchResponseBuffer, unResponseBufferSize);
+        return callPPI(unDeviceIndex, pchRequest, pchResponseBuffer, unResponseBufferSize, __functionAddress);
     }
 
     /**
@@ -1170,8 +1186,9 @@ public class VRSystem {
     public static int VRSystem_DriverDebugRequest(@NativeType("TrackedDeviceIndex_t") int unDeviceIndex, @NativeType("char const *") CharSequence pchRequest, @Nullable @NativeType("char *") ByteBuffer pchResponseBuffer) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRequestEncoded = stack.ASCII(pchRequest);
-            return nVRSystem_DriverDebugRequest(unDeviceIndex, memAddress(pchRequestEncoded), memAddressSafe(pchResponseBuffer), remainingSafe(pchResponseBuffer));
+            stack.nASCII(pchRequest, true);
+            long pchRequestEncoded = stack.getPointerAddress();
+            return nVRSystem_DriverDebugRequest(unDeviceIndex, pchRequestEncoded, memAddressSafe(pchResponseBuffer), remainingSafe(pchResponseBuffer));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1187,9 +1204,10 @@ public class VRSystem {
     public static String VRSystem_DriverDebugRequest(@NativeType("TrackedDeviceIndex_t") int unDeviceIndex, @NativeType("char const *") CharSequence pchRequest, @NativeType("uint32_t") int unResponseBufferSize) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchRequestEncoded = stack.ASCII(pchRequest);
+            stack.nASCII(pchRequest, true);
+            long pchRequestEncoded = stack.getPointerAddress();
             ByteBuffer pchResponseBuffer = stack.malloc(unResponseBufferSize);
-            int __result = nVRSystem_DriverDebugRequest(unDeviceIndex, memAddress(pchRequestEncoded), memAddress(pchResponseBuffer), unResponseBufferSize);
+            int __result = nVRSystem_DriverDebugRequest(unDeviceIndex, pchRequestEncoded, memAddress(pchResponseBuffer), unResponseBufferSize);
             return memASCII(pchResponseBuffer, __result - 1);
         } finally {
             stack.setPointer(stackPointer);
@@ -1225,7 +1243,7 @@ public class VRSystem {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callI(__functionAddress, unDeviceIndex);
+        return callI(unDeviceIndex, __functionAddress);
     }
 
     // --- [ VRSystem_AcknowledgeQuit_Exiting ] ---

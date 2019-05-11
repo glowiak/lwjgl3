@@ -100,7 +100,7 @@ val KHR_driver_properties = "KHRDriverProperties".nativeClassVK("KHR_driver_prop
         </div>
 
         <h5>See Also</h5>
-        No cross-references are available
+        ##VkPhysicalDeviceDriverPropertiesKHR
         """,
 
         "DRIVER_ID_AMD_PROPRIETARY_KHR".."1",
@@ -111,6 +111,8 @@ val KHR_driver_properties = "KHRDriverProperties".nativeClassVK("KHR_driver_prop
         "DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR".."6",
         "DRIVER_ID_IMAGINATION_PROPRIETARY_KHR".."7",
         "DRIVER_ID_QUALCOMM_PROPRIETARY_KHR".."8",
-        "DRIVER_ID_ARM_PROPRIETARY_KHR".."9"
+        "DRIVER_ID_ARM_PROPRIETARY_KHR".."9",
+        "DRIVER_ID_GOOGLE_PASTEL_KHR".."10",
+        "DRIVER_ID_GGP_PROPRIETARY_KHR".."11"
     )
 }

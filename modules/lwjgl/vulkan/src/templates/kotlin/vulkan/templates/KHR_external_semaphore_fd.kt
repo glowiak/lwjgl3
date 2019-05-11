@@ -119,8 +119,8 @@ val KHR_external_semaphore_fd = "KHRExternalSemaphoreFd".nativeClassVK("KHR_exte
         ##VkImportSemaphoreFdInfoKHR
         """,
 
-        VkDevice.IN("device", "the logical device that created the semaphore."),
-        VkImportSemaphoreFdInfoKHR.const.p.IN("pImportSemaphoreFdInfo", "points to a ##VkImportSemaphoreFdInfoKHR structure specifying the semaphore and import parameters.")
+        VkDevice("device", "the logical device that created the semaphore."),
+        VkImportSemaphoreFdInfoKHR.const.p("pImportSemaphoreFdInfo", "points to a ##VkImportSemaphoreFdInfoKHR structure specifying the semaphore and import parameters.")
     )
 
     VkResult(
@@ -138,7 +138,7 @@ val KHR_external_semaphore_fd = "KHRExternalSemaphoreFd".nativeClassVK("KHR_exte
 ￿    int*                                        pFd);</code></pre>
 
         <h5>Description</h5>
-        Each call to #GetSemaphoreFdKHR() <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor when it is no longer needed.
+        Each call to {@code vkGetSemaphoreFdKHR} <b>must</b> create a new file descriptor and transfer ownership of it to the application. To avoid leaking resources, the application <b>must</b> release ownership of the file descriptor when it is no longer needed.
 
         <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
         Ownership can be released in many ways. For example, the application can call {@code close}() on the file descriptor, or transfer ownership back to Vulkan by using the file descriptor to import a semaphore payload.
@@ -146,13 +146,13 @@ val KHR_external_semaphore_fd = "KHRExternalSemaphoreFd".nativeClassVK("KHR_exte
 
         Where supported by the operating system, the implementation <b>must</b> set the file descriptor to be closed automatically when an {@code execve} system call is made.
 
-        Exporting a file descriptor from a semaphore <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-semaphores-importing">Importing Semaphore State</a>.
+        Exporting a file descriptor from a semaphore <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-semaphores-importing">Importing Semaphore State</a>.
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
             <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
             <li>{@code pGetFdInfo} <b>must</b> be a valid pointer to a valid ##VkSemaphoreGetFdInfoKHR structure</li>
-            <li>{@code pFd} <b>must</b> be a valid pointer to a {@code int} value</li>
+            <li>{@code pFd} <b>must</b> be a valid pointer to an {@code int} value</li>
         </ul>
 
         <h5>Return Codes</h5>
@@ -173,8 +173,8 @@ val KHR_external_semaphore_fd = "KHRExternalSemaphoreFd".nativeClassVK("KHR_exte
         ##VkSemaphoreGetFdInfoKHR
         """,
 
-        VkDevice.IN("device", "the logical device that created the semaphore being exported."),
-        VkSemaphoreGetFdInfoKHR.const.p.IN("pGetFdInfo", "a pointer to an instance of the ##VkSemaphoreGetFdInfoKHR structure containing parameters of the export operation."),
-        Check(1)..int.p.OUT("pFd", "will return the file descriptor representing the semaphore payload.")
+        VkDevice("device", "the logical device that created the semaphore being exported."),
+        VkSemaphoreGetFdInfoKHR.const.p("pGetFdInfo", "a pointer to an instance of the ##VkSemaphoreGetFdInfoKHR structure containing parameters of the export operation."),
+        Check(1)..int.p("pFd", "will return the file descriptor representing the semaphore payload.")
     )
 }

@@ -39,9 +39,9 @@ val KHR_partial_update = "KHRPartialUpdate".nativeClassEGL("KHR_partial_update",
         "SetDamageRegionKHR",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLSurface.IN("surface", ""),
-        nullable..EGLint.p.OUT("rects", ""),
-        AutoSize("rects")..EGLint.IN("n_rects", "")
+        EGLDisplay("dpy", ""),
+        EGLSurface("surface", ""),
+        nullable..EGLint.p("rects", ""),
+        AutoSize("rects")..EGLint("n_rects", "")
     )
 }

@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code presentID} &ndash; an application-provided identification value, that <b>can</b> be used with the results of {@link GOOGLEDisplayTiming#vkGetPastPresentationTimingGOOGLE GetPastPresentationTimingGOOGLE}, in order to uniquely identify this present. In order to be useful to the application, it <b>should</b> be unique within some period of time that is meaningful to the application.</li>
- * <li>{@code desiredPresentTime} &ndash; specifies that the image given <b>should</b> not be displayed to the user any earlier than this time. {@code desiredPresentTime} is a time in nanoseconds, relative to a monotonically-increasing clock (e.g. {@code CLOCK_MONOTONIC} (see clock_gettime(2)) on Android and Linux). A value of zero specifies that the presentation engine <b>may</b> display the image at any time. This is useful when the application desires to provide {@code presentID}, but doesn&#8217;t need a specific {@code desiredPresentTime}.</li>
+ * <li>{@code desiredPresentTime} &ndash; specifies that the image given <b>should</b> not be displayed to the user any earlier than this time. {@code desiredPresentTime} is a time in nanoseconds, relative to a monotonically-increasing clock (e.g. {@code CLOCK_MONOTONIC} (see clock_gettime(2)) on Android and Linux). A value of zero specifies that the presentation engine <b>may</b> display the image at any time. This is useful when the application desires to provide {@code presentID}, but does not need a specific {@code desiredPresentTime}.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -59,18 +59,14 @@ public class VkPresentTimeGOOGLE extends Struct implements NativeResource {
         DESIREDPRESENTTIME = layout.offsetof(1);
     }
 
-    VkPresentTimeGOOGLE(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPresentTimeGOOGLE} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPresentTimeGOOGLE} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPresentTimeGOOGLE(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -113,30 +109,31 @@ public class VkPresentTimeGOOGLE extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPresentTimeGOOGLE} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPresentTimeGOOGLE} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPresentTimeGOOGLE malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPresentTimeGOOGLE.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPresentTimeGOOGLE} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPresentTimeGOOGLE} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPresentTimeGOOGLE calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPresentTimeGOOGLE.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPresentTimeGOOGLE} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPresentTimeGOOGLE} instance allocated with {@link BufferUtils}. */
     public static VkPresentTimeGOOGLE create() {
-        return new VkPresentTimeGOOGLE(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPresentTimeGOOGLE.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPresentTimeGOOGLE} instance for the specified memory address. */
+    /** Returns a new {@code VkPresentTimeGOOGLE} instance for the specified memory address. */
     public static VkPresentTimeGOOGLE create(long address) {
-        return new VkPresentTimeGOOGLE(address, null);
+        return wrap(VkPresentTimeGOOGLE.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPresentTimeGOOGLE createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPresentTimeGOOGLE.class, address);
     }
 
     /**
@@ -145,7 +142,7 @@ public class VkPresentTimeGOOGLE extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPresentTimeGOOGLE.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -154,7 +151,7 @@ public class VkPresentTimeGOOGLE extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPresentTimeGOOGLE.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -163,7 +160,8 @@ public class VkPresentTimeGOOGLE extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPresentTimeGOOGLE.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -173,43 +171,43 @@ public class VkPresentTimeGOOGLE extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPresentTimeGOOGLE.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPresentTimeGOOGLE.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPresentTimeGOOGLE} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPresentTimeGOOGLE} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPresentTimeGOOGLE mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPresentTimeGOOGLE} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPresentTimeGOOGLE} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPresentTimeGOOGLE callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPresentTimeGOOGLE} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPresentTimeGOOGLE} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPresentTimeGOOGLE mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPresentTimeGOOGLE.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPresentTimeGOOGLE} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPresentTimeGOOGLE} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPresentTimeGOOGLE callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPresentTimeGOOGLE.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -237,7 +235,7 @@ public class VkPresentTimeGOOGLE extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPresentTimeGOOGLE.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -247,28 +245,30 @@ public class VkPresentTimeGOOGLE extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkPresentTimeGOOGLE.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #presentID}. */
-    public static int npresentID(long struct) { return memGetInt(struct + VkPresentTimeGOOGLE.PRESENTID); }
+    public static int npresentID(long struct) { return UNSAFE.getInt(null, struct + VkPresentTimeGOOGLE.PRESENTID); }
     /** Unsafe version of {@link #desiredPresentTime}. */
-    public static long ndesiredPresentTime(long struct) { return memGetLong(struct + VkPresentTimeGOOGLE.DESIREDPRESENTTIME); }
+    public static long ndesiredPresentTime(long struct) { return UNSAFE.getLong(null, struct + VkPresentTimeGOOGLE.DESIREDPRESENTTIME); }
 
     /** Unsafe version of {@link #presentID(int) presentID}. */
-    public static void npresentID(long struct, int value) { memPutInt(struct + VkPresentTimeGOOGLE.PRESENTID, value); }
+    public static void npresentID(long struct, int value) { UNSAFE.putInt(null, struct + VkPresentTimeGOOGLE.PRESENTID, value); }
     /** Unsafe version of {@link #desiredPresentTime(long) desiredPresentTime}. */
-    public static void ndesiredPresentTime(long struct, long value) { memPutLong(struct + VkPresentTimeGOOGLE.DESIREDPRESENTTIME, value); }
+    public static void ndesiredPresentTime(long struct, long value) { UNSAFE.putLong(null, struct + VkPresentTimeGOOGLE.DESIREDPRESENTTIME, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPresentTimeGOOGLE} structs. */
     public static class Buffer extends StructBuffer<VkPresentTimeGOOGLE, Buffer> implements NativeResource {
 
+        private static final VkPresentTimeGOOGLE ELEMENT_FACTORY = VkPresentTimeGOOGLE.create(-1L);
+
         /**
-         * Creates a new {@link VkPresentTimeGOOGLE.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPresentTimeGOOGLE.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -294,18 +294,8 @@ public class VkPresentTimeGOOGLE extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPresentTimeGOOGLE newInstance(long address) {
-            return new VkPresentTimeGOOGLE(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPresentTimeGOOGLE getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code presentID} field. */

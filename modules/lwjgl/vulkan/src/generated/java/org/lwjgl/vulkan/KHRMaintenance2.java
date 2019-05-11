@@ -23,7 +23,7 @@ package org.lwjgl.vulkan;
  * 
  * <p>Input attachment specification allows an application to specify which aspect of a multi-aspect image (e.g. a combined depth stencil format) will be accessed via a {@code subpassLoad} operation.</p>
  * 
- * <p>On some implementations there <b>may</b> be a performance penalty if the implementation does not know (at {@link VK10#vkCreateRenderPass CreateRenderPass} time) which aspect(s) of multi-aspect images <b>can</b> be be accessed as input attachments.</p>
+ * <p>On some implementations there <b>may</b> be a performance penalty if the implementation does not know (at {@link VK10#vkCreateRenderPass CreateRenderPass} time) which aspect(s) of multi-aspect images <b>can</b> be accessed as input attachments.</p>
  * 
  * <h5>Promotion to Vulkan 1.1</h5>
  * 
@@ -77,7 +77,7 @@ package org.lwjgl.vulkan;
  * </ul></dd>
  * <dt><b>Deprecation state</b></dt>
  * <dd><ul>
- * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
+ * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>

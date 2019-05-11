@@ -40,7 +40,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code binding} &ndash; the binding number for which the divisor is specified.</li>
- * <li>{@code divisor} &ndash; the number of successive instances that will use the same value of the vertex attribute when instanced rendering is enabled. For example, if the divisor is N, the same vertex attribute will applied to N successive instances before moving on to the next vertex attribute. The maximum value of divisor is implementation dependent and can be queried using {@link VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT}{@code ::maxVertexAttribDivisor}. A value of 0 <b>can</b> be used for the divisor if the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-vertexAttributeInstanceRateZeroDivisor">{@code vertexAttributeInstanceRateZeroDivisor}</a> feature is enabled. In this case, the same vertex attribute will be applied to all instances.</li>
+ * <li>{@code divisor} &ndash; the number of successive instances that will use the same value of the vertex attribute when instanced rendering is enabled. For example, if the divisor is N, the same vertex attribute will applied to N successive instances before moving on to the next vertex attribute. The maximum value of divisor is implementation dependent and can be queried using {@link VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT}{@code ::maxVertexAttribDivisor}. A value of 0 <b>can</b> be used for the divisor if the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor">{@code vertexAttributeInstanceRateZeroDivisor}</a> feature is enabled. In this case, the same vertex attribute will be applied to all instances.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -77,18 +77,14 @@ public class VkVertexInputBindingDivisorDescriptionEXT extends Struct implements
         DIVISOR = layout.offsetof(1);
     }
 
-    VkVertexInputBindingDivisorDescriptionEXT(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkVertexInputBindingDivisorDescriptionEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkVertexInputBindingDivisorDescriptionEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkVertexInputBindingDivisorDescriptionEXT(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -131,30 +127,31 @@ public class VkVertexInputBindingDivisorDescriptionEXT extends Struct implements
 
     // -----------------------------------
 
-    /** Returns a new {@link VkVertexInputBindingDivisorDescriptionEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkVertexInputBindingDivisorDescriptionEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkVertexInputBindingDivisorDescriptionEXT malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkVertexInputBindingDivisorDescriptionEXT.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkVertexInputBindingDivisorDescriptionEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkVertexInputBindingDivisorDescriptionEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkVertexInputBindingDivisorDescriptionEXT calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkVertexInputBindingDivisorDescriptionEXT.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkVertexInputBindingDivisorDescriptionEXT} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkVertexInputBindingDivisorDescriptionEXT} instance allocated with {@link BufferUtils}. */
     public static VkVertexInputBindingDivisorDescriptionEXT create() {
-        return new VkVertexInputBindingDivisorDescriptionEXT(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkVertexInputBindingDivisorDescriptionEXT.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkVertexInputBindingDivisorDescriptionEXT} instance for the specified memory address. */
+    /** Returns a new {@code VkVertexInputBindingDivisorDescriptionEXT} instance for the specified memory address. */
     public static VkVertexInputBindingDivisorDescriptionEXT create(long address) {
-        return new VkVertexInputBindingDivisorDescriptionEXT(address, null);
+        return wrap(VkVertexInputBindingDivisorDescriptionEXT.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkVertexInputBindingDivisorDescriptionEXT createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkVertexInputBindingDivisorDescriptionEXT.class, address);
     }
 
     /**
@@ -163,7 +160,7 @@ public class VkVertexInputBindingDivisorDescriptionEXT extends Struct implements
      * @param capacity the buffer capacity
      */
     public static VkVertexInputBindingDivisorDescriptionEXT.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -172,7 +169,7 @@ public class VkVertexInputBindingDivisorDescriptionEXT extends Struct implements
      * @param capacity the buffer capacity
      */
     public static VkVertexInputBindingDivisorDescriptionEXT.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -181,7 +178,8 @@ public class VkVertexInputBindingDivisorDescriptionEXT extends Struct implements
      * @param capacity the buffer capacity
      */
     public static VkVertexInputBindingDivisorDescriptionEXT.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -191,43 +189,43 @@ public class VkVertexInputBindingDivisorDescriptionEXT extends Struct implements
      * @param capacity the buffer capacity
      */
     public static VkVertexInputBindingDivisorDescriptionEXT.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkVertexInputBindingDivisorDescriptionEXT.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkVertexInputBindingDivisorDescriptionEXT} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkVertexInputBindingDivisorDescriptionEXT} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkVertexInputBindingDivisorDescriptionEXT mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkVertexInputBindingDivisorDescriptionEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkVertexInputBindingDivisorDescriptionEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkVertexInputBindingDivisorDescriptionEXT callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkVertexInputBindingDivisorDescriptionEXT} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkVertexInputBindingDivisorDescriptionEXT} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkVertexInputBindingDivisorDescriptionEXT mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkVertexInputBindingDivisorDescriptionEXT.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkVertexInputBindingDivisorDescriptionEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkVertexInputBindingDivisorDescriptionEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkVertexInputBindingDivisorDescriptionEXT callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkVertexInputBindingDivisorDescriptionEXT.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -255,7 +253,7 @@ public class VkVertexInputBindingDivisorDescriptionEXT extends Struct implements
      * @param capacity the buffer capacity
      */
     public static VkVertexInputBindingDivisorDescriptionEXT.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -265,28 +263,30 @@ public class VkVertexInputBindingDivisorDescriptionEXT extends Struct implements
      * @param capacity the buffer capacity
      */
     public static VkVertexInputBindingDivisorDescriptionEXT.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #binding}. */
-    public static int nbinding(long struct) { return memGetInt(struct + VkVertexInputBindingDivisorDescriptionEXT.BINDING); }
+    public static int nbinding(long struct) { return UNSAFE.getInt(null, struct + VkVertexInputBindingDivisorDescriptionEXT.BINDING); }
     /** Unsafe version of {@link #divisor}. */
-    public static int ndivisor(long struct) { return memGetInt(struct + VkVertexInputBindingDivisorDescriptionEXT.DIVISOR); }
+    public static int ndivisor(long struct) { return UNSAFE.getInt(null, struct + VkVertexInputBindingDivisorDescriptionEXT.DIVISOR); }
 
     /** Unsafe version of {@link #binding(int) binding}. */
-    public static void nbinding(long struct, int value) { memPutInt(struct + VkVertexInputBindingDivisorDescriptionEXT.BINDING, value); }
+    public static void nbinding(long struct, int value) { UNSAFE.putInt(null, struct + VkVertexInputBindingDivisorDescriptionEXT.BINDING, value); }
     /** Unsafe version of {@link #divisor(int) divisor}. */
-    public static void ndivisor(long struct, int value) { memPutInt(struct + VkVertexInputBindingDivisorDescriptionEXT.DIVISOR, value); }
+    public static void ndivisor(long struct, int value) { UNSAFE.putInt(null, struct + VkVertexInputBindingDivisorDescriptionEXT.DIVISOR, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkVertexInputBindingDivisorDescriptionEXT} structs. */
     public static class Buffer extends StructBuffer<VkVertexInputBindingDivisorDescriptionEXT, Buffer> implements NativeResource {
 
+        private static final VkVertexInputBindingDivisorDescriptionEXT ELEMENT_FACTORY = VkVertexInputBindingDivisorDescriptionEXT.create(-1L);
+
         /**
-         * Creates a new {@link VkVertexInputBindingDivisorDescriptionEXT.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkVertexInputBindingDivisorDescriptionEXT.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -312,18 +312,8 @@ public class VkVertexInputBindingDivisorDescriptionEXT extends Struct implements
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkVertexInputBindingDivisorDescriptionEXT newInstance(long address) {
-            return new VkVertexInputBindingDivisorDescriptionEXT(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkVertexInputBindingDivisorDescriptionEXT getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code binding} field. */

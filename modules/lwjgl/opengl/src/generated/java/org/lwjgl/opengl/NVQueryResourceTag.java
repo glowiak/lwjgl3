@@ -89,8 +89,9 @@ public class NVQueryResourceTag {
     public static void glQueryResourceTagNV(@NativeType("GLuint") int tagId, @NativeType("GLchar const *") CharSequence tagString) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer tagStringEncoded = stack.ASCII(tagString);
-            nglQueryResourceTagNV(tagId, memAddress(tagStringEncoded));
+            stack.nASCII(tagString, true);
+            long tagStringEncoded = stack.getPointerAddress();
+            nglQueryResourceTagNV(tagId, tagStringEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -102,7 +103,7 @@ public class NVQueryResourceTag {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, tagIds.length, tagIds);
+        callPV(tagIds.length, tagIds, __functionAddress);
     }
 
     /** Array version of: {@link #glDeleteQueryResourceTagNV DeleteQueryResourceTagNV} */
@@ -111,7 +112,7 @@ public class NVQueryResourceTag {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, tagIds.length, tagIds);
+        callPV(tagIds.length, tagIds, __functionAddress);
     }
 
 }

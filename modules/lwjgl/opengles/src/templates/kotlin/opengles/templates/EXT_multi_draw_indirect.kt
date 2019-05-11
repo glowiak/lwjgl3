@@ -26,24 +26,24 @@ val EXT_multi_draw_indirect = "EXTMultiDrawIndirect".nativeClassGLES("EXT_multi_
         "MultiDrawArraysIndirectEXT",
         "",
 
-        GLenum.IN("mode", ""),
-        DRAW_INDIRECT_BUFFER..MultiType(
+        GLenum("mode", ""),
+        RawPointer..MultiType(
             PointerMapping.DATA_INT
-        )..Check("drawcount * (stride == 0 ? (4 * 4) : stride)")..void.const.p.IN("indirect", ""),
-        GLsizei.IN("drawcount", ""),
-        GLsizei.IN("stride", "")
+        )..Check("drawcount * (stride == 0 ? (4 * 4) : stride)")..void.const.p("indirect", ""),
+        GLsizei("drawcount", ""),
+        GLsizei("stride", "")
     )
 
     void(
         "MultiDrawElementsIndirectEXT",
         "",
 
-        GLenum.IN("mode", ""),
-        GLenum.IN("type", ""),
-        DRAW_INDIRECT_BUFFER..MultiType(
+        GLenum("mode", ""),
+        GLenum("type", ""),
+        RawPointer..MultiType(
             PointerMapping.DATA_INT
-        )..Check("drawcount * (stride == 0 ? (5 * 4) : stride)")..void.const.p.IN("indirect", ""),
-        GLsizei.IN("drawcount", ""),
-        GLsizei.IN("stride", "")
+        )..Check("drawcount * (stride == 0 ? (5 * 4) : stride)")..void.const.p("indirect", ""),
+        GLsizei("drawcount", ""),
+        GLsizei("stride", "")
     )
 }

@@ -33,7 +33,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <pre><code>
  * struct bgfx_callback_interface_t {
- *     {@link BGFXCallbackVtbl bgfx_callback_vtbl_t const} * vtbl;
+ *     {@link BGFXCallbackVtbl bgfx_callback_vtbl_t} const * vtbl;
  * }</code></pre>
  */
 @NativeType("struct bgfx_callback_interface_t")
@@ -60,18 +60,14 @@ public class BGFXCallbackInterface extends Struct implements NativeResource {
         VTBL = layout.offsetof(0);
     }
 
-    BGFXCallbackInterface(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link BGFXCallbackInterface} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code BGFXCallbackInterface} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public BGFXCallbackInterface(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -98,60 +94,61 @@ public class BGFXCallbackInterface extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link BGFXCallbackInterface} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code BGFXCallbackInterface} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static BGFXCallbackInterface malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(BGFXCallbackInterface.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link BGFXCallbackInterface} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code BGFXCallbackInterface} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static BGFXCallbackInterface calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(BGFXCallbackInterface.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link BGFXCallbackInterface} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code BGFXCallbackInterface} instance allocated with {@link BufferUtils}. */
     public static BGFXCallbackInterface create() {
-        return new BGFXCallbackInterface(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(BGFXCallbackInterface.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link BGFXCallbackInterface} instance for the specified memory address. */
+    /** Returns a new {@code BGFXCallbackInterface} instance for the specified memory address. */
     public static BGFXCallbackInterface create(long address) {
-        return new BGFXCallbackInterface(address, null);
+        return wrap(BGFXCallbackInterface.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static BGFXCallbackInterface createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(BGFXCallbackInterface.class, address);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link BGFXCallbackInterface} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code BGFXCallbackInterface} instance allocated on the thread-local {@link MemoryStack}. */
     public static BGFXCallbackInterface mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link BGFXCallbackInterface} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code BGFXCallbackInterface} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static BGFXCallbackInterface callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link BGFXCallbackInterface} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code BGFXCallbackInterface} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static BGFXCallbackInterface mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(BGFXCallbackInterface.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link BGFXCallbackInterface} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code BGFXCallbackInterface} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static BGFXCallbackInterface callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(BGFXCallbackInterface.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     // -----------------------------------
@@ -181,7 +178,7 @@ public class BGFXCallbackInterface extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 

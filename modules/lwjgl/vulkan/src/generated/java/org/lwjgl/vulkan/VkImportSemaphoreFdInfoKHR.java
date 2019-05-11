@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <p>The handle types supported by {@code handleType} are:</p>
  * 
- * <h6>Handle Types Supported by VkImportSemaphoreFdInfoKHR</h6>
+ * <h6>Handle Types Supported by {@link VkImportSemaphoreFdInfoKHR}</h6>
  * 
  * <table class="lwjgl">
  * <thead><tr><th>Handle Type</th><th>Transference</th><th>Permanence Supported</th></tr></thead>
@@ -35,8 +35,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>{@code handleType} <b>must</b> be a value included in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphore-handletypes-fd">Handle Types Supported by VkImportSemaphoreFdInfoKHR</a> table.</li>
- * <li>{@code fd} <b>must</b> obey any requirements listed for {@code handleType} in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility">external semaphore handle types compatibility</a>.</li>
+ * <li>{@code handleType} <b>must</b> be a value included in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphore-handletypes-fd">Handle Types Supported by VkImportSemaphoreFdInfoKHR</a> table.</li>
+ * <li>{@code fd} <b>must</b> obey any requirements listed for {@code handleType} in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility">external semaphore handle types compatibility</a>.</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -120,18 +120,14 @@ public class VkImportSemaphoreFdInfoKHR extends Struct implements NativeResource
         FD = layout.offsetof(5);
     }
 
-    VkImportSemaphoreFdInfoKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkImportSemaphoreFdInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkImportSemaphoreFdInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkImportSemaphoreFdInfoKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -201,30 +197,31 @@ public class VkImportSemaphoreFdInfoKHR extends Struct implements NativeResource
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImportSemaphoreFdInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImportSemaphoreFdInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkImportSemaphoreFdInfoKHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkImportSemaphoreFdInfoKHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkImportSemaphoreFdInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImportSemaphoreFdInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkImportSemaphoreFdInfoKHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkImportSemaphoreFdInfoKHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkImportSemaphoreFdInfoKHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkImportSemaphoreFdInfoKHR} instance allocated with {@link BufferUtils}. */
     public static VkImportSemaphoreFdInfoKHR create() {
-        return new VkImportSemaphoreFdInfoKHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkImportSemaphoreFdInfoKHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkImportSemaphoreFdInfoKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkImportSemaphoreFdInfoKHR} instance for the specified memory address. */
     public static VkImportSemaphoreFdInfoKHR create(long address) {
-        return new VkImportSemaphoreFdInfoKHR(address, null);
+        return wrap(VkImportSemaphoreFdInfoKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImportSemaphoreFdInfoKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkImportSemaphoreFdInfoKHR.class, address);
     }
 
     /**
@@ -233,7 +230,7 @@ public class VkImportSemaphoreFdInfoKHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkImportSemaphoreFdInfoKHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -242,7 +239,7 @@ public class VkImportSemaphoreFdInfoKHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkImportSemaphoreFdInfoKHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -251,7 +248,8 @@ public class VkImportSemaphoreFdInfoKHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkImportSemaphoreFdInfoKHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -261,43 +259,43 @@ public class VkImportSemaphoreFdInfoKHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkImportSemaphoreFdInfoKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImportSemaphoreFdInfoKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImportSemaphoreFdInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkImportSemaphoreFdInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkImportSemaphoreFdInfoKHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkImportSemaphoreFdInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkImportSemaphoreFdInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkImportSemaphoreFdInfoKHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkImportSemaphoreFdInfoKHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkImportSemaphoreFdInfoKHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImportSemaphoreFdInfoKHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkImportSemaphoreFdInfoKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkImportSemaphoreFdInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkImportSemaphoreFdInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImportSemaphoreFdInfoKHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkImportSemaphoreFdInfoKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -325,7 +323,7 @@ public class VkImportSemaphoreFdInfoKHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkImportSemaphoreFdInfoKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -335,44 +333,46 @@ public class VkImportSemaphoreFdInfoKHR extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkImportSemaphoreFdInfoKHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkImportSemaphoreFdInfoKHR.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkImportSemaphoreFdInfoKHR.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkImportSemaphoreFdInfoKHR.PNEXT); }
     /** Unsafe version of {@link #semaphore}. */
-    public static long nsemaphore(long struct) { return memGetLong(struct + VkImportSemaphoreFdInfoKHR.SEMAPHORE); }
+    public static long nsemaphore(long struct) { return UNSAFE.getLong(null, struct + VkImportSemaphoreFdInfoKHR.SEMAPHORE); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkImportSemaphoreFdInfoKHR.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkImportSemaphoreFdInfoKHR.FLAGS); }
     /** Unsafe version of {@link #handleType}. */
-    public static int nhandleType(long struct) { return memGetInt(struct + VkImportSemaphoreFdInfoKHR.HANDLETYPE); }
+    public static int nhandleType(long struct) { return UNSAFE.getInt(null, struct + VkImportSemaphoreFdInfoKHR.HANDLETYPE); }
     /** Unsafe version of {@link #fd}. */
-    public static int nfd(long struct) { return memGetInt(struct + VkImportSemaphoreFdInfoKHR.FD); }
+    public static int nfd(long struct) { return UNSAFE.getInt(null, struct + VkImportSemaphoreFdInfoKHR.FD); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkImportSemaphoreFdInfoKHR.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkImportSemaphoreFdInfoKHR.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkImportSemaphoreFdInfoKHR.PNEXT, value); }
     /** Unsafe version of {@link #semaphore(long) semaphore}. */
-    public static void nsemaphore(long struct, long value) { memPutLong(struct + VkImportSemaphoreFdInfoKHR.SEMAPHORE, value); }
+    public static void nsemaphore(long struct, long value) { UNSAFE.putLong(null, struct + VkImportSemaphoreFdInfoKHR.SEMAPHORE, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkImportSemaphoreFdInfoKHR.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkImportSemaphoreFdInfoKHR.FLAGS, value); }
     /** Unsafe version of {@link #handleType(int) handleType}. */
-    public static void nhandleType(long struct, int value) { memPutInt(struct + VkImportSemaphoreFdInfoKHR.HANDLETYPE, value); }
+    public static void nhandleType(long struct, int value) { UNSAFE.putInt(null, struct + VkImportSemaphoreFdInfoKHR.HANDLETYPE, value); }
     /** Unsafe version of {@link #fd(int) fd}. */
-    public static void nfd(long struct, int value) { memPutInt(struct + VkImportSemaphoreFdInfoKHR.FD, value); }
+    public static void nfd(long struct, int value) { UNSAFE.putInt(null, struct + VkImportSemaphoreFdInfoKHR.FD, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkImportSemaphoreFdInfoKHR} structs. */
     public static class Buffer extends StructBuffer<VkImportSemaphoreFdInfoKHR, Buffer> implements NativeResource {
 
+        private static final VkImportSemaphoreFdInfoKHR ELEMENT_FACTORY = VkImportSemaphoreFdInfoKHR.create(-1L);
+
         /**
-         * Creates a new {@link VkImportSemaphoreFdInfoKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkImportSemaphoreFdInfoKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -398,18 +398,8 @@ public class VkImportSemaphoreFdInfoKHR extends Struct implements NativeResource
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkImportSemaphoreFdInfoKHR newInstance(long address) {
-            return new VkImportSemaphoreFdInfoKHR(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkImportSemaphoreFdInfoKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

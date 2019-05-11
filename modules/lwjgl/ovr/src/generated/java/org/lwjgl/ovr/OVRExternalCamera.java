@@ -61,18 +61,14 @@ public class OVRExternalCamera extends Struct implements NativeResource {
         EXTRINSICS = layout.offsetof(2);
     }
 
-    OVRExternalCamera(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link OVRExternalCamera} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code OVRExternalCamera} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public OVRExternalCamera(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -97,30 +93,31 @@ public class OVRExternalCamera extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRExternalCamera} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRExternalCamera} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static OVRExternalCamera malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(OVRExternalCamera.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link OVRExternalCamera} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRExternalCamera} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static OVRExternalCamera calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(OVRExternalCamera.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link OVRExternalCamera} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code OVRExternalCamera} instance allocated with {@link BufferUtils}. */
     public static OVRExternalCamera create() {
-        return new OVRExternalCamera(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(OVRExternalCamera.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link OVRExternalCamera} instance for the specified memory address. */
+    /** Returns a new {@code OVRExternalCamera} instance for the specified memory address. */
     public static OVRExternalCamera create(long address) {
-        return new OVRExternalCamera(address, null);
+        return wrap(OVRExternalCamera.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static OVRExternalCamera createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(OVRExternalCamera.class, address);
     }
 
     /**
@@ -129,7 +126,7 @@ public class OVRExternalCamera extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRExternalCamera.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -138,7 +135,7 @@ public class OVRExternalCamera extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRExternalCamera.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -147,7 +144,8 @@ public class OVRExternalCamera extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRExternalCamera.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -157,43 +155,43 @@ public class OVRExternalCamera extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRExternalCamera.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static OVRExternalCamera.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRExternalCamera} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code OVRExternalCamera} instance allocated on the thread-local {@link MemoryStack}. */
     public static OVRExternalCamera mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link OVRExternalCamera} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code OVRExternalCamera} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static OVRExternalCamera callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link OVRExternalCamera} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code OVRExternalCamera} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRExternalCamera mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(OVRExternalCamera.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link OVRExternalCamera} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code OVRExternalCamera} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRExternalCamera callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(OVRExternalCamera.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -221,7 +219,7 @@ public class OVRExternalCamera extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRExternalCamera.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -231,7 +229,7 @@ public class OVRExternalCamera extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRExternalCamera.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -250,8 +248,10 @@ public class OVRExternalCamera extends Struct implements NativeResource {
     /** An array of {@link OVRExternalCamera} structs. */
     public static class Buffer extends StructBuffer<OVRExternalCamera, Buffer> implements NativeResource {
 
+        private static final OVRExternalCamera ELEMENT_FACTORY = OVRExternalCamera.create(-1L);
+
         /**
-         * Creates a new {@link OVRExternalCamera.Buffer} instance backed by the specified container.
+         * Creates a new {@code OVRExternalCamera.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -277,18 +277,8 @@ public class OVRExternalCamera extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected OVRExternalCamera newInstance(long address) {
-            return new OVRExternalCamera(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected OVRExternalCamera getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link ByteBuffer} view of the {@code Name} field. */

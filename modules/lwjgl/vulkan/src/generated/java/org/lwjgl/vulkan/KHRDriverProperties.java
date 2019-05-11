@@ -76,7 +76,7 @@ public final class KHRDriverProperties {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>No cross-references are available</p>
+     * <p>{@link VkPhysicalDeviceDriverPropertiesKHR}</p>
      * 
      * <h5>Enum values:</h5>
      * 
@@ -90,6 +90,8 @@ public final class KHRDriverProperties {
      * <li>{@link #VK_DRIVER_ID_IMAGINATION_PROPRIETARY_KHR DRIVER_ID_IMAGINATION_PROPRIETARY_KHR}</li>
      * <li>{@link #VK_DRIVER_ID_QUALCOMM_PROPRIETARY_KHR DRIVER_ID_QUALCOMM_PROPRIETARY_KHR}</li>
      * <li>{@link #VK_DRIVER_ID_ARM_PROPRIETARY_KHR DRIVER_ID_ARM_PROPRIETARY_KHR}</li>
+     * <li>{@link #VK_DRIVER_ID_GOOGLE_PASTEL_KHR DRIVER_ID_GOOGLE_PASTEL_KHR}</li>
+     * <li>{@link #VK_DRIVER_ID_GGP_PROPRIETARY_KHR DRIVER_ID_GGP_PROPRIETARY_KHR}</li>
      * </ul>
      */
     public static final int
@@ -101,7 +103,9 @@ public final class KHRDriverProperties {
         VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR    = 6,
         VK_DRIVER_ID_IMAGINATION_PROPRIETARY_KHR   = 7,
         VK_DRIVER_ID_QUALCOMM_PROPRIETARY_KHR      = 8,
-        VK_DRIVER_ID_ARM_PROPRIETARY_KHR           = 9;
+        VK_DRIVER_ID_ARM_PROPRIETARY_KHR           = 9,
+        VK_DRIVER_ID_GOOGLE_PASTEL_KHR             = 10,
+        VK_DRIVER_ID_GGP_PROPRIETARY_KHR           = 11;
 
     private KHRDriverProperties() {}
 

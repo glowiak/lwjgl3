@@ -10,7 +10,6 @@ import openvr.*
 val VRResources = "VRResources".nativeClass(
     Module.OPENVR,
     prefixMethod = "VRResources_",
-    library = OPENVR_LIBRARY,
     binding = OPENVR_FNTABLE_BINDING
 ) {
     documentation = "Shared Resource Methods."
@@ -19,9 +18,9 @@ val VRResources = "VRResources".nativeClass(
         "LoadSharedResource",
         "Loads the specified resource into the provided buffer if large enough.",
 
-        charASCII.const.p.IN("pchResourceName", ""),
-        Return(RESULT, includesNT = true)..nullable..charASCII.p.OUT("pchBuffer", ""),
-        AutoSize("pchBuffer")..uint32_t.IN("unBufferLen", ""),
+        charASCII.const.p("pchResourceName", ""),
+        Return(RESULT, includesNT = true)..nullable..charASCII.p("pchBuffer", ""),
+        AutoSize("pchBuffer")..uint32_t("unBufferLen", ""),
 
         returnDoc = "the size in bytes of the buffer required to hold the specified resource"
     )
@@ -33,9 +32,9 @@ val VRResources = "VRResources".nativeClass(
         those and returns the actual physical path. {@code pchResourceTypeDirectory} is the subdirectory of resources to look in.
         """,
 
-        charASCII.const.p.IN("pchResourceName", ""),
-        charASCII.const.p.IN("pchResourceTypeDirectory", ""),
-        Return(RESULT, includesNT = true)..nullable..charASCII.p.OUT("pchPathBuffer", ""),
-        AutoSize("pchPathBuffer")..uint32_t.IN("unBufferLen", "")
+        charASCII.const.p("pchResourceName", ""),
+        charASCII.const.p("pchResourceTypeDirectory", ""),
+        Return(RESULT, includesNT = true)..nullable..charASCII.p("pchPathBuffer", ""),
+        AutoSize("pchPathBuffer")..uint32_t("unBufferLen", "")
     )
 }

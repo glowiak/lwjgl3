@@ -7,7 +7,7 @@ package stb.templates
 import org.lwjgl.generator.*
 import stb.*
 
-val stb_image_write = "STBImageWrite".nativeClass(Module.STB, prefix = "STBI", prefixMethod = "stbi_", library = STB_LIBRARY) {
+val stb_image_write = "STBImageWrite".nativeClass(Module.STB, prefix = "STBI", prefixMethod = "stbi_") {
     includeSTBAPI(
         """#include "lwjgl_malloc.h"
 #define STBIW_MALLOC(sz)    org_lwjgl_malloc(sz)
@@ -17,6 +17,7 @@ val stb_image_write = "STBImageWrite".nativeClass(Module.STB, prefix = "STBI", p
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_STATIC
 #ifdef LWJGL_WINDOWS
+    #define STBIW_WINDOWS_UTF8
     #define STBI_MSC_SECURE_CRT
 #endif
 #include "stb_image_write.h"""")
@@ -80,24 +81,26 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         PNG allows you to set the deflate compression level by setting the global variable #write_png_compression_level() (it defaults to 8).
         """,
 
-        charASCII.const.p.IN("filename", "the image file path"),
-        int.IN("w", "the image width, in pixels"),
-        int.IN("h", "the image height, in pixels"),
-        int.IN("comp", "the number of channels in each pixel"),
-        Check("(stride_in_bytes != 0 ? stride_in_bytes : w * comp) * h")..void.const.p.IN("data", "the image data"),
-        int.IN("stride_in_bytes", "the distance in bytes from the first byte of a row of pixels to the first byte of the next row of pixels"),
+        charUTF8.const.p("filename", "the image file path"),
+        int("w", "the image width, in pixels"),
+        int("h", "the image height, in pixels"),
+        int("comp", "the number of channels in each pixel"),
+        Check("(stride_in_bytes != 0 ? stride_in_bytes : w * comp) * h")..void.const.p("data", "the image data"),
+        int("stride_in_bytes", "the distance in bytes from the first byte of a row of pixels to the first byte of the next row of pixels"),
 
         returnDoc = "1 on success, 0 on failure"
     )
 
     macro..Address..int.p(
         "write_png_compression_level",
-        "Returns the address of the global variable {@code stbi_write_png_compression_level}."
+        "Returns the address of the global variable {@code stbi_write_png_compression_level}.",
+        void()
     )
 
     macro..Address..int.p(
         "write_force_png_filter",
-        "Returns the address of the global variable {@code stbi_write_force_png_filter}."
+        "Returns the address of the global variable {@code stbi_write_force_png_filter}.",
+        void()
     )
 
     macro..Address..stbi_zlib_compress.p(
@@ -106,7 +109,8 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         Returns the address of the global variable {@code stbi_zlib_compress}.
 
         The address of an ##STBIZlibCompress instance may be set to this variable, in order to override the Zlib compression implementation.
-        """
+        """,
+        void()
     )
 
     intb(
@@ -121,7 +125,7 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         write["w"],
         write["h"],
         write["comp"],
-        Check("w * h * comp")..void.const.p.IN("data", "the image data"),
+        Check("w * h * comp")..void.const.p("data", "the image data"),
 
         returnDoc = "1 on success, 0 on failure"
     )
@@ -139,14 +143,15 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         write["w"],
         write["h"],
         write["comp"],
-        Check("w * h * comp")..void.const.p.IN("data", "the image data"),
+        Check("w * h * comp")..void.const.p("data", "the image data"),
 
         returnDoc = "1 on success, 0 on failure"
     )
 
     macro..Address..int.p(
         "write_tga_with_rle",
-        "Returns the address of the global variable {@code stbi_write_tga_with_rle}."
+        "Returns the address of the global variable {@code stbi_write_tga_with_rle}.",
+        void()
     )
 
     val write_hdr = intb(
@@ -162,7 +167,7 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         write["w"],
         write["h"],
         write["comp"],
-        Check("w * h * comp")..float.const.p.IN("data", "the image data"),
+        Check("w * h * comp")..float.const.p("data", "the image data"),
 
         returnDoc = "1 on success, 0 on failure"
     )
@@ -180,8 +185,8 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         write["w"],
         write["h"],
         write["comp"],
-        Check("w * h * comp")..void.const.p.IN("data", "the image data"),
-        int.IN("quality", "the compression quality"),
+        Check("w * h * comp")..void.const.p("data", "the image data"),
+        int("quality", "the compression quality"),
 
         returnDoc = "1 on success, 0 on failure"
 
@@ -191,8 +196,8 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         "write_png_to_func",
         "Callback version of #write_png().",
 
-        stbi_write_func.IN("func", "the callback function"),
-        nullable..opaque_p.IN("context", "a context that will be passed to {@code func}"),
+        stbi_write_func("func", "the callback function"),
+        nullable..opaque_p("context", "a context that will be passed to {@code func}"),
         write["w"],
         write["h"],
         write["comp"],
@@ -211,7 +216,7 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         write["w"],
         write["h"],
         write["comp"],
-        Check("w * h * comp")..void.const.p.IN("data", "the image data"),
+        Check("w * h * comp")..void.const.p("data", "the image data"),
 
         returnDoc = "1 on success, 0 on failure"
     )
@@ -225,7 +230,7 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         write["w"],
         write["h"],
         write["comp"],
-        Check("w * h * comp")..void.const.p.IN("data", "the image data"),
+        Check("w * h * comp")..void.const.p("data", "the image data"),
 
         returnDoc = "1 on success, 0 on failure"
     )
@@ -253,7 +258,7 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         write["w"],
         write["h"],
         write["comp"],
-        Check("w * h * comp")..void.const.p.IN("data", "the image data"),
+        Check("w * h * comp")..void.const.p("data", "the image data"),
         write_jpg["quality"],
 
         returnDoc = "1 on success, 0 on failure"
@@ -263,6 +268,6 @@ int stbi_write_force_png_filter;         // defaults to -1; set to 0..5 to force
         "flip_vertically_on_write",
         "Configures if the written image should flipped vertically.",
 
-        intb.IN("flip_boolean", "true to flip data vertically")
+        intb("flip_boolean", "true to flip data vertically")
     )
 }

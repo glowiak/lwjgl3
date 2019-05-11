@@ -6,13 +6,6 @@ package core.jni
 
 import org.lwjgl.generator.*
 
-fun config() {
-    packageInfo(
-        Module.CORE_JNI,
-        "Contains bindings to the Java Native Interface (JNI)."
-    )
-}
-
 val jboolean = IntegerType("jboolean", PrimitiveMapping.BOOLEAN)
 val jbyte = IntegerType("jbyte", PrimitiveMapping.BYTE)
 val jchar = CharType("jchar", CharMapping.UTF16)
@@ -55,7 +48,7 @@ val JavaVM = "JavaVM".handle
 val JNINativeMethod = struct(Module.CORE_JNI, "JNINativeMethod") {
     documentation = ""
 
-    charUTF8.p.member("name", "")
-    charUTF8.p.member("signature", "")
-    opaque_p.member("fnPtr", "")
+    charUTF8.p("name", "")
+    charUTF8.p("signature", "")
+    opaque_p("fnPtr", "")
 }

@@ -9,10 +9,12 @@ import javax.annotation.*;
 
 import java.nio.*;
 
+import org.lwjgl.*;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.Checks.*;
 import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.*;
 
 import static org.lwjgl.vulkan.VK10.*;
 import static org.lwjgl.vulkan.VK11.*;
@@ -29,12 +31,12 @@ import static org.lwjgl.vulkan.VK11.*;
  * <p>{@code deviceUUID} and/or {@code driverUUID} <b>must</b> be used to determine whether a particular external object can be shared between driver components, where such a restriction exists as defined in the compatibility table for the particular object type:</p>
  * 
  * <ul>
- * <li><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-memory-handle-types-compatibility">External memory handle types compatibility</a></li>
- * <li><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility">External semaphore handle types compatibility</a></li>
- * <li><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-fence-handle-types-compatibility">External fence handle types compatibility</a></li>
+ * <li><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-memory-handle-types-compatibility">External memory handle types compatibility</a></li>
+ * <li><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility">External semaphore handle types compatibility</a></li>
+ * <li><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-fence-handle-types-compatibility">External fence handle types compatibility</a></li>
  * </ul>
  * 
- * <p>If {@code deviceLUIDValid} is {@link VK10#VK_FALSE FALSE}, the contents of {@code deviceLUID} and {@code deviceNodeMask} are undefined. If {@code deviceLUIDValid} is {@link VK10#VK_TRUE TRUE} and Vulkan is running on the Windows operating system, the contents of {@code deviceLUID} <b>can</b> be cast to an {@code LUID} object and <b>must</b> be equal to the locally unique identifier of a {@code IDXGIAdapter1} object that corresponds to {@code physicalDevice}. If {@code deviceLUIDValid} is {@link VK10#VK_TRUE TRUE}, {@code deviceNodeMask} <b>must</b> contain exactly one bit. If Vulkan is running on an operating system that supports the Direct3D 12 API and {@code physicalDevice} corresponds to an individual device in a linked device adapter, {@code deviceNodeMask} identifies the Direct3D 12 node corresponding to {@code physicalDevice}. Otherwise, {@code deviceNodeMask} <b>must</b> be 1.</p>
+ * <p>If {@code deviceLUIDValid} is {@link VK10#VK_FALSE FALSE}, the values of {@code deviceLUID} and {@code deviceNodeMask} are undefined. If {@code deviceLUIDValid} is {@link VK10#VK_TRUE TRUE} and Vulkan is running on the Windows operating system, the contents of {@code deviceLUID} <b>can</b> be cast to an {@code LUID} object and <b>must</b> be equal to the locally unique identifier of a {@code IDXGIAdapter1} object that corresponds to {@code physicalDevice}. If {@code deviceLUIDValid} is {@link VK10#VK_TRUE TRUE}, {@code deviceNodeMask} <b>must</b> contain exactly one bit. If Vulkan is running on an operating system that supports the Direct3D 12 API and {@code physicalDevice} corresponds to an individual device in a linked device adapter, {@code deviceNodeMask} identifies the Direct3D 12 node corresponding to {@code physicalDevice}. Otherwise, {@code deviceNodeMask} <b>must</b> be 1.</p>
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
@@ -77,7 +79,7 @@ import static org.lwjgl.vulkan.VK11.*;
  *     VkBool32 deviceLUIDValid;
  * }</code></pre>
  */
-public class VkPhysicalDeviceIDProperties extends Struct {
+public class VkPhysicalDeviceIDProperties extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
@@ -118,18 +120,14 @@ public class VkPhysicalDeviceIDProperties extends Struct {
         DEVICELUIDVALID = layout.offsetof(6);
     }
 
-    VkPhysicalDeviceIDProperties(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDeviceIDProperties} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceIDProperties} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceIDProperties(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -196,15 +194,59 @@ public class VkPhysicalDeviceIDProperties extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceIDProperties} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceIDProperties} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    public static VkPhysicalDeviceIDProperties malloc() {
+        return wrap(VkPhysicalDeviceIDProperties.class, nmemAllocChecked(SIZEOF));
+    }
+
+    /** Returns a new {@code VkPhysicalDeviceIDProperties} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    public static VkPhysicalDeviceIDProperties calloc() {
+        return wrap(VkPhysicalDeviceIDProperties.class, nmemCallocChecked(1, SIZEOF));
+    }
+
+    /** Returns a new {@code VkPhysicalDeviceIDProperties} instance allocated with {@link BufferUtils}. */
+    public static VkPhysicalDeviceIDProperties create() {
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDeviceIDProperties.class, memAddress(container), container);
+    }
+
+    /** Returns a new {@code VkPhysicalDeviceIDProperties} instance for the specified memory address. */
     public static VkPhysicalDeviceIDProperties create(long address) {
-        return new VkPhysicalDeviceIDProperties(address, null);
+        return wrap(VkPhysicalDeviceIDProperties.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceIDProperties createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceIDProperties.class, address);
+    }
+
+    /**
+     * Returns a new {@link VkPhysicalDeviceIDProperties.Buffer} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkPhysicalDeviceIDProperties.Buffer malloc(int capacity) {
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
+    }
+
+    /**
+     * Returns a new {@link VkPhysicalDeviceIDProperties.Buffer} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkPhysicalDeviceIDProperties.Buffer calloc(int capacity) {
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
+    }
+
+    /**
+     * Returns a new {@link VkPhysicalDeviceIDProperties.Buffer} instance allocated with {@link BufferUtils}.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkPhysicalDeviceIDProperties.Buffer create(int capacity) {
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -214,56 +256,126 @@ public class VkPhysicalDeviceIDProperties extends Struct {
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceIDProperties.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceIDProperties.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
+    }
+
+    // -----------------------------------
+
+    /** Returns a new {@code VkPhysicalDeviceIDProperties} instance allocated on the thread-local {@link MemoryStack}. */
+    public static VkPhysicalDeviceIDProperties mallocStack() {
+        return mallocStack(stackGet());
+    }
+
+    /** Returns a new {@code VkPhysicalDeviceIDProperties} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    public static VkPhysicalDeviceIDProperties callocStack() {
+        return callocStack(stackGet());
+    }
+
+    /**
+     * Returns a new {@code VkPhysicalDeviceIDProperties} instance allocated on the specified {@link MemoryStack}.
+     *
+     * @param stack the stack from which to allocate
+     */
+    public static VkPhysicalDeviceIDProperties mallocStack(MemoryStack stack) {
+        return wrap(VkPhysicalDeviceIDProperties.class, stack.nmalloc(ALIGNOF, SIZEOF));
+    }
+
+    /**
+     * Returns a new {@code VkPhysicalDeviceIDProperties} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     *
+     * @param stack the stack from which to allocate
+     */
+    public static VkPhysicalDeviceIDProperties callocStack(MemoryStack stack) {
+        return wrap(VkPhysicalDeviceIDProperties.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
+    }
+
+    /**
+     * Returns a new {@link VkPhysicalDeviceIDProperties.Buffer} instance allocated on the thread-local {@link MemoryStack}.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkPhysicalDeviceIDProperties.Buffer mallocStack(int capacity) {
+        return mallocStack(capacity, stackGet());
+    }
+
+    /**
+     * Returns a new {@link VkPhysicalDeviceIDProperties.Buffer} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero.
+     *
+     * @param capacity the buffer capacity
+     */
+    public static VkPhysicalDeviceIDProperties.Buffer callocStack(int capacity) {
+        return callocStack(capacity, stackGet());
+    }
+
+    /**
+     * Returns a new {@link VkPhysicalDeviceIDProperties.Buffer} instance allocated on the specified {@link MemoryStack}.
+     *
+     * @param stack the stack from which to allocate
+     * @param capacity the buffer capacity
+     */
+    public static VkPhysicalDeviceIDProperties.Buffer mallocStack(int capacity, MemoryStack stack) {
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+    }
+
+    /**
+     * Returns a new {@link VkPhysicalDeviceIDProperties.Buffer} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     *
+     * @param stack the stack from which to allocate
+     * @param capacity the buffer capacity
+     */
+    public static VkPhysicalDeviceIDProperties.Buffer callocStack(int capacity, MemoryStack stack) {
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPhysicalDeviceIDProperties.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceIDProperties.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPhysicalDeviceIDProperties.PNEXT); }
     /** Unsafe version of {@link #deviceUUID}. */
     public static ByteBuffer ndeviceUUID(long struct) { return memByteBuffer(struct + VkPhysicalDeviceIDProperties.DEVICEUUID, VK_UUID_SIZE); }
     /** Unsafe version of {@link #deviceUUID(int) deviceUUID}. */
     public static byte ndeviceUUID(long struct, int index) {
-        return memGetByte(struct + VkPhysicalDeviceIDProperties.DEVICEUUID + check(index, VK_UUID_SIZE) * 1);
+        return UNSAFE.getByte(null, struct + VkPhysicalDeviceIDProperties.DEVICEUUID + check(index, VK_UUID_SIZE) * 1);
     }
     /** Unsafe version of {@link #driverUUID}. */
     public static ByteBuffer ndriverUUID(long struct) { return memByteBuffer(struct + VkPhysicalDeviceIDProperties.DRIVERUUID, VK_UUID_SIZE); }
     /** Unsafe version of {@link #driverUUID(int) driverUUID}. */
     public static byte ndriverUUID(long struct, int index) {
-        return memGetByte(struct + VkPhysicalDeviceIDProperties.DRIVERUUID + check(index, VK_UUID_SIZE) * 1);
+        return UNSAFE.getByte(null, struct + VkPhysicalDeviceIDProperties.DRIVERUUID + check(index, VK_UUID_SIZE) * 1);
     }
     /** Unsafe version of {@link #deviceLUID}. */
     public static ByteBuffer ndeviceLUID(long struct) { return memByteBuffer(struct + VkPhysicalDeviceIDProperties.DEVICELUID, VK_LUID_SIZE); }
     /** Unsafe version of {@link #deviceLUID(int) deviceLUID}. */
     public static byte ndeviceLUID(long struct, int index) {
-        return memGetByte(struct + VkPhysicalDeviceIDProperties.DEVICELUID + check(index, VK_LUID_SIZE) * 1);
+        return UNSAFE.getByte(null, struct + VkPhysicalDeviceIDProperties.DEVICELUID + check(index, VK_LUID_SIZE) * 1);
     }
     /** Unsafe version of {@link #deviceNodeMask}. */
-    public static int ndeviceNodeMask(long struct) { return memGetInt(struct + VkPhysicalDeviceIDProperties.DEVICENODEMASK); }
+    public static int ndeviceNodeMask(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceIDProperties.DEVICENODEMASK); }
     /** Unsafe version of {@link #deviceLUIDValid}. */
-    public static int ndeviceLUIDValid(long struct) { return memGetInt(struct + VkPhysicalDeviceIDProperties.DEVICELUIDVALID); }
+    public static int ndeviceLUIDValid(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceIDProperties.DEVICELUIDVALID); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPhysicalDeviceIDProperties.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDeviceIDProperties.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPhysicalDeviceIDProperties.PNEXT, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPhysicalDeviceIDProperties} structs. */
-    public static class Buffer extends StructBuffer<VkPhysicalDeviceIDProperties, Buffer> {
+    public static class Buffer extends StructBuffer<VkPhysicalDeviceIDProperties, Buffer> implements NativeResource {
+
+        private static final VkPhysicalDeviceIDProperties ELEMENT_FACTORY = VkPhysicalDeviceIDProperties.create(-1L);
 
         /**
-         * Creates a new {@link VkPhysicalDeviceIDProperties.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceIDProperties.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -289,18 +401,8 @@ public class VkPhysicalDeviceIDProperties extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDeviceIDProperties newInstance(long address) {
-            return new VkPhysicalDeviceIDProperties(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPhysicalDeviceIDProperties getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

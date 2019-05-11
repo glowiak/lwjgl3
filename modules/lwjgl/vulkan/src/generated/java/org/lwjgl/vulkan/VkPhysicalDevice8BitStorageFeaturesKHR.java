@@ -29,8 +29,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <ul>
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
- * <li>{@code storageBuffer8BitAccess} &ndash; indicates whether objects in the {@code StorageBuffer} storage class with the {@code Block} decoration <b>can</b> have 8-bit integer members. If this feature is not enabled, 8-bit integer members <b>must</b> not be used in such objects. This also indicates whether shader modules <b>can</b> declare the {@code StorageBuffer8BitAccess} capability.</li>
- * <li>{@code uniformAndStorageBuffer8BitAccess} &ndash; indicates whether objects in the {@code Uniform} storage class with the {@code Block} decoration and in the {@code StorageBuffer} storage class with the same decoration <b>can</b> have 8-bit integer members. If this feature is not enabled, 8-bit integer members <b>must</b> not be used in such objects. This also indicates whether shader modules <b>can</b> declare the {@code UniformAndStorageBuffer8BitAccess} capability.</li>
+ * <li>{@code storageBuffer8BitAccess} &ndash; indicates whether objects in the {@code StorageBuffer} or {@code PhysicalStorageBufferEXT} storage class with the {@code Block} decoration <b>can</b> have 8-bit integer members. If this feature is not enabled, 8-bit integer members <b>must</b> not be used in such objects. This also indicates whether shader modules <b>can</b> declare the {@code StorageBuffer8BitAccess} capability.</li>
+ * <li>{@code uniformAndStorageBuffer8BitAccess} &ndash; indicates whether objects in the {@code Uniform} storage class with the {@code Block} decoration and in the {@code StorageBuffer} or {@code PhysicalStorageBufferEXT} storage class with the same decoration <b>can</b> have 8-bit integer members. If this feature is not enabled, 8-bit integer members <b>must</b> not be used in such objects. This also indicates whether shader modules <b>can</b> declare the {@code UniformAndStorageBuffer8BitAccess} capability.</li>
  * <li>{@code storagePushConstant8} &ndash; indicates whether objects in the {@code PushConstant} storage class <b>can</b> have 8-bit integer members. If this feature is not enabled, 8-bit integer members <b>must</b> not be used in such objects. This also indicates whether shader modules <b>can</b> declare the {@code StoragePushConstant8} capability.</li>
  * </ul>
  * 
@@ -80,18 +80,14 @@ public class VkPhysicalDevice8BitStorageFeaturesKHR extends Struct implements Na
         STORAGEPUSHCONSTANT8 = layout.offsetof(4);
     }
 
-    VkPhysicalDevice8BitStorageFeaturesKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDevice8BitStorageFeaturesKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDevice8BitStorageFeaturesKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDevice8BitStorageFeaturesKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -155,30 +151,31 @@ public class VkPhysicalDevice8BitStorageFeaturesKHR extends Struct implements Na
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPhysicalDevice8BitStorageFeaturesKHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPhysicalDevice8BitStorageFeaturesKHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPhysicalDevice8BitStorageFeaturesKHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPhysicalDevice8BitStorageFeaturesKHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated with {@link BufferUtils}. */
     public static VkPhysicalDevice8BitStorageFeaturesKHR create() {
-        return new VkPhysicalDevice8BitStorageFeaturesKHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDevice8BitStorageFeaturesKHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPhysicalDevice8BitStorageFeaturesKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDevice8BitStorageFeaturesKHR} instance for the specified memory address. */
     public static VkPhysicalDevice8BitStorageFeaturesKHR create(long address) {
-        return new VkPhysicalDevice8BitStorageFeaturesKHR(address, null);
+        return wrap(VkPhysicalDevice8BitStorageFeaturesKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDevice8BitStorageFeaturesKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDevice8BitStorageFeaturesKHR.class, address);
     }
 
     /**
@@ -187,7 +184,7 @@ public class VkPhysicalDevice8BitStorageFeaturesKHR extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDevice8BitStorageFeaturesKHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -196,7 +193,7 @@ public class VkPhysicalDevice8BitStorageFeaturesKHR extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDevice8BitStorageFeaturesKHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -205,7 +202,8 @@ public class VkPhysicalDevice8BitStorageFeaturesKHR extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDevice8BitStorageFeaturesKHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -215,43 +213,43 @@ public class VkPhysicalDevice8BitStorageFeaturesKHR extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDevice8BitStorageFeaturesKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDevice8BitStorageFeaturesKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPhysicalDevice8BitStorageFeaturesKHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPhysicalDevice8BitStorageFeaturesKHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDevice8BitStorageFeaturesKHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPhysicalDevice8BitStorageFeaturesKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPhysicalDevice8BitStorageFeaturesKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDevice8BitStorageFeaturesKHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPhysicalDevice8BitStorageFeaturesKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -279,7 +277,7 @@ public class VkPhysicalDevice8BitStorageFeaturesKHR extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDevice8BitStorageFeaturesKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -289,40 +287,42 @@ public class VkPhysicalDevice8BitStorageFeaturesKHR extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDevice8BitStorageFeaturesKHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPhysicalDevice8BitStorageFeaturesKHR.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDevice8BitStorageFeaturesKHR.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPhysicalDevice8BitStorageFeaturesKHR.PNEXT); }
     /** Unsafe version of {@link #storageBuffer8BitAccess}. */
-    public static int nstorageBuffer8BitAccess(long struct) { return memGetInt(struct + VkPhysicalDevice8BitStorageFeaturesKHR.STORAGEBUFFER8BITACCESS); }
+    public static int nstorageBuffer8BitAccess(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDevice8BitStorageFeaturesKHR.STORAGEBUFFER8BITACCESS); }
     /** Unsafe version of {@link #uniformAndStorageBuffer8BitAccess}. */
-    public static int nuniformAndStorageBuffer8BitAccess(long struct) { return memGetInt(struct + VkPhysicalDevice8BitStorageFeaturesKHR.UNIFORMANDSTORAGEBUFFER8BITACCESS); }
+    public static int nuniformAndStorageBuffer8BitAccess(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDevice8BitStorageFeaturesKHR.UNIFORMANDSTORAGEBUFFER8BITACCESS); }
     /** Unsafe version of {@link #storagePushConstant8}. */
-    public static int nstoragePushConstant8(long struct) { return memGetInt(struct + VkPhysicalDevice8BitStorageFeaturesKHR.STORAGEPUSHCONSTANT8); }
+    public static int nstoragePushConstant8(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDevice8BitStorageFeaturesKHR.STORAGEPUSHCONSTANT8); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPhysicalDevice8BitStorageFeaturesKHR.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDevice8BitStorageFeaturesKHR.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPhysicalDevice8BitStorageFeaturesKHR.PNEXT, value); }
     /** Unsafe version of {@link #storageBuffer8BitAccess(boolean) storageBuffer8BitAccess}. */
-    public static void nstorageBuffer8BitAccess(long struct, int value) { memPutInt(struct + VkPhysicalDevice8BitStorageFeaturesKHR.STORAGEBUFFER8BITACCESS, value); }
+    public static void nstorageBuffer8BitAccess(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDevice8BitStorageFeaturesKHR.STORAGEBUFFER8BITACCESS, value); }
     /** Unsafe version of {@link #uniformAndStorageBuffer8BitAccess(boolean) uniformAndStorageBuffer8BitAccess}. */
-    public static void nuniformAndStorageBuffer8BitAccess(long struct, int value) { memPutInt(struct + VkPhysicalDevice8BitStorageFeaturesKHR.UNIFORMANDSTORAGEBUFFER8BITACCESS, value); }
+    public static void nuniformAndStorageBuffer8BitAccess(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDevice8BitStorageFeaturesKHR.UNIFORMANDSTORAGEBUFFER8BITACCESS, value); }
     /** Unsafe version of {@link #storagePushConstant8(boolean) storagePushConstant8}. */
-    public static void nstoragePushConstant8(long struct, int value) { memPutInt(struct + VkPhysicalDevice8BitStorageFeaturesKHR.STORAGEPUSHCONSTANT8, value); }
+    public static void nstoragePushConstant8(long struct, int value) { UNSAFE.putInt(null, struct + VkPhysicalDevice8BitStorageFeaturesKHR.STORAGEPUSHCONSTANT8, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPhysicalDevice8BitStorageFeaturesKHR} structs. */
     public static class Buffer extends StructBuffer<VkPhysicalDevice8BitStorageFeaturesKHR, Buffer> implements NativeResource {
 
+        private static final VkPhysicalDevice8BitStorageFeaturesKHR ELEMENT_FACTORY = VkPhysicalDevice8BitStorageFeaturesKHR.create(-1L);
+
         /**
-         * Creates a new {@link VkPhysicalDevice8BitStorageFeaturesKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDevice8BitStorageFeaturesKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -348,18 +348,8 @@ public class VkPhysicalDevice8BitStorageFeaturesKHR extends Struct implements Na
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDevice8BitStorageFeaturesKHR newInstance(long address) {
-            return new VkPhysicalDevice8BitStorageFeaturesKHR(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPhysicalDevice8BitStorageFeaturesKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

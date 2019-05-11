@@ -28,10 +28,10 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>{@code planeIndex} <b>must</b> be less than the number of display planes supported by the device as determined by calling {@link KHRDisplay#vkGetPhysicalDeviceDisplayPlanePropertiesKHR GetPhysicalDeviceDisplayPlanePropertiesKHR}</li>
- * <li>If the {@code planeReorderPossible} member of the {@link VkDisplayPropertiesKHR} structure returned by {@link KHRDisplay#vkGetPhysicalDeviceDisplayPropertiesKHR GetPhysicalDeviceDisplayPropertiesKHR} for the display corresponding to {@code displayMode} is {@link VK10#VK_TRUE TRUE} then {@code planeStackIndex} <b>must</b> be less than the number of display planes supported by the device as determined by calling {@link KHRDisplay#vkGetPhysicalDeviceDisplayPlanePropertiesKHR GetPhysicalDeviceDisplayPlanePropertiesKHR}; otherwise {@code planeStackIndex} <b>must</b> equal the {@code currentStackIndex} member of {@link VkDisplayPlanePropertiesKHR} returned by {@link KHRDisplay#vkGetPhysicalDeviceDisplayPlanePropertiesKHR GetPhysicalDeviceDisplayPlanePropertiesKHR} for the display plane corresponding to {@code displayMode}</li>
+ * <li>{@code planeIndex} <b>must</b> be less than the number of display planes supported by the device as determined by calling {@code vkGetPhysicalDeviceDisplayPlanePropertiesKHR}</li>
+ * <li>If the {@code planeReorderPossible} member of the {@link VkDisplayPropertiesKHR} structure returned by {@code vkGetPhysicalDeviceDisplayPropertiesKHR} for the display corresponding to {@code displayMode} is {@link VK10#VK_TRUE TRUE} then {@code planeStackIndex} <b>must</b> be less than the number of display planes supported by the device as determined by calling {@code vkGetPhysicalDeviceDisplayPlanePropertiesKHR}; otherwise {@code planeStackIndex} <b>must</b> equal the {@code currentStackIndex} member of {@link VkDisplayPlanePropertiesKHR} returned by {@code vkGetPhysicalDeviceDisplayPlanePropertiesKHR} for the display plane corresponding to {@code displayMode}</li>
  * <li>If {@code alphaMode} is {@link KHRDisplay#VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR} then {@code globalAlpha} <b>must</b> be between 0 and 1, inclusive</li>
- * <li>{@code alphaMode} <b>must</b> be 0 or one of the bits present in the {@code supportedAlpha} member of {@link VkDisplayPlaneCapabilitiesKHR} returned by {@link KHRDisplay#vkGetDisplayPlaneCapabilitiesKHR GetDisplayPlaneCapabilitiesKHR} for the display plane corresponding to {@code displayMode}</li>
+ * <li>{@code alphaMode} <b>must</b> be 0 or one of the bits present in the {@code supportedAlpha} member of {@link VkDisplayPlaneCapabilitiesKHR} returned by {@code vkGetDisplayPlaneCapabilitiesKHR} for the display plane corresponding to {@code displayMode}</li>
  * <li>The {@code width} and {@code height} members of {@code imageExtent} <b>must</b> be less than the {@code maxImageDimensions2D} member of {@link VkPhysicalDeviceLimits}</li>
  * </ul>
  * 
@@ -131,18 +131,14 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
         IMAGEEXTENT = layout.offsetof(9);
     }
 
-    VkDisplaySurfaceCreateInfoKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkDisplaySurfaceCreateInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkDisplaySurfaceCreateInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkDisplaySurfaceCreateInfoKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -241,30 +237,31 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDisplaySurfaceCreateInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDisplaySurfaceCreateInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkDisplaySurfaceCreateInfoKHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkDisplaySurfaceCreateInfoKHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkDisplaySurfaceCreateInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDisplaySurfaceCreateInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkDisplaySurfaceCreateInfoKHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkDisplaySurfaceCreateInfoKHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkDisplaySurfaceCreateInfoKHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkDisplaySurfaceCreateInfoKHR} instance allocated with {@link BufferUtils}. */
     public static VkDisplaySurfaceCreateInfoKHR create() {
-        return new VkDisplaySurfaceCreateInfoKHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkDisplaySurfaceCreateInfoKHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkDisplaySurfaceCreateInfoKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkDisplaySurfaceCreateInfoKHR} instance for the specified memory address. */
     public static VkDisplaySurfaceCreateInfoKHR create(long address) {
-        return new VkDisplaySurfaceCreateInfoKHR(address, null);
+        return wrap(VkDisplaySurfaceCreateInfoKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDisplaySurfaceCreateInfoKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkDisplaySurfaceCreateInfoKHR.class, address);
     }
 
     /**
@@ -273,7 +270,7 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkDisplaySurfaceCreateInfoKHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -282,7 +279,7 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkDisplaySurfaceCreateInfoKHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -291,7 +288,8 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkDisplaySurfaceCreateInfoKHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -301,43 +299,43 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkDisplaySurfaceCreateInfoKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDisplaySurfaceCreateInfoKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDisplaySurfaceCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkDisplaySurfaceCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkDisplaySurfaceCreateInfoKHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkDisplaySurfaceCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkDisplaySurfaceCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkDisplaySurfaceCreateInfoKHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkDisplaySurfaceCreateInfoKHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkDisplaySurfaceCreateInfoKHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDisplaySurfaceCreateInfoKHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkDisplaySurfaceCreateInfoKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkDisplaySurfaceCreateInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkDisplaySurfaceCreateInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDisplaySurfaceCreateInfoKHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkDisplaySurfaceCreateInfoKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -365,7 +363,7 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkDisplaySurfaceCreateInfoKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -375,50 +373,50 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkDisplaySurfaceCreateInfoKHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkDisplaySurfaceCreateInfoKHR.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkDisplaySurfaceCreateInfoKHR.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkDisplaySurfaceCreateInfoKHR.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkDisplaySurfaceCreateInfoKHR.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkDisplaySurfaceCreateInfoKHR.FLAGS); }
     /** Unsafe version of {@link #displayMode}. */
-    public static long ndisplayMode(long struct) { return memGetLong(struct + VkDisplaySurfaceCreateInfoKHR.DISPLAYMODE); }
+    public static long ndisplayMode(long struct) { return UNSAFE.getLong(null, struct + VkDisplaySurfaceCreateInfoKHR.DISPLAYMODE); }
     /** Unsafe version of {@link #planeIndex}. */
-    public static int nplaneIndex(long struct) { return memGetInt(struct + VkDisplaySurfaceCreateInfoKHR.PLANEINDEX); }
+    public static int nplaneIndex(long struct) { return UNSAFE.getInt(null, struct + VkDisplaySurfaceCreateInfoKHR.PLANEINDEX); }
     /** Unsafe version of {@link #planeStackIndex}. */
-    public static int nplaneStackIndex(long struct) { return memGetInt(struct + VkDisplaySurfaceCreateInfoKHR.PLANESTACKINDEX); }
+    public static int nplaneStackIndex(long struct) { return UNSAFE.getInt(null, struct + VkDisplaySurfaceCreateInfoKHR.PLANESTACKINDEX); }
     /** Unsafe version of {@link #transform}. */
-    public static int ntransform(long struct) { return memGetInt(struct + VkDisplaySurfaceCreateInfoKHR.TRANSFORM); }
+    public static int ntransform(long struct) { return UNSAFE.getInt(null, struct + VkDisplaySurfaceCreateInfoKHR.TRANSFORM); }
     /** Unsafe version of {@link #globalAlpha}. */
-    public static float nglobalAlpha(long struct) { return memGetFloat(struct + VkDisplaySurfaceCreateInfoKHR.GLOBALALPHA); }
+    public static float nglobalAlpha(long struct) { return UNSAFE.getFloat(null, struct + VkDisplaySurfaceCreateInfoKHR.GLOBALALPHA); }
     /** Unsafe version of {@link #alphaMode}. */
-    public static int nalphaMode(long struct) { return memGetInt(struct + VkDisplaySurfaceCreateInfoKHR.ALPHAMODE); }
+    public static int nalphaMode(long struct) { return UNSAFE.getInt(null, struct + VkDisplaySurfaceCreateInfoKHR.ALPHAMODE); }
     /** Unsafe version of {@link #imageExtent}. */
     public static VkExtent2D nimageExtent(long struct) { return VkExtent2D.create(struct + VkDisplaySurfaceCreateInfoKHR.IMAGEEXTENT); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkDisplaySurfaceCreateInfoKHR.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkDisplaySurfaceCreateInfoKHR.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkDisplaySurfaceCreateInfoKHR.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkDisplaySurfaceCreateInfoKHR.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkDisplaySurfaceCreateInfoKHR.FLAGS, value); }
     /** Unsafe version of {@link #displayMode(long) displayMode}. */
-    public static void ndisplayMode(long struct, long value) { memPutLong(struct + VkDisplaySurfaceCreateInfoKHR.DISPLAYMODE, value); }
+    public static void ndisplayMode(long struct, long value) { UNSAFE.putLong(null, struct + VkDisplaySurfaceCreateInfoKHR.DISPLAYMODE, value); }
     /** Unsafe version of {@link #planeIndex(int) planeIndex}. */
-    public static void nplaneIndex(long struct, int value) { memPutInt(struct + VkDisplaySurfaceCreateInfoKHR.PLANEINDEX, value); }
+    public static void nplaneIndex(long struct, int value) { UNSAFE.putInt(null, struct + VkDisplaySurfaceCreateInfoKHR.PLANEINDEX, value); }
     /** Unsafe version of {@link #planeStackIndex(int) planeStackIndex}. */
-    public static void nplaneStackIndex(long struct, int value) { memPutInt(struct + VkDisplaySurfaceCreateInfoKHR.PLANESTACKINDEX, value); }
+    public static void nplaneStackIndex(long struct, int value) { UNSAFE.putInt(null, struct + VkDisplaySurfaceCreateInfoKHR.PLANESTACKINDEX, value); }
     /** Unsafe version of {@link #transform(int) transform}. */
-    public static void ntransform(long struct, int value) { memPutInt(struct + VkDisplaySurfaceCreateInfoKHR.TRANSFORM, value); }
+    public static void ntransform(long struct, int value) { UNSAFE.putInt(null, struct + VkDisplaySurfaceCreateInfoKHR.TRANSFORM, value); }
     /** Unsafe version of {@link #globalAlpha(float) globalAlpha}. */
-    public static void nglobalAlpha(long struct, float value) { memPutFloat(struct + VkDisplaySurfaceCreateInfoKHR.GLOBALALPHA, value); }
+    public static void nglobalAlpha(long struct, float value) { UNSAFE.putFloat(null, struct + VkDisplaySurfaceCreateInfoKHR.GLOBALALPHA, value); }
     /** Unsafe version of {@link #alphaMode(int) alphaMode}. */
-    public static void nalphaMode(long struct, int value) { memPutInt(struct + VkDisplaySurfaceCreateInfoKHR.ALPHAMODE, value); }
+    public static void nalphaMode(long struct, int value) { UNSAFE.putInt(null, struct + VkDisplaySurfaceCreateInfoKHR.ALPHAMODE, value); }
     /** Unsafe version of {@link #imageExtent(VkExtent2D) imageExtent}. */
     public static void nimageExtent(long struct, VkExtent2D value) { memCopy(value.address(), struct + VkDisplaySurfaceCreateInfoKHR.IMAGEEXTENT, VkExtent2D.SIZEOF); }
 
@@ -427,8 +425,10 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
     /** An array of {@link VkDisplaySurfaceCreateInfoKHR} structs. */
     public static class Buffer extends StructBuffer<VkDisplaySurfaceCreateInfoKHR, Buffer> implements NativeResource {
 
+        private static final VkDisplaySurfaceCreateInfoKHR ELEMENT_FACTORY = VkDisplaySurfaceCreateInfoKHR.create(-1L);
+
         /**
-         * Creates a new {@link VkDisplaySurfaceCreateInfoKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkDisplaySurfaceCreateInfoKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -454,18 +454,8 @@ public class VkDisplaySurfaceCreateInfoKHR extends Struct implements NativeResou
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkDisplaySurfaceCreateInfoKHR newInstance(long address) {
-            return new VkDisplaySurfaceCreateInfoKHR(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkDisplaySurfaceCreateInfoKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

@@ -23,7 +23,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link KHRSwapchain#VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR}</li>
- * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkDeviceGroupSwapchainCreateInfoKHR} or {@link VkSwapchainCounterCreateInfoEXT}</li>
+ * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkDeviceGroupSwapchainCreateInfoKHR}, {@link VkImageFormatListCreateInfoKHR}, {@link VkSurfaceFullScreenExclusiveInfoEXT}, {@link VkSurfaceFullScreenExclusiveWin32InfoEXT}, {@link VkSwapchainCounterCreateInfoEXT}, or {@link VkSwapchainDisplayNativeHdrCreateInfoAMD}</li>
  * <li>Each {@code sType} member in the {@code pNext} chain <b>must</b> be unique</li>
  * <li>{@code flags} <b>must</b> be a valid combination of {@code VkSwapchainCreateFlagBitsKHR} values</li>
  * <li>{@code surface} <b>must</b> be a valid {@code VkSurfaceKHR} handle</li>
@@ -54,7 +54,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code minImageCount} &ndash; the minimum number of presentable images that the application needs. The implementation will either create the swapchain with at least that many images, or it will fail to create the swapchain.</li>
  * <li>{@code imageFormat} &ndash; a {@code VkFormat} value specifying the format the swapchain image(s) will be created with.</li>
  * <li>{@code imageColorSpace} &ndash; a {@code VkColorSpaceKHR} value specifying the way the swapchain interprets image data.</li>
- * <li>{@code imageExtent} &ndash; the size (in pixels) of the swapchain image(s). The behavior is platform-dependent if the image extent does not match the surface&#8217;s {@code currentExtent} as returned by {@link KHRSurface#vkGetPhysicalDeviceSurfaceCapabilitiesKHR GetPhysicalDeviceSurfaceCapabilitiesKHR}.
+ * <li>{@code imageExtent} &ndash; the size (in pixels) of the swapchain image(s). The behavior is platform-dependent if the image extent does not match the surface&#8217;s {@code currentExtent} as returned by {@code vkGetPhysicalDeviceSurfaceCapabilitiesKHR}.
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
@@ -65,7 +65,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code imageSharingMode} &ndash; the sharing mode used for the image(s) of the swapchain.</li>
  * <li>{@code queueFamilyIndexCount} &ndash; the number of queue families having access to the image(s) of the swapchain when {@code imageSharingMode} is {@link VK10#VK_SHARING_MODE_CONCURRENT SHARING_MODE_CONCURRENT}.</li>
  * <li>{@code pQueueFamilyIndices} &ndash; an array of queue family indices having access to the images(s) of the swapchain when {@code imageSharingMode} is {@link VK10#VK_SHARING_MODE_CONCURRENT SHARING_MODE_CONCURRENT}.</li>
- * <li>{@code preTransform} &ndash; a {@code VkSurfaceTransformFlagBitsKHR} value describing the transform, relative to the presentation engine&#8217;s natural orientation, applied to the image content prior to presentation. If it does not match the {@code currentTransform} value returned by {@link KHRSurface#vkGetPhysicalDeviceSurfaceCapabilitiesKHR GetPhysicalDeviceSurfaceCapabilitiesKHR}, the presentation engine will transform the image content as part of the presentation operation.</li>
+ * <li>{@code preTransform} &ndash; a {@code VkSurfaceTransformFlagBitsKHR} value describing the transform, relative to the presentation engine&#8217;s natural orientation, applied to the image content prior to presentation. If it does not match the {@code currentTransform} value returned by {@code vkGetPhysicalDeviceSurfaceCapabilitiesKHR}, the presentation engine will transform the image content as part of the presentation operation.</li>
  * <li>{@code compositeAlpha} &ndash; a {@code VkCompositeAlphaFlagBitsKHR} value indicating the alpha compositing mode to use when this surface is composited together with other surfaces on certain window systems.</li>
  * <li>{@code presentMode} &ndash; the presentation mode the swapchain will use. A swapchain&#8217;s present mode determines how incoming present requests will be processed and queued internally.</li>
  * <li>{@code clipped} &ndash; specifies whether the Vulkan implementation is allowed to discard rendering operations that affect regions of the surface that are not visible.
@@ -82,9 +82,9 @@ import static org.lwjgl.system.MemoryStack.*;
  * </ul></li>
  * <li>{@code oldSwapchain} &ndash; {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, or the existing non-retired swapchain currently associated with {@code surface}. Providing a valid {@code oldSwapchain} <b>may</b> aid in the resource reuse, and also allows the application to still present any images that are already acquired from it.
  * 
- * <p>Upon calling {@link KHRSwapchain#vkCreateSwapchainKHR CreateSwapchainKHR} with an {@code oldSwapchain} that is not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, {@code oldSwapchain} is retired -- even if creation of the new swapchain fails. The new swapchain is created in the non-retired state whether or not {@code oldSwapchain} is {@link VK10#VK_NULL_HANDLE NULL_HANDLE}.</p>
+ * <p>Upon calling {@code vkCreateSwapchainKHR} with an {@code oldSwapchain} that is not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, {@code oldSwapchain} is retired -- even if creation of the new swapchain fails. The new swapchain is created in the non-retired state whether or not {@code oldSwapchain} is {@link VK10#VK_NULL_HANDLE NULL_HANDLE}.</p>
  * 
- * <p>Upon calling {@link KHRSwapchain#vkCreateSwapchainKHR CreateSwapchainKHR} with an {@code oldSwapchain} that is not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, any images from {@code oldSwapchain} that are not acquired by the application <b>may</b> be freed by the implementation, which <b>may</b> occur even if creation of the new swapchain fails. The application <b>can</b> destroy {@code oldSwapchain} to free all memory associated with {@code oldSwapchain}.</p>
+ * <p>Upon calling {@code vkCreateSwapchainKHR} with an {@code oldSwapchain} that is not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, any images from {@code oldSwapchain} that are not acquired by the application <b>may</b> be freed by the implementation, which <b>may</b> occur even if creation of the new swapchain fails. The application <b>can</b> destroy {@code oldSwapchain} to free all memory associated with {@code oldSwapchain}.</p>
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
@@ -194,18 +194,14 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
         OLDSWAPCHAIN = layout.offsetof(17);
     }
 
-    VkSwapchainCreateInfoKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkSwapchainCreateInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkSwapchainCreateInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkSwapchainCreateInfoKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -358,30 +354,31 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSwapchainCreateInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSwapchainCreateInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkSwapchainCreateInfoKHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkSwapchainCreateInfoKHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkSwapchainCreateInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSwapchainCreateInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkSwapchainCreateInfoKHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkSwapchainCreateInfoKHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkSwapchainCreateInfoKHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkSwapchainCreateInfoKHR} instance allocated with {@link BufferUtils}. */
     public static VkSwapchainCreateInfoKHR create() {
-        return new VkSwapchainCreateInfoKHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkSwapchainCreateInfoKHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkSwapchainCreateInfoKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkSwapchainCreateInfoKHR} instance for the specified memory address. */
     public static VkSwapchainCreateInfoKHR create(long address) {
-        return new VkSwapchainCreateInfoKHR(address, null);
+        return wrap(VkSwapchainCreateInfoKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSwapchainCreateInfoKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkSwapchainCreateInfoKHR.class, address);
     }
 
     /**
@@ -390,7 +387,7 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSwapchainCreateInfoKHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -399,7 +396,7 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSwapchainCreateInfoKHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -408,7 +405,8 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSwapchainCreateInfoKHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -418,43 +416,43 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSwapchainCreateInfoKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSwapchainCreateInfoKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSwapchainCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkSwapchainCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkSwapchainCreateInfoKHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkSwapchainCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkSwapchainCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkSwapchainCreateInfoKHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkSwapchainCreateInfoKHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkSwapchainCreateInfoKHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSwapchainCreateInfoKHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkSwapchainCreateInfoKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkSwapchainCreateInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkSwapchainCreateInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSwapchainCreateInfoKHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkSwapchainCreateInfoKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -482,7 +480,7 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSwapchainCreateInfoKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -492,84 +490,84 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSwapchainCreateInfoKHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkSwapchainCreateInfoKHR.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.FLAGS); }
     /** Unsafe version of {@link #surface}. */
-    public static long nsurface(long struct) { return memGetLong(struct + VkSwapchainCreateInfoKHR.SURFACE); }
+    public static long nsurface(long struct) { return UNSAFE.getLong(null, struct + VkSwapchainCreateInfoKHR.SURFACE); }
     /** Unsafe version of {@link #minImageCount}. */
-    public static int nminImageCount(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.MINIMAGECOUNT); }
+    public static int nminImageCount(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.MINIMAGECOUNT); }
     /** Unsafe version of {@link #imageFormat}. */
-    public static int nimageFormat(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.IMAGEFORMAT); }
+    public static int nimageFormat(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.IMAGEFORMAT); }
     /** Unsafe version of {@link #imageColorSpace}. */
-    public static int nimageColorSpace(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.IMAGECOLORSPACE); }
+    public static int nimageColorSpace(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.IMAGECOLORSPACE); }
     /** Unsafe version of {@link #imageExtent}. */
     public static VkExtent2D nimageExtent(long struct) { return VkExtent2D.create(struct + VkSwapchainCreateInfoKHR.IMAGEEXTENT); }
     /** Unsafe version of {@link #imageArrayLayers}. */
-    public static int nimageArrayLayers(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.IMAGEARRAYLAYERS); }
+    public static int nimageArrayLayers(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.IMAGEARRAYLAYERS); }
     /** Unsafe version of {@link #imageUsage}. */
-    public static int nimageUsage(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.IMAGEUSAGE); }
+    public static int nimageUsage(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.IMAGEUSAGE); }
     /** Unsafe version of {@link #imageSharingMode}. */
-    public static int nimageSharingMode(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.IMAGESHARINGMODE); }
+    public static int nimageSharingMode(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.IMAGESHARINGMODE); }
     /** Unsafe version of {@link #queueFamilyIndexCount}. */
-    public static int nqueueFamilyIndexCount(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.QUEUEFAMILYINDEXCOUNT); }
+    public static int nqueueFamilyIndexCount(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.QUEUEFAMILYINDEXCOUNT); }
     /** Unsafe version of {@link #pQueueFamilyIndices() pQueueFamilyIndices}. */
     @Nullable public static IntBuffer npQueueFamilyIndices(long struct) { return memIntBufferSafe(memGetAddress(struct + VkSwapchainCreateInfoKHR.PQUEUEFAMILYINDICES), nqueueFamilyIndexCount(struct)); }
     /** Unsafe version of {@link #preTransform}. */
-    public static int npreTransform(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.PRETRANSFORM); }
+    public static int npreTransform(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.PRETRANSFORM); }
     /** Unsafe version of {@link #compositeAlpha}. */
-    public static int ncompositeAlpha(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.COMPOSITEALPHA); }
+    public static int ncompositeAlpha(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.COMPOSITEALPHA); }
     /** Unsafe version of {@link #presentMode}. */
-    public static int npresentMode(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.PRESENTMODE); }
+    public static int npresentMode(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.PRESENTMODE); }
     /** Unsafe version of {@link #clipped}. */
-    public static int nclipped(long struct) { return memGetInt(struct + VkSwapchainCreateInfoKHR.CLIPPED); }
+    public static int nclipped(long struct) { return UNSAFE.getInt(null, struct + VkSwapchainCreateInfoKHR.CLIPPED); }
     /** Unsafe version of {@link #oldSwapchain}. */
-    public static long noldSwapchain(long struct) { return memGetLong(struct + VkSwapchainCreateInfoKHR.OLDSWAPCHAIN); }
+    public static long noldSwapchain(long struct) { return UNSAFE.getLong(null, struct + VkSwapchainCreateInfoKHR.OLDSWAPCHAIN); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkSwapchainCreateInfoKHR.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.FLAGS, value); }
     /** Unsafe version of {@link #surface(long) surface}. */
-    public static void nsurface(long struct, long value) { memPutLong(struct + VkSwapchainCreateInfoKHR.SURFACE, value); }
+    public static void nsurface(long struct, long value) { UNSAFE.putLong(null, struct + VkSwapchainCreateInfoKHR.SURFACE, value); }
     /** Unsafe version of {@link #minImageCount(int) minImageCount}. */
-    public static void nminImageCount(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.MINIMAGECOUNT, value); }
+    public static void nminImageCount(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.MINIMAGECOUNT, value); }
     /** Unsafe version of {@link #imageFormat(int) imageFormat}. */
-    public static void nimageFormat(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.IMAGEFORMAT, value); }
+    public static void nimageFormat(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.IMAGEFORMAT, value); }
     /** Unsafe version of {@link #imageColorSpace(int) imageColorSpace}. */
-    public static void nimageColorSpace(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.IMAGECOLORSPACE, value); }
+    public static void nimageColorSpace(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.IMAGECOLORSPACE, value); }
     /** Unsafe version of {@link #imageExtent(VkExtent2D) imageExtent}. */
     public static void nimageExtent(long struct, VkExtent2D value) { memCopy(value.address(), struct + VkSwapchainCreateInfoKHR.IMAGEEXTENT, VkExtent2D.SIZEOF); }
     /** Unsafe version of {@link #imageArrayLayers(int) imageArrayLayers}. */
-    public static void nimageArrayLayers(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.IMAGEARRAYLAYERS, value); }
+    public static void nimageArrayLayers(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.IMAGEARRAYLAYERS, value); }
     /** Unsafe version of {@link #imageUsage(int) imageUsage}. */
-    public static void nimageUsage(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.IMAGEUSAGE, value); }
+    public static void nimageUsage(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.IMAGEUSAGE, value); }
     /** Unsafe version of {@link #imageSharingMode(int) imageSharingMode}. */
-    public static void nimageSharingMode(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.IMAGESHARINGMODE, value); }
+    public static void nimageSharingMode(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.IMAGESHARINGMODE, value); }
     /** Sets the specified value to the {@code queueFamilyIndexCount} field of the specified {@code struct}. */
-    public static void nqueueFamilyIndexCount(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.QUEUEFAMILYINDEXCOUNT, value); }
+    public static void nqueueFamilyIndexCount(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.QUEUEFAMILYINDEXCOUNT, value); }
     /** Unsafe version of {@link #pQueueFamilyIndices(IntBuffer) pQueueFamilyIndices}. */
     public static void npQueueFamilyIndices(long struct, @Nullable IntBuffer value) { memPutAddress(struct + VkSwapchainCreateInfoKHR.PQUEUEFAMILYINDICES, memAddressSafe(value)); nqueueFamilyIndexCount(struct, value == null ? 0 : value.remaining()); }
     /** Unsafe version of {@link #preTransform(int) preTransform}. */
-    public static void npreTransform(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.PRETRANSFORM, value); }
+    public static void npreTransform(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.PRETRANSFORM, value); }
     /** Unsafe version of {@link #compositeAlpha(int) compositeAlpha}. */
-    public static void ncompositeAlpha(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.COMPOSITEALPHA, value); }
+    public static void ncompositeAlpha(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.COMPOSITEALPHA, value); }
     /** Unsafe version of {@link #presentMode(int) presentMode}. */
-    public static void npresentMode(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.PRESENTMODE, value); }
+    public static void npresentMode(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.PRESENTMODE, value); }
     /** Unsafe version of {@link #clipped(boolean) clipped}. */
-    public static void nclipped(long struct, int value) { memPutInt(struct + VkSwapchainCreateInfoKHR.CLIPPED, value); }
+    public static void nclipped(long struct, int value) { UNSAFE.putInt(null, struct + VkSwapchainCreateInfoKHR.CLIPPED, value); }
     /** Unsafe version of {@link #oldSwapchain(long) oldSwapchain}. */
-    public static void noldSwapchain(long struct, long value) { memPutLong(struct + VkSwapchainCreateInfoKHR.OLDSWAPCHAIN, value); }
+    public static void noldSwapchain(long struct, long value) { UNSAFE.putLong(null, struct + VkSwapchainCreateInfoKHR.OLDSWAPCHAIN, value); }
 
     /**
      * Validates pointer members that should not be {@code NULL}.
@@ -590,7 +588,7 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -599,8 +597,10 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
     /** An array of {@link VkSwapchainCreateInfoKHR} structs. */
     public static class Buffer extends StructBuffer<VkSwapchainCreateInfoKHR, Buffer> implements NativeResource {
 
+        private static final VkSwapchainCreateInfoKHR ELEMENT_FACTORY = VkSwapchainCreateInfoKHR.create(-1L);
+
         /**
-         * Creates a new {@link VkSwapchainCreateInfoKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkSwapchainCreateInfoKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -626,18 +626,8 @@ public class VkSwapchainCreateInfoKHR extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkSwapchainCreateInfoKHR newInstance(long address) {
-            return new VkSwapchainCreateInfoKHR(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkSwapchainCreateInfoKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

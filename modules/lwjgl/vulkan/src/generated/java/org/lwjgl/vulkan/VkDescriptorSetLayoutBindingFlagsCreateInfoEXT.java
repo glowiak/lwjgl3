@@ -34,7 +34,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If {@link VkPhysicalDeviceDescriptorIndexingFeaturesEXT}{@code ::descriptorBindingStorageBufferUpdateAfterBind} is not enabled, all bindings with descriptor type {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER} <b>must</b> not use {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT}</li>
  * <li>If {@link VkPhysicalDeviceDescriptorIndexingFeaturesEXT}{@code ::descriptorBindingUniformTexelBufferUpdateAfterBind} is not enabled, all bindings with descriptor type {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER} <b>must</b> not use {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT}</li>
  * <li>If {@link VkPhysicalDeviceDescriptorIndexingFeaturesEXT}{@code ::descriptorBindingStorageTexelBufferUpdateAfterBind} is not enabled, all bindings with descriptor type {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER} <b>must</b> not use {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT}</li>
- * <li>If {@code VkPhysicalDeviceInlineUniformBlockFeatureEXT}{@code ::descriptorBindingInlineUniformBlockUpdateAfterBind} is not enabled, all bindings with descriptor type {@link EXTInlineUniformBlock#VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT} <b>must</b> not use {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT}</li>
+ * <li>If {@link VkPhysicalDeviceInlineUniformBlockFeaturesEXT}{@code ::descriptorBindingInlineUniformBlockUpdateAfterBind} is not enabled, all bindings with descriptor type {@link EXTInlineUniformBlock#VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT} <b>must</b> not use {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT}</li>
  * <li>All bindings with descriptor type {@link VK10#VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT}, {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC}, or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} <b>must</b> not use {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT}</li>
  * <li>If {@link VkPhysicalDeviceDescriptorIndexingFeaturesEXT}{@code ::descriptorBindingUpdateUnusedWhilePending} is not enabled, all elements of {@code pBindingFlags} <b>must</b> not include {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT}</li>
  * <li>If {@link VkPhysicalDeviceDescriptorIndexingFeaturesEXT}{@code ::descriptorBindingPartiallyBound} is not enabled, all elements of {@code pBindingFlags} <b>must</b> not include {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT}</li>
@@ -100,18 +100,14 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
         PBINDINGFLAGS = layout.offsetof(3);
     }
 
-    VkDescriptorSetLayoutBindingFlagsCreateInfoEXT(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkDescriptorSetLayoutBindingFlagsCreateInfoEXT(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -169,30 +165,31 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated with {@link BufferUtils}. */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT create() {
-        return new VkDescriptorSetLayoutBindingFlagsCreateInfoEXT(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance for the specified memory address. */
+    /** Returns a new {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance for the specified memory address. */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT create(long address) {
-        return new VkDescriptorSetLayoutBindingFlagsCreateInfoEXT(address, null);
+        return wrap(VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.class, address);
     }
 
     /**
@@ -201,7 +198,7 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -210,7 +207,7 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -219,7 +216,8 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -229,43 +227,43 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -293,7 +291,7 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -303,26 +301,26 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.PNEXT); }
     /** Unsafe version of {@link #bindingCount}. */
-    public static int nbindingCount(long struct) { return memGetInt(struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.BINDINGCOUNT); }
+    public static int nbindingCount(long struct) { return UNSAFE.getInt(null, struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.BINDINGCOUNT); }
     /** Unsafe version of {@link #pBindingFlags() pBindingFlags}. */
     @Nullable public static IntBuffer npBindingFlags(long struct) { return memIntBufferSafe(memGetAddress(struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.PBINDINGFLAGS), nbindingCount(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.PNEXT, value); }
     /** Sets the specified value to the {@code bindingCount} field of the specified {@code struct}. */
-    public static void nbindingCount(long struct, int value) { memPutInt(struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.BINDINGCOUNT, value); }
+    public static void nbindingCount(long struct, int value) { UNSAFE.putInt(null, struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.BINDINGCOUNT, value); }
     /** Unsafe version of {@link #pBindingFlags(IntBuffer) pBindingFlags}. */
     public static void npBindingFlags(long struct, @Nullable IntBuffer value) { memPutAddress(struct + VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.PBINDINGFLAGS, memAddressSafe(value)); if (value != null) { nbindingCount(struct, value.remaining()); } }
 
@@ -331,8 +329,10 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
     /** An array of {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT} structs. */
     public static class Buffer extends StructBuffer<VkDescriptorSetLayoutBindingFlagsCreateInfoEXT, Buffer> implements NativeResource {
 
+        private static final VkDescriptorSetLayoutBindingFlagsCreateInfoEXT ELEMENT_FACTORY = VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.create(-1L);
+
         /**
-         * Creates a new {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -358,18 +358,8 @@ public class VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extends Struct imple
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkDescriptorSetLayoutBindingFlagsCreateInfoEXT newInstance(long address) {
-            return new VkDescriptorSetLayoutBindingFlagsCreateInfoEXT(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkDescriptorSetLayoutBindingFlagsCreateInfoEXT getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

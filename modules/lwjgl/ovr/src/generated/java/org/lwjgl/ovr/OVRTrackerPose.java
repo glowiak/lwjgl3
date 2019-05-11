@@ -35,7 +35,6 @@ import static org.lwjgl.system.MemoryStack.*;
  *     unsigned int TrackerFlags;
  *     {@link OVRPosef ovrPosef} Pose;
  *     {@link OVRPosef ovrPosef} LeveledPose;
- *     char[4];
  * }</code></pre>
  */
 @NativeType("struct ovrTrackerPose")
@@ -55,10 +54,10 @@ public class OVRTrackerPose extends Struct implements NativeResource {
 
     static {
         Layout layout = __struct(
+            DEFAULT_PACK_ALIGNMENT, 8,
             __member(4),
             __member(OVRPosef.SIZEOF, OVRPosef.ALIGNOF),
-            __member(OVRPosef.SIZEOF, OVRPosef.ALIGNOF),
-            __padding(4, true)
+            __member(OVRPosef.SIZEOF, OVRPosef.ALIGNOF)
         );
 
         SIZEOF = layout.getSize();
@@ -69,18 +68,14 @@ public class OVRTrackerPose extends Struct implements NativeResource {
         LEVELEDPOSE = layout.offsetof(2);
     }
 
-    OVRTrackerPose(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link OVRTrackerPose} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code OVRTrackerPose} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public OVRTrackerPose(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -102,30 +97,31 @@ public class OVRTrackerPose extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRTrackerPose} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRTrackerPose} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static OVRTrackerPose malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(OVRTrackerPose.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link OVRTrackerPose} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRTrackerPose} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static OVRTrackerPose calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(OVRTrackerPose.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link OVRTrackerPose} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code OVRTrackerPose} instance allocated with {@link BufferUtils}. */
     public static OVRTrackerPose create() {
-        return new OVRTrackerPose(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(OVRTrackerPose.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link OVRTrackerPose} instance for the specified memory address. */
+    /** Returns a new {@code OVRTrackerPose} instance for the specified memory address. */
     public static OVRTrackerPose create(long address) {
-        return new OVRTrackerPose(address, null);
+        return wrap(OVRTrackerPose.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static OVRTrackerPose createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(OVRTrackerPose.class, address);
     }
 
     /**
@@ -134,7 +130,7 @@ public class OVRTrackerPose extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRTrackerPose.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -143,7 +139,7 @@ public class OVRTrackerPose extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRTrackerPose.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -152,7 +148,8 @@ public class OVRTrackerPose extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRTrackerPose.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -162,43 +159,43 @@ public class OVRTrackerPose extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRTrackerPose.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static OVRTrackerPose.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRTrackerPose} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code OVRTrackerPose} instance allocated on the thread-local {@link MemoryStack}. */
     public static OVRTrackerPose mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link OVRTrackerPose} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code OVRTrackerPose} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static OVRTrackerPose callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link OVRTrackerPose} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code OVRTrackerPose} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRTrackerPose mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(OVRTrackerPose.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link OVRTrackerPose} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code OVRTrackerPose} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRTrackerPose callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(OVRTrackerPose.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -226,7 +223,7 @@ public class OVRTrackerPose extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRTrackerPose.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -236,13 +233,13 @@ public class OVRTrackerPose extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRTrackerPose.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #TrackerFlags}. */
-    public static int nTrackerFlags(long struct) { return memGetInt(struct + OVRTrackerPose.TRACKERFLAGS); }
+    public static int nTrackerFlags(long struct) { return UNSAFE.getInt(null, struct + OVRTrackerPose.TRACKERFLAGS); }
     /** Unsafe version of {@link #Pose}. */
     public static OVRPosef nPose(long struct) { return OVRPosef.create(struct + OVRTrackerPose.POSE); }
     /** Unsafe version of {@link #LeveledPose}. */
@@ -253,8 +250,10 @@ public class OVRTrackerPose extends Struct implements NativeResource {
     /** An array of {@link OVRTrackerPose} structs. */
     public static class Buffer extends StructBuffer<OVRTrackerPose, Buffer> implements NativeResource {
 
+        private static final OVRTrackerPose ELEMENT_FACTORY = OVRTrackerPose.create(-1L);
+
         /**
-         * Creates a new {@link OVRTrackerPose.Buffer} instance backed by the specified container.
+         * Creates a new {@code OVRTrackerPose.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -280,18 +279,8 @@ public class OVRTrackerPose extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected OVRTrackerPose newInstance(long address) {
-            return new OVRTrackerPose(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected OVRTrackerPose getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code TrackerFlags} field. */

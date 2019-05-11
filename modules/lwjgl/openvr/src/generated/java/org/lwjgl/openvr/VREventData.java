@@ -42,6 +42,8 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     {@link VREventHapticVibration VREvent_HapticVibration_t} hapticVibration;
  *     {@link VREventWebConsole VREvent_WebConsole_t} webConsole;
  *     {@link VREventInputBindingLoad VREvent_InputBindingLoad_t} inputBinding;
+ *     {@link VREventInputActionManifestLoad VREvent_InputActionManifestLoad_t} actionManifest;
+ *     {@link VREventSpatialAnchor VREvent_SpatialAnchor_t} spatialAnchor;
  * }</code></pre>
  */
 @NativeType("union VREvent_Data_t")
@@ -78,7 +80,9 @@ public class VREventData extends Struct {
         DUALANALOG,
         HAPTICVIBRATION,
         WEBCONSOLE,
-        INPUTBINDING;
+        INPUTBINDING,
+        ACTIONMANIFEST,
+        SPATIALANCHOR;
 
     static {
         Layout layout = __union(
@@ -105,7 +109,9 @@ public class VREventData extends Struct {
             __member(VREventDualAnalog.SIZEOF, VREventDualAnalog.ALIGNOF),
             __member(VREventHapticVibration.SIZEOF, VREventHapticVibration.ALIGNOF),
             __member(VREventWebConsole.SIZEOF, VREventWebConsole.ALIGNOF),
-            __member(VREventInputBindingLoad.SIZEOF, VREventInputBindingLoad.ALIGNOF)
+            __member(VREventInputBindingLoad.SIZEOF, VREventInputBindingLoad.ALIGNOF),
+            __member(VREventInputActionManifestLoad.SIZEOF, VREventInputActionManifestLoad.ALIGNOF),
+            __member(VREventSpatialAnchor.SIZEOF, VREventSpatialAnchor.ALIGNOF)
         );
 
         SIZEOF = layout.getSize();
@@ -135,20 +141,18 @@ public class VREventData extends Struct {
         HAPTICVIBRATION = layout.offsetof(21);
         WEBCONSOLE = layout.offsetof(22);
         INPUTBINDING = layout.offsetof(23);
-    }
-
-    VREventData(long address, @Nullable ByteBuffer container) {
-        super(address, container);
+        ACTIONMANIFEST = layout.offsetof(24);
+        SPATIALANCHOR = layout.offsetof(25);
     }
 
     /**
-     * Creates a {@link VREventData} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VREventData} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VREventData(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -226,18 +230,24 @@ public class VREventData extends Struct {
     /** Returns a {@link VREventInputBindingLoad} view of the {@code inputBinding} field. */
     @NativeType("VREvent_InputBindingLoad_t")
     public VREventInputBindingLoad inputBinding() { return ninputBinding(address()); }
+    /** Returns a {@link VREventInputActionManifestLoad} view of the {@code actionManifest} field. */
+    @NativeType("VREvent_InputActionManifestLoad_t")
+    public VREventInputActionManifestLoad actionManifest() { return nactionManifest(address()); }
+    /** Returns a {@link VREventSpatialAnchor} view of the {@code spatialAnchor} field. */
+    @NativeType("VREvent_SpatialAnchor_t")
+    public VREventSpatialAnchor spatialAnchor() { return nspatialAnchor(address()); }
 
     // -----------------------------------
 
-    /** Returns a new {@link VREventData} instance for the specified memory address. */
+    /** Returns a new {@code VREventData} instance for the specified memory address. */
     public static VREventData create(long address) {
-        return new VREventData(address, null);
+        return wrap(VREventData.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VREventData createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VREventData.class, address);
     }
 
     /**
@@ -247,13 +257,13 @@ public class VREventData extends Struct {
      * @param capacity the buffer capacity
      */
     public static VREventData.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VREventData.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
@@ -306,14 +316,20 @@ public class VREventData extends Struct {
     public static VREventWebConsole nwebConsole(long struct) { return VREventWebConsole.create(struct + VREventData.WEBCONSOLE); }
     /** Unsafe version of {@link #inputBinding}. */
     public static VREventInputBindingLoad ninputBinding(long struct) { return VREventInputBindingLoad.create(struct + VREventData.INPUTBINDING); }
+    /** Unsafe version of {@link #actionManifest}. */
+    public static VREventInputActionManifestLoad nactionManifest(long struct) { return VREventInputActionManifestLoad.create(struct + VREventData.ACTIONMANIFEST); }
+    /** Unsafe version of {@link #spatialAnchor}. */
+    public static VREventSpatialAnchor nspatialAnchor(long struct) { return VREventSpatialAnchor.create(struct + VREventData.SPATIALANCHOR); }
 
     // -----------------------------------
 
     /** An array of {@link VREventData} structs. */
     public static class Buffer extends StructBuffer<VREventData, Buffer> {
 
+        private static final VREventData ELEMENT_FACTORY = VREventData.create(-1L);
+
         /**
-         * Creates a new {@link VREventData.Buffer} instance backed by the specified container.
+         * Creates a new {@code VREventData.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -339,18 +355,8 @@ public class VREventData extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VREventData newInstance(long address) {
-            return new VREventData(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VREventData getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link VREventReserved} view of the {@code reserved} field. */
@@ -425,6 +431,12 @@ public class VREventData extends Struct {
         /** Returns a {@link VREventInputBindingLoad} view of the {@code inputBinding} field. */
         @NativeType("VREvent_InputBindingLoad_t")
         public VREventInputBindingLoad inputBinding() { return VREventData.ninputBinding(address()); }
+        /** Returns a {@link VREventInputActionManifestLoad} view of the {@code actionManifest} field. */
+        @NativeType("VREvent_InputActionManifestLoad_t")
+        public VREventInputActionManifestLoad actionManifest() { return VREventData.nactionManifest(address()); }
+        /** Returns a {@link VREventSpatialAnchor} view of the {@code spatialAnchor} field. */
+        @NativeType("VREvent_SpatialAnchor_t")
+        public VREventSpatialAnchor spatialAnchor() { return VREventData.nspatialAnchor(address()); }
 
     }
 

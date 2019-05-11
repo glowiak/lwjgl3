@@ -24,6 +24,8 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     uint64_t reserved1;
  *     uint64_t reserved2;
  *     uint64_t reserved3;
+ *     uint64_t reserved4;
+ *     uint64_t reserved5;
  * }</code></pre>
  */
 @NativeType("struct VREvent_Reserved_t")
@@ -40,10 +42,14 @@ public class VREventReserved extends Struct {
         RESERVED0,
         RESERVED1,
         RESERVED2,
-        RESERVED3;
+        RESERVED3,
+        RESERVED4,
+        RESERVED5;
 
     static {
         Layout layout = __struct(
+            __member(8),
+            __member(8),
             __member(8),
             __member(8),
             __member(8),
@@ -57,20 +63,18 @@ public class VREventReserved extends Struct {
         RESERVED1 = layout.offsetof(1);
         RESERVED2 = layout.offsetof(2);
         RESERVED3 = layout.offsetof(3);
-    }
-
-    VREventReserved(long address, @Nullable ByteBuffer container) {
-        super(address, container);
+        RESERVED4 = layout.offsetof(4);
+        RESERVED5 = layout.offsetof(5);
     }
 
     /**
-     * Creates a {@link VREventReserved} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VREventReserved} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VREventReserved(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -88,18 +92,24 @@ public class VREventReserved extends Struct {
     /** Returns the value of the {@code reserved3} field. */
     @NativeType("uint64_t")
     public long reserved3() { return nreserved3(address()); }
+    /** Returns the value of the {@code reserved4} field. */
+    @NativeType("uint64_t")
+    public long reserved4() { return nreserved4(address()); }
+    /** Returns the value of the {@code reserved5} field. */
+    @NativeType("uint64_t")
+    public long reserved5() { return nreserved5(address()); }
 
     // -----------------------------------
 
-    /** Returns a new {@link VREventReserved} instance for the specified memory address. */
+    /** Returns a new {@code VREventReserved} instance for the specified memory address. */
     public static VREventReserved create(long address) {
-        return new VREventReserved(address, null);
+        return wrap(VREventReserved.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VREventReserved createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VREventReserved.class, address);
     }
 
     /**
@@ -109,33 +119,39 @@ public class VREventReserved extends Struct {
      * @param capacity the buffer capacity
      */
     public static VREventReserved.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VREventReserved.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #reserved0}. */
-    public static long nreserved0(long struct) { return memGetLong(struct + VREventReserved.RESERVED0); }
+    public static long nreserved0(long struct) { return UNSAFE.getLong(null, struct + VREventReserved.RESERVED0); }
     /** Unsafe version of {@link #reserved1}. */
-    public static long nreserved1(long struct) { return memGetLong(struct + VREventReserved.RESERVED1); }
+    public static long nreserved1(long struct) { return UNSAFE.getLong(null, struct + VREventReserved.RESERVED1); }
     /** Unsafe version of {@link #reserved2}. */
-    public static long nreserved2(long struct) { return memGetLong(struct + VREventReserved.RESERVED2); }
+    public static long nreserved2(long struct) { return UNSAFE.getLong(null, struct + VREventReserved.RESERVED2); }
     /** Unsafe version of {@link #reserved3}. */
-    public static long nreserved3(long struct) { return memGetLong(struct + VREventReserved.RESERVED3); }
+    public static long nreserved3(long struct) { return UNSAFE.getLong(null, struct + VREventReserved.RESERVED3); }
+    /** Unsafe version of {@link #reserved4}. */
+    public static long nreserved4(long struct) { return UNSAFE.getLong(null, struct + VREventReserved.RESERVED4); }
+    /** Unsafe version of {@link #reserved5}. */
+    public static long nreserved5(long struct) { return UNSAFE.getLong(null, struct + VREventReserved.RESERVED5); }
 
     // -----------------------------------
 
     /** An array of {@link VREventReserved} structs. */
     public static class Buffer extends StructBuffer<VREventReserved, Buffer> {
 
+        private static final VREventReserved ELEMENT_FACTORY = VREventReserved.create(-1L);
+
         /**
-         * Creates a new {@link VREventReserved.Buffer} instance backed by the specified container.
+         * Creates a new {@code VREventReserved.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -161,18 +177,8 @@ public class VREventReserved extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VREventReserved newInstance(long address) {
-            return new VREventReserved(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VREventReserved getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code reserved0} field. */
@@ -187,6 +193,12 @@ public class VREventReserved extends Struct {
         /** Returns the value of the {@code reserved3} field. */
         @NativeType("uint64_t")
         public long reserved3() { return VREventReserved.nreserved3(address()); }
+        /** Returns the value of the {@code reserved4} field. */
+        @NativeType("uint64_t")
+        public long reserved4() { return VREventReserved.nreserved4(address()); }
+        /** Returns the value of the {@code reserved5} field. */
+        @NativeType("uint64_t")
+        public long reserved5() { return VREventReserved.nreserved5(address()); }
 
     }
 

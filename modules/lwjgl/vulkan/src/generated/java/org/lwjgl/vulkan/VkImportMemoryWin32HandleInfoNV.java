@@ -90,18 +90,14 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
         HANDLE = layout.offsetof(3);
     }
 
-    VkImportMemoryWin32HandleInfoNV(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkImportMemoryWin32HandleInfoNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkImportMemoryWin32HandleInfoNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkImportMemoryWin32HandleInfoNV(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -158,30 +154,31 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImportMemoryWin32HandleInfoNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImportMemoryWin32HandleInfoNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkImportMemoryWin32HandleInfoNV malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkImportMemoryWin32HandleInfoNV.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkImportMemoryWin32HandleInfoNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImportMemoryWin32HandleInfoNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkImportMemoryWin32HandleInfoNV calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkImportMemoryWin32HandleInfoNV.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkImportMemoryWin32HandleInfoNV} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkImportMemoryWin32HandleInfoNV} instance allocated with {@link BufferUtils}. */
     public static VkImportMemoryWin32HandleInfoNV create() {
-        return new VkImportMemoryWin32HandleInfoNV(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkImportMemoryWin32HandleInfoNV.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkImportMemoryWin32HandleInfoNV} instance for the specified memory address. */
+    /** Returns a new {@code VkImportMemoryWin32HandleInfoNV} instance for the specified memory address. */
     public static VkImportMemoryWin32HandleInfoNV create(long address) {
-        return new VkImportMemoryWin32HandleInfoNV(address, null);
+        return wrap(VkImportMemoryWin32HandleInfoNV.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImportMemoryWin32HandleInfoNV createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkImportMemoryWin32HandleInfoNV.class, address);
     }
 
     /**
@@ -190,7 +187,7 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkImportMemoryWin32HandleInfoNV.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -199,7 +196,7 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkImportMemoryWin32HandleInfoNV.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -208,7 +205,8 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkImportMemoryWin32HandleInfoNV.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -218,43 +216,43 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkImportMemoryWin32HandleInfoNV.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImportMemoryWin32HandleInfoNV.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImportMemoryWin32HandleInfoNV} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkImportMemoryWin32HandleInfoNV} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkImportMemoryWin32HandleInfoNV mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkImportMemoryWin32HandleInfoNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkImportMemoryWin32HandleInfoNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkImportMemoryWin32HandleInfoNV callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkImportMemoryWin32HandleInfoNV} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkImportMemoryWin32HandleInfoNV} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImportMemoryWin32HandleInfoNV mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkImportMemoryWin32HandleInfoNV.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkImportMemoryWin32HandleInfoNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkImportMemoryWin32HandleInfoNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImportMemoryWin32HandleInfoNV callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkImportMemoryWin32HandleInfoNV.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -282,7 +280,7 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkImportMemoryWin32HandleInfoNV.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -292,26 +290,26 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkImportMemoryWin32HandleInfoNV.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkImportMemoryWin32HandleInfoNV.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkImportMemoryWin32HandleInfoNV.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkImportMemoryWin32HandleInfoNV.PNEXT); }
     /** Unsafe version of {@link #handleType}. */
-    public static int nhandleType(long struct) { return memGetInt(struct + VkImportMemoryWin32HandleInfoNV.HANDLETYPE); }
+    public static int nhandleType(long struct) { return UNSAFE.getInt(null, struct + VkImportMemoryWin32HandleInfoNV.HANDLETYPE); }
     /** Unsafe version of {@link #handle}. */
     public static long nhandle(long struct) { return memGetAddress(struct + VkImportMemoryWin32HandleInfoNV.HANDLE); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkImportMemoryWin32HandleInfoNV.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkImportMemoryWin32HandleInfoNV.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkImportMemoryWin32HandleInfoNV.PNEXT, value); }
     /** Unsafe version of {@link #handleType(int) handleType}. */
-    public static void nhandleType(long struct, int value) { memPutInt(struct + VkImportMemoryWin32HandleInfoNV.HANDLETYPE, value); }
+    public static void nhandleType(long struct, int value) { UNSAFE.putInt(null, struct + VkImportMemoryWin32HandleInfoNV.HANDLETYPE, value); }
     /** Unsafe version of {@link #handle(long) handle}. */
     public static void nhandle(long struct, long value) { memPutAddress(struct + VkImportMemoryWin32HandleInfoNV.HANDLE, check(value)); }
 
@@ -332,7 +330,7 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -341,8 +339,10 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
     /** An array of {@link VkImportMemoryWin32HandleInfoNV} structs. */
     public static class Buffer extends StructBuffer<VkImportMemoryWin32HandleInfoNV, Buffer> implements NativeResource {
 
+        private static final VkImportMemoryWin32HandleInfoNV ELEMENT_FACTORY = VkImportMemoryWin32HandleInfoNV.create(-1L);
+
         /**
-         * Creates a new {@link VkImportMemoryWin32HandleInfoNV.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkImportMemoryWin32HandleInfoNV.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -368,18 +368,8 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkImportMemoryWin32HandleInfoNV newInstance(long address) {
-            return new VkImportMemoryWin32HandleInfoNV(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkImportMemoryWin32HandleInfoNV getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

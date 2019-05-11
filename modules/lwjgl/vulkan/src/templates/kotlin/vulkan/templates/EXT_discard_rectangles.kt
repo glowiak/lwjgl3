@@ -132,7 +132,7 @@ val EXT_discard_rectangles = "EXTDiscardRectangles".nativeClassVK("EXT_discard_r
         <ul>
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
             <li>{@code pDiscardRectangles} <b>must</b> be a valid pointer to an array of {@code discardRectangleCount} ##VkRect2D structures</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics operations</li>
             <li>{@code discardRectangleCount} <b>must</b> be greater than 0</li>
         </ul>
@@ -145,7 +145,7 @@ val EXT_discard_rectangles = "EXTDiscardRectangles".nativeClassVK("EXT_discard_r
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics</td><td></td></tr></tbody>
         </table>
 
@@ -153,9 +153,9 @@ val EXT_discard_rectangles = "EXTDiscardRectangles".nativeClassVK("EXT_discard_r
         ##VkRect2D
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command will be recorded."),
-        uint32_t.IN("firstDiscardRectangle", "the index of the first discard rectangle whose state is updated by the command."),
-        AutoSize("pDiscardRectangles")..uint32_t.IN("discardRectangleCount", "the number of discard rectangles whose state are updated by the command."),
-        VkRect2D.const.p.IN("pDiscardRectangles", "a pointer to an array of ##VkRect2D structures specifying discard rectangles.")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command will be recorded."),
+        uint32_t("firstDiscardRectangle", "the index of the first discard rectangle whose state is updated by the command."),
+        AutoSize("pDiscardRectangles")..uint32_t("discardRectangleCount", "the number of discard rectangles whose state are updated by the command."),
+        VkRect2D.const.p("pDiscardRectangles", "a pointer to an array of ##VkRect2D structures specifying discard rectangles.")
     )
 }

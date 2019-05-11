@@ -910,8 +910,9 @@ public class GL40C extends GL33C {
     public static int glGetSubroutineUniformLocation(@NativeType("GLuint") int program, @NativeType("GLenum") int shadertype, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nglGetSubroutineUniformLocation(program, shadertype, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nglGetSubroutineUniformLocation(program, shadertype, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -952,8 +953,9 @@ public class GL40C extends GL33C {
     public static int glGetSubroutineIndex(@NativeType("GLuint") int program, @NativeType("GLenum") int shadertype, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nglGetSubroutineIndex(program, shadertype, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nglGetSubroutineIndex(program, shadertype, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1518,7 +1520,7 @@ public class GL40C extends GL33C {
             check(__functionAddress);
             check(indirect, (4 * 4) >> 2);
         }
-        callPV(__functionAddress, mode, indirect);
+        callPV(mode, indirect, __functionAddress);
     }
 
     /**
@@ -1532,7 +1534,7 @@ public class GL40C extends GL33C {
             check(__functionAddress);
             check(indirect, (5 * 4) >> 2);
         }
-        callPV(__functionAddress, mode, type, indirect);
+        callPV(mode, type, indirect, __functionAddress);
     }
 
     /**
@@ -1545,7 +1547,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length, value);
+        callPV(location, value.length, value, __functionAddress);
     }
 
     /**
@@ -1558,7 +1560,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 1, value);
+        callPV(location, value.length >> 1, value, __functionAddress);
     }
 
     /**
@@ -1571,7 +1573,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 3, value);
+        callPV(location, value.length / 3, value, __functionAddress);
     }
 
     /**
@@ -1584,7 +1586,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 2, value);
+        callPV(location, value.length >> 2, value, __functionAddress);
     }
 
     /**
@@ -1597,7 +1599,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 2, transpose, value);
+        callPV(location, value.length >> 2, transpose, value, __functionAddress);
     }
 
     /**
@@ -1610,7 +1612,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 9, transpose, value);
+        callPV(location, value.length / 9, transpose, value, __functionAddress);
     }
 
     /**
@@ -1623,7 +1625,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 4, transpose, value);
+        callPV(location, value.length >> 4, transpose, value, __functionAddress);
     }
 
     /**
@@ -1636,7 +1638,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 6, transpose, value);
+        callPV(location, value.length / 6, transpose, value, __functionAddress);
     }
 
     /**
@@ -1649,7 +1651,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 3, transpose, value);
+        callPV(location, value.length >> 3, transpose, value, __functionAddress);
     }
 
     /**
@@ -1662,7 +1664,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 6, transpose, value);
+        callPV(location, value.length / 6, transpose, value, __functionAddress);
     }
 
     /**
@@ -1675,7 +1677,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 12, transpose, value);
+        callPV(location, value.length / 12, transpose, value, __functionAddress);
     }
 
     /**
@@ -1688,7 +1690,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 3, transpose, value);
+        callPV(location, value.length >> 3, transpose, value, __functionAddress);
     }
 
     /**
@@ -1701,7 +1703,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 12, transpose, value);
+        callPV(location, value.length / 12, transpose, value, __functionAddress);
     }
 
     /**
@@ -1715,7 +1717,7 @@ public class GL40C extends GL33C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, program, location, params);
+        callPV(program, location, params, __functionAddress);
     }
 
     /**
@@ -1729,7 +1731,7 @@ public class GL40C extends GL33C {
             check(__functionAddress);
             check(values, 1);
         }
-        callPV(__functionAddress, program, shadertype, index, pname, values);
+        callPV(program, shadertype, index, pname, values, __functionAddress);
     }
 
     /**
@@ -1743,7 +1745,7 @@ public class GL40C extends GL33C {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, program, shadertype, index, name.remaining(), length, memAddress(name));
+        callPPV(program, shadertype, index, name.remaining(), length, memAddress(name), __functionAddress);
     }
 
     /**
@@ -1757,7 +1759,7 @@ public class GL40C extends GL33C {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, program, shadertype, index, name.remaining(), length, memAddress(name));
+        callPPV(program, shadertype, index, name.remaining(), length, memAddress(name), __functionAddress);
     }
 
     /**
@@ -1770,7 +1772,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, shadertype, indices.length, indices);
+        callPV(shadertype, indices.length, indices, __functionAddress);
     }
 
     /**
@@ -1784,7 +1786,7 @@ public class GL40C extends GL33C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, shadertype, location, params);
+        callPV(shadertype, location, params, __functionAddress);
     }
 
     /**
@@ -1798,7 +1800,7 @@ public class GL40C extends GL33C {
             check(__functionAddress);
             check(values, 1);
         }
-        callPV(__functionAddress, program, shadertype, pname, values);
+        callPV(program, shadertype, pname, values, __functionAddress);
     }
 
     /**
@@ -1814,7 +1816,7 @@ public class GL40C extends GL33C {
                 check(values, GL11.glGetInteger(GL_PATCH_VERTICES));
             }
         }
-        callPV(__functionAddress, pname, values);
+        callPV(pname, values, __functionAddress);
     }
 
     /**
@@ -1827,7 +1829,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, ids.length, ids);
+        callPV(ids.length, ids, __functionAddress);
     }
 
     /**
@@ -1840,7 +1842,7 @@ public class GL40C extends GL33C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, ids.length, ids);
+        callPV(ids.length, ids, __functionAddress);
     }
 
     /**
@@ -1854,7 +1856,7 @@ public class GL40C extends GL33C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, target, index, pname, params);
+        callPV(target, index, pname, params, __functionAddress);
     }
 
 }

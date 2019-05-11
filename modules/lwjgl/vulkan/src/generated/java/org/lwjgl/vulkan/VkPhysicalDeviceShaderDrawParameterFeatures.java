@@ -16,23 +16,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * Structure describing shader draw parameter features that can be supported by an implementation.
- * 
- * <h5>Description</h5>
- * 
- * <p>If the {@link VkPhysicalDeviceShaderDrawParameterFeatures} structure is included in the {@code pNext} chain of flink:VkPhysicalDeviceFeatures2, it is filled with a value indicating whether the feature is supported.</p>
- * 
- * <h5>Valid Usage (Implicit)</h5>
- * 
- * <ul>
- * <li>{@code sType} <b>must</b> be {@link VK11#VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES}</li>
- * </ul>
- * 
- * <h3>Member documentation</h3>
- * 
- * <ul>
- * <li>{@code shaderDrawParameters} &ndash; specifies whether shader draw parameters are supported.</li>
- * </ul>
+ * See {@link VkPhysicalDeviceShaderDrawParametersFeatures}.
  * 
  * <h3>Layout</h3>
  * 
@@ -43,70 +27,30 @@ import static org.lwjgl.system.MemoryStack.*;
  *     VkBool32 shaderDrawParameters;
  * }</code></pre>
  */
-public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implements NativeResource {
-
-    /** The struct size in bytes. */
-    public static final int SIZEOF;
-
-    /** The struct alignment in bytes. */
-    public static final int ALIGNOF;
-
-    /** The struct member offsets. */
-    public static final int
-        STYPE,
-        PNEXT,
-        SHADERDRAWPARAMETERS;
-
-    static {
-        Layout layout = __struct(
-            __member(4),
-            __member(POINTER_SIZE),
-            __member(4)
-        );
-
-        SIZEOF = layout.getSize();
-        ALIGNOF = layout.getAlignment();
-
-        STYPE = layout.offsetof(0);
-        PNEXT = layout.offsetof(1);
-        SHADERDRAWPARAMETERS = layout.offsetof(2);
-    }
-
-    VkPhysicalDeviceShaderDrawParameterFeatures(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
+public class VkPhysicalDeviceShaderDrawParameterFeatures extends VkPhysicalDeviceShaderDrawParametersFeatures {
 
     /**
-     * Creates a {@link VkPhysicalDeviceShaderDrawParameterFeatures} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceShaderDrawParameterFeatures} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceShaderDrawParameterFeatures(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(container);
     }
 
-    @Override
-    public int sizeof() { return SIZEOF; }
-
-    /** Returns the value of the {@code sType} field. */
-    @NativeType("VkStructureType")
-    public int sType() { return nsType(address()); }
-    /** Returns the value of the {@code pNext} field. */
-    @NativeType("void *")
-    public long pNext() { return npNext(address()); }
-    /** Returns the value of the {@code shaderDrawParameters} field. */
-    @NativeType("VkBool32")
-    public boolean shaderDrawParameters() { return nshaderDrawParameters(address()) != 0; }
-
     /** Sets the specified value to the {@code sType} field. */
+    @Override
     public VkPhysicalDeviceShaderDrawParameterFeatures sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
+    @Override
     public VkPhysicalDeviceShaderDrawParameterFeatures pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code shaderDrawParameters} field. */
+    @Override
     public VkPhysicalDeviceShaderDrawParameterFeatures shaderDrawParameters(@NativeType("VkBool32") boolean value) { nshaderDrawParameters(address(), value ? 1 : 0); return this; }
 
     /** Initializes this struct with the specified values. */
+    @Override
     public VkPhysicalDeviceShaderDrawParameterFeatures set(
         int sType,
         long pNext,
@@ -133,30 +77,31 @@ public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implemen
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceShaderDrawParameterFeatures malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPhysicalDeviceShaderDrawParameterFeatures.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceShaderDrawParameterFeatures calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPhysicalDeviceShaderDrawParameterFeatures.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated with {@link BufferUtils}. */
     public static VkPhysicalDeviceShaderDrawParameterFeatures create() {
-        return new VkPhysicalDeviceShaderDrawParameterFeatures(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDeviceShaderDrawParameterFeatures.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPhysicalDeviceShaderDrawParameterFeatures} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceShaderDrawParameterFeatures} instance for the specified memory address. */
     public static VkPhysicalDeviceShaderDrawParameterFeatures create(long address) {
-        return new VkPhysicalDeviceShaderDrawParameterFeatures(address, null);
+        return wrap(VkPhysicalDeviceShaderDrawParameterFeatures.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceShaderDrawParameterFeatures createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceShaderDrawParameterFeatures.class, address);
     }
 
     /**
@@ -165,7 +110,7 @@ public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceShaderDrawParameterFeatures.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -174,7 +119,7 @@ public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceShaderDrawParameterFeatures.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -183,7 +128,8 @@ public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceShaderDrawParameterFeatures.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -193,43 +139,43 @@ public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceShaderDrawParameterFeatures.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceShaderDrawParameterFeatures.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPhysicalDeviceShaderDrawParameterFeatures mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPhysicalDeviceShaderDrawParameterFeatures callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceShaderDrawParameterFeatures mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPhysicalDeviceShaderDrawParameterFeatures.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPhysicalDeviceShaderDrawParameterFeatures} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceShaderDrawParameterFeatures callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPhysicalDeviceShaderDrawParameterFeatures.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -257,7 +203,7 @@ public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceShaderDrawParameterFeatures.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -267,32 +213,18 @@ public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceShaderDrawParameterFeatures.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
-    /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPhysicalDeviceShaderDrawParameterFeatures.STYPE); }
-    /** Unsafe version of {@link #pNext}. */
-    public static long npNext(long struct) { return memGetAddress(struct + VkPhysicalDeviceShaderDrawParameterFeatures.PNEXT); }
-    /** Unsafe version of {@link #shaderDrawParameters}. */
-    public static int nshaderDrawParameters(long struct) { return memGetInt(struct + VkPhysicalDeviceShaderDrawParameterFeatures.SHADERDRAWPARAMETERS); }
-
-    /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPhysicalDeviceShaderDrawParameterFeatures.STYPE, value); }
-    /** Unsafe version of {@link #pNext(long) pNext}. */
-    public static void npNext(long struct, long value) { memPutAddress(struct + VkPhysicalDeviceShaderDrawParameterFeatures.PNEXT, value); }
-    /** Unsafe version of {@link #shaderDrawParameters(boolean) shaderDrawParameters}. */
-    public static void nshaderDrawParameters(long struct, int value) { memPutInt(struct + VkPhysicalDeviceShaderDrawParameterFeatures.SHADERDRAWPARAMETERS, value); }
-
-    // -----------------------------------
-
     /** An array of {@link VkPhysicalDeviceShaderDrawParameterFeatures} structs. */
-    public static class Buffer extends StructBuffer<VkPhysicalDeviceShaderDrawParameterFeatures, Buffer> implements NativeResource {
+    public static class Buffer extends VkPhysicalDeviceShaderDrawParametersFeatures.Buffer {
+
+        private static final VkPhysicalDeviceShaderDrawParameterFeatures ELEMENT_FACTORY = VkPhysicalDeviceShaderDrawParameterFeatures.create(-1L);
 
         /**
-         * Creates a new {@link VkPhysicalDeviceShaderDrawParameterFeatures.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceShaderDrawParameterFeatures.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -301,7 +233,7 @@ public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implemen
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container, container.remaining() / SIZEOF);
+            super(container);
         }
 
         public Buffer(long address, int cap) {
@@ -318,35 +250,18 @@ public class VkPhysicalDeviceShaderDrawParameterFeatures extends Struct implemen
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
+        protected VkPhysicalDeviceShaderDrawParameterFeatures getElementFactory() {
+            return ELEMENT_FACTORY;
         }
-
-        @Override
-        protected VkPhysicalDeviceShaderDrawParameterFeatures newInstance(long address) {
-            return new VkPhysicalDeviceShaderDrawParameterFeatures(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
-        }
-
-        /** Returns the value of the {@code sType} field. */
-        @NativeType("VkStructureType")
-        public int sType() { return VkPhysicalDeviceShaderDrawParameterFeatures.nsType(address()); }
-        /** Returns the value of the {@code pNext} field. */
-        @NativeType("void *")
-        public long pNext() { return VkPhysicalDeviceShaderDrawParameterFeatures.npNext(address()); }
-        /** Returns the value of the {@code shaderDrawParameters} field. */
-        @NativeType("VkBool32")
-        public boolean shaderDrawParameters() { return VkPhysicalDeviceShaderDrawParameterFeatures.nshaderDrawParameters(address()) != 0; }
 
         /** Sets the specified value to the {@code sType} field. */
+        @Override
         public VkPhysicalDeviceShaderDrawParameterFeatures.Buffer sType(@NativeType("VkStructureType") int value) { VkPhysicalDeviceShaderDrawParameterFeatures.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
+        @Override
         public VkPhysicalDeviceShaderDrawParameterFeatures.Buffer pNext(@NativeType("void *") long value) { VkPhysicalDeviceShaderDrawParameterFeatures.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code shaderDrawParameters} field. */
+        @Override
         public VkPhysicalDeviceShaderDrawParameterFeatures.Buffer shaderDrawParameters(@NativeType("VkBool32") boolean value) { VkPhysicalDeviceShaderDrawParameterFeatures.nshaderDrawParameters(address(), value ? 1 : 0); return this; }
 
     }

@@ -78,18 +78,14 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
         SIZE = layout.offsetof(2);
     }
 
-    VkSpecializationMapEntry(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkSpecializationMapEntry} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkSpecializationMapEntry} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkSpecializationMapEntry(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -139,30 +135,31 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSpecializationMapEntry} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSpecializationMapEntry} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkSpecializationMapEntry malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkSpecializationMapEntry.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkSpecializationMapEntry} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSpecializationMapEntry} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkSpecializationMapEntry calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkSpecializationMapEntry.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkSpecializationMapEntry} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkSpecializationMapEntry} instance allocated with {@link BufferUtils}. */
     public static VkSpecializationMapEntry create() {
-        return new VkSpecializationMapEntry(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkSpecializationMapEntry.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkSpecializationMapEntry} instance for the specified memory address. */
+    /** Returns a new {@code VkSpecializationMapEntry} instance for the specified memory address. */
     public static VkSpecializationMapEntry create(long address) {
-        return new VkSpecializationMapEntry(address, null);
+        return wrap(VkSpecializationMapEntry.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSpecializationMapEntry createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkSpecializationMapEntry.class, address);
     }
 
     /**
@@ -171,7 +168,7 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSpecializationMapEntry.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -180,7 +177,7 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSpecializationMapEntry.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -189,7 +186,8 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSpecializationMapEntry.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -199,43 +197,43 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSpecializationMapEntry.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSpecializationMapEntry.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSpecializationMapEntry} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkSpecializationMapEntry} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkSpecializationMapEntry mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkSpecializationMapEntry} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkSpecializationMapEntry} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkSpecializationMapEntry callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkSpecializationMapEntry} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkSpecializationMapEntry} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSpecializationMapEntry mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkSpecializationMapEntry.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkSpecializationMapEntry} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkSpecializationMapEntry} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSpecializationMapEntry callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkSpecializationMapEntry.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -263,7 +261,7 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSpecializationMapEntry.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -273,22 +271,22 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSpecializationMapEntry.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #constantID}. */
-    public static int nconstantID(long struct) { return memGetInt(struct + VkSpecializationMapEntry.CONSTANTID); }
+    public static int nconstantID(long struct) { return UNSAFE.getInt(null, struct + VkSpecializationMapEntry.CONSTANTID); }
     /** Unsafe version of {@link #offset}. */
-    public static int noffset(long struct) { return memGetInt(struct + VkSpecializationMapEntry.OFFSET); }
+    public static int noffset(long struct) { return UNSAFE.getInt(null, struct + VkSpecializationMapEntry.OFFSET); }
     /** Unsafe version of {@link #size}. */
     public static long nsize(long struct) { return memGetAddress(struct + VkSpecializationMapEntry.SIZE); }
 
     /** Unsafe version of {@link #constantID(int) constantID}. */
-    public static void nconstantID(long struct, int value) { memPutInt(struct + VkSpecializationMapEntry.CONSTANTID, value); }
+    public static void nconstantID(long struct, int value) { UNSAFE.putInt(null, struct + VkSpecializationMapEntry.CONSTANTID, value); }
     /** Unsafe version of {@link #offset(int) offset}. */
-    public static void noffset(long struct, int value) { memPutInt(struct + VkSpecializationMapEntry.OFFSET, value); }
+    public static void noffset(long struct, int value) { UNSAFE.putInt(null, struct + VkSpecializationMapEntry.OFFSET, value); }
     /** Unsafe version of {@link #size(long) size}. */
     public static void nsize(long struct, long value) { memPutAddress(struct + VkSpecializationMapEntry.SIZE, value); }
 
@@ -297,8 +295,10 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
     /** An array of {@link VkSpecializationMapEntry} structs. */
     public static class Buffer extends StructBuffer<VkSpecializationMapEntry, Buffer> implements NativeResource {
 
+        private static final VkSpecializationMapEntry ELEMENT_FACTORY = VkSpecializationMapEntry.create(-1L);
+
         /**
-         * Creates a new {@link VkSpecializationMapEntry.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkSpecializationMapEntry.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -324,18 +324,8 @@ public class VkSpecializationMapEntry extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkSpecializationMapEntry newInstance(long address) {
-            return new VkSpecializationMapEntry(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkSpecializationMapEntry getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code constantID} field. */

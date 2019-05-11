@@ -5,7 +5,6 @@
 package org.lwjgl.generator
 
 import org.lwjgl.generator.GenerationMode.*
-import org.lwjgl.generator.ParameterType.*
 import java.io.*
 
 /*
@@ -78,11 +77,23 @@ class Func(
     private inline fun getParam(crossinline predicate: (Parameter) -> Boolean) = getParams(predicate).single()
     internal inline fun hasParam(crossinline predicate: (Parameter) -> Boolean) = getParams(predicate).any()
 
-    private fun getNativeParams(withExplicitFunctionAddress: Boolean = true, withJNIEnv: Boolean = false) =
-        getParams { (withJNIEnv || it !== JNI_ENV) && (withExplicitFunctionAddress || it !== EXPLICIT_FUNCTION_ADDRESS) && !it.has<Virtual>() }
+    private fun getNativeParams(
+        withExplicitFunctionAddress: Boolean = true,
+        withJNIEnv: Boolean = false,
+        withAutoSizeResultParams: Boolean = true
+    ) = parameters.asSequence()
+        .let { p -> if (withExplicitFunctionAddress) p else p.filter { it !== EXPLICIT_FUNCTION_ADDRESS } }
+        .let { p -> if (withJNIEnv) p else p.filter { it !== JNI_ENV } }
+        .let { p -> if (withAutoSizeResultParams)
+            p.filter { !it.has<Virtual>() }
+        else
+            p.filter { !((it.has<Virtual>() && !it.has<AutoSizeResultParam>()) || (it.isAutoSizeResultOut && hideAutoSizeResultParam)) }
+        }
 
     /** Returns a parameter that has the specified ReferenceModifier with the specified reference. Returns null if no such parameter exists. */
-    internal inline fun <reified T> getReferenceParam(reference: String) where T : ParameterModifier, T : ReferenceModifier = parameters.asSequence().firstOrNull {
+    internal inline fun <reified T> getReferenceParam(reference: String)
+        where T : ParameterModifier,
+              T : ReferenceModifier = parameters.asSequence().firstOrNull {
         it.has<T>(reference)
     } // Assumes at most 1 parameter will be found that references the specified parameter
 
@@ -130,7 +141,7 @@ class Func(
     }
 
     internal val hasExplicitFunctionAddress
-        get() = this.parameters.isNotEmpty() && this.parameters[0] === EXPLICIT_FUNCTION_ADDRESS
+        get() = this.parameters.isNotEmpty() && this.parameters.last() === EXPLICIT_FUNCTION_ADDRESS
 
     private val hasNativeCode
         get() = (has<Code>() && get<Code>().let { it.nativeBeforeCall != null || it.nativeCall != null || it.nativeAfterCall != null }) || this.parameters.contains(JNI_ENV)
@@ -171,7 +182,7 @@ class Func(
             if (it is PointerType<*>) {
                 if (it.elementType is StructType && hasParam { param -> param.has<AutoSizeResultParam>() })
                     "${it.javaMethodType}.Buffer"
-                else if (it is CallbackType)
+                else if (it is FunctionType)
                     it.className
                 else
                     it.javaMethodType
@@ -188,9 +199,15 @@ class Func(
     internal val returnsNull
         get() = !(has(Nonnull) || has(Address) || (has<Macro>() && !get<Macro>().function))
 
-    private fun hasAutoSizePredicate(reference: Parameter): (Parameter) -> Boolean = { it.has<AutoSize>() && it.get<AutoSize>().hasReference(reference.name) }
+    private inline fun <reified T> hasReference(reference: Parameter): (Parameter) -> Boolean
+        where T : ParameterModifier,
+              T : ReferenceModifier = { it.has<T>() && it.get<T>().hasReference(reference.name) }
 
-    internal fun hasAutoSizeFor(reference: Parameter) = hasParam(hasAutoSizePredicate(reference))
+    private inline fun <reified T> hasReferenceFor(reference: Parameter)
+        where T : ParameterModifier,
+              T : ReferenceModifier = hasParam(hasReference<T>(reference))
+
+    internal fun hasAutoSizeFor(reference: Parameter) = hasReferenceFor<AutoSize>(reference)
 
     internal val hideAutoSizeResultParam = returns.nativeType is PointerType<*> && getParams { it.isAutoSizeResultOut }.count() == 1
 
@@ -200,7 +217,7 @@ class Func(
 
     private fun Parameter.asJavaMethodParam(annotate: Boolean) =
         (
-            if (nativeType is PointerType<*> && nativeType.elementType is StructType && (has<Check>() || getReferenceParam<AutoSize>(name) != null))
+            if (nativeType is PointerType<*> && nativeType.elementType is StructType && (has<Check>() || has<Unsafe>() || getReferenceParam<AutoSize>(name) != null))
                 "$javaMethodType.Buffer"
             else if (nativeType is ArrayType<*>)
                 "${nativeType.mapping.primitive}[]"
@@ -210,7 +227,7 @@ class Func(
                 javaMethodType
         ).let {
             if (annotate) {
-                nativeType.annotate(it).let {annotatedType ->
+                nativeType.annotate(it).let { annotatedType ->
                     if (nativeType.isReference && has(nullable)) {
                         "@Nullable $annotatedType"
                     } else {
@@ -237,12 +254,12 @@ class Func(
             }
         }
 
-    private fun Parameter.asNativeMethodCallParam(mode: GenerationMode) = when {
-        nativeType.dereference is StructType || nativeType is ObjectType
+    private fun Parameter.asNativeMethodArgument(mode: GenerationMode) = when {
+        nativeType.dereference is StructType || nativeType is WrappedPointerType
                                                          ->
             if (has(nullable))
                 "memAddressSafe($name)"
-            else if (nativeType is ObjectType && hasUnsafeMethod && nativeClass.binding!!.apiCapabilities === APICapabilities.PARAM_CAPABILITIES)
+            else if (nativeType is WrappedPointerType && hasUnsafeMethod && nativeClass.binding!!.apiCapabilities === APICapabilities.PARAM_CAPABILITIES)
                 name
             else
                 "$name.$ADDRESS"
@@ -259,7 +276,7 @@ class Func(
     }
 
     private val Parameter.isFunctionProvider
-        get() = nativeType is ObjectType && nativeClass.binding != null && nativeClass.binding.apiCapabilities === APICapabilities.PARAM_CAPABILITIES
+        get() = nativeType is WrappedPointerType && nativeClass.binding != null && nativeClass.binding.apiCapabilities === APICapabilities.PARAM_CAPABILITIES
 
     /** Validates parameters with modifiers that reference other parameters. */
     private fun validate() {
@@ -275,15 +292,15 @@ class Func(
         parameters.forEachIndexed { i, it ->
             it.nativeType.dereference.let { type ->
                 if (type is StructType) {
-                    if (it.paramType === OUT)
-                        type.definition.hasUsageOutput()
-                    else
+                    if (it.isInput)
                         type.definition.hasUsageInput()
+                    else
+                        type.definition.hasUsageOutput()
                 }
             }
 
-            if (it === EXPLICIT_FUNCTION_ADDRESS && i != 0)
-                it.error("The explicit function address parameter must be the first parameter.")
+            if (it === EXPLICIT_FUNCTION_ADDRESS && i != parameters.lastIndex)
+                it.error("The explicit function address parameter must be the last parameter.")
 
             if (it.has<Check>()) {
                 val checkReference = paramMap[it.get<Check>().expression]
@@ -327,6 +344,7 @@ class Func(
             if (it.isBufferPointer
                 && it.nativeType !is CharSequenceType
                 && !it.has<Check>()
+                && !it.has<Unsafe>()
                 && !hasAutoSizeFor(it)
                 && !it.has<AutoSizeResultParam>()
                 && !it.has<Terminated>()
@@ -398,6 +416,31 @@ class Func(
 
             if (it.nativeType === va_list && i != parameters.lastIndex)
                 it.error("The va_list type can only be used on the last parameter of a function")
+
+            if (it.nativeType is FunctionType && !it.nativeType.function.skipNative) {
+                if (!hasReferenceFor<UserData>(it)) {
+                    it.error("Missing UserData parameter for callback parameter: ${it.name}")
+                }
+                Expression(
+                    "${if (it.has(nullable)) "${it.name} == null ? NULL : " else ""}${it.nativeType.function.className}.DELEGATE",
+                    keepParam = true,
+                    skipNormal = true
+                )..it
+            }
+
+            if (it.has<UserData>()) {
+                val callbackParamName = it.get<UserData>().reference
+                val callbackParam = paramMap[callbackParamName]
+                if (callbackParam == null) {
+                    it.error("Callback reference does not exist: UserData($callbackParamName)")
+                } else if (callbackParam.nativeType !is FunctionType) {
+                    it.error("UserData reference must be a callback parameter: UserData($callbackParamName)")
+                }
+                Expression(
+                    "$callbackParamName.$ADDRESS",
+                    skipNormal = true
+                )..it
+            }
         }
     }
 
@@ -442,27 +485,25 @@ class Func(
         // First pass
         getNativeParams().forEach {
             if (it.nativeType.mapping === PointerMapping.OPAQUE_POINTER) {
-                if (!it.has(nullable) && !hasUnsafeMethod && it.nativeType !is ObjectType && transforms?.get(it) !is SkipCheckFunctionTransform)
+                if (!it.has(nullable) && !hasUnsafeMethod && it.nativeType !is WrappedPointerType && transforms?.get(it) !is SkipCheckFunctionTransform)
                     checks.add("check(${it.name});")
                 return@forEach
             }
 
             var Safe = if (it.has<Nullable>()) "Safe" else ""
 
-            if (it.paramType === IN) {
-                if (it.nativeType is CharSequenceType && !it.has<Check>() && !hasAutoSizeFor(it) && transforms?.get(it) == null)
-                    checks.add("checkNT${it.nativeType.charMapping.bytes}$Safe(${it.name});")
+            if (it.nativeType is CharSequenceType && !it.has<Check>() && !it.has<Unsafe>() && !hasAutoSizeFor(it) && transforms?.get(it) == null)
+                checks.add("checkNT${it.nativeType.charMapping.bytes}$Safe(${it.name});")
 
-                if (it.has<Terminated>()) {
-                    val postfix = if ((it.nativeType.mapping as PointerMapping).isMultiByte) "" else "1"
-                    checks.add("checkNT$postfix$Safe(${it.name}${it.get<Terminated>().let { terminated -> if (terminated === NullTerminated) "" else ", ${terminated.value}" }});")
-                }
+            if (it.has<Terminated>()) {
+                val postfix = if ((it.nativeType.mapping as PointerMapping).isMultiByte) "" else "1"
+                checks.add("checkNT$postfix$Safe(${it.name}${it.get<Terminated>().let { terminated -> if (terminated === NullTerminated) "" else ", ${terminated.value}" }});")
             }
 
-            if (it.has<Check>()) {
+            if (it.has<Check>() && (!it.has<AutoSizeResultParam>() || !hideAutoSizeResultParam)) {
                 val check = it.get<Check>()
                 val transform = transforms?.get(it)
-                if (check !== Unsafe && transform !is SkipCheckFunctionTransform) {
+                if (transform !is SkipCheckFunctionTransform) {
                     checks.add(when {
                         it.has<MultiType>()         -> "check$Safe(${it.name}, ${bufferShift(check.expression, it.name, ">>", transform)});"
                         it.nativeType is StructType -> "check$Safe(${it.name}, ${bufferShift(check.expression, it.name, "<<", transform)});"
@@ -473,9 +514,9 @@ class Func(
 
             if (it.has<AutoSize>()) {
                 val autoSize = it.get<AutoSize>()
-                if (mode === NORMAL || it.paramType === INOUT) {
+                if (mode === NORMAL || !it.isInput) {
                     var expression = it.name
-                    if (it.paramType === INOUT) {
+                    if (!it.isInput) {
                         expression += if (it.nativeType is ArrayType<*>)
                             "[0]"
                         else
@@ -525,7 +566,7 @@ class Func(
 
         // Second pass
         getNativeParams()
-            .filter { it.paramType != OUT && it.nativeType.hasStructValidation && !hasUnsafeMethod }
+            .filter { it.isInput && it.nativeType.hasStructValidation && !hasUnsafeMethod }
             .forEach {
                 // Do this after the AutoSize check
                 checks.add(
@@ -589,7 +630,7 @@ class Func(
             if (hasUnsafeMethod)
                 writer.generateUnsafeMethod(constantMacro, hasReuse)
 
-            if ((returns.nativeType !is CharSequenceType || has<Address>()) && parameters.none { it.has<AutoSize>() && it.paramType == IN })
+            if ((returns.nativeType !is CharSequenceType || has<Address>() || has<MustBeDisposed>()) && parameters.none { (it.has<AutoSize>() && it.isInput) || (it.has<Expression>() && it.get<Expression>().skipNormal) })
                 writer.generateJavaMethod(constantMacro, hasReuse)
 
             writer.generateAlternativeMethods()
@@ -598,7 +639,9 @@ class Func(
         if (constantMacro && !has(private)) {
             writer.println()
             writer.printDocumentation { true }
-            writer.println("$t${accessModifier}static final ${if (returns.nativeType is CharSequenceType) "String" else returns.javaMethodType} $name = $name();")
+            writer.println("$t${accessModifier}static final ${if (returns.nativeType is CharSequenceType) "String" else returns.javaMethodType} $name = $name(${
+                if (returns.nativeType !is StructType) "" else "${returns.nativeType.javaMethodType}.create()"
+            });")
         }
     }
 
@@ -665,12 +708,12 @@ class Func(
         print("(")
 
         val nativeParams = getNativeParams()
-        if (hasFunctionAddressParam && !hasExplicitFunctionAddress) {
-            print("long $FUNCTION_ADDRESS")
-            if (nativeParams.any()) print(", ")
-        }
         printList(nativeParams) {
             it.asNativeMethodParam(nativeOnly)
+        }
+        if (hasFunctionAddressParam && !hasExplicitFunctionAddress) {
+            if (nativeParams.any()) print(", ")
+            print("long $FUNCTION_ADDRESS")
         }
         if (returns.isStructValue && !hasParam { it has ReturnParam }) {
             if (nativeClass.binding != null || nativeParams.any()) print(", ")
@@ -682,12 +725,12 @@ class Func(
             if (retType != "void")
                 print("return ")
             print("${get<Reuse>().source.className}.n$name(")
-            if (hasFunctionAddressParam && !hasExplicitFunctionAddress) {
-                print(FUNCTION_ADDRESS)
-                if (nativeParams.any()) print(", ")
-            }
             printList(nativeParams) {
                 it.name
+            }
+            if (hasFunctionAddressParam && !hasExplicitFunctionAddress) {
+                if (nativeParams.any()) print(", ")
+                print(FUNCTION_ADDRESS)
             }
             println(");\n$t}")
         } else {
@@ -741,9 +784,9 @@ class Func(
             if (has<DependsOn>() || has<IgnoreMissing>() || binding.shouldCheckFunctionAddress(this@Func))
                 checks.add("check($FUNCTION_ADDRESS);")
             getNativeParams().forEach {
-                if (it.nativeType.mapping === PointerMapping.OPAQUE_POINTER && !it.has(nullable) && it.nativeType !is ObjectType)
+                if (it.nativeType.mapping === PointerMapping.OPAQUE_POINTER && !it.has(nullable) && it.nativeType !is WrappedPointerType)
                     checks.add("check(${it.name});")
-                else if (it.paramType != OUT && it.nativeType.hasStructValidation)
+                else if (it.isInput && it.nativeType.hasStructValidation)
                     checks.add(
                         "${it.nativeType.javaMethodType}.validate(${it.name}${sequenceOf(
                             if (it.has<Check>()) it.get<Check>().expression else null,
@@ -783,15 +826,15 @@ class Func(
         else
             "${nativeClass.callingConvention.method}${getNativeParams(withExplicitFunctionAddress = false).map { it.nativeType.jniSignatureJava }.joinToString("")}${returns.nativeType.jniSignature}("
         )
-        if (!hasExplicitFunctionAddress) {
-            print(FUNCTION_ADDRESS)
-            if (hasNativeParams) print(", ")
-        }
         printList(getNativeParams()) {
             if (it.isFunctionProvider)
                 "${it.name}.$ADDRESS"
             else
                 it.name
+        }
+        if (!hasExplicitFunctionAddress) {
+            if (hasNativeParams) print(", ")
+            print(FUNCTION_ADDRESS)
         }
         if (returns.isStructValue && !hasParam { it has ReturnParam }) {
             print(", ")
@@ -835,16 +878,13 @@ class Func(
         }
 
         print("$t${if (constantMacro) "private " else accessModifier}static $retType $name(")
-        printList(getNativeParams()) {
-            if (it.isAutoSizeResultOut && hideAutoSizeResultParam)
-                null
-            else
-                it.asJavaMethodParam(true)
+        printList(getNativeParams(withAutoSizeResultParams = false)) {
+            it.asJavaMethodParam(true)
         }
 
         if (returns.isStructValue && !hasParam { it has ReturnParam }) {
             if (!parameters.isEmpty()) print(", ")
-            print("${returns.nativeType.javaMethodType} $RESULT")
+            print("${returns.nativeType.annotate(retType)} $RESULT")
         }
 
         println(") {")
@@ -865,6 +905,7 @@ class Func(
             return
         }
 
+        val hasArrays = hasParam { it.nativeType is ArrayType<*> }
         val code = if (has<Code>()) get() else Code.NO_CODE
 
         // Get function address
@@ -873,7 +914,7 @@ class Func(
             nativeClass.binding!!.generateFunctionAddress(this, this@Func)
 
         // Generate checks
-        printCode(code.javaInit, ApplyTo.NORMAL)
+        printCode(code.javaInit, false, hasArrays)
         if (Module.CHECKS && !has<Macro>())
             generateChecks(NORMAL)
 
@@ -888,23 +929,23 @@ class Func(
             println("$t$t${autoSizeType}Buffer ${autoSizeParam.name} = stack.calloc$autoSizeType(1);")
         }
 
-        val hasFinally = hasStack || code.hasStatements(code.javaFinally, ApplyTo.NORMAL)
+        val hasFinally = hasStack || code.hasStatements(code.javaFinally, false, hasArrays)
 
         // Call the native method
-        generateCodeBeforeNative(code, ApplyTo.NORMAL, hasFinally)
+        generateCodeBeforeNative(code, false, hasArrays, hasFinally)
 
         if (hasCustomJNI || !has<Address>()) {
             generateNativeMethodCall(
-                code.hasStatements(code.javaAfterNative, ApplyTo.NORMAL),
-                hasStack || code.hasStatements(code.javaFinally, ApplyTo.NORMAL)
+                code.hasStatements(code.javaAfterNative, false, hasArrays),
+                hasStack || code.hasStatements(code.javaFinally, false, hasArrays)
             ) {
                 printList(getNativeParams()) {
-                    it.asNativeMethodCallParam(NORMAL)
+                    it.asNativeMethodArgument(NORMAL)
                 }
             }
         }
 
-        generateCodeAfterNative(code, ApplyTo.NORMAL, hasFinally)
+        generateCodeAfterNative(code, false, hasArrays, hasFinally)
 
         if (returns.isStructValue) {
             println("${if (hasFinally) "$t$t$t" else "$t$t"}return ${getParams { it has ReturnParam }.map { it.name }.singleOrNull() ?: RESULT};")
@@ -912,66 +953,74 @@ class Func(
             if (returns.nativeType is PointerType<*> && returns.nativeType.mapping !== PointerMapping.OPAQUE_POINTER) {
                 if (hasFinally)
                     print(t)
-                print("$t$t")
-                if (returns.nativeType.dereference is StructType) {
-                    println("return ${returns.nativeType.javaMethodType}.create${if (returnsNull) "Safe" else ""}($RESULT${parameters.asSequence()
-                        .singleOrNull { it.has<AutoSizeResultParam>() }
-                        .let { if (it != null) ", ${it.name}.get(0)" else "" }
-                    });")
-                } else {
-                    val isNullTerminated = returns.nativeType is CharSequenceType
-                    val bufferType = if (isNullTerminated || returns.nativeType.elementType is VoidType)
-                        "ByteBuffer"
-                    else
-                        returns.nativeType.mapping.javaMethodName
+                print("$t${t}return ")
 
-                    print("return mem$bufferType")
-                    if (isNullTerminated)
-                        print("NT${(returns.nativeType as CharSequenceType).charMapping.bytes}")
-                    else if (returnsNull)
-                        print("Safe")
+                val isNullTerminated = returns.nativeType is CharSequenceType
+                print(
+                    if (returns.nativeType.dereference is StructType) {
+                        "${returns.nativeType.javaMethodType}.create"
+                    } else {
+                        "mem${if (isNullTerminated || returns.nativeType.elementType is VoidType)
+                            "ByteBuffer"
+                        else
+                            returns.nativeType.mapping.javaMethodName}"
+                    }
+                )
+                if (isNullTerminated) {
+                    print("NT${(returns.nativeType as CharSequenceType).charMapping.bytes}")
+                }
+                if (returnsNull) {
+                    print("Safe")
+                }
 
-                    print("($RESULT")
-                    if (has<MapPointer>())
-                        get<MapPointer>().sizeExpression.let { expression ->
-                            print(", ${if (paramMap[expression]?.nativeType?.mapping === PrimitiveMapping.POINTER) "(int)" else ""}$expression")
-                        }
-                    else if (!isNullTerminated) {
-                        if (hasParam { it.has<AutoSizeResultParam>() }) {
+                print("($RESULT")
+                if (has<MapPointer>())
+                    get<MapPointer>().sizeExpression.let { expression ->
+                        print(", ${if (paramMap[expression]?.nativeType?.mapping === PrimitiveMapping.POINTER) "(int)" else ""}$expression")
+                    }
+                else {
+                    val hasAutoSizeResult = hasParam { it.has<AutoSizeResultParam>() }
+                    if (!isNullTerminated || hasAutoSizeResult) {
+                        if (hasAutoSizeResult) {
                             val params = getParams { it.has<AutoSizeResultParam>() }
                             val single = params.count() == 1
                             print(", ${params.map { getAutoSizeResultExpression(single, it) }.joinToString(" * ")}")
-                        } else if (has<Address>())
-                            print(", 1")
-                        else
-                            throw IllegalStateException("No AutoSizeResult parameter could be found.")
+                        } else if (returns.nativeType.dereference !is StructType) {
+                            if (has<Address>()) {
+                                print(", 1")
+                            } else {
+                                throw IllegalStateException("No AutoSizeResult parameter could be found.")
+                            }
+                        }
                     }
-                    println(");")
                 }
-            } else if (code.hasStatements(code.javaAfterNative, ApplyTo.NORMAL)) {
+                println(");")
+            } else if (code.hasStatements(code.javaAfterNative, false, hasArrays)) {
                 if (hasFinally)
                     print(t)
                 println("$t${t}return $RESULT;")
             }
         }
 
-        generateCodeFinally(code, ApplyTo.NORMAL, hasStack)
+        generateCodeFinally(code, false, hasArrays, hasStack)
 
         println("$t}")
     }
 
-    private fun PrintWriter.printCode(statements: List<Code.Statement>, applyTo: ApplyTo, indent: String = "") {
+    private fun PrintWriter.printCode(statements: List<Code.Statement>, alternative: Boolean, arrays: Boolean, indent: String = "") {
         if (statements.isEmpty())
             return
 
-        statements.filter { it.applyTo === ApplyTo.BOTH || it.applyTo === applyTo }.forEach {
-            print(indent)
-            println(it.code)
-        }
+        statements
+            .filter { it.applyTo.filter(alternative, arrays) }
+            .forEach {
+                print(indent)
+                println(it.code)
+            }
     }
 
     private fun getAutoSizeResultExpression(single: Boolean, param: Parameter) =
-        if (param.paramType === IN)
+        if (param.isInput)
             param.name.let {
                 val custom = param.get<AutoSizeResultParam>().expression
                 custom?.replace("\$original", it) ?: it.let { expression -> if (param.nativeType.mapping === PrimitiveMapping.INT) expression else "(int)$expression" }
@@ -986,19 +1035,19 @@ class Func(
                 custom?.replace("\$original", it) ?: it.let { expression -> if (param.nativeType.mapping === PointerMapping.DATA_INT) expression else "(int)$expression" }
             }
 
-    private fun PrintWriter.generateCodeBeforeNative(code: Code, applyTo: ApplyTo, hasFinally: Boolean) {
-        printCode(code.javaBeforeNative, applyTo, "")
+    private fun PrintWriter.generateCodeBeforeNative(code: Code, alternative: Boolean, arrays: Boolean, hasFinally: Boolean) {
+        printCode(code.javaBeforeNative, alternative, arrays , "")
 
         if (hasFinally)
             println("$t${t}try {")
     }
 
-    private fun PrintWriter.generateCodeAfterNative(code: Code, applyTo: ApplyTo, hasFinally: Boolean) {
-        printCode(code.javaAfterNative, applyTo, if (hasFinally) t else "")
+    private fun PrintWriter.generateCodeAfterNative(code: Code, alternative: Boolean, arrays: Boolean, hasFinally: Boolean) {
+        printCode(code.javaAfterNative, alternative, arrays, if (hasFinally) t else "")
     }
 
-    private fun PrintWriter.generateCodeFinally(code: Code, applyTo: ApplyTo, hasStack: Boolean) {
-        val finally = code.getStatements(code.javaFinally, applyTo)
+    private fun PrintWriter.generateCodeFinally(code: Code, alternative: Boolean, arrays: Boolean, hasStack: Boolean) {
+        val finally = code.getStatements(code.javaFinally, alternative, arrays)
         if (hasStack || finally.isNotEmpty()) {
             println("$t$t} finally {")
             finally.forEach {
@@ -1015,8 +1064,8 @@ class Func(
         hasFinally: Boolean,
         printParams: PrintWriter.() -> Unit
     ) {
-        val returnsObject = returns.nativeType is ObjectType
-        val returnType = if (returnsObject) (returns.nativeType as ObjectType).className else returns.nativeMethodType
+        val returnsObject = returns.nativeType is WrappedPointerType
+        val returnType = if (returnsObject) (returns.nativeType as WrappedPointerType).className else returns.nativeMethodType
 
         if (hasFinally)
             print(t)
@@ -1048,13 +1097,13 @@ class Func(
                     .joinToString("")
                 }${returns.nativeType.jniSignature}(")
             }
-            if (hasFunctionAddressParam && !hasExplicitFunctionAddress && !has<Macro>()) {
-                print(FUNCTION_ADDRESS)
-                if (hasNativeParams) print(", ")
-            }
         }
         if (macroExpression == null) {
             printParams()
+            if (!hasUnsafeMethod && hasFunctionAddressParam && !hasExplicitFunctionAddress && !has<Macro>()) {
+                if (hasNativeParams) print(", ")
+                print(FUNCTION_ADDRESS)
+            }
             if (returns.isStructValue && !hasParam { it has ReturnParam }) {
                 if (hasNativeParams) print(", ")
                 print("$RESULT.$ADDRESS")
@@ -1082,7 +1131,21 @@ class Func(
 
         nativeClass.binding?.generateAlternativeMethods(this, this@Func, transforms)
 
-        if (returns.nativeType is CharSequenceType && !has<Address>())
+        // Apply RawPointer transformations.
+        parameters.filter { it.has<RawPointer>() && it.nativeType !is ArrayType<*> }.let { params ->
+            if (params.isEmpty())
+                return@let
+
+            params.forEach {
+                transforms[it] = RawPointerTransform
+            }
+            generateAlternativeMethod(name, transforms)
+            params.forEach {
+                transforms.remove(it)
+            }
+        }
+
+        if (returns.nativeType is CharSequenceType && !has<Address>() && !has<MustBeDisposed>())
             transforms[returns] = StringReturnTransform(returnsNull)
         else if (has<MapPointer>()) {
             val mapPointer = get<MapPointer>()
@@ -1095,21 +1158,19 @@ class Func(
 
         // Apply basic transformations
         parameters.forEach {
-            if (it.paramType === IN) {
-                if (it.has<AutoSize>()) {
-                    val autoSize = it.get<AutoSize>()
-                    val param = paramMap[autoSize.reference]!! // TODO: Check dependent too?
-                    // Check if there's also an optional on the referenced parameter. Skip if so.
-                    if (!(param has optional))
-                        transforms[it] = AutoSizeTransform(param, hasCustomJNI || hasUnsafeMethod)
-                } else if (it has optional) {
-                    transforms[it] = ExpressionTransform("NULL")
-                } else if (it.has<Expression>()) {
-                    // We do this here in case another transform applies too.
-                    // We overwrite the value with the expression but use the type of the other transform.
-                    val expression = it.get<Expression>()
-                    transforms[it] = ExpressionTransform(expression.value, expression.keepParam, @Suppress("UNCHECKED_CAST") (transforms[it] as FunctionTransform<Parameter>?))
-                }
+            if (it.has<AutoSize>() && it.isInput) {
+                val autoSize = it.get<AutoSize>()
+                val param = paramMap[autoSize.reference]!! // TODO: Check dependent too?
+                // Check if there's also an optional on the referenced parameter. Skip if so.
+                if (!(param has optional))
+                    transforms[it] = AutoSizeTransform(param, hasCustomJNI || hasUnsafeMethod)
+            } else if (it has optional) {
+                transforms[it] = ExpressionTransform("NULL")
+            } else if (it.has<Expression>()) {
+                // We do this here in case another transform applies too.
+                // We overwrite the value with the expression but use the type of the other transform.
+                val expression = it.get<Expression>()
+                transforms[it] = ExpressionTransform(expression.value, expression.keepParam, @Suppress("UNCHECKED_CAST") (transforms[it] as FunctionTransform<Parameter>?))
             }
         }
 
@@ -1128,13 +1189,13 @@ class Func(
 
         // Apply any CharSequenceTransforms. These can be combined with any of the other transformations.
         if (parameters.count {
-            if (it.paramType === OUT || it.nativeType !is CharSequenceType)
+            if (!it.isInput || it.nativeType !is CharSequenceType)
                 false
             else {
                 val hasAutoSize = hasAutoSizeFor(it)
                 it.apply {
                     if (hasAutoSize)
-                        getParams(hasAutoSizePredicate(this)).forEach { param -> transforms[param] = AutoSizeCharSequenceTransform(this) }
+                        getParams(hasReference<AutoSize>(this)).forEach { param -> transforms[param] = AutoSizeCharSequenceTransform(this) }
                 }
                 transforms[it] = CharSequenceTransform(!hasAutoSize)
                 true
@@ -1147,7 +1208,7 @@ class Func(
             transforms[returns] = PrimitiveValueReturnTransform(param.nativeType as PointerType<*>, param.name)
 
             // Transform the AutoSize parameter, if there is one
-            getParams(hasAutoSizePredicate(param)).forEach {
+            getParams(hasReference<AutoSize>(param)).forEach {
                 transforms[it] = Expression1Transform
             }
 
@@ -1168,7 +1229,7 @@ class Func(
                     }
                 } else if (it.nativeType is CharSequenceType) {
                     // Remove any transform from the maxLength parameter
-                    val maxLengthParam = getParam(hasAutoSizePredicate(it))
+                    val maxLengthParam = getParam(hasReference<AutoSize>(it))
                     transforms.remove(maxLengthParam)
 
                     // Hide length parameter and use the stack
@@ -1272,7 +1333,7 @@ class Func(
                         }
                         singleValueParams.forEach {
                             // Transform the AutoSize parameter
-                            val autoSizeParam = getParam(hasAutoSizePredicate(it)) // required
+                            val autoSizeParam = getParam(hasReference<AutoSize>(it)) // required
                             transforms[autoSizeParam] = ExpressionTransform("(1 << ${autoType.byteShift}) * $i")
 
                             val singleValue = it.get<SingleValue>()
@@ -1283,7 +1344,7 @@ class Func(
                 }
 
                 singleValueParams.forEach {
-                    transforms.remove(getParam(hasAutoSizePredicate(it)))
+                    transforms.remove(getParam(hasReference<AutoSize>(it)))
                 }
             }
 
@@ -1302,7 +1363,7 @@ class Func(
             if (params.isEmpty())
                 return@let
 
-            fun Parameter.getAutoSizeReference(): Parameter? = getParams { it ->
+            fun Parameter.getAutoSizeReference(): Parameter? = getParams {
                 it.has<AutoSize>() && it.get<AutoSize>().reference == this.name
             }.firstOrNull()
 
@@ -1361,7 +1422,7 @@ class Func(
                 getParams { param -> param has ReturnParam }.forEach(::applyReturnValueTransforms)
 
                 // Transform the AutoSize parameter, if there is one
-                getParams(hasAutoSizePredicate(it)).forEach { param ->
+                getParams(hasReference<AutoSize>(it)).forEach { param ->
                     transforms[param] = Expression1Transform
                 }
 
@@ -1372,11 +1433,11 @@ class Func(
                 } else {
                     transforms[it] = SingleValueTransform(
                         when (pointerType.elementType) {
-                            is CharSequenceType -> "CharSequence"
-                            is ObjectType       -> pointerType.elementType.className
-                            is StructType       -> it.javaMethodType
-                            is PointerType<*>   -> "long"
-                            else                -> pointerType.elementType.javaMethodType
+                            is CharSequenceType   -> "CharSequence"
+                            is WrappedPointerType -> pointerType.elementType.className
+                            is StructType         -> it.javaMethodType
+                            is PointerType<*>     -> "long"
+                            else                  -> pointerType.elementType.javaMethodType
                         },
                         pointerType.mapping.box.toLowerCase(),
                         singleValue.newName
@@ -1415,12 +1476,6 @@ class Func(
             @Suppress("UNCHECKED_CAST")
             return (transform as FunctionTransform<T>).transformCall(this, original)
     }
-
-    // TODO: Remove if KT-7859 is fixed.
-    fun generateAlternativeMethod(
-        writer: PrintWriter, name: String,
-        transforms: Map<QualifiedType, Transform>
-    ) = writer.generateAlternativeMethod(name, transforms)
 
     private fun PrintWriter.generateAlternativeMethodSignature(
         name: String,
@@ -1461,17 +1516,18 @@ class Func(
         }
 
         print("$t${if (constantMacro) "private " else accessModifier}static $retType $name(")
-        printList(getParams { it !== JNI_ENV }) { param ->
-            if (param.isAutoSizeResultOut && hideAutoSizeResultParam)
-                null
-            else
-                param.transformDeclarationOrElse(transforms, param.asJavaMethodParam(false), true).let {
-                    if (it != null && param.nativeType.isReference && param.has(nullable) && transforms[param] !is SingleValueStructTransform) {
-                        "@Nullable $it"
-                    } else {
-                        it
-                    }
+        printList(getNativeParams(withAutoSizeResultParams = false)) { param ->
+            param.transformDeclarationOrElse(transforms, param.asJavaMethodParam(false), true).let {
+                if (
+                    it != null && param.nativeType.isReference && param.has(nullable) &&
+                    transforms[param] !is SingleValueTransform &&
+                    transforms[param] !is SingleValueStructTransform
+                ) {
+                    "@Nullable $it"
+                } else {
+                    it
                 }
+            }
         }
         val returnTransform = transforms[returns]
         if (returnTransform is MapPointerTransform) {
@@ -1488,7 +1544,7 @@ class Func(
         }
         if (returns.isStructValue) {
             if (!parameters.isEmpty()) print(", ")
-            print("${returns.nativeType.javaMethodType} $RESULT")
+            print("${returns.nativeType.annotate(retType)} $RESULT")
         }
         println(") {")
 
@@ -1511,13 +1567,9 @@ class Func(
                 print("return ")
             }
             print("${get<Reuse>().source.className}.$name(")
-            printList(getNativeParams()) {
-                if ((it.isAutoSizeResultOut && hideAutoSizeResultParam))
-                    null
-                else {
-                    it.transformDeclarationOrElse(transforms, it.name, false).let { name ->
-                        name?.substring(name.lastIndexOf(' ') + 1)
-                    }
+            printList(getNativeParams(withAutoSizeResultParams = false)) {
+                it.transformDeclarationOrElse(transforms, it.name, false).let { name ->
+                    name?.substring(name.lastIndexOf(' ') + 1)
                 }
             }
             println(");\n$t}")
@@ -1526,6 +1578,7 @@ class Func(
 
         // Append CodeFunctionTransform statements to Code
 
+        val hasArrays = hasParam { it.nativeType is ArrayType<*> }
         val code = transforms
             .asSequence()
             .filter { it.value is CodeFunctionTransform<*> }
@@ -1552,7 +1605,7 @@ class Func(
                 println("$t$t${param.asJavaMethodParam(false)} = ${transform.transformCall(param, param.name)};")
             }
 
-        printCode(code.javaInit, ApplyTo.ALTERNATIVE)
+        printCode(code.javaInit, true, hasArrays)
         if (Module.CHECKS && !macro)
             generateChecks(ALTERNATIVE, transforms)
 
@@ -1565,11 +1618,11 @@ class Func(
         if (hasStack)
             println("$t${t}MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();")
 
-        val hasFinally = hasStack || code.hasStatements(code.javaFinally, ApplyTo.ALTERNATIVE)
+        val hasFinally = hasStack || code.hasStatements(code.javaFinally, true, hasArrays)
 
         // Call the native method
 
-        generateCodeBeforeNative(code, ApplyTo.ALTERNATIVE, hasFinally)
+        generateCodeBeforeNative(code, true, hasArrays, hasFinally)
 
         if (hideAutoSizeResultParam) {
             val autoSizeParam = getParam { it.has<AutoSizeResultParam>() }
@@ -1585,14 +1638,14 @@ class Func(
             }
         }
 
-        val returnLater = code.hasStatements(code.javaAfterNative, ApplyTo.ALTERNATIVE) || transforms[returns] is ReturnLaterTransform
+        val returnLater = code.hasStatements(code.javaAfterNative, true, hasArrays) || transforms[returns] is ReturnLaterTransform
         generateNativeMethodCall(returnLater, hasFinally) {
             printList(getNativeParams()) {
-                it.transformCallOrElse(transforms, it.asNativeMethodCallParam(ALTERNATIVE))
+                it.transformCallOrElse(transforms, it.asNativeMethodArgument(ALTERNATIVE))
             }
         }
 
-        generateCodeAfterNative(code, ApplyTo.ALTERNATIVE, hasFinally)
+        generateCodeAfterNative(code, true, hasArrays, hasFinally)
 
         // Return
 
@@ -1608,43 +1661,48 @@ class Func(
                 if (hasFinally)
                     print(t)
                 print("$t$t")
-                if (returns.nativeType.dereference is StructType) {
-                    println("return ${returns.nativeType.javaMethodType}.create${if (returnsNull) "Safe" else ""}($RESULT${parameters.asSequence()
-                        .singleOrNull { it.has<AutoSizeResultParam>() }
-                        .let { if (it != null) ", ${it.name}.get(${it.name}.position()" else "" }
-                    });")
-                } else {
-                    val isNullTerminated = returns.nativeType is CharSequenceType
-                    val bufferType = if (isNullTerminated || returns.nativeType.elementType is VoidType)
-                        "ByteBuffer"
-                    else
-                        returns.nativeType.mapping.javaMethodName
 
-                    val builder = StringBuilder()
-                    builder.append("mem$bufferType")
-                    if (isNullTerminated)
-                        builder.append("NT${(returns.nativeType as CharSequenceType).charMapping.bytes}")
-                    else if (returnsNull)
-                        builder.append("Safe")
-                    builder.append("($RESULT")
-                    if (has<MapPointer>())
-                        builder.append(", ${get<MapPointer>().sizeExpression}")
-                    else if (!isNullTerminated) {
-                        if (hasParam { it.has<AutoSizeResultParam>() }) {
+                val builder = StringBuilder()
+
+                val isNullTerminated = returns.nativeType is CharSequenceType
+                builder.append(
+                    if (returns.nativeType.dereference is StructType) {
+                        "${returns.nativeType.javaMethodType}.create"
+                    } else {
+                        "mem${if (isNullTerminated || returns.nativeType.elementType is VoidType)
+                            "ByteBuffer"
+                        else
+                            returns.nativeType.mapping.javaMethodName}"
+                    }
+                )
+                if (isNullTerminated) {
+                    builder.append("NT${(returns.nativeType as CharSequenceType).charMapping.bytes}")
+                } else if (returnsNull) {
+                    builder.append("Safe")
+                }
+
+                builder.append("($RESULT")
+                if (has<MapPointer>())
+                    builder.append(", ${get<MapPointer>().sizeExpression}")
+                else {
+                    val hasAutoSizeResult = hasParam { it.has<AutoSizeResultParam>() }
+                    if (!isNullTerminated || hasAutoSizeResult) {
+                        if (hasAutoSizeResult) {
                             val params = getParams { it.has<AutoSizeResultParam>() }
                             val single = params.count() == 1
                             builder.append(", ${params.map { getAutoSizeResultExpression(single, it) }.joinToString(" * ")}")
-                        } else
+                        } else if (returns.nativeType.dereference !is StructType) {
                             throw IllegalStateException("No AutoSizeResult parameter could be found.")
+                        }
                     }
-                    builder.append(")")
-
-                    val returnExpression = returns.transformCallOrElse(transforms, builder.toString())
-                    if (returnExpression.indexOf('\n') == -1)
-                        println("return $returnExpression;")
-                    else // Multiple statements, assumes the transformation includes the return statement.
-                        println(returnExpression)
                 }
+                builder.append(")")
+
+                val returnExpression = returns.transformCallOrElse(transforms, builder.toString())
+                if (returnExpression.indexOf('\n') == -1)
+                    println("return $returnExpression;")
+                else // Multiple statements, assumes the transformation includes the return statement.
+                    println(returnExpression)
             } else if (returnLater) {
                 if (hasFinally)
                     print(t)
@@ -1652,7 +1710,7 @@ class Func(
             }
         }
 
-        generateCodeFinally(code, ApplyTo.ALTERNATIVE, hasStack)
+        generateCodeFinally(code, true, hasArrays, hasStack)
 
         println("$t}")
     }
@@ -1678,7 +1736,7 @@ class Func(
         }) {
             val t = transforms[it]
             if (t is ExpressionTransform)
-                t.transformCall(it, it.asNativeMethodCallParam(ALTERNATIVE))
+                t.transformCall(it, it.asNativeMethodArgument(ALTERNATIVE))
             else
                 it.name
         }
@@ -1706,17 +1764,17 @@ class Func(
 
     internal fun generateFunction(writer: PrintWriter) {
         val hasArrays = hasParam { it.nativeType is ArrayType<*> }
-        writer.generateFunctionImpl(hasArrays, critical = false)
-        if (hasArrays && !parameters.contains(JNI_ENV))
-            writer.generateFunctionImpl(hasArrays, critical = true)
+        val hasCritical = nativeClass.binding?.apiCapabilities != APICapabilities.JNI_CAPABILITIES && !parameters.contains(JNI_ENV)
+        if (hasCritical) {
+            writer.generateFunctionImpl(hasArrays, hasCritical, critical = true)
+        }
+        writer.generateFunctionImpl(hasArrays, hasCritical, critical = false)
     }
 
-    private fun PrintWriter.generateFunctionImpl(hasArrays: Boolean, critical: Boolean) {
+    private fun PrintWriter.generateFunctionImpl(hasArrays: Boolean, hasCritical: Boolean, critical: Boolean) {
         val params = ArrayList<String>(4 + parameters.size)
         if (!critical)
             params.add("JNIEnv *$JNIENV, jclass clazz")
-        if (hasFunctionAddressParam)
-            params.add("jlong $FUNCTION_ADDRESS")
         getNativeParams(withExplicitFunctionAddress = false).map {
             if (it.nativeType is ArrayType<*>) {
                 if (critical)
@@ -1727,27 +1785,40 @@ class Func(
                 "${it.nativeType.jniFunctionType} ${it.name}${if (it.nativeType is PointerType<*> || it.nativeType is StructType) POINTER_POSTFIX else ""}"
             }
         }.toCollection(params)
+        if (hasFunctionAddressParam)
+            params.add("jlong $FUNCTION_ADDRESS")
         if (returns.isStructValue && !hasParam { it has ReturnParam })
             params.add("jlong $RESULT")
 
         // Function signature
 
-        val workaroundJDK8167409 = critical && 6 <= parameters.count() && parameters.any {
-            (it.nativeType is PointerType<*> && it.nativeType !is ArrayType<*>) || it.nativeType.mapping.let { mapping -> mapping is PrimitiveMapping && 4 < mapping.bytes }
-        }
-        if (workaroundJDK8167409) println("#ifdef LWJGL_WINDOWS")
-        print("JNIEXPORT ${returns.jniFunctionType} JNICALL Java${if (critical) "Critical" else ""}_${nativeClass.nativeFileNameJNI}_")
-        if (!isNativeOnly)
-            print('n')
-        print(name.asJNIName)
-        if (hasArrays || hasArrayOverloads)
-            print(getNativeParams(withExplicitFunctionAddress = false).map {
-                if (it.nativeType is ArrayType<*>)
-                    it.nativeType.jniSignatureArray
-                else
-                    it.nativeType.jniSignatureStrict
-            }.joinToString("", prefix = if (hasFunctionAddressParam) "__J" else "__", postfix = if (returns.isStructValue) "J" else ""))
+        print("JNIEXPORT${if (critical && workaroundJDK8167409()) "_CRITICAL" else ""} ${returns.jniFunctionType} JNICALL ${JNI_NAME(hasArrays, critical)}")
         println("(${if (params.isEmpty()) "void" else params.joinToString(", ")}) {")
+
+        if (hasCritical && !(critical || hasArrays)) {
+            // Unused parameter macro
+            printUnusedParameters(false)
+
+            print(t)
+            if (!returns.isVoid && !returns.isStructValue)
+                print("return ")
+
+            print(JNI_NAME(hasArrays, critical = true, ignoreArrayType = true))
+            print('(')
+
+            params.clear()
+            getNativeParams(withExplicitFunctionAddress = true, withJNIEnv = false)
+                .mapTo(params) { "${it.name}${if (it.nativeType is PointerType<*> || it.nativeType is StructType) POINTER_POSTFIX else ""}" }
+            if (hasFunctionAddressParam)
+                params.add(FUNCTION_ADDRESS)
+            if (returns.isStructValue && !hasParam { it has ReturnParam })
+                params.add(RESULT)
+            print(params.joinToString(", "))
+
+            println(");")
+            println("}")
+            return
+        }
 
         // Cast function address to pointer
 
@@ -1760,47 +1831,83 @@ class Func(
 
         // Cast addresses to pointers
 
-        getNativeParams(withExplicitFunctionAddress = false)
-            .filter { it.nativeType.castAddressToPointer }
-            .forEach {
-                val pointerType = it.toNativeType(nativeClass.binding, pointerMode = true)
-                print("$t$pointerType")
-                if (!pointerType.endsWith('*')) print(' ')
-                val castExpression = if (it.nativeType === va_list) {
-                    print("*")
-                    "VA_LIST_CAST"
-                } else
-                    "($pointerType)"
-                println("${it.name} = $castExpression${if (nativeClass.binding == null) "(intptr_t)" else ""}${it.name}$POINTER_POSTFIX;")
-            }
+        if (!hasCritical || !hasArrays) {
+            getNativeParams(withExplicitFunctionAddress = false)
+                .filter { it.nativeType.castAddressToPointer }
+                .forEach {
+                    val variableType = if (it.nativeType === va_list)
+                        "va_list *"
+                    else
+                        it.toNativeType(nativeClass.binding, pointerMode = true)
+
+                    print(t)
+                    if (it.nativeType is FunctionType && variableType.contains("(*)")) {
+                        print(variableType.replace("(*)", "(*${it.name})"))
+                    } else {
+                        print(variableType)
+                        if (!variableType.endsWith('*')) {
+                            print(' ')
+                        }
+                        print(it.name)
+                    }
+                    println(
+                        " = ${if (it.nativeType === va_list) {
+                            "VA_LIST_CAST"
+                        } else {
+                            "($variableType)"
+                        }
+                        }${if (nativeClass.binding == null) "(intptr_t)" else ""}${it.name}$POINTER_POSTFIX;"
+                    )
+                }
+        }
 
         // Custom code
 
         var code = if (has<Code>()) get() else Code.NO_CODE
-        if (hasArrays && !critical) {
-            code = code.append(
-                nativeBeforeCall = getParams { it.nativeType is ArrayType<*> }.map {
-                    "j${(it.nativeType.mapping as PointerMapping).primitive} *${it.name} = ${
-                    "(*$JNIENV)->GetPrimitiveArrayCritical($JNIENV, ${it.name}$POINTER_POSTFIX, 0)".let { expression ->
-                        if (it.has<Nullable>())
-                            "${it.name}$POINTER_POSTFIX == NULL ? NULL : $expression"
-                        else
-                            expression
-                    }};"
-                }.joinToString("\n$t", prefix = t),
-                nativeAfterCall = getParams { it.nativeType is ArrayType<*> }
-                    .withIndex()
-                    .sortedByDescending { it.index }
-                    .map { it.value }
-                    .map {
-                        "(*$JNIENV)->ReleasePrimitiveArrayCritical($JNIENV, ${it.name}$POINTER_POSTFIX, ${it.name}, 0);".let { expression ->
+        if (hasArrays) {
+            if (!critical) {
+                code = code.append(
+                    nativeBeforeCall = getParams { it.nativeType is ArrayType<*> }.map {
+                        "j${(it.nativeType.mapping as PointerMapping).primitive} *${it.name} = ${
+                        "(*$JNIENV)->GetPrimitiveArrayCritical($JNIENV, ${it.name}$POINTER_POSTFIX, 0)".let { expression ->
                             if (it.has<Nullable>())
-                                "if (${it.name} != NULL) { $expression }"
+                                "${it.name}$POINTER_POSTFIX == NULL ? NULL : $expression"
                             else
                                 expression
+                        }};"
+                    }.joinToString("\n$t", prefix = t),
+                    nativeAfterCall = getParams { it.nativeType is ArrayType<*> }
+                        .withIndex()
+                        .sortedByDescending { it.index }
+                        .map { it.value }
+                        .map {
+                            "(*$JNIENV)->ReleasePrimitiveArrayCritical($JNIENV, ${it.name}$POINTER_POSTFIX, ${it.name}, 0);".let { expression ->
+                                if (it.has<Nullable>())
+                                    "if (${it.name} != NULL) { $expression }"
+                                else
+                                    expression
+                            }
+                        }.joinToString("\n$t", prefix = t)
+                )
+            }
+            if (hasCritical) {
+                val callPrefix = if (!returns.isVoid && !returns.isStructValue) {
+                    if (critical) "return " else "$RESULT = "
+                } else {
+                    ""
+                }
+                code = code.append(
+                    nativeCall = "$t$callPrefix${JNI_NAME(hasArrays = true, critical = true, ignoreArrayType = true)}(${getNativeParams()
+                        .map {
+                            if (it.nativeType is ArrayType<*>)
+                                "(intptr_t)${it.name}"
+                            else
+                                "${it.name}${if (it.nativeType is PointerType<*> || it.nativeType is StructType) POINTER_POSTFIX else ""}"
                         }
-                    }.joinToString("\n$t", prefix = t)
-            )
+                        .joinToString(", ")
+                    }${if (returns.isStructValue) ", $RESULT" else ""});"
+                )
+            }
         }
 
         if (code.nativeAfterCall != null && !returns.isVoid && !returns.isStructValue)
@@ -1810,16 +1917,7 @@ class Func(
 
         // Unused parameter macro
 
-        if (!critical)
-            println(if (parameters.contains(JNI_ENV) || (nativeClass.binding != null && !hasFunctionAddressParam))
-                "${t}UNUSED_PARAM(clazz)"
-            else
-                "${t}UNUSED_PARAMS($JNIENV, clazz)"
-            )
-        else
-            getParams { it.nativeType is ArrayType<*> }.forEach {
-                println("${t}UNUSED_PARAM(${it.name}__length)")
-            }
+        printUnusedParameters(critical)
 
         // Call native function
 
@@ -1877,7 +1975,54 @@ class Func(
         }
 
         println("}")
-        if (workaroundJDK8167409) println("#endif")
+    }
+
+    private fun workaroundJDK8167409(ignoreArrayType: Boolean = false): Boolean = parameters.count().let {
+        6 <= it || (5 <= it && returns.isStructValue && !hasParam { param -> param has ReturnParam })
+    } && parameters[0].nativeType.let { type ->
+        (type is PointerType<*> && (ignoreArrayType || type !is ArrayType<*>)) || type.mapping.let { it is PrimitiveMapping && 4 < it.bytes }
+    }
+
+    private fun JNI_NAME(hasArrays: Boolean, critical: Boolean, ignoreArrayType: Boolean = false): String {
+        return "${nativeClass.nativeFileNameJNI}_${if (isNativeOnly) "" else "n"}${name.asJNIName}${if (nativeClass.module.arrayOverloads && (hasArrays || hasArrayOverloads))
+            getNativeParams(withExplicitFunctionAddress = false)
+                .map {
+                    if (it.nativeType is ArrayType<*> && !(critical && ignoreArrayType))
+                        it.nativeType.jniSignatureArray
+                    else
+                        it.nativeType.jniSignatureStrict
+                }
+                .joinToString(
+                    "",
+                    prefix = "__",
+                    postfix = "J".repeat((if (returns.isStructValue) 1 else 0) + (if (hasFunctionAddressParam) 1 else 0))
+                )
+        else
+            ""
+        }".let {
+            if (critical) {
+                if (workaroundJDK8167409(ignoreArrayType))
+                    "CRITICAL($it)"
+                else
+                    "JavaCritical_$it"
+            } else {
+                "Java_$it"
+            }
+        }
+    }
+
+    private fun PrintWriter.printUnusedParameters(critical: Boolean) {
+        if (!critical)
+            println(
+                if (parameters.contains(JNI_ENV) || (nativeClass.binding != null && !hasFunctionAddressParam))
+                    "${t}UNUSED_PARAM(clazz)"
+                else
+                    "${t}UNUSED_PARAMS($JNIENV, clazz)"
+            )
+        else
+            getParams { it.nativeType is ArrayType<*> }.forEach {
+                println("${t}UNUSED_PARAM(${it.name}__length)")
+            }
     }
 
 }

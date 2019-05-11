@@ -16,7 +16,7 @@ import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
- * Applications may wish to update a fixed set of descriptors in a large number of descriptors sets very frequently, i.e. during initializaton phase or if it's required to rebuild descriptor sets for each frame. For those cases it's also not unlikely that all information required to update a single descriptor set is stored in a single struct. This extension provides a way to update a fixed set of descriptors in a single {@code VkDescriptorSet} with a pointer to a user defined data structure which describes the new descriptors.
+ * Applications may wish to update a fixed set of descriptors in a large number of descriptors sets very frequently, i.e. during initializaton phase or if it is required to rebuild descriptor sets for each frame. For those cases it is also not unlikely that all information required to update a single descriptor set is stored in a single struct. This extension provides a way to update a fixed set of descriptors in a single {@code VkDescriptorSet} with a pointer to a user defined data structure which describes the new descriptors.
  * 
  * <h5>Promotion to Vulkan 1.1</h5>
  * 
@@ -39,7 +39,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Deprecation state</b></dt>
  * <dd><ul>
- * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
+ * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
@@ -107,7 +107,7 @@ public class KHRDescriptorUpdateTemplate {
             VkDescriptorUpdateTemplateCreateInfo.validate(pCreateInfo);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
+        return callPPPPI(device.address(), pCreateInfo, pAllocator, pDescriptorUpdateTemplate, __functionAddress);
     }
 
     /**
@@ -115,7 +115,7 @@ public class KHRDescriptorUpdateTemplate {
      *
      * @param device                    the logical device that creates the descriptor update template.
      * @param pCreateInfo               a pointer to an instance of the {@link VkDescriptorUpdateTemplateCreateInfo} structure specifying the set of descriptors to update with a single call to {@link #vkCmdPushDescriptorSetWithTemplateKHR CmdPushDescriptorSetWithTemplateKHR} or {@link VK11#vkUpdateDescriptorSetWithTemplate UpdateDescriptorSetWithTemplate}.
-     * @param pAllocator                controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator                controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pDescriptorUpdateTemplate points to a {@code VkDescriptorUpdateTemplate} handle in which the resulting descriptor update template object is returned.
      */
     @NativeType("VkResult")
@@ -135,7 +135,7 @@ public class KHRDescriptorUpdateTemplate {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, device.address(), descriptorUpdateTemplate, pAllocator);
+        callPJPV(device.address(), descriptorUpdateTemplate, pAllocator, __functionAddress);
     }
 
     /**
@@ -143,7 +143,7 @@ public class KHRDescriptorUpdateTemplate {
      *
      * @param device                   the logical device that has been used to create the descriptor update template
      * @param descriptorUpdateTemplate the descriptor update template to destroy.
-     * @param pAllocator               controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator               controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
     public static void vkDestroyDescriptorUpdateTemplateKHR(VkDevice device, @NativeType("VkDescriptorUpdateTemplate") long descriptorUpdateTemplate, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, memAddressSafe(pAllocator));
@@ -165,7 +165,7 @@ public class KHRDescriptorUpdateTemplate {
             check(__functionAddress);
             check(pData);
         }
-        callPJJPV(__functionAddress, device.address(), descriptorSet, descriptorUpdateTemplate, pData);
+        callPJJPV(device.address(), descriptorSet, descriptorUpdateTemplate, pData, __functionAddress);
     }
 
     // --- [ vkCmdPushDescriptorSetWithTemplateKHR ] ---
@@ -188,7 +188,7 @@ public class KHRDescriptorUpdateTemplate {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The pipelineBindPoint specified during the creation of the descriptor update template <b>must</b> be supported by the {@code commandBuffer}&#8217;s parent {@code VkCommandPool}&#8217;s queue family</li>
+     * <li>The {@code pipelineBindPoint} specified during the creation of the descriptor update template <b>must</b> be supported by the {@code commandBuffer}&#8217;s parent {@code VkCommandPool}&#8217;s queue family</li>
      * <li>{@code pData} <b>must</b> be a valid pointer to a memory that contains one or more valid instances of {@link VkDescriptorImageInfo}, {@link VkDescriptorBufferInfo}, or {@code VkBufferView} in a layout defined by {@code descriptorUpdateTemplate} when it was created with {@link #vkCreateDescriptorUpdateTemplateKHR CreateDescriptorUpdateTemplateKHR}</li>
      * </ul>
      * 
@@ -198,7 +198,7 @@ public class KHRDescriptorUpdateTemplate {
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
      * <li>{@code descriptorUpdateTemplate} <b>must</b> be a valid {@code VkDescriptorUpdateTemplate} handle</li>
      * <li>{@code layout} <b>must</b> be a valid {@code VkPipelineLayout} handle</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
      * <li>Each of {@code commandBuffer}, {@code descriptorUpdateTemplate}, and {@code layout} <b>must</b> have been created, allocated, or retrieved from the same {@code VkDevice}</li>
      * </ul>
@@ -213,16 +213,11 @@ public class KHRDescriptorUpdateTemplate {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute</td><td></td></tr></tbody>
      * </table>
      * 
      * <pre><code>
-     * struct AppBufferView {
-     *     VkBufferView bufferView;
-     *     uint32_t     applicationRelatedInformation;
-     * };
-     * 
      * struct AppDataStructure
      * {
      *     VkDescriptorImageInfo  imageInfo;          // a single image info
@@ -238,24 +233,23 @@ public class KHRDescriptorUpdateTemplate {
      *         1,                                           // descriptorCount
      *         VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,   // descriptorType
      *         offsetof(AppDataStructure, imageInfo),       // offset
-     *         0                                            // stride is not required if descriptorCount is 1.
+     *         0                                            // stride is not required if descriptorCount is 1
      *     }
-     * 
      * };
      * 
      * // create a descriptor update template for descriptor set updates
      * const VkDescriptorUpdateTemplateCreateInfo createInfo =
      * {
      *     VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,  // sType
-     *     NULL,                                                          // pNext
-     *     0,                                                             // flags
-     *     1,                                                             // descriptorUpdateEntryCount
-     *     descriptorUpdateTemplateEntries,                               // pDescriptorUpdateEntries
-     *     VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR,       // templateType
-     *     0,                                                             // descriptorSetLayout, ignored by given templateType
-     *     VK_PIPELINE_BIND_POINT_GRAPHICS,                               // pipelineBindPoint
-     *     myPipelineLayout,                                              // pipelineLayout
-     *     0,                                                             // set
+     *     NULL,                                                      // pNext
+     *     0,                                                         // flags
+     *     1,                                                         // descriptorUpdateEntryCount
+     *     descriptorUpdateTemplateEntries,                           // pDescriptorUpdateEntries
+     *     VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR,   // templateType
+     *     0,                                                         // descriptorSetLayout, ignored by given templateType
+     *     VK_PIPELINE_BIND_POINT_GRAPHICS,                           // pipelineBindPoint
+     *     myPipelineLayout,                                          // pipelineLayout
+     *     0,                                                         // set
      * };
      * 
      * VkDescriptorUpdateTemplate myDescriptorUpdateTemplate;
@@ -271,10 +265,10 @@ public class KHRDescriptorUpdateTemplate {
      * vkCmdPushDescriptorSetWithTemplateKHR(myCmdBuffer, myDescriptorUpdateTemplate, myPipelineLayout, 0,&amp;appData);</code></pre>
      *
      * @param commandBuffer            the command buffer that the descriptors will be recorded in.
-     * @param descriptorUpdateTemplate A descriptor update template which defines how to interpret the descriptor information in pData.
+     * @param descriptorUpdateTemplate a descriptor update template that defines how to interpret the descriptor information in {@code pData}.
      * @param layout                   a {@code VkPipelineLayout} object used to program the bindings. It <b>must</b> be compatible with the layout used to create the {@code descriptorUpdateTemplate} handle.
      * @param set                      the set number of the descriptor set in the pipeline layout that will be updated. This <b>must</b> be the same number used to create the {@code descriptorUpdateTemplate} handle.
-     * @param pData                    Points to memory which contains the descriptors for the templated update.
+     * @param pData                    points to memory which contains the descriptors for the templated update.
      */
     public static void vkCmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, @NativeType("VkDescriptorUpdateTemplate") long descriptorUpdateTemplate, @NativeType("VkPipelineLayout") long layout, @NativeType("uint32_t") int set, @NativeType("void const *") long pData) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdPushDescriptorSetWithTemplateKHR;
@@ -282,7 +276,7 @@ public class KHRDescriptorUpdateTemplate {
             check(__functionAddress);
             check(pData);
         }
-        callPJJPV(__functionAddress, commandBuffer.address(), descriptorUpdateTemplate, layout, set, pData);
+        callPJJPV(commandBuffer.address(), descriptorUpdateTemplate, layout, set, pData, __functionAddress);
     }
 
     /** Array version of: {@link #vkCreateDescriptorUpdateTemplateKHR CreateDescriptorUpdateTemplateKHR} */
@@ -295,7 +289,7 @@ public class KHRDescriptorUpdateTemplate {
             VkDescriptorUpdateTemplateCreateInfo.validate(pCreateInfo.address());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pDescriptorUpdateTemplate);
+        return callPPPPI(device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pDescriptorUpdateTemplate, __functionAddress);
     }
 
 }

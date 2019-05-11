@@ -78,7 +78,7 @@ val NV_device_diagnostic_checkpoints = "NVDeviceDiagnosticCheckpoints".nativeCla
         insert diagnostic checkpoint in command stream.
 
         <h5>C Specification</h5>
-        Device diagnostic checkpoints are inserted into the command stream by calling {@code vkCmdSetCheckpointNV}.
+        Device diagnostic checkpoints are inserted into the command stream by calling #CmdSetCheckpointNV().
 
         <pre><code>
 ￿void vkCmdSetCheckpointNV(
@@ -88,7 +88,7 @@ val NV_device_diagnostic_checkpoints = "NVDeviceDiagnosticCheckpoints".nativeCla
         <h5>Valid Usage (Implicit)</h5>
         <ul>
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, compute, or transfer operations</li>
         </ul>
 
@@ -99,13 +99,13 @@ val NV_device_diagnostic_checkpoints = "NVDeviceDiagnosticCheckpoints".nativeCla
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute Transfer</td><td></td></tr></tbody>
         </table>
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer that will receive the marker"),
-        opaque_const_p.IN("pCheckpointMarker", "an opaque application-provided value that will be associated with the checkpoint.")
+        VkCommandBuffer("commandBuffer", "the command buffer that will receive the marker"),
+        opaque_const_p("pCheckpointMarker", "an opaque application-provided value that will be associated with the checkpoint.")
     )
 
     void(
@@ -114,7 +114,7 @@ val NV_device_diagnostic_checkpoints = "NVDeviceDiagnosticCheckpoints".nativeCla
         retrieve diagnostic checkpoint data.
 
         <h5>C Specification</h5>
-        If the device encounters an error during execution, the implementation will return a #ERROR_DEVICE_LOST error to the application at a certain point during host execution. When this happens, the application <b>can</b> call {@code vkGetQueueCheckpointDataNV} to retrieve information on the most recent diagnostic checkpoints that were executed by the device.
+        If the device encounters an error during execution, the implementation will return a #ERROR_DEVICE_LOST error to the application at a certain point during host execution. When this happens, the application <b>can</b> call #GetQueueCheckpointDataNV() to retrieve information on the most recent diagnostic checkpoints that were executed by the device.
 
         <pre><code>
 ￿void vkGetQueueCheckpointDataNV(
@@ -145,8 +145,8 @@ val NV_device_diagnostic_checkpoints = "NVDeviceDiagnosticCheckpoints".nativeCla
         ##VkCheckpointDataNV
         """,
 
-        VkQueue.IN("queue", "the {@code VkQueue} object the caller would like to retrieve checkpoint data for"),
-        AutoSize("pCheckpointData")..Check(1)..uint32_t.p.INOUT("pCheckpointDataCount", "a pointer to an integer related to the number of checkpoint markers available or queried, as described below."),
-        nullable..VkCheckpointDataNV.p.OUT("pCheckpointData", "either {@code NULL} or a pointer to an array of ##VkCheckpointDataNV structures.")
+        VkQueue("queue", "the {@code VkQueue} object the caller would like to retrieve checkpoint data for"),
+        AutoSize("pCheckpointData")..Check(1)..uint32_t.p("pCheckpointDataCount", "a pointer to an integer related to the number of checkpoint markers available or queried, as described below."),
+        nullable..VkCheckpointDataNV.p("pCheckpointData", "either {@code NULL} or a pointer to an array of ##VkCheckpointDataNV structures.")
     )
 }

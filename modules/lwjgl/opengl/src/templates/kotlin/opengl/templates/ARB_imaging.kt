@@ -89,75 +89,75 @@ val ARB_imaging = "ARBImaging".nativeClassGL("ARB_imaging") {
         "ColorTable",
         "Specifies a color lookup table.",
 
-        GLenum.IN("target", "the color table target", "$COLOR_TABLE_TARGETS $PROXY_COLOR_TABLE_TARGETS"),
-        GLenum.IN("internalformat", "the color table internal format", IMAGING_INTERNAL_FORMATS),
-        GLsizei.IN("width", "the color table width"),
-        GLenum.IN("format", "the color data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the color data type", PIXEL_DATA_TYPES),
+        GLenum("target", "the color table target", "$COLOR_TABLE_TARGETS $PROXY_COLOR_TABLE_TARGETS"),
+        GLenum("internalformat", "the color table internal format", IMAGING_INTERNAL_FORMATS),
+        GLsizei("width", "the color table width"),
+        GLenum("format", "the color data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the color data type", PIXEL_DATA_TYPES),
         MultiType(
             PointerMapping.DATA_SHORT, PointerMapping.DATA_INT, PointerMapping.DATA_FLOAT
-        )..Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("table", "the color table data")
+        )..Unsafe..RawPointer..void.const.p("table", "the color table data")
     )
 
     DeprecatedGL..void(
         "CopyColorTable",
         "Defines a color table in exactly the manner of #ColorTable(), except that the image data are taken from the framebuffer rather than from client memory.",
 
-        GLenum.IN("target", "the color table target", COLOR_TABLE_TARGETS),
-        GLenum.IN("internalformat", "the color table internal format", IMAGING_INTERNAL_FORMATS),
-        GLint.IN("x", "the left framebuffer pixel coordinate"),
-        GLint.IN("y", "the lower framebuffer pixel coordinate"),
-        GLsizei.IN("width", "the color table width")
+        GLenum("target", "the color table target", COLOR_TABLE_TARGETS),
+        GLenum("internalformat", "the color table internal format", IMAGING_INTERNAL_FORMATS),
+        GLint("x", "the left framebuffer pixel coordinate"),
+        GLint("y", "the lower framebuffer pixel coordinate"),
+        GLsizei("width", "the color table width")
     )
 
     DeprecatedGL..void(
         "ColorTableParameteriv",
         "Specifies the scale and bias parameters for a color table.",
 
-        GLenum.IN("target", "the color table target", COLOR_TABLE_TARGETS),
-        GLenum.IN("pname", "the parameter to set", COLOR_TABLE_PARAMS),
-        Check(4)..GLint.const.p.IN("params", "the parameter value")
+        GLenum("target", "the color table target", COLOR_TABLE_TARGETS),
+        GLenum("pname", "the parameter to set", COLOR_TABLE_PARAMS),
+        Check(4)..GLint.const.p("params", "the parameter value")
     )
 
     DeprecatedGL..void(
         "ColorTableParameterfv",
         "Float version of #ColorTableParameteriv().",
 
-        GLenum.IN("target", "the color table target"),
-        GLenum.IN("pname", "the parameter to set"),
-        Check(4)..GLfloat.const.p.IN("params", "the parameter value")
+        GLenum("target", "the color table target"),
+        GLenum("pname", "the parameter to set"),
+        Check(4)..GLfloat.const.p("params", "the parameter value")
     )
 
     DeprecatedGL..void(
         "GetColorTable",
         "Returns the current contents of a color table.",
 
-        GLenum.IN("target", "the color table target", COLOR_TABLE_TARGETS),
-        GLenum.IN("format", "the color data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the color data type", PIXEL_DATA_TYPES),
+        GLenum("target", "the color table target", COLOR_TABLE_TARGETS),
+        GLenum("format", "the color data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the color data type", PIXEL_DATA_TYPES),
         MultiType(
             PointerMapping.DATA_SHORT,
             PointerMapping.DATA_INT,
             PointerMapping.DATA_FLOAT
-        )..Unsafe..PIXEL_PACK_BUFFER..void.p.OUT("table", "the color table data")
+        )..Unsafe..RawPointer..void.p("table", "the color table data")
     )
 
     DeprecatedGL..void(
         "GetColorTableParameteriv",
         "Returns the integer value of the specified color table parameter.",
 
-        GLenum.IN("target", "the color table target", "$COLOR_TABLE_TARGETS $PROXY_COLOR_TABLE_TARGETS"),
-        GLenum.IN("pname", "the parameter to query", "$COLOR_TABLE_PARAMS $COLOR_TABLE_PROPERTIES"),
-        Check(4)..ReturnParam..GLint.p.OUT("params", "a buffer in which to place the returned value")
+        GLenum("target", "the color table target", "$COLOR_TABLE_TARGETS $PROXY_COLOR_TABLE_TARGETS"),
+        GLenum("pname", "the parameter to query", "$COLOR_TABLE_PARAMS $COLOR_TABLE_PROPERTIES"),
+        Check(4)..ReturnParam..GLint.p("params", "a buffer in which to place the returned value")
     )
 
     DeprecatedGL..void(
         "GetColorTableParameterfv",
         "Float version of #GetColorTableParameteriv().",
 
-        GLenum.IN("target", "the color table target"),
-        GLenum.IN("pname", "the parameter to query"),
-        Check(4)..ReturnParam..GLfloat.p.OUT("params", "a buffer in which to place the returned value")
+        GLenum("target", "the color table target"),
+        GLenum("pname", "the parameter to query"),
+        Check(4)..ReturnParam..GLfloat.p("params", "a buffer in which to place the returned value")
     )
 
     // EXT_color_subtable
@@ -166,23 +166,23 @@ val ARB_imaging = "ARBImaging".nativeClassGL("ARB_imaging") {
         "ColorSubTable",
         "Respecifies a portion of an existing color table.",
 
-        GLenum.IN("target", "the color table target", COLOR_TABLE_TARGETS),
-        GLsizei.IN("start", "the starting index of the subregion to respecify"),
-        GLsizei.IN("count", "the number of colors in the subregion to respecify"),
-        GLenum.IN("format", "the color data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the color data type", PIXEL_DATA_TYPES),
-        Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("data", "the color table data")
+        GLenum("target", "the color table target", COLOR_TABLE_TARGETS),
+        GLsizei("start", "the starting index of the subregion to respecify"),
+        GLsizei("count", "the number of colors in the subregion to respecify"),
+        GLenum("format", "the color data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the color data type", PIXEL_DATA_TYPES),
+        Unsafe..RawPointer..void.const.p("data", "the color table data")
     )
 
     DeprecatedGL..void(
         "CopyColorSubTable",
         "Respecifies a portion of an existing color table using image taken from the framebuffer.",
 
-        GLenum.IN("target", "the color table target", COLOR_TABLE_TARGETS),
-        GLsizei.IN("start", "the start index of the subregion to respecify"),
-        GLint.IN("x", "the left framebuffer pixel coordinate"),
-        GLint.IN("y", "the lower framebuffer pixel coordinate"),
-        GLsizei.IN("width", "the number of colors in the subregion to respecify")
+        GLenum("target", "the color table target", COLOR_TABLE_TARGETS),
+        GLsizei("start", "the start index of the subregion to respecify"),
+        GLint("x", "the left framebuffer pixel coordinate"),
+        GLint("y", "the lower framebuffer pixel coordinate"),
+        GLsizei("width", "the number of colors in the subregion to respecify")
     )
 
     // EXT_convolution
@@ -272,25 +272,25 @@ val ARB_imaging = "ARBImaging".nativeClassGL("ARB_imaging") {
         "ConvolutionFilter1D",
         "Defines a one-dimensional convolution filter.",
 
-        GLenum.IN("target", "the convolution target", "#CONVOLUTION_1D"),
-        GLenum.IN("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
-        GLsizei.IN("width", "the filter width"),
-        GLenum.IN("format", "the filter data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the filter data type", PIXEL_DATA_TYPES),
-        Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("data", "the filter data")
+        GLenum("target", "the convolution target", "#CONVOLUTION_1D"),
+        GLenum("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
+        GLsizei("width", "the filter width"),
+        GLenum("format", "the filter data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the filter data type", PIXEL_DATA_TYPES),
+        Unsafe..RawPointer..void.const.p("data", "the filter data")
     )
 
     DeprecatedGL..void(
         "ConvolutionFilter2D",
         "Defines a two-dimensional convolution filter.",
 
-        GLenum.IN("target", "the convolution target", "#CONVOLUTION_2D"),
-        GLenum.IN("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
-        GLsizei.IN("width", "the filter width"),
-        GLsizei.IN("height", "the filter height"),
-        GLenum.IN("format", "the filter data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the filter data type", PIXEL_DATA_TYPES),
-        Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("data", "the filter data")
+        GLenum("target", "the convolution target", "#CONVOLUTION_2D"),
+        GLenum("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
+        GLsizei("width", "the filter width"),
+        GLsizei("height", "the filter height"),
+        GLenum("format", "the filter data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the filter data type", PIXEL_DATA_TYPES),
+        Unsafe..RawPointer..void.const.p("data", "the filter data")
     )
 
     DeprecatedGL..void(
@@ -300,11 +300,11 @@ val ARB_imaging = "ARBImaging".nativeClassGL("ARB_imaging") {
         client memory.
         """,
 
-        GLenum.IN("target", "the convolution target", "#CONVOLUTION_1D"),
-        GLenum.IN("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
-        GLint.IN("x", "the left framebuffer pixel coordinate"),
-        GLint.IN("y", "the lower framebuffer pixel coordinate"),
-        GLsizei.IN("width", "the filter width")
+        GLenum("target", "the convolution target", "#CONVOLUTION_1D"),
+        GLenum("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
+        GLint("x", "the left framebuffer pixel coordinate"),
+        GLint("y", "the lower framebuffer pixel coordinate"),
+        GLsizei("width", "the filter width")
     )
 
     DeprecatedGL..void(
@@ -314,102 +314,102 @@ val ARB_imaging = "ARBImaging".nativeClassGL("ARB_imaging") {
         client memory.
         """,
 
-        GLenum.IN("target", "the convolution target", "#CONVOLUTION_2D"),
-        GLenum.IN("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
-        GLint.IN("x", "the left framebuffer pixel coordinate"),
-        GLint.IN("y", "the lower framebuffer pixel coordinate"),
-        GLsizei.IN("width", "the filter width"),
-        GLsizei.IN("height", "the filter height")
+        GLenum("target", "the convolution target", "#CONVOLUTION_2D"),
+        GLenum("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
+        GLint("x", "the left framebuffer pixel coordinate"),
+        GLint("y", "the lower framebuffer pixel coordinate"),
+        GLsizei("width", "the filter width"),
+        GLsizei("height", "the filter height")
     )
 
     DeprecatedGL..void(
         "GetConvolutionFilter",
         "Returns the contents of a convolution filter.",
 
-        GLenum.IN("target", "the convolution target", "#CONVOLUTION_1D #CONVOLUTION_2D"),
-        GLenum.IN("format", "the filter data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the filter data type", PIXEL_DATA_TYPES),
-        Unsafe..PIXEL_PACK_BUFFER..void.p.OUT("image", "the filter data")
+        GLenum("target", "the convolution target", "#CONVOLUTION_1D #CONVOLUTION_2D"),
+        GLenum("format", "the filter data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the filter data type", PIXEL_DATA_TYPES),
+        Unsafe..RawPointer..void.p("image", "the filter data")
     )
 
     DeprecatedGL..void(
         "SeparableFilter2D",
         "Specifies a two-dimensional separable convolution filter.",
 
-        GLenum.IN("target", "the filter target", "#SEPARABLE_2D"),
-        GLenum.IN("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
-        GLsizei.IN("width", "the filter width"),
-        GLsizei.IN("height", "the filter height"),
-        GLenum.IN("format", "the filter data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the filter data type", PIXEL_DATA_TYPES),
-        Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("row", "the horizontal filter data"),
-        Unsafe..PIXEL_UNPACK_BUFFER..void.const.p.IN("column", "the vertical filter data")
+        GLenum("target", "the filter target", "#SEPARABLE_2D"),
+        GLenum("internalformat", "the filter internal format", IMAGING_INTERNAL_FORMATS),
+        GLsizei("width", "the filter width"),
+        GLsizei("height", "the filter height"),
+        GLenum("format", "the filter data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the filter data type", PIXEL_DATA_TYPES),
+        Unsafe..RawPointer..void.const.p("row", "the horizontal filter data"),
+        Unsafe..RawPointer..void.const.p("column", "the vertical filter data")
     )
 
     DeprecatedGL..void(
         "GetSeparableFilter",
         "Returns the current contents of a separable convolution filter.",
 
-        GLenum.IN("target", "the filter target", "#SEPARABLE_2D"),
-        GLenum.IN("format", "the filter data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the filter data type", PIXEL_DATA_TYPES),
-        Unsafe..PIXEL_PACK_BUFFER..void.p.OUT("row", "a buffer in which to return the filter row"),
-        Unsafe..PIXEL_PACK_BUFFER..void.p.OUT("column", "a buffer in which to return the filter column"),
-        Unsafe..nullable..void.p.IN("span", "unused")
+        GLenum("target", "the filter target", "#SEPARABLE_2D"),
+        GLenum("format", "the filter data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the filter data type", PIXEL_DATA_TYPES),
+        Unsafe..RawPointer..void.p("row", "a buffer in which to return the filter row"),
+        Unsafe..RawPointer..void.p("column", "a buffer in which to return the filter column"),
+        Unsafe..nullable..void.p("span", "unused")
     )
 
     DeprecatedGL..void(
         "ConvolutionParameteri",
         "Specifies the scale and bias of a convolution filter.",
 
-        GLenum.IN("target", "the filter target", "#CONVOLUTION_1D #CONVOLUTION_2D #SEPARABLE_2D"),
-        GLenum.IN("pname", "the parameter to set", "#CONVOLUTION_BORDER_MODE"),
-        GLint.IN("param", "the parameter value")
+        GLenum("target", "the filter target", "#CONVOLUTION_1D #CONVOLUTION_2D #SEPARABLE_2D"),
+        GLenum("pname", "the parameter to set", "#CONVOLUTION_BORDER_MODE"),
+        GLint("param", "the parameter value")
     )
 
     DeprecatedGL..void(
         "ConvolutionParameteriv",
         "Pointer version of #ConvolutionParameteri().",
 
-        GLenum.IN("target", "the filter target"),
-        GLenum.IN("pname", "the parameter to set", "$CONVOLUTION_FILTER_PARAMS #CONVOLUTION_BORDER_COLOR"),
-        Check(4)..GLint.const.p.IN("params", "the parameter value")
+        GLenum("target", "the filter target"),
+        GLenum("pname", "the parameter to set", "$CONVOLUTION_FILTER_PARAMS #CONVOLUTION_BORDER_COLOR"),
+        Check(4)..GLint.const.p("params", "the parameter value")
     )
 
     DeprecatedGL..void(
         "ConvolutionParameterf",
         "Float version of #ConvolutionParameteri()",
 
-        GLenum.IN("target", "the filter target"),
-        GLenum.IN("pname", "the parameter to set"),
-        GLfloat.IN("param", "the parameter value")
+        GLenum("target", "the filter target"),
+        GLenum("pname", "the parameter to set"),
+        GLfloat("param", "the parameter value")
     )
 
     DeprecatedGL..void(
         "ConvolutionParameterfv",
         "Pointer version of #ConvolutionParameterf().",
 
-        GLenum.IN("target", "the filter target"),
-        GLenum.IN("pname", "the parameter to set", "$CONVOLUTION_FILTER_PARAMS #CONVOLUTION_BORDER_COLOR"),
-        Check(4)..GLfloat.const.p.IN("params", "the parameter value")
+        GLenum("target", "the filter target"),
+        GLenum("pname", "the parameter to set", "$CONVOLUTION_FILTER_PARAMS #CONVOLUTION_BORDER_COLOR"),
+        Check(4)..GLfloat.const.p("params", "the parameter value")
     )
 
     DeprecatedGL..void(
         "GetConvolutionParameteriv",
         "Returns the value of a convolution filter parameter.",
 
-        GLenum.IN("target", "the filter target", "#CONVOLUTION_1D #CONVOLUTION_2D #SEPARABLE_2D"),
-        GLenum.IN("pname", "the parameter to query", CONVOLUTION_FILTER_PROPERTIES),
-        ReturnParam..Check(4)..GLint.p.OUT("params", "a buffer in which to return the parameter value")
+        GLenum("target", "the filter target", "#CONVOLUTION_1D #CONVOLUTION_2D #SEPARABLE_2D"),
+        GLenum("pname", "the parameter to query", CONVOLUTION_FILTER_PROPERTIES),
+        ReturnParam..Check(4)..GLint.p("params", "a buffer in which to return the parameter value")
     )
 
     DeprecatedGL..void(
         "GetConvolutionParameterfv",
         "Float version of #GetConvolutionParameteriv().",
 
-        GLenum.IN("target", "the filter target"),
-        GLenum.IN("pname", "the parameter to query"),
-        ReturnParam..Check(4)..GLfloat.p.OUT("params", "a buffer in which to return the parameter value")
+        GLenum("target", "the filter target"),
+        GLenum("pname", "the parameter to query"),
+        ReturnParam..Check(4)..GLfloat.p("params", "a buffer in which to return the parameter value")
     )
 
     // HP_convolution_border_modes
@@ -505,10 +505,10 @@ val ARB_imaging = "ARBImaging".nativeClassGL("ARB_imaging") {
         "Histogram",
         "Specifies the histogram table.",
 
-        GLenum.IN("target", "the histogram target", "#HISTOGRAM #PROXY_HISTOGRAM"),
-        GLsizei.IN("width", "the histogram width"),
-        GLenum.IN("internalformat", "the histogram internal format", IMAGING_INTERNAL_FORMATS),
-        GLboolean.IN(
+        GLenum("target", "the histogram target", "#HISTOGRAM #PROXY_HISTOGRAM"),
+        GLsizei("width", "the histogram width"),
+        GLenum("internalformat", "the histogram internal format", IMAGING_INTERNAL_FORMATS),
+        GLboolean(
             "sink",
             """
             whether pixel groups will be consumed by the histogram operation (#TRUE) or passed on to the minmax operation (#FALSE)
@@ -520,48 +520,48 @@ val ARB_imaging = "ARBImaging".nativeClassGL("ARB_imaging") {
         "ResetHistogram",
         "Resets all counters of all elements of the histogram table to zero.",
 
-        GLenum.IN("target", "the histogram target", "#HISTOGRAM")
+        GLenum("target", "the histogram target", "#HISTOGRAM")
     )
 
     DeprecatedGL..void(
         "GetHistogram",
         "Returns the current contents of the histogram table.",
 
-        GLenum.IN("target", "the histogram target", "#HISTOGRAM"),
-        GLboolean.IN(
+        GLenum("target", "the histogram target", "#HISTOGRAM"),
+        GLboolean(
             "reset",
             "if #TRUE, then all counters of all elements of the histogram are reset to zero. Counters are reset whether returned or not."
         ),
-        GLenum.IN("format", "the pixel data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the pixel data types", PIXEL_DATA_TYPES),
-        Unsafe..PIXEL_PACK_BUFFER..void.p.OUT("values", "the pixel data")
+        GLenum("format", "the pixel data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the pixel data types", PIXEL_DATA_TYPES),
+        Unsafe..RawPointer..void.p("values", "the pixel data")
     )
 
     DeprecatedGL..void(
         "GetHistogramParameteriv",
         "Returns the integer values of the specified histogram parameter",
 
-        GLenum.IN("target", "the histogram target", "#HISTOGRAM"),
-        GLenum.IN("pname", "the parameter to query", HISTOGRAM_PROPERTIES),
-        ReturnParam..Check(1)..GLint.p.OUT("params", "a buffer in which to return the parameter values")
+        GLenum("target", "the histogram target", "#HISTOGRAM"),
+        GLenum("pname", "the parameter to query", HISTOGRAM_PROPERTIES),
+        ReturnParam..Check(1)..GLint.p("params", "a buffer in which to return the parameter values")
     )
 
     DeprecatedGL..void(
         "GetHistogramParameterfv",
         "Float version of #GetHistogramParameteriv().",
 
-        GLenum.IN("target", "the histogram target"),
-        GLenum.IN("pname", "the parameter to query"),
-        ReturnParam..Check(1)..GLfloat.p.OUT("params", "a buffer in which to place the returned value")
+        GLenum("target", "the histogram target"),
+        GLenum("pname", "the parameter to query"),
+        ReturnParam..Check(1)..GLfloat.p("params", "a buffer in which to place the returned value")
     )
 
     DeprecatedGL..void(
         "Minmax",
         "Specifies the minmax table.",
 
-        GLenum.IN("target", "the minmax target", "#MINMAX"),
-        GLenum.IN("internalformat", "the minmax table internal format", IMAGING_INTERNAL_FORMATS),
-        GLboolean.IN(
+        GLenum("target", "the minmax target", "#MINMAX"),
+        GLenum("internalformat", "the minmax table internal format", IMAGING_INTERNAL_FORMATS),
+        GLboolean(
             "sink",
             "whether pixel groups will be consumed by the minmax operation (#TRUE) or passed on to final conversion (#FALSE)"
         )
@@ -571,42 +571,42 @@ val ARB_imaging = "ARBImaging".nativeClassGL("ARB_imaging") {
         "ResetMinmax",
         "Resets all minimum and maximum values of {@code target} to to their maximum and minimum representable values, respectively.",
 
-        GLenum.IN("target", "the minmax target", "#MINMAX")
+        GLenum("target", "the minmax target", "#MINMAX")
     )
 
     DeprecatedGL..void(
         "GetMinmax",
         "Returns the current contents of the minmax table.",
 
-        GLenum.IN("target", "the minmax target", "#MINMAX"),
-        GLboolean.IN(
+        GLenum("target", "the minmax target", "#MINMAX"),
+        GLboolean(
             "reset",
             """
             If #TRUE, then each minimum value is reset to the maximum representable value, and each maximum value is reset to the minimum
             representable value. All values are reset, whether returned or not.
             """
         ),
-        GLenum.IN("format", "the pixel data format", PIXEL_DATA_FORMATS),
-        GLenum.IN("type", "the pixel data type", PIXEL_DATA_TYPES),
-        Unsafe..PIXEL_PACK_BUFFER..void.p.OUT("values", "a buffer in which to place the minmax values")
+        GLenum("format", "the pixel data format", PIXEL_DATA_FORMATS),
+        GLenum("type", "the pixel data type", PIXEL_DATA_TYPES),
+        Unsafe..RawPointer..void.p("values", "a buffer in which to place the minmax values")
     )
 
     DeprecatedGL..void(
         "GetMinmaxParameteriv",
         "Returns the integer value of the specified minmax parameter.",
 
-        GLenum.IN("target", "the minmax target", "#MINMAX"),
-        GLenum.IN("pname", "the parameter to query"),
-        ReturnParam..Check(1)..GLint.p.OUT("params", "a buffer in which to place the returned value")
+        GLenum("target", "the minmax target", "#MINMAX"),
+        GLenum("pname", "the parameter to query"),
+        ReturnParam..Check(1)..GLint.p("params", "a buffer in which to place the returned value")
     )
 
     DeprecatedGL..void(
         "GetMinmaxParameterfv",
         "Float version of #GetMinmaxParameteriv().",
 
-        GLenum.IN("target", "the minmax target", "#MINMAX"),
-        GLenum.IN("pname", "the parameter to query"),
-        ReturnParam..Check(1)..GLfloat.p.OUT("params", "a buffer in which to place the returned value")
+        GLenum("target", "the minmax target", "#MINMAX"),
+        GLenum("pname", "the parameter to query"),
+        ReturnParam..Check(1)..GLfloat.p("params", "a buffer in which to place the returned value")
     )
 
     // EXT_blend_color

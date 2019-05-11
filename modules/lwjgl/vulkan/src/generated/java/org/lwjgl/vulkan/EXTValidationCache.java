@@ -86,7 +86,7 @@ public class EXTValidationCache {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>UNKNOWN:vkCreateValdiationCacheEXT, {@link #vkGetValidationCacheDataEXT GetValidationCacheDataEXT}</p>
+     * <p>{@link #vkCreateValidationCacheEXT CreateValidationCacheEXT}, {@link #vkGetValidationCacheDataEXT GetValidationCacheDataEXT}</p>
      */
     public static final int VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = 1;
 
@@ -113,7 +113,7 @@ public class EXTValidationCache {
             VkValidationCacheCreateInfoEXT.validate(pCreateInfo);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo, pAllocator, pValidationCache);
+        return callPPPPI(device.address(), pCreateInfo, pAllocator, pValidationCache, __functionAddress);
     }
 
     /**
@@ -134,14 +134,14 @@ public class EXTValidationCache {
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
-     * <p>Applications <b>can</b> track and manage the total host memory size of a validation cache object using the {@code pAllocator}. Applications <b>can</b> limit the amount of data retrieved from a validation cache object in {@link #vkGetValidationCacheDataEXT GetValidationCacheDataEXT}. Implementations <b>should</b> not internally limit the total number of entries added to a validation cache object or the total host memory consumed.</p>
+     * <p>Applications <b>can</b> track and manage the total host memory size of a validation cache object using the {@code pAllocator}. Applications <b>can</b> limit the amount of data retrieved from a validation cache object in {@code vkGetValidationCacheDataEXT}. Implementations <b>should</b> not internally limit the total number of entries added to a validation cache object or the total host memory consumed.</p>
      * </div>
      * 
-     * <p>Once created, a validation cache <b>can</b> be passed to the {@link VK10#vkCreateShaderModule CreateShaderModule} command as part of the {@link VkShaderModuleCreateInfo} {@code pNext} chain. If a {@link VkShaderModuleValidationCacheCreateInfoEXT} object is part of the {@link VkShaderModuleCreateInfo}{@code ::pNext} chain, and its {@code validationCache} field is not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, the implementation will query it for possible reuse opportunities and update it with new content. The use of the validation cache object in these commands is internally synchronized, and the same validation cache object <b>can</b> be used in multiple threads simultaneously.</p>
+     * <p>Once created, a validation cache <b>can</b> be passed to the {@code vkCreateShaderModule} command as part of the {@link VkShaderModuleCreateInfo} {@code pNext} chain. If a {@link VkShaderModuleValidationCacheCreateInfoEXT} object is part of the {@link VkShaderModuleCreateInfo}{@code ::pNext} chain, and its {@code validationCache} field is not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, the implementation will query it for possible reuse opportunities and update it with new content. The use of the validation cache object in these commands is internally synchronized, and the same validation cache object <b>can</b> be used in multiple threads simultaneously.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
-     * <p>Implementations <b>should</b> make every effort to limit any critical sections to the actual accesses to the cache, which is expected to be significantly shorter than the duration of the {@link VK10#vkCreateShaderModule CreateShaderModule} command.</p>
+     * <p>Implementations <b>should</b> make every effort to limit any critical sections to the actual accesses to the cache, which is expected to be significantly shorter than the duration of the {@code vkCreateShaderModule} command.</p>
      * </div>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -172,7 +172,7 @@ public class EXTValidationCache {
      *
      * @param device           the logical device that creates the validation cache object.
      * @param pCreateInfo      a pointer to a {@link VkValidationCacheCreateInfoEXT} structure that contains the initial parameters for the validation cache object.
-     * @param pAllocator       controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator       controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pValidationCache a pointer to a {@code VkValidationCacheEXT} handle in which the resulting validation cache object is returned.
      */
     @NativeType("VkResult")
@@ -192,7 +192,7 @@ public class EXTValidationCache {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, device.address(), validationCache, pAllocator);
+        callPJPV(device.address(), validationCache, pAllocator, __functionAddress);
     }
 
     /**
@@ -236,7 +236,7 @@ public class EXTValidationCache {
      *
      * @param device          the logical device that destroys the validation cache object.
      * @param validationCache the handle of the validation cache to destroy.
-     * @param pAllocator      controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator      controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
     public static void vkDestroyValidationCacheEXT(VkDevice device, @NativeType("VkValidationCacheEXT") long validationCache, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroyValidationCacheEXT(device, validationCache, memAddressSafe(pAllocator));
@@ -254,7 +254,7 @@ public class EXTValidationCache {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPI(__functionAddress, device.address(), dstCache, srcCacheCount, pSrcCaches);
+        return callPJPI(device.address(), dstCache, srcCacheCount, pSrcCaches, __functionAddress);
     }
 
     /**
@@ -336,7 +336,7 @@ public class EXTValidationCache {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPPI(__functionAddress, device.address(), validationCache, pDataSize, pData);
+        return callPJPPI(device.address(), validationCache, pDataSize, pData, __functionAddress);
     }
 
     /**
@@ -357,13 +357,13 @@ public class EXTValidationCache {
      * 
      * <p>If {@code pData} is {@code NULL}, then the maximum size of the data that <b>can</b> be retrieved from the validation cache, in bytes, is returned in {@code pDataSize}. Otherwise, {@code pDataSize} <b>must</b> point to a variable set by the user to the size of the buffer, in bytes, pointed to by {@code pData}, and on return the variable is overwritten with the amount of data actually written to {@code pData}.</p>
      * 
-     * <p>If {@code pDataSize} is less than the maximum size that <b>can</b> be retrieved by the validation cache, at most {@code pDataSize} bytes will be written to {@code pData}, and {@link #vkGetValidationCacheDataEXT GetValidationCacheDataEXT} will return {@link VK10#VK_INCOMPLETE INCOMPLETE}. Any data written to {@code pData} is valid and <b>can</b> be provided as the {@code pInitialData} member of the {@link VkValidationCacheCreateInfoEXT} structure passed to {@link #vkCreateValidationCacheEXT CreateValidationCacheEXT}.</p>
+     * <p>If {@code pDataSize} is less than the maximum size that <b>can</b> be retrieved by the validation cache, at most {@code pDataSize} bytes will be written to {@code pData}, and {@code vkGetValidationCacheDataEXT} will return {@link VK10#VK_INCOMPLETE INCOMPLETE}. Any data written to {@code pData} is valid and <b>can</b> be provided as the {@code pInitialData} member of the {@link VkValidationCacheCreateInfoEXT} structure passed to {@code vkCreateValidationCacheEXT}.</p>
      * 
-     * <p>Two calls to {@link #vkGetValidationCacheDataEXT GetValidationCacheDataEXT} with the same parameters <b>must</b> retrieve the same data unless a command that modifies the contents of the cache is called between them.</p>
+     * <p>Two calls to {@code vkGetValidationCacheDataEXT} with the same parameters <b>must</b> retrieve the same data unless a command that modifies the contents of the cache is called between them.</p>
      * 
      * <p>Applications <b>can</b> store the data retrieved from the validation cache, and use these data, possibly in a future run of the application, to populate new validation cache objects. The results of validation, however, <b>may</b> depend on the vendor ID, device ID, driver version, and other details of the device. To enable applications to detect when previously retrieved data is incompatible with the device, the initial bytes written to {@code pData} <b>must</b> be a header consisting of the following members:</p>
      * 
-     * <h6>Layout for validation cache header version ename:VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT</h6>
+     * <h6>Layout for validation cache header version {@link #VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT VALIDATION_CACHE_HEADER_VERSION_ONE_EXT}</h6>
      * 
      * <table class="lwjgl">
      * <thead><tr><th>Offset</th><th>Size</th><th>Meaning</th></tr></thead>
@@ -429,7 +429,7 @@ public class EXTValidationCache {
             VkValidationCacheCreateInfoEXT.validate(pCreateInfo.address());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pValidationCache);
+        return callPPPPI(device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pValidationCache, __functionAddress);
     }
 
     /** Array version of: {@link #vkMergeValidationCachesEXT MergeValidationCachesEXT} */
@@ -439,7 +439,7 @@ public class EXTValidationCache {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPI(__functionAddress, device.address(), dstCache, pSrcCaches.length, pSrcCaches);
+        return callPJPI(device.address(), dstCache, pSrcCaches.length, pSrcCaches, __functionAddress);
     }
 
 }

@@ -28,23 +28,19 @@ import static org.lwjgl.system.MemoryStack.*;
  *     uint32_t deviceIndexCount;
  *     uint32_t const * pDeviceIndices;
  *     uint32_t splitInstanceBindRegionCount;
- *     {@link VkRect2D VkRect2D const} * pSplitInstanceBindRegions;
+ *     {@link VkRect2D VkRect2D} const * pSplitInstanceBindRegions;
  * }</code></pre>
  */
 public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDeviceGroupInfo {
 
-    VkBindImageMemoryDeviceGroupInfoKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkBindImageMemoryDeviceGroupInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkBindImageMemoryDeviceGroupInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkBindImageMemoryDeviceGroupInfoKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(container);
     }
 
     /** Sets the specified value to the {@code sType} field. */
@@ -90,30 +86,31 @@ public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDevice
 
     // -----------------------------------
 
-    /** Returns a new {@link VkBindImageMemoryDeviceGroupInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkBindImageMemoryDeviceGroupInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkBindImageMemoryDeviceGroupInfoKHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkBindImageMemoryDeviceGroupInfoKHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkBindImageMemoryDeviceGroupInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkBindImageMemoryDeviceGroupInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkBindImageMemoryDeviceGroupInfoKHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkBindImageMemoryDeviceGroupInfoKHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkBindImageMemoryDeviceGroupInfoKHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkBindImageMemoryDeviceGroupInfoKHR} instance allocated with {@link BufferUtils}. */
     public static VkBindImageMemoryDeviceGroupInfoKHR create() {
-        return new VkBindImageMemoryDeviceGroupInfoKHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkBindImageMemoryDeviceGroupInfoKHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkBindImageMemoryDeviceGroupInfoKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkBindImageMemoryDeviceGroupInfoKHR} instance for the specified memory address. */
     public static VkBindImageMemoryDeviceGroupInfoKHR create(long address) {
-        return new VkBindImageMemoryDeviceGroupInfoKHR(address, null);
+        return wrap(VkBindImageMemoryDeviceGroupInfoKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkBindImageMemoryDeviceGroupInfoKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkBindImageMemoryDeviceGroupInfoKHR.class, address);
     }
 
     /**
@@ -122,7 +119,7 @@ public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDevice
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryDeviceGroupInfoKHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -131,7 +128,7 @@ public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDevice
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryDeviceGroupInfoKHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -140,7 +137,8 @@ public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDevice
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryDeviceGroupInfoKHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -150,43 +148,43 @@ public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDevice
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryDeviceGroupInfoKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkBindImageMemoryDeviceGroupInfoKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkBindImageMemoryDeviceGroupInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkBindImageMemoryDeviceGroupInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkBindImageMemoryDeviceGroupInfoKHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkBindImageMemoryDeviceGroupInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkBindImageMemoryDeviceGroupInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkBindImageMemoryDeviceGroupInfoKHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkBindImageMemoryDeviceGroupInfoKHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkBindImageMemoryDeviceGroupInfoKHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkBindImageMemoryDeviceGroupInfoKHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkBindImageMemoryDeviceGroupInfoKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkBindImageMemoryDeviceGroupInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkBindImageMemoryDeviceGroupInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkBindImageMemoryDeviceGroupInfoKHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkBindImageMemoryDeviceGroupInfoKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -214,7 +212,7 @@ public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDevice
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryDeviceGroupInfoKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -224,7 +222,7 @@ public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDevice
      * @param capacity the buffer capacity
      */
     public static VkBindImageMemoryDeviceGroupInfoKHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -232,8 +230,10 @@ public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDevice
     /** An array of {@link VkBindImageMemoryDeviceGroupInfoKHR} structs. */
     public static class Buffer extends VkBindImageMemoryDeviceGroupInfo.Buffer {
 
+        private static final VkBindImageMemoryDeviceGroupInfoKHR ELEMENT_FACTORY = VkBindImageMemoryDeviceGroupInfoKHR.create(-1L);
+
         /**
-         * Creates a new {@link VkBindImageMemoryDeviceGroupInfoKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkBindImageMemoryDeviceGroupInfoKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -259,13 +259,8 @@ public class VkBindImageMemoryDeviceGroupInfoKHR extends VkBindImageMemoryDevice
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkBindImageMemoryDeviceGroupInfoKHR newInstance(long address) {
-            return new VkBindImageMemoryDeviceGroupInfoKHR(address, container);
+        protected VkBindImageMemoryDeviceGroupInfoKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Sets the specified value to the {@code sType} field. */

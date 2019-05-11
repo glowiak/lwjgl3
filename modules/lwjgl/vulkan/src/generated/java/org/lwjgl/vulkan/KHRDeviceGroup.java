@@ -67,7 +67,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Deprecation state</b></dt>
  * <dd><ul>
- * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
+ * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
@@ -215,6 +215,7 @@ public class KHRDeviceGroup {
             && VK.isSupported(provider, "vkGetDeviceGroupPresentCapabilitiesKHR", caps, ext.contains("VK_KHR_surface"))
             && VK.isSupported(provider, "vkGetDeviceGroupSurfacePresentModesKHR", caps, ext.contains("VK_KHR_surface"))
             && VK.isSupported(provider, "vkAcquireNextImage2KHR", caps, ext.contains("VK_KHR_swapchain"))
+            && VK.isSupported(provider, "vkGetDeviceGroupSurfacePresentModes2EXT", caps, ext.contains("VK_EXT_full_screen_exclusive"))
         );
     }
 
@@ -226,7 +227,7 @@ public class KHRDeviceGroup {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, device.address(), heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+        callPPV(device.address(), heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures, __functionAddress);
     }
 
     /**
@@ -258,7 +259,7 @@ public class KHRDeviceGroup {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, commandBuffer.address(), deviceMask);
+        callPV(commandBuffer.address(), deviceMask, __functionAddress);
     }
 
     // --- [ vkCmdDispatchBaseKHR ] ---
@@ -279,7 +280,7 @@ public class KHRDeviceGroup {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, commandBuffer.address(), baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
+        callPV(commandBuffer.address(), baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ, __functionAddress);
     }
 
     // --- [ vkGetDeviceGroupPresentCapabilitiesKHR ] ---
@@ -290,7 +291,7 @@ public class KHRDeviceGroup {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, device.address(), pDeviceGroupPresentCapabilities);
+        return callPPI(device.address(), pDeviceGroupPresentCapabilities, __functionAddress);
     }
 
     /**
@@ -348,7 +349,7 @@ public class KHRDeviceGroup {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPI(__functionAddress, device.address(), surface, pModes);
+        return callPJPI(device.address(), surface, pModes, __functionAddress);
     }
 
     /**
@@ -424,7 +425,7 @@ public class KHRDeviceGroup {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), surface, pRectCount, pRects);
+        return callPJPPI(physicalDevice.address(), surface, pRectCount, pRects, __functionAddress);
     }
 
     /**
@@ -508,7 +509,7 @@ public class KHRDeviceGroup {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, device.address(), pAcquireInfo, pImageIndex);
+        return callPPPI(device.address(), pAcquireInfo, pImageIndex, __functionAddress);
     }
 
     /**
@@ -555,6 +556,7 @@ public class KHRDeviceGroup {
      * <li>{@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}</li>
      * <li>{@link KHRSwapchain#VK_ERROR_OUT_OF_DATE_KHR ERROR_OUT_OF_DATE_KHR}</li>
      * <li>{@link KHRSurface#VK_ERROR_SURFACE_LOST_KHR ERROR_SURFACE_LOST_KHR}</li>
+     * <li>{@link EXTFullScreenExclusive#VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -574,6 +576,73 @@ public class KHRDeviceGroup {
         return nvkAcquireNextImage2KHR(device, pAcquireInfo.address(), memAddress(pImageIndex));
     }
 
+    // --- [ vkGetDeviceGroupSurfacePresentModes2EXT ] ---
+
+    /** Unsafe version of: {@link #vkGetDeviceGroupSurfacePresentModes2EXT GetDeviceGroupSurfacePresentModes2EXT} */
+    public static int nvkGetDeviceGroupSurfacePresentModes2EXT(VkDevice device, long pSurfaceInfo, long pModes) {
+        long __functionAddress = device.getCapabilities().vkGetDeviceGroupSurfacePresentModes2EXT;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        return callPPPI(device.address(), pSurfaceInfo, pModes, __functionAddress);
+    }
+
+    /**
+     * Query device group present capabilities for a surface.
+     * 
+     * <h5>C Specification</h5>
+     * 
+     * <p>Alternatively, to query the supported device group presentation modes for a surface combined with select other fixed swapchain creation parameters, call:</p>
+     * 
+     * <pre><code>
+     * VkResult vkGetDeviceGroupSurfacePresentModes2EXT(
+     *     VkDevice                                    device,
+     *     const VkPhysicalDeviceSurfaceInfo2KHR*      pSurfaceInfo,
+     *     VkDeviceGroupPresentModeFlagsKHR*           pModes);</code></pre>
+     * 
+     * <h5>Description</h5>
+     * 
+     * <p>{@code vkGetDeviceGroupSurfacePresentModes2EXT} behaves similarly to {@link #vkGetDeviceGroupSurfacePresentModesKHR GetDeviceGroupSurfacePresentModesKHR}, with the ability to specify extended inputs via chained input structures.</p>
+     * 
+     * <h5>Valid Usage (Implicit)</h5>
+     * 
+     * <ul>
+     * <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
+     * <li>{@code pSurfaceInfo} <b>must</b> be a valid pointer to a valid {@link VkPhysicalDeviceSurfaceInfo2KHR} structure</li>
+     * <li>{@code pModes} <b>must</b> be a valid pointer to a {@code VkDeviceGroupPresentModeFlagsKHR} value</li>
+     * </ul>
+     * 
+     * <h5>Return Codes</h5>
+     * 
+     * <dl>
+     * <dt>On success, this command returns</dt>
+     * <dd><ul>
+     * <li>{@link VK10#VK_SUCCESS SUCCESS}</li>
+     * </ul></dd>
+     * <dt>On failure, this command returns</dt>
+     * <dd><ul>
+     * <li>{@link VK10#VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY}</li>
+     * <li>{@link VK10#VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}</li>
+     * <li>{@link KHRSurface#VK_ERROR_SURFACE_LOST_KHR ERROR_SURFACE_LOST_KHR}</li>
+     * </ul></dd>
+     * </dl>
+     * 
+     * <h5>See Also</h5>
+     * 
+     * <p>{@link VkPhysicalDeviceSurfaceInfo2KHR}</p>
+     *
+     * @param device       the logical device.
+     * @param pSurfaceInfo points to an instance of the VkPhysicalDeviceSurfaceInfo2KHR structure, describing the surface and other fixed parameters that would be consumed by vkCreateSwapchainKHR.
+     * @param pModes       a pointer to a value of type {@code VkDeviceGroupPresentModeFlagsKHR} that is filled with the supported device group present modes for the surface.
+     */
+    @NativeType("VkResult")
+    public static int vkGetDeviceGroupSurfacePresentModes2EXT(VkDevice device, @NativeType("VkPhysicalDeviceSurfaceInfo2KHR const *") VkPhysicalDeviceSurfaceInfo2KHR pSurfaceInfo, @NativeType("VkDeviceGroupPresentModeFlagsKHR *") IntBuffer pModes) {
+        if (CHECKS) {
+            check(pModes, 1);
+        }
+        return nvkGetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo.address(), memAddress(pModes));
+    }
+
     /** Array version of: {@link #vkGetDeviceGroupPeerMemoryFeaturesKHR GetDeviceGroupPeerMemoryFeaturesKHR} */
     public static void vkGetDeviceGroupPeerMemoryFeaturesKHR(VkDevice device, @NativeType("uint32_t") int heapIndex, @NativeType("uint32_t") int localDeviceIndex, @NativeType("uint32_t") int remoteDeviceIndex, @NativeType("VkPeerMemoryFeatureFlags *") int[] pPeerMemoryFeatures) {
         long __functionAddress = device.getCapabilities().vkGetDeviceGroupPeerMemoryFeaturesKHR;
@@ -581,7 +650,7 @@ public class KHRDeviceGroup {
             check(__functionAddress);
             check(pPeerMemoryFeatures, 1);
         }
-        callPPV(__functionAddress, device.address(), heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+        callPPV(device.address(), heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures, __functionAddress);
     }
 
     /** Array version of: {@link #vkGetDeviceGroupSurfacePresentModesKHR GetDeviceGroupSurfacePresentModesKHR} */
@@ -592,7 +661,7 @@ public class KHRDeviceGroup {
             check(__functionAddress);
             check(pModes, 1);
         }
-        return callPJPI(__functionAddress, device.address(), surface, pModes);
+        return callPJPI(device.address(), surface, pModes, __functionAddress);
     }
 
     /** Array version of: {@link #vkGetPhysicalDevicePresentRectanglesKHR GetPhysicalDevicePresentRectanglesKHR} */
@@ -604,7 +673,7 @@ public class KHRDeviceGroup {
             check(pRectCount, 1);
             checkSafe(pRects, pRectCount[0]);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), surface, pRectCount, memAddressSafe(pRects));
+        return callPJPPI(physicalDevice.address(), surface, pRectCount, memAddressSafe(pRects), __functionAddress);
     }
 
     /** Array version of: {@link #vkAcquireNextImage2KHR AcquireNextImage2KHR} */
@@ -615,7 +684,18 @@ public class KHRDeviceGroup {
             check(__functionAddress);
             check(pImageIndex, 1);
         }
-        return callPPPI(__functionAddress, device.address(), pAcquireInfo.address(), pImageIndex);
+        return callPPPI(device.address(), pAcquireInfo.address(), pImageIndex, __functionAddress);
+    }
+
+    /** Array version of: {@link #vkGetDeviceGroupSurfacePresentModes2EXT GetDeviceGroupSurfacePresentModes2EXT} */
+    @NativeType("VkResult")
+    public static int vkGetDeviceGroupSurfacePresentModes2EXT(VkDevice device, @NativeType("VkPhysicalDeviceSurfaceInfo2KHR const *") VkPhysicalDeviceSurfaceInfo2KHR pSurfaceInfo, @NativeType("VkDeviceGroupPresentModeFlagsKHR *") int[] pModes) {
+        long __functionAddress = device.getCapabilities().vkGetDeviceGroupSurfacePresentModes2EXT;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(pModes, 1);
+        }
+        return callPPPI(device.address(), pSurfaceInfo.address(), pModes, __functionAddress);
     }
 
 }

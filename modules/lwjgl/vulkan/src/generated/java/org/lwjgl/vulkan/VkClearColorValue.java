@@ -32,7 +32,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
- * <li>{@code float32} &ndash; are the color clear values when the format of the image or attachment is one of the formats in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-numericformat">Interpretation of Numeric Format</a> table other than signed integer ({@code SINT}) or unsigned integer ({@code UINT}). Floating point values are automatically converted to the format of the image, with the clear value being treated as linear if the image is sRGB.</li>
+ * <li>{@code float32} &ndash; are the color clear values when the format of the image or attachment is one of the formats in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-numericformat">Interpretation of Numeric Format</a> table other than signed integer ({@code SINT}) or unsigned integer ({@code UINT}). Floating point values are automatically converted to the format of the image, with the clear value being treated as linear if the image is sRGB.</li>
  * <li>{@code int32} &ndash; are the color clear values when the format of the image or attachment is signed integer ({@code SINT}). Signed integer values are converted to the format of the image by casting to the smaller type (with negative 32-bit values mapping to negative values in the smaller type). If the integer clear value is not representable in the target type (e.g. would overflow in conversion to that type), the clear value is undefined.</li>
  * <li>{@code uint32} &ndash; are the color clear values when the format of the image or attachment is unsigned integer ({@code UINT}). Unsigned integer values are converted to the format of the image by casting to the integer type with fewer bits.</li>
  * </ul>
@@ -75,18 +75,14 @@ public class VkClearColorValue extends Struct implements NativeResource {
         UINT32 = layout.offsetof(2);
     }
 
-    VkClearColorValue(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkClearColorValue} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkClearColorValue} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkClearColorValue(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -137,30 +133,31 @@ public class VkClearColorValue extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkClearColorValue} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkClearColorValue} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkClearColorValue malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkClearColorValue.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkClearColorValue} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkClearColorValue} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkClearColorValue calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkClearColorValue.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkClearColorValue} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkClearColorValue} instance allocated with {@link BufferUtils}. */
     public static VkClearColorValue create() {
-        return new VkClearColorValue(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkClearColorValue.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkClearColorValue} instance for the specified memory address. */
+    /** Returns a new {@code VkClearColorValue} instance for the specified memory address. */
     public static VkClearColorValue create(long address) {
-        return new VkClearColorValue(address, null);
+        return wrap(VkClearColorValue.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkClearColorValue createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkClearColorValue.class, address);
     }
 
     /**
@@ -169,7 +166,7 @@ public class VkClearColorValue extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkClearColorValue.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -178,7 +175,7 @@ public class VkClearColorValue extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkClearColorValue.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -187,7 +184,8 @@ public class VkClearColorValue extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkClearColorValue.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -197,43 +195,43 @@ public class VkClearColorValue extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkClearColorValue.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkClearColorValue.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkClearColorValue} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkClearColorValue} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkClearColorValue mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkClearColorValue} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkClearColorValue} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkClearColorValue callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkClearColorValue} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkClearColorValue} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkClearColorValue mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkClearColorValue.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkClearColorValue} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkClearColorValue} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkClearColorValue callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkClearColorValue.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -261,7 +259,7 @@ public class VkClearColorValue extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkClearColorValue.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -271,7 +269,7 @@ public class VkClearColorValue extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkClearColorValue.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -280,19 +278,19 @@ public class VkClearColorValue extends Struct implements NativeResource {
     public static FloatBuffer nfloat32(long struct) { return memFloatBuffer(struct + VkClearColorValue.FLOAT32, 4); }
     /** Unsafe version of {@link #float32(int) float32}. */
     public static float nfloat32(long struct, int index) {
-        return memGetFloat(struct + VkClearColorValue.FLOAT32 + check(index, 4) * 4);
+        return UNSAFE.getFloat(null, struct + VkClearColorValue.FLOAT32 + check(index, 4) * 4);
     }
     /** Unsafe version of {@link #int32}. */
     public static IntBuffer nint32(long struct) { return memIntBuffer(struct + VkClearColorValue.INT32, 4); }
     /** Unsafe version of {@link #int32(int) int32}. */
     public static int nint32(long struct, int index) {
-        return memGetInt(struct + VkClearColorValue.INT32 + check(index, 4) * 4);
+        return UNSAFE.getInt(null, struct + VkClearColorValue.INT32 + check(index, 4) * 4);
     }
     /** Unsafe version of {@link #uint32}. */
     public static IntBuffer nuint32(long struct) { return memIntBuffer(struct + VkClearColorValue.UINT32, 4); }
     /** Unsafe version of {@link #uint32(int) uint32}. */
     public static int nuint32(long struct, int index) {
-        return memGetInt(struct + VkClearColorValue.UINT32 + check(index, 4) * 4);
+        return UNSAFE.getInt(null, struct + VkClearColorValue.UINT32 + check(index, 4) * 4);
     }
 
     /** Unsafe version of {@link #float32(FloatBuffer) float32}. */
@@ -302,7 +300,7 @@ public class VkClearColorValue extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #float32(int, float) float32}. */
     public static void nfloat32(long struct, int index, float value) {
-        memPutFloat(struct + VkClearColorValue.FLOAT32 + check(index, 4) * 4, value);
+        UNSAFE.putFloat(null, struct + VkClearColorValue.FLOAT32 + check(index, 4) * 4, value);
     }
     /** Unsafe version of {@link #int32(IntBuffer) int32}. */
     public static void nint32(long struct, IntBuffer value) {
@@ -311,7 +309,7 @@ public class VkClearColorValue extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #int32(int, int) int32}. */
     public static void nint32(long struct, int index, int value) {
-        memPutInt(struct + VkClearColorValue.INT32 + check(index, 4) * 4, value);
+        UNSAFE.putInt(null, struct + VkClearColorValue.INT32 + check(index, 4) * 4, value);
     }
     /** Unsafe version of {@link #uint32(IntBuffer) uint32}. */
     public static void nuint32(long struct, IntBuffer value) {
@@ -320,7 +318,7 @@ public class VkClearColorValue extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #uint32(int, int) uint32}. */
     public static void nuint32(long struct, int index, int value) {
-        memPutInt(struct + VkClearColorValue.UINT32 + check(index, 4) * 4, value);
+        UNSAFE.putInt(null, struct + VkClearColorValue.UINT32 + check(index, 4) * 4, value);
     }
 
     // -----------------------------------
@@ -328,8 +326,10 @@ public class VkClearColorValue extends Struct implements NativeResource {
     /** An array of {@link VkClearColorValue} structs. */
     public static class Buffer extends StructBuffer<VkClearColorValue, Buffer> implements NativeResource {
 
+        private static final VkClearColorValue ELEMENT_FACTORY = VkClearColorValue.create(-1L);
+
         /**
-         * Creates a new {@link VkClearColorValue.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkClearColorValue.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -355,18 +355,8 @@ public class VkClearColorValue extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkClearColorValue newInstance(long address) {
-            return new VkClearColorValue(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkClearColorValue getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link FloatBuffer} view of the {@code float32} field. */

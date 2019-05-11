@@ -24,6 +24,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  */
 public class VR {
 
+    /** OpenVR version. */
+    public static final int
+        k_nSteamVRVersionMajor = 1,
+        k_nSteamVRVersionMinor = 3,
+        k_nSteamVRVersionBuild = 22;
+
     /** OpenVR constants. */
     public static final int
         k_nDriverNone                    = -1,
@@ -42,6 +48,8 @@ public class VR {
         k_unHmdMatrix44PropertyTag       = 21,
         k_unHmdVector3PropertyTag        = 22,
         k_unHmdVector4PropertyTag        = 23,
+        k_unHmdVector2PropertyTag        = 24,
+        k_unHmdQuadPropertyTag           = 25,
         k_unHiddenAreaPropertyTag        = 30,
         k_unPathHandleInfoTag            = 31,
         k_unActionPropertyTag            = 32,
@@ -50,13 +58,16 @@ public class VR {
         k_unHapticVibrationPropertyTag   = 35,
         k_unSkeletonPropertyTag          = 36,
         k_unSpatialAnchorPosePropertyTag = 40,
+        k_unJsonPropertyTag              = 41,
+        k_unActiveActionSetPropertyTag   = 42,
         k_unOpenVRInternalReserved_Start = 1000,
         k_unOpenVRInternalReserved_End   = 10000,
         k_unScreenshotHandleInvalid      = 0,
         k_unNotificationTextMaxSize      = 256,
         k_unMaxActionNameLength          = 64,
         k_unMaxActionSetNameLength       = 64,
-        k_unMaxActionOriginCount         = 16;
+        k_unMaxActionOriginCount         = 16,
+        k_unMaxBoneNameLength            = 32;
 
     /** OpenVR constants. */
     public static final long
@@ -71,6 +82,8 @@ public class VR {
 
     /** No string property will ever be longer than this length. */
     public static final int k_unMaxPropertyStringSize = 32768;
+
+    public static final int k_unMaxDistortionFunctionParameters = 8;
 
     /** The number of axes in the controller state. */
     public static final int k_unControllerStateAxisCount = 5;
@@ -97,14 +110,14 @@ public class VR {
     public static final String
         IVRSystem_Version                                              = "IVRSystem_019",
         IVRExtendedDisplay_Version                                     = "IVRExtendedDisplay_001",
-        IVRTrackedCamera_Version                                       = "IVRTrackedCamera_003",
+        IVRTrackedCamera_Version                                       = "IVRTrackedCamera_005",
         k_pch_MimeType_HomeApp                                         = "vr/home",
         k_pch_MimeType_GameTheater                                     = "vr/game_theater",
         IVRApplications_Version                                        = "IVRApplications_006",
         IVRChaperone_Version                                           = "IVRChaperone_003",
-        IVRChaperoneSetup_Version                                      = "IVRChaperoneSetup_005",
+        IVRChaperoneSetup_Version                                      = "IVRChaperoneSetup_006",
         IVRCompositor_Version                                          = "IVRCompositor_022",
-        IVROverlay_Version                                             = "IVROverlay_018",
+        IVROverlay_Version                                             = "IVROverlay_019",
         k_pch_Controller_Component_GDC2015                             = "gdc2015",
         k_pch_Controller_Component_Base                                = "base",
         k_pch_Controller_Component_Tip                                 = "tip",
@@ -132,21 +145,19 @@ public class VR {
         k_pch_SteamVR_PlayAreaColor_String                             = "playAreaColor",
         k_pch_SteamVR_ShowStage_Bool                                   = "showStage",
         k_pch_SteamVR_ActivateMultipleDrivers_Bool                     = "activateMultipleDrivers",
-        k_pch_SteamVR_DirectMode_Bool                                  = "directMode",
-        k_pch_SteamVR_DirectModeEdidVid_Int32                          = "directModeEdidVid",
-        k_pch_SteamVR_DirectModeEdidPid_Int32                          = "directModeEdidPid",
         k_pch_SteamVR_UsingSpeakers_Bool                               = "usingSpeakers",
         k_pch_SteamVR_SpeakersForwardYawOffsetDegrees_Float            = "speakersForwardYawOffsetDegrees",
         k_pch_SteamVR_BaseStationPowerManagement_Bool                  = "basestationPowerManagement",
         k_pch_SteamVR_NeverKillProcesses_Bool                          = "neverKillProcesses",
         k_pch_SteamVR_SupersampleScale_Float                           = "supersampleScale",
-        k_pch_SteamVR_AllowAsyncReprojection_Bool                      = "allowAsyncReprojection",
-        k_pch_SteamVR_AllowReprojection_Bool                           = "allowInterleavedReprojection",
-        k_pch_SteamVR_ForceReprojection_Bool                           = "forceReprojection",
+        k_pch_SteamVR_MaxRecommendedResolution_Int32                   = "maxRecommendedResolution",
+        k_pch_SteamVR_MotionSmoothing_Bool                             = "motionSmoothing",
+        k_pch_SteamVR_MotionSmoothingOverride_Int32                    = "motionSmoothingOverride",
         k_pch_SteamVR_ForceFadeOnBadTracking_Bool                      = "forceFadeOnBadTracking",
-        k_pch_SteamVR_DefaultMirrorView_Int32                          = "defaultMirrorView",
+        k_pch_SteamVR_DefaultMirrorView_Int32                          = "mirrorView",
         k_pch_SteamVR_ShowMirrorView_Bool                              = "showMirrorView",
         k_pch_SteamVR_MirrorViewGeometry_String                        = "mirrorViewGeometry",
+        k_pch_SteamVR_MirrorViewGeometryMaximized_String               = "mirrorViewGeometryMaximized",
         k_pch_SteamVR_StartMonitorFromAppLaunch                        = "startMonitorFromAppLaunch",
         k_pch_SteamVR_StartCompositorFromAppLaunch_Bool                = "startCompositorFromAppLaunch",
         k_pch_SteamVR_StartDashboardFromAppLaunch_Bool                 = "startDashboardFromAppLaunch",
@@ -162,10 +173,19 @@ public class VR {
         k_pch_SteamVR_HaveStartedTutorialForNativeChaperoneDriver_Bool = "haveStartedTutorialForNativeChaperoneDriver",
         k_pch_SteamVR_ForceWindows32bitVRMonitor                       = "forceWindows32BitVRMonitor",
         k_pch_SteamVR_DebugInput                                       = "debugInput",
-        k_pch_SteamVR_LegacyInputRebinding                             = "legacyInputRebinding",
         k_pch_SteamVR_DebugInputBinding                                = "debugInputBinding",
         k_pch_SteamVR_InputBindingUIBlock                              = "inputBindingUI",
         k_pch_SteamVR_RenderCameraMode                                 = "renderCameraMode",
+        k_pch_SteamVR_EnableSharedResourceJournaling                   = "enableSharedResourceJournaling",
+        k_pch_SteamVR_EnableSafeMode                                   = "enableSafeMode",
+        k_pch_SteamVR_PreferredRefreshRate                             = "preferredRefreshRate",
+        k_pch_SteamVR_LastVersionNotice                                = "lastVersionNotice",
+        k_pch_SteamVR_LastVersionNoticeDate                            = "lastVersionNoticeDate",
+        k_pch_DirectMode_Section                                       = "direct_mode",
+        k_pch_DirectMode_Enable_Bool                                   = "enable",
+        k_pch_DirectMode_Count_Int32                                   = "count",
+        k_pch_DirectMode_EdidVid_Int32                                 = "edidVid",
+        k_pch_DirectMode_EdidPid_Int32                                 = "edidPid",
         k_pch_Lighthouse_Section                                       = "driver_lighthouse",
         k_pch_Lighthouse_DisableIMU_Bool                               = "disableimu",
         k_pch_Lighthouse_DisableIMUExceptHMD_Bool                      = "disableimuexcepthmd",
@@ -175,6 +195,9 @@ public class VR {
         k_pch_Lighthouse_DBHistory_Bool                                = "dbhistory",
         k_pch_Lighthouse_EnableBluetooth_Bool                          = "enableBluetooth",
         k_pch_Lighthouse_PowerManagedBaseStations_String               = "PowerManagedBaseStations",
+        k_pch_Lighthouse_PowerManagedBaseStations2_String              = "PowerManagedBaseStations2",
+        k_pch_Lighthouse_EnableImuFallback_Bool                        = "enableImuFallback",
+        k_pch_Lighthouse_NewPairing_Bool                               = "newPairing",
         k_pch_Null_Section                                             = "driver_null",
         k_pch_Null_SerialNumber_String                                 = "serialNumber",
         k_pch_Null_ModelNumber_String                                  = "modelNumber",
@@ -189,6 +212,7 @@ public class VR {
         k_pch_UserInterface_Section                                    = "userinterface",
         k_pch_UserInterface_StatusAlwaysOnTop_Bool                     = "StatusAlwaysOnTop",
         k_pch_UserInterface_MinimizeToTray_Bool                        = "MinimizeToTray",
+        k_pch_UserInterface_HidePopupsWhenStatusMinimized_Bool         = "HidePopupsWhenStatusMinimized",
         k_pch_UserInterface_Screenshots_Bool                           = "screenshots",
         k_pch_UserInterface_ScreenshotType_Int                         = "screenshotType",
         k_pch_Notifications_Section                                    = "notifications",
@@ -202,9 +226,7 @@ public class VR {
         k_pch_Keyboard_OffsetY                                         = "OffsetY",
         k_pch_Keyboard_Smoothing                                       = "Smoothing",
         k_pch_Perf_Section                                             = "perfcheck",
-        k_pch_Perf_HeuristicActive_Bool                                = "heuristicActive",
-        k_pch_Perf_NotifyInHMD_Bool                                    = "warnInHMD",
-        k_pch_Perf_NotifyOnlyOnce_Bool                                 = "warnOnlyOnce",
+        k_pch_Perf_PerfGraphInHMD_Bool                                 = "perfGraphInHMD",
         k_pch_Perf_AllowTimingStore_Bool                               = "allowTimingStore",
         k_pch_Perf_SaveTimingsOnExit_Bool                              = "saveTimingsOnExit",
         k_pch_Perf_TestData_Float                                      = "perfTestData",
@@ -247,29 +269,37 @@ public class VR {
         k_pch_Dashboard_Section                                        = "dashboard",
         k_pch_Dashboard_EnableDashboard_Bool                           = "enableDashboard",
         k_pch_Dashboard_ArcadeMode_Bool                                = "arcadeMode",
-        k_pch_Dashboard_EnableWebUI                                    = "webUI",
-        k_pch_Dashboard_EnableWebUIDevTools                            = "webUIDevTools",
-        k_pch_Dashboard_EnableWebUIDashboardReplacement                = "webUIDashboard",
+        k_pch_Dashboard_UseWebDashboard                                = "useWebDashboard",
+        k_pch_Dashboard_UseWebSettings                                 = "useWebSettings",
+        k_pch_Dashboard_UseWebIPD                                      = "useWebIPD",
+        k_pch_Dashboard_UseWebPowerMenu                                = "useWebPowerMenu",
         k_pch_modelskin_Section                                        = "modelskins",
         k_pch_Driver_Enable_Bool                                       = "enable",
         k_pch_WebInterface_Section                                     = "WebInterface",
         k_pch_WebInterface_WebEnable_Bool                              = "WebEnable",
         k_pch_WebInterface_WebPort_String                              = "WebPort",
+        k_pch_VRWebHelper_Section                                      = "VRWebHelper",
+        k_pch_VRWebHelper_DebuggerEnabled_Bool                         = "DebuggerEnabled",
+        k_pch_VRWebHelper_DebuggerPort_Int32                           = "DebuggerPort",
         k_pch_TrackingOverride_Section                                 = "TrackingOverrides",
         k_pch_App_BindingAutosaveURLSuffix_String                      = "AutosaveURL",
         k_pch_App_BindingCurrentURLSuffix_String                       = "CurrentURL",
         k_pch_App_NeedToUpdateAutosaveSuffix_Bool                      = "NeedToUpdateAutosave",
-        k_pch_App_ActionManifestURL_String                             = "ActionManifestURL",
         k_pch_Trackers_Section                                         = "trackers",
+        k_pch_DesktopUI_Section                                        = "DesktopUI",
+        k_pch_LastKnown_Section                                        = "LastKnown",
+        k_pch_LastKnown_HMDManufacturer_String                         = "HMDManufacturer",
+        k_pch_LastKnown_HMDModel_String                                = "HMDModel",
+        k_pch_DismissedWarnings_Section                                = "DismissedWarnings",
         IVRScreenshots_Version                                         = "IVRScreenshots_001",
         IVRResources_Version                                           = "IVRResources_001",
         IVRDriverManager_Version                                       = "IVRDriverManager_001",
-        IVRInput_Version                                               = "IVRInput_004",
-        IVRIOBuffer_Version                                            = "IVRIOBuffer_001",
+        IVRInput_Version                                               = "IVRInput_005",
+        IVRIOBuffer_Version                                            = "IVRIOBuffer_002",
         IVRSpatialAnchors_Version                                      = "IVRSpatialAnchors_001";
 
     /**
-     * EVREye
+     * {@code EVREye}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -283,7 +313,7 @@ public class VR {
         EVREye_Eye_Right = 1;
 
     /**
-     * ETextureType
+     * {@code ETextureType}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -315,7 +345,7 @@ public class VR {
         ETextureType_TextureType_Metal            = 6;
 
     /**
-     * EColorSpace
+     * {@code EColorSpace}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -331,7 +361,7 @@ public class VR {
         EColorSpace_ColorSpace_Linear = 2;
 
     /**
-     * ETrackingResult
+     * {@code ETrackingResult}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -341,6 +371,7 @@ public class VR {
      * <li>{@link #ETrackingResult_TrackingResult_Calibrating_OutOfRange ETrackingResult_TrackingResult_Calibrating_OutOfRange}</li>
      * <li>{@link #ETrackingResult_TrackingResult_Running_OK ETrackingResult_TrackingResult_Running_OK}</li>
      * <li>{@link #ETrackingResult_TrackingResult_Running_OutOfRange ETrackingResult_TrackingResult_Running_OutOfRange}</li>
+     * <li>{@link #ETrackingResult_TrackingResult_Fallback_RotationOnly ETrackingResult_TrackingResult_Fallback_RotationOnly}</li>
      * </ul>
      */
     public static final int
@@ -348,7 +379,8 @@ public class VR {
         ETrackingResult_TrackingResult_Calibrating_InProgress = 100,
         ETrackingResult_TrackingResult_Calibrating_OutOfRange = 101,
         ETrackingResult_TrackingResult_Running_OK             = 200,
-        ETrackingResult_TrackingResult_Running_OutOfRange     = 201;
+        ETrackingResult_TrackingResult_Running_OutOfRange     = 201,
+        ETrackingResult_TrackingResult_Fallback_RotationOnly  = 300;
 
     /**
      * {@code ETrackedDeviceClass}: Describes what kind of object is being tracked at a given ID.
@@ -384,6 +416,7 @@ public class VR {
      * <li>{@link #ETrackedControllerRole_TrackedControllerRole_LeftHand ETrackedControllerRole_TrackedControllerRole_LeftHand} - Tracked device associated with the left hand.</li>
      * <li>{@link #ETrackedControllerRole_TrackedControllerRole_RightHand ETrackedControllerRole_TrackedControllerRole_RightHand} - Tracked device associated with the right hand.</li>
      * <li>{@link #ETrackedControllerRole_TrackedControllerRole_OptOut ETrackedControllerRole_TrackedControllerRole_OptOut} - Tracked device is opting out of left/right hand selection.</li>
+     * <li>{@link #ETrackedControllerRole_TrackedControllerRole_Treadmill ETrackedControllerRole_TrackedControllerRole_Treadmill} - Tracked device is a treadmill.</li>
      * <li>{@link #ETrackedControllerRole_TrackedControllerRole_Max ETrackedControllerRole_TrackedControllerRole_Max}</li>
      * </ul>
      */
@@ -392,6 +425,7 @@ public class VR {
         ETrackedControllerRole_TrackedControllerRole_LeftHand  = 1,
         ETrackedControllerRole_TrackedControllerRole_RightHand = 2,
         ETrackedControllerRole_TrackedControllerRole_OptOut    = 3,
+        ETrackedControllerRole_TrackedControllerRole_Treadmill = 4,
         ETrackedControllerRole_TrackedControllerRole_Max       = 4;
 
     /**
@@ -412,6 +446,24 @@ public class VR {
         ETrackingUniverseOrigin_TrackingUniverseSeated             = 0,
         ETrackingUniverseOrigin_TrackingUniverseStanding           = 1,
         ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated = 2;
+
+    /**
+     * {@code EAdditionalRadioFeatures}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #EAdditionalRadioFeatures_AdditionalRadioFeatures_None EAdditionalRadioFeatures_AdditionalRadioFeatures_None}</li>
+     * <li>{@link #EAdditionalRadioFeatures_AdditionalRadioFeatures_HTCLinkBox EAdditionalRadioFeatures_AdditionalRadioFeatures_HTCLinkBox}</li>
+     * <li>{@link #EAdditionalRadioFeatures_AdditionalRadioFeatures_InternalDongle EAdditionalRadioFeatures_AdditionalRadioFeatures_InternalDongle}</li>
+     * <li>{@link #EAdditionalRadioFeatures_AdditionalRadioFeatures_ExternalDongle EAdditionalRadioFeatures_AdditionalRadioFeatures_ExternalDongle}</li>
+     * </ul>
+     */
+    public static final int
+        EAdditionalRadioFeatures_AdditionalRadioFeatures_None           = 0,
+        EAdditionalRadioFeatures_AdditionalRadioFeatures_HTCLinkBox     = 1,
+        EAdditionalRadioFeatures_AdditionalRadioFeatures_InternalDongle = 2,
+        EAdditionalRadioFeatures_AdditionalRadioFeatures_ExternalDongle = 4;
 
     /**
      * {@code ETrackedDeviceProperty}: Each entry in this enum represents a property that can be retrieved about a tracked device. Many fields are only valid
@@ -462,6 +514,12 @@ public class VR {
      * <li>{@link #ETrackedDeviceProperty_Prop_NeverTracked_Bool ETrackedDeviceProperty_Prop_NeverTracked_Bool} - used for devices that will never have a valid pose by design.</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_NumCameras_Int32 ETrackedDeviceProperty_Prop_NumCameras_Int32}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_CameraFrameLayout_Int32 ETrackedDeviceProperty_Prop_CameraFrameLayout_Int32} - {@code EVRTrackedCameraFrameLayout} value</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_CameraStreamFormat_Int32 ETrackedDeviceProperty_Prop_CameraStreamFormat_Int32} - {@code ECameraVideoStreamFormat} value</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_AdditionalDeviceSettingsPath_String ETrackedDeviceProperty_Prop_AdditionalDeviceSettingsPath_String} - driver-relative path to additional device and global configuration settings</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_Identifiable_Bool ETrackedDeviceProperty_Prop_Identifiable_Bool} - Whether device supports being identified from vrmonitor (e.g. blink LED, vibrate haptics, etc)</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_BootloaderVersion_Uint64 ETrackedDeviceProperty_Prop_BootloaderVersion_Uint64}</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_AdditionalSystemReportData_String ETrackedDeviceProperty_Prop_AdditionalSystemReportData_String} - additional string to include in system reports about a tracked device</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_CompositeFirmwareVersion_String ETrackedDeviceProperty_Prop_CompositeFirmwareVersion_String} - additional FW components from a device that gets propagated into reports</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_ReportsTimeSinceVSync_Bool ETrackedDeviceProperty_Prop_ReportsTimeSinceVSync_Bool}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_SecondsFromVsyncToPhotons_Float ETrackedDeviceProperty_Prop_SecondsFromVsyncToPhotons_Float}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_DisplayFrequency_Float ETrackedDeviceProperty_Prop_DisplayFrequency_Float}</li>
@@ -529,6 +587,11 @@ public class VR {
      * <li>{@link #ETrackedDeviceProperty_Prop_ImuFactoryAccelerometerBias_Vector3 ETrackedDeviceProperty_Prop_ImuFactoryAccelerometerBias_Vector3}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_ImuFactoryAccelerometerScale_Vector3 ETrackedDeviceProperty_Prop_ImuFactoryAccelerometerScale_Vector3}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_ConfigurationIncludesLighthouse20Features_Bool ETrackedDeviceProperty_Prop_ConfigurationIncludesLighthouse20Features_Bool}</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_AdditionalRadioFeatures_Uint64 ETrackedDeviceProperty_Prop_AdditionalRadioFeatures_Uint64}</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_CameraWhiteBalance_Vector4_Array ETrackedDeviceProperty_Prop_CameraWhiteBalance_Vector4_Array} - {@code Prop_NumCameras_Int32}-sized array of {@code float[4]} RGBG white balance calibration data (max size is {@code vr::k_unMaxCameras})</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_CameraDistortionFunction_Int32_Array ETrackedDeviceProperty_Prop_CameraDistortionFunction_Int32_Array} - {@code Prop_NumCameras_Int32}-sized array of {@code vr::EVRDistortionFunctionType} values (max size is {@code vr::k_unMaxCameras})</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_CameraDistortionCoefficients_Float_Array ETrackedDeviceProperty_Prop_CameraDistortionCoefficients_Float_Array} - {@code Prop_NumCameras_Int32}-sized array of {@code double[vr::k_unMaxDistortionFunctionParameters]} (max size is {@code vr::k_unMaxCameras})</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_ExpectedControllerType_String ETrackedDeviceProperty_Prop_ExpectedControllerType_String}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_DriverRequestedMuraCorrectionMode_Int32 ETrackedDeviceProperty_Prop_DriverRequestedMuraCorrectionMode_Int32}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_DriverRequestedMuraFeather_InnerLeft_Int32 ETrackedDeviceProperty_Prop_DriverRequestedMuraFeather_InnerLeft_Int32}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_DriverRequestedMuraFeather_InnerRight_Int32 ETrackedDeviceProperty_Prop_DriverRequestedMuraFeather_InnerRight_Int32}</li>
@@ -553,6 +616,8 @@ public class VR {
      * <li>{@link #ETrackedDeviceProperty_Prop_TrackingRangeMinimumMeters_Float ETrackedDeviceProperty_Prop_TrackingRangeMinimumMeters_Float}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_TrackingRangeMaximumMeters_Float ETrackedDeviceProperty_Prop_TrackingRangeMaximumMeters_Float}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_ModeLabel_String ETrackedDeviceProperty_Prop_ModeLabel_String}</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_CanWirelessIdentify_Bool ETrackedDeviceProperty_Prop_CanWirelessIdentify_Bool} - volatile, based on radio presence and fw discovery</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_Nonce_Int32 ETrackedDeviceProperty_Prop_Nonce_Int32}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_IconPathName_String ETrackedDeviceProperty_Prop_IconPathName_String} - usually a directory named "icons"</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_NamedIconPathDeviceOff_String ETrackedDeviceProperty_Prop_NamedIconPathDeviceOff_String} - PNG for static icon, or GIF for animation, 50x32 for headsets and 32x32 for others</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_NamedIconPathDeviceSearching_String ETrackedDeviceProperty_Prop_NamedIconPathDeviceSearching_String} - PNG for static icon, or GIF for animation, 50x32 for headsets and 32x32 for others</li>
@@ -575,6 +640,7 @@ public class VR {
      * <li>{@link #ETrackedDeviceProperty_Prop_HasSpatialAnchorsSupport_Bool ETrackedDeviceProperty_Prop_HasSpatialAnchorsSupport_Bool}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_ControllerType_String ETrackedDeviceProperty_Prop_ControllerType_String}</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_LegacyInputProfile_String ETrackedDeviceProperty_Prop_LegacyInputProfile_String}</li>
+     * <li>{@link #ETrackedDeviceProperty_Prop_ControllerHandSelectionPriority_Int32 ETrackedDeviceProperty_Prop_ControllerHandSelectionPriority_Int32} - Allows hand assignments to prefer some controllers over others. High numbers are selected over low numbers.</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_VendorSpecific_Reserved_Start ETrackedDeviceProperty_Prop_VendorSpecific_Reserved_Start} - PNG for static icon, or GIF for animation, 50x32 for headsets and 32x32 for others</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_VendorSpecific_Reserved_End ETrackedDeviceProperty_Prop_VendorSpecific_Reserved_End} - PNG for static icon, or GIF for animation, 50x32 for headsets and 32x32 for others</li>
      * <li>{@link #ETrackedDeviceProperty_Prop_TrackedDeviceProperty_Max ETrackedDeviceProperty_Prop_TrackedDeviceProperty_Max}</li>
@@ -623,6 +689,12 @@ public class VR {
         ETrackedDeviceProperty_Prop_NeverTracked_Bool                              = 1038,
         ETrackedDeviceProperty_Prop_NumCameras_Int32                               = 1039,
         ETrackedDeviceProperty_Prop_CameraFrameLayout_Int32                        = 1040,
+        ETrackedDeviceProperty_Prop_CameraStreamFormat_Int32                       = 1041,
+        ETrackedDeviceProperty_Prop_AdditionalDeviceSettingsPath_String            = 1042,
+        ETrackedDeviceProperty_Prop_Identifiable_Bool                              = 1043,
+        ETrackedDeviceProperty_Prop_BootloaderVersion_Uint64                       = 1044,
+        ETrackedDeviceProperty_Prop_AdditionalSystemReportData_String              = 1045,
+        ETrackedDeviceProperty_Prop_CompositeFirmwareVersion_String                = 1046,
         ETrackedDeviceProperty_Prop_ReportsTimeSinceVSync_Bool                     = 2000,
         ETrackedDeviceProperty_Prop_SecondsFromVsyncToPhotons_Float                = 2001,
         ETrackedDeviceProperty_Prop_DisplayFrequency_Float                         = 2002,
@@ -690,6 +762,11 @@ public class VR {
         ETrackedDeviceProperty_Prop_ImuFactoryAccelerometerBias_Vector3            = 2066,
         ETrackedDeviceProperty_Prop_ImuFactoryAccelerometerScale_Vector3           = 2067,
         ETrackedDeviceProperty_Prop_ConfigurationIncludesLighthouse20Features_Bool = 2069,
+        ETrackedDeviceProperty_Prop_AdditionalRadioFeatures_Uint64                 = 2070,
+        ETrackedDeviceProperty_Prop_CameraWhiteBalance_Vector4_Array               = 2071,
+        ETrackedDeviceProperty_Prop_CameraDistortionFunction_Int32_Array           = 2072,
+        ETrackedDeviceProperty_Prop_CameraDistortionCoefficients_Float_Array       = 2073,
+        ETrackedDeviceProperty_Prop_ExpectedControllerType_String                  = 2074,
         ETrackedDeviceProperty_Prop_DriverRequestedMuraCorrectionMode_Int32        = 2200,
         ETrackedDeviceProperty_Prop_DriverRequestedMuraFeather_InnerLeft_Int32     = 2201,
         ETrackedDeviceProperty_Prop_DriverRequestedMuraFeather_InnerRight_Int32    = 2202,
@@ -714,6 +791,8 @@ public class VR {
         ETrackedDeviceProperty_Prop_TrackingRangeMinimumMeters_Float               = 4004,
         ETrackedDeviceProperty_Prop_TrackingRangeMaximumMeters_Float               = 4005,
         ETrackedDeviceProperty_Prop_ModeLabel_String                               = 4006,
+        ETrackedDeviceProperty_Prop_CanWirelessIdentify_Bool                       = 4007,
+        ETrackedDeviceProperty_Prop_Nonce_Int32                                    = 4008,
         ETrackedDeviceProperty_Prop_IconPathName_String                            = 5000,
         ETrackedDeviceProperty_Prop_NamedIconPathDeviceOff_String                  = 5001,
         ETrackedDeviceProperty_Prop_NamedIconPathDeviceSearching_String            = 5002,
@@ -736,6 +815,7 @@ public class VR {
         ETrackedDeviceProperty_Prop_HasSpatialAnchorsSupport_Bool                  = 6007,
         ETrackedDeviceProperty_Prop_ControllerType_String                          = 7000,
         ETrackedDeviceProperty_Prop_LegacyInputProfile_String                      = 7001,
+        ETrackedDeviceProperty_Prop_ControllerHandSelectionPriority_Int32          = 7002,
         ETrackedDeviceProperty_Prop_VendorSpecific_Reserved_Start                  = 10000,
         ETrackedDeviceProperty_Prop_VendorSpecific_Reserved_End                    = 10999,
         ETrackedDeviceProperty_Prop_TrackedDeviceProperty_Max                      = 1000000;
@@ -759,6 +839,7 @@ public class VR {
      * <li>{@link #ETrackedPropertyError_TrackedProp_PermissionDenied ETrackedPropertyError_TrackedProp_PermissionDenied}</li>
      * <li>{@link #ETrackedPropertyError_TrackedProp_InvalidOperation ETrackedPropertyError_TrackedProp_InvalidOperation}</li>
      * <li>{@link #ETrackedPropertyError_TrackedProp_CannotWriteToWildcards ETrackedPropertyError_TrackedProp_CannotWriteToWildcards}</li>
+     * <li>{@link #ETrackedPropertyError_TrackedProp_IPCReadFailure ETrackedPropertyError_TrackedProp_IPCReadFailure}</li>
      * </ul>
      */
     public static final int
@@ -774,7 +855,8 @@ public class VR {
         ETrackedPropertyError_TrackedProp_NotYetAvailable            = 9,
         ETrackedPropertyError_TrackedProp_PermissionDenied           = 10,
         ETrackedPropertyError_TrackedProp_InvalidOperation           = 11,
-        ETrackedPropertyError_TrackedProp_CannotWriteToWildcards     = 12;
+        ETrackedPropertyError_TrackedProp_CannotWriteToWildcards     = 12,
+        ETrackedPropertyError_TrackedProp_IPCReadFailure             = 13;
 
     /**
      * {@code EVRSubmitFlags}: Allows the application to control how scene textures are used by the compositor when calling {@link VRCompositor#VRCompositor_Submit Submit}.
@@ -839,7 +921,7 @@ public class VR {
         EVRState_VRState_Ready_Alert_Low = 7;
 
     /**
-     * {@code} EVREventType: The types of events that could be posted (and what the parameters mean for each event type).
+     * {@code EVREventType}: The types of events that could be posted (and what the parameters mean for each event type).
      * 
      * <h5>Enum values:</h5>
      * 
@@ -876,9 +958,11 @@ public class VR {
      * <li>{@link #EVREventType_VREvent_MouseButtonUp EVREventType_VREvent_MouseButtonUp} - data is mouse</li>
      * <li>{@link #EVREventType_VREvent_FocusEnter EVREventType_VREvent_FocusEnter} - data is overlay</li>
      * <li>{@link #EVREventType_VREvent_FocusLeave EVREventType_VREvent_FocusLeave} - data is overlay</li>
-     * <li>{@link #EVREventType_VREvent_Scroll EVREventType_VREvent_Scroll} - data is mouse</li>
+     * <li>{@link #EVREventType_VREvent_ScrollDiscrete EVREventType_VREvent_ScrollDiscrete} - data is scroll</li>
      * <li>{@link #EVREventType_VREvent_TouchPadMove EVREventType_VREvent_TouchPadMove} - data is mouse</li>
      * <li>{@link #EVREventType_VREvent_OverlayFocusChanged EVREventType_VREvent_OverlayFocusChanged} - data is overlay, global event</li>
+     * <li>{@link #EVREventType_VREvent_ReloadOverlays EVREventType_VREvent_ReloadOverlays}</li>
+     * <li>{@link #EVREventType_VREvent_ScrollSmooth EVREventType_VREvent_ScrollSmooth} - data is scroll</li>
      * <li>{@link #EVREventType_VREvent_InputFocusCaptured EVREventType_VREvent_InputFocusCaptured} - data is process DEPRECATED</li>
      * <li>{@link #EVREventType_VREvent_InputFocusReleased EVREventType_VREvent_InputFocusReleased} - data is process DEPRECATED</li>
      * <li>{@link #EVREventType_VREvent_SceneFocusLost EVREventType_VREvent_SceneFocusLost} - data is process</li>
@@ -897,7 +981,6 @@ public class VR {
      * <li>{@link #EVREventType_VREvent_OverlayHidden EVREventType_VREvent_OverlayHidden}</li>
      * <li>{@link #EVREventType_VREvent_DashboardActivated EVREventType_VREvent_DashboardActivated}</li>
      * <li>{@link #EVREventType_VREvent_DashboardDeactivated EVREventType_VREvent_DashboardDeactivated}</li>
-     * <li>{@link #EVREventType_VREvent_DashboardThumbSelected EVREventType_VREvent_DashboardThumbSelected} - Sent to the overlay manager - data is overlay</li>
      * <li>{@link #EVREventType_VREvent_DashboardRequested EVREventType_VREvent_DashboardRequested} - Sent to the overlay manager - data is overlay</li>
      * <li>{@link #EVREventType_VREvent_ResetDashboard EVREventType_VREvent_ResetDashboard} - Sent to the overlay manager</li>
      * <li>{@link #EVREventType_VREvent_RenderToast EVREventType_VREvent_RenderToast} - Sent to the dashboard to render a toast - data is the notification ID</li>
@@ -919,6 +1002,8 @@ public class VR {
      * <li>{@link #EVREventType_VREvent_PrimaryDashboardDeviceChanged EVREventType_VREvent_PrimaryDashboardDeviceChanged}</li>
      * <li>{@link #EVREventType_VREvent_RoomViewShown EVREventType_VREvent_RoomViewShown} - Sent by compositor whenever room-view is enabled</li>
      * <li>{@link #EVREventType_VREvent_RoomViewHidden EVREventType_VREvent_RoomViewHidden} - Sent by compositor whenever room-view is disabled</li>
+     * <li>{@link #EVREventType_VREvent_ShowUI EVREventType_VREvent_ShowUI} - data is showUi</li>
+     * <li>{@link #EVREventType_VREvent_ShowDevTools EVREventType_VREvent_ShowDevTools} - data is showDevTools</li>
      * <li>{@link #EVREventType_VREvent_Notification_Shown EVREventType_VREvent_Notification_Shown}</li>
      * <li>{@link #EVREventType_VREvent_Notification_Hidden EVREventType_VREvent_Notification_Hidden}</li>
      * <li>{@link #EVREventType_VREvent_Notification_BeginInteraction EVREventType_VREvent_Notification_BeginInteraction}</li>
@@ -928,11 +1013,13 @@ public class VR {
      * <li>{@link #EVREventType_VREvent_QuitAborted_UserPrompt EVREventType_VREvent_QuitAborted_UserPrompt} - data is process</li>
      * <li>{@link #EVREventType_VREvent_QuitAcknowledged EVREventType_VREvent_QuitAcknowledged} - data is process</li>
      * <li>{@link #EVREventType_VREvent_DriverRequestedQuit EVREventType_VREvent_DriverRequestedQuit} - The driver has requested that SteamVR shut down</li>
-     * <li>{@link #EVREventType_VREvent_ChaperoneDataHasChanged EVREventType_VREvent_ChaperoneDataHasChanged}</li>
+     * <li>{@link #EVREventType_VREvent_RestartRequested EVREventType_VREvent_RestartRequested} - A driver or other component wants the user to restart SteamVR</li>
+     * <li>{@link #EVREventType_VREvent_ChaperoneDataHasChanged EVREventType_VREvent_ChaperoneDataHasChanged} - Sent when the process needs to call {@code VRChaperone()->ReloadInfo()}</li>
      * <li>{@link #EVREventType_VREvent_ChaperoneUniverseHasChanged EVREventType_VREvent_ChaperoneUniverseHasChanged}</li>
      * <li>{@link #EVREventType_VREvent_ChaperoneTempDataHasChanged EVREventType_VREvent_ChaperoneTempDataHasChanged}</li>
      * <li>{@link #EVREventType_VREvent_ChaperoneSettingsHaveChanged EVREventType_VREvent_ChaperoneSettingsHaveChanged}</li>
      * <li>{@link #EVREventType_VREvent_SeatedZeroPoseReset EVREventType_VREvent_SeatedZeroPoseReset}</li>
+     * <li>{@link #EVREventType_VREvent_ChaperoneFlushCache EVREventType_VREvent_ChaperoneFlushCache} - Sent when the process needs to reload any cached data it retrieved from {@code VRChaperone()}</li>
      * <li>{@link #EVREventType_VREvent_AudioSettingsHaveChanged EVREventType_VREvent_AudioSettingsHaveChanged}</li>
      * <li>{@link #EVREventType_VREvent_BackgroundSettingHasChanged EVREventType_VREvent_BackgroundSettingHasChanged}</li>
      * <li>{@link #EVREventType_VREvent_CameraSettingsHaveChanged EVREventType_VREvent_CameraSettingsHaveChanged}</li>
@@ -951,6 +1038,8 @@ public class VR {
      * <li>{@link #EVREventType_VREvent_DashboardSectionSettingChanged EVREventType_VREvent_DashboardSectionSettingChanged}</li>
      * <li>{@link #EVREventType_VREvent_WebInterfaceSectionSettingChanged EVREventType_VREvent_WebInterfaceSectionSettingChanged}</li>
      * <li>{@link #EVREventType_VREvent_TrackersSectionSettingChanged EVREventType_VREvent_TrackersSectionSettingChanged}</li>
+     * <li>{@link #EVREventType_VREvent_LastKnownSectionSettingChanged EVREventType_VREvent_LastKnownSectionSettingChanged}</li>
+     * <li>{@link #EVREventType_VREvent_DismissedWarningsSectionSettingChanged EVREventType_VREvent_DismissedWarningsSectionSettingChanged}</li>
      * <li>{@link #EVREventType_VREvent_StatusUpdate EVREventType_VREvent_StatusUpdate}</li>
      * <li>{@link #EVREventType_VREvent_WebInterface_InstallDriverCompleted EVREventType_VREvent_WebInterface_InstallDriverCompleted}</li>
      * <li>{@link #EVREventType_VREvent_MCImageUpdated EVREventType_VREvent_MCImageUpdated}</li>
@@ -971,6 +1060,11 @@ public class VR {
      * <li>{@link #EVREventType_VREvent_Compositor_MirrorWindowHidden EVREventType_VREvent_Compositor_MirrorWindowHidden}</li>
      * <li>{@link #EVREventType_VREvent_Compositor_ChaperoneBoundsShown EVREventType_VREvent_Compositor_ChaperoneBoundsShown}</li>
      * <li>{@link #EVREventType_VREvent_Compositor_ChaperoneBoundsHidden EVREventType_VREvent_Compositor_ChaperoneBoundsHidden}</li>
+     * <li>{@link #EVREventType_VREvent_Compositor_DisplayDisconnected EVREventType_VREvent_Compositor_DisplayDisconnected}</li>
+     * <li>{@link #EVREventType_VREvent_Compositor_DisplayReconnected EVREventType_VREvent_Compositor_DisplayReconnected}</li>
+     * <li>{@link #EVREventType_VREvent_Compositor_HDCPError EVREventType_VREvent_Compositor_HDCPError} - data is hdcpError</li>
+     * <li>{@link #EVREventType_VREvent_Compositor_ApplicationNotResponding EVREventType_VREvent_Compositor_ApplicationNotResponding}</li>
+     * <li>{@link #EVREventType_VREvent_Compositor_ApplicationResumed EVREventType_VREvent_Compositor_ApplicationResumed}</li>
      * <li>{@link #EVREventType_VREvent_TrackedCamera_StartVideoStream EVREventType_VREvent_TrackedCamera_StartVideoStream}</li>
      * <li>{@link #EVREventType_VREvent_TrackedCamera_StopVideoStream EVREventType_VREvent_TrackedCamera_StopVideoStream}</li>
      * <li>{@link #EVREventType_VREvent_TrackedCamera_PauseVideoStream EVREventType_VREvent_TrackedCamera_PauseVideoStream}</li>
@@ -986,10 +1080,14 @@ public class VR {
      * <li>{@link #EVREventType_VREvent_Input_BindingLoadSuccessful EVREventType_VREvent_Input_BindingLoadSuccessful} - data is inputBinding</li>
      * <li>{@link #EVREventType_VREvent_Input_ActionManifestReloaded EVREventType_VREvent_Input_ActionManifestReloaded} - no data</li>
      * <li>{@link #EVREventType_VREvent_Input_ActionManifestLoadFailed EVREventType_VREvent_Input_ActionManifestLoadFailed} - data is actionManifest</li>
+     * <li>{@link #EVREventType_VREvent_Input_ProgressUpdate EVREventType_VREvent_Input_ProgressUpdate} - data is progressUpdate</li>
+     * <li>{@link #EVREventType_VREvent_Input_TrackerActivated EVREventType_VREvent_Input_TrackerActivated}</li>
+     * <li>{@link #EVREventType_VREvent_Input_BindingsUpdated EVREventType_VREvent_Input_BindingsUpdated}</li>
      * <li>{@link #EVREventType_VREvent_SpatialAnchors_PoseUpdated EVREventType_VREvent_SpatialAnchors_PoseUpdated} - data is spatialAnchor. broadcast</li>
      * <li>{@link #EVREventType_VREvent_SpatialAnchors_DescriptorUpdated EVREventType_VREvent_SpatialAnchors_DescriptorUpdated} - data is spatialAnchor. broadcast</li>
      * <li>{@link #EVREventType_VREvent_SpatialAnchors_RequestPoseUpdate EVREventType_VREvent_SpatialAnchors_RequestPoseUpdate} - data is spatialAnchor. sent to specific driver</li>
      * <li>{@link #EVREventType_VREvent_SpatialAnchors_RequestDescriptorUpdate EVREventType_VREvent_SpatialAnchors_RequestDescriptorUpdate} - data is spatialAnchor. sent to specific driver</li>
+     * <li>{@link #EVREventType_VREvent_SystemReport_Started EVREventType_VREvent_SystemReport_Started} - user or system initiated generation of a system report. broadcast</li>
      * <li>{@link #EVREventType_VREvent_VendorSpecific_Reserved_Start EVREventType_VREvent_VendorSpecific_Reserved_Start}</li>
      * <li>{@link #EVREventType_VREvent_VendorSpecific_Reserved_End EVREventType_VREvent_VendorSpecific_Reserved_End}</li>
      * </ul>
@@ -1027,9 +1125,11 @@ public class VR {
         EVREventType_VREvent_MouseButtonUp                             = 302,
         EVREventType_VREvent_FocusEnter                                = 303,
         EVREventType_VREvent_FocusLeave                                = 304,
-        EVREventType_VREvent_Scroll                                    = 305,
+        EVREventType_VREvent_ScrollDiscrete                            = 305,
         EVREventType_VREvent_TouchPadMove                              = 306,
         EVREventType_VREvent_OverlayFocusChanged                       = 307,
+        EVREventType_VREvent_ReloadOverlays                            = 308,
+        EVREventType_VREvent_ScrollSmooth                              = 309,
         EVREventType_VREvent_InputFocusCaptured                        = 400,
         EVREventType_VREvent_InputFocusReleased                        = 401,
         EVREventType_VREvent_SceneFocusLost                            = 402,
@@ -1048,16 +1148,15 @@ public class VR {
         EVREventType_VREvent_OverlayHidden                             = 501,
         EVREventType_VREvent_DashboardActivated                        = 502,
         EVREventType_VREvent_DashboardDeactivated                      = 503,
-        EVREventType_VREvent_DashboardThumbSelected                    = 504,
-        EVREventType_VREvent_DashboardRequested                        = 505,
-        EVREventType_VREvent_ResetDashboard                            = 506,
-        EVREventType_VREvent_RenderToast                               = 507,
-        EVREventType_VREvent_ImageLoaded                               = 508,
-        EVREventType_VREvent_ShowKeyboard                              = 509,
-        EVREventType_VREvent_HideKeyboard                              = 510,
-        EVREventType_VREvent_OverlayGamepadFocusGained                 = 511,
-        EVREventType_VREvent_OverlayGamepadFocusLost                   = 512,
-        EVREventType_VREvent_OverlaySharedTextureChanged               = 513,
+        EVREventType_VREvent_DashboardRequested                        = 504,
+        EVREventType_VREvent_ResetDashboard                            = 505,
+        EVREventType_VREvent_RenderToast                               = 506,
+        EVREventType_VREvent_ImageLoaded                               = 507,
+        EVREventType_VREvent_ShowKeyboard                              = 508,
+        EVREventType_VREvent_HideKeyboard                              = 509,
+        EVREventType_VREvent_OverlayGamepadFocusGained                 = 510,
+        EVREventType_VREvent_OverlayGamepadFocusLost                   = 511,
+        EVREventType_VREvent_OverlaySharedTextureChanged               = 512,
         EVREventType_VREvent_ScreenshotTriggered                       = 516,
         EVREventType_VREvent_ImageFailed                               = 517,
         EVREventType_VREvent_DashboardOverlayCreated                   = 518,
@@ -1070,6 +1169,8 @@ public class VR {
         EVREventType_VREvent_PrimaryDashboardDeviceChanged             = 525,
         EVREventType_VREvent_RoomViewShown                             = 526,
         EVREventType_VREvent_RoomViewHidden                            = 527,
+        EVREventType_VREvent_ShowUI                                    = 528,
+        EVREventType_VREvent_ShowDevTools                              = 529,
         EVREventType_VREvent_Notification_Shown                        = 600,
         EVREventType_VREvent_Notification_Hidden                       = 601,
         EVREventType_VREvent_Notification_BeginInteraction             = 602,
@@ -1079,11 +1180,13 @@ public class VR {
         EVREventType_VREvent_QuitAborted_UserPrompt                    = 702,
         EVREventType_VREvent_QuitAcknowledged                          = 703,
         EVREventType_VREvent_DriverRequestedQuit                       = 704,
+        EVREventType_VREvent_RestartRequested                          = 705,
         EVREventType_VREvent_ChaperoneDataHasChanged                   = 800,
         EVREventType_VREvent_ChaperoneUniverseHasChanged               = 801,
         EVREventType_VREvent_ChaperoneTempDataHasChanged               = 802,
         EVREventType_VREvent_ChaperoneSettingsHaveChanged              = 803,
         EVREventType_VREvent_SeatedZeroPoseReset                       = 804,
+        EVREventType_VREvent_ChaperoneFlushCache                       = 805,
         EVREventType_VREvent_AudioSettingsHaveChanged                  = 820,
         EVREventType_VREvent_BackgroundSettingHasChanged               = 850,
         EVREventType_VREvent_CameraSettingsHaveChanged                 = 851,
@@ -1102,6 +1205,8 @@ public class VR {
         EVREventType_VREvent_DashboardSectionSettingChanged            = 864,
         EVREventType_VREvent_WebInterfaceSectionSettingChanged         = 865,
         EVREventType_VREvent_TrackersSectionSettingChanged             = 866,
+        EVREventType_VREvent_LastKnownSectionSettingChanged            = 867,
+        EVREventType_VREvent_DismissedWarningsSectionSettingChanged    = 868,
         EVREventType_VREvent_StatusUpdate                              = 900,
         EVREventType_VREvent_WebInterface_InstallDriverCompleted       = 950,
         EVREventType_VREvent_MCImageUpdated                            = 1000,
@@ -1122,6 +1227,11 @@ public class VR {
         EVREventType_VREvent_Compositor_MirrorWindowHidden             = 1401,
         EVREventType_VREvent_Compositor_ChaperoneBoundsShown           = 1410,
         EVREventType_VREvent_Compositor_ChaperoneBoundsHidden          = 1411,
+        EVREventType_VREvent_Compositor_DisplayDisconnected            = 1412,
+        EVREventType_VREvent_Compositor_DisplayReconnected             = 1413,
+        EVREventType_VREvent_Compositor_HDCPError                      = 1414,
+        EVREventType_VREvent_Compositor_ApplicationNotResponding       = 1415,
+        EVREventType_VREvent_Compositor_ApplicationResumed             = 1416,
         EVREventType_VREvent_TrackedCamera_StartVideoStream            = 1500,
         EVREventType_VREvent_TrackedCamera_StopVideoStream             = 1501,
         EVREventType_VREvent_TrackedCamera_PauseVideoStream            = 1502,
@@ -1137,10 +1247,14 @@ public class VR {
         EVREventType_VREvent_Input_BindingLoadSuccessful               = 1702,
         EVREventType_VREvent_Input_ActionManifestReloaded              = 1703,
         EVREventType_VREvent_Input_ActionManifestLoadFailed            = 1704,
+        EVREventType_VREvent_Input_ProgressUpdate                      = 1705,
+        EVREventType_VREvent_Input_TrackerActivated                    = 1706,
+        EVREventType_VREvent_Input_BindingsUpdated                     = 1707,
         EVREventType_VREvent_SpatialAnchors_PoseUpdated                = 1800,
         EVREventType_VREvent_SpatialAnchors_DescriptorUpdated          = 1801,
         EVREventType_VREvent_SpatialAnchors_RequestPoseUpdate          = 1802,
         EVREventType_VREvent_SpatialAnchors_RequestDescriptorUpdate    = 1803,
+        EVREventType_VREvent_SystemReport_Started                      = 1900,
         EVREventType_VREvent_VendorSpecific_Reserved_Start             = 10000,
         EVREventType_VREvent_VendorSpecific_Reserved_End               = 19999;
 
@@ -1247,6 +1361,46 @@ public class VR {
         EDualAnalogWhich_k_EDualAnalog_Right = 1;
 
     /**
+     * {@code EShowUIType}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #EShowUIType_ShowUI_ControllerBinding EShowUIType_ShowUI_ControllerBinding}</li>
+     * <li>{@link #EShowUIType_ShowUI_ManageTrackers EShowUIType_ShowUI_ManageTrackers}</li>
+     * <li>{@link #EShowUIType_ShowUI_QuickStart EShowUIType_ShowUI_QuickStart}</li>
+     * <li>{@link #EShowUIType_ShowUI_Pairing EShowUIType_ShowUI_Pairing}</li>
+     * <li>{@link #EShowUIType_ShowUI_Settings EShowUIType_ShowUI_Settings}</li>
+     * </ul>
+     */
+    public static final int
+        EShowUIType_ShowUI_ControllerBinding = 0,
+        EShowUIType_ShowUI_ManageTrackers    = 1,
+        EShowUIType_ShowUI_QuickStart        = 2,
+        EShowUIType_ShowUI_Pairing           = 3,
+        EShowUIType_ShowUI_Settings          = 4;
+
+    /**
+     * {@code EHDCPError}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #EHDCPError_HDCPError_None EHDCPError_HDCPError_None}</li>
+     * <li>{@link #EHDCPError_HDCPError_LinkLost EHDCPError_HDCPError_LinkLost}</li>
+     * <li>{@link #EHDCPError_HDCPError_Tampered EHDCPError_HDCPError_Tampered}</li>
+     * <li>{@link #EHDCPError_HDCPError_DeviceRevoked EHDCPError_HDCPError_DeviceRevoked}</li>
+     * <li>{@link #EHDCPError_HDCPError_Unknown EHDCPError_HDCPError_Unknown}</li>
+     * </ul>
+     */
+    public static final int
+        EHDCPError_HDCPError_None          = 0,
+        EHDCPError_HDCPError_LinkLost      = 1,
+        EHDCPError_HDCPError_Tampered      = 2,
+        EHDCPError_HDCPError_DeviceRevoked = 3,
+        EHDCPError_HDCPError_Unknown       = 4;
+
+    /**
      * {@code EVRInputError}
      * 
      * <h5>Enum values:</h5>
@@ -1269,6 +1423,7 @@ public class VR {
      * <li>{@link #EVRInputError_VRInputError_BufferTooSmall EVRInputError_VRInputError_BufferTooSmall}</li>
      * <li>{@link #EVRInputError_VRInputError_MismatchedActionManifest EVRInputError_VRInputError_MismatchedActionManifest}</li>
      * <li>{@link #EVRInputError_VRInputError_MissingSkeletonData EVRInputError_VRInputError_MissingSkeletonData}</li>
+     * <li>{@link #EVRInputError_VRInputError_InvalidBoneIndex EVRInputError_VRInputError_InvalidBoneIndex}</li>
      * </ul>
      */
     public static final int
@@ -1288,10 +1443,11 @@ public class VR {
         EVRInputError_VRInputError_NoData                   = 13,
         EVRInputError_VRInputError_BufferTooSmall           = 14,
         EVRInputError_VRInputError_MismatchedActionManifest = 15,
-        EVRInputError_VRInputError_MissingSkeletonData      = 16;
+        EVRInputError_VRInputError_MissingSkeletonData      = 16,
+        EVRInputError_VRInputError_InvalidBoneIndex         = 17;
 
     /**
-     * EVRSpatialAnchorError
+     * {@code EVRSpatialAnchorError}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1329,7 +1485,7 @@ public class VR {
         EVRSpatialAnchorError_VRSpatialAnchorError_UnknownDriver              = 13;
 
     /**
-     * EHiddenAreaMeshType
+     * {@code EHiddenAreaMeshType}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1476,8 +1632,9 @@ public class VR {
      * hardware.
      * </li>
      * <li>{@link #EVRApplicationType_VRApplication_VRMonitor EVRApplicationType_VRApplication_VRMonitor} - Reserved for vrmonitor.</li>
-     * <li>{@link #EVRApplicationType_VRApplication_SteamWatchdog EVRApplicationType_VRApplication_SteamWatchdog} - Reserved for Steam</li>
-     * <li>{@link #EVRApplicationType_VRApplication_Bootstrapper EVRApplicationType_VRApplication_Bootstrapper} - Start up SteamVR</li>
+     * <li>{@link #EVRApplicationType_VRApplication_SteamWatchdog EVRApplicationType_VRApplication_SteamWatchdog} - Reserved for Steam.</li>
+     * <li>{@link #EVRApplicationType_VRApplication_Bootstrapper EVRApplicationType_VRApplication_Bootstrapper} - Reserved for vrstartup.</li>
+     * <li>{@link #EVRApplicationType_VRApplication_WebHelper EVRApplicationType_VRApplication_WebHelper} - Reserved for vrwebhelper.</li>
      * <li>{@link #EVRApplicationType_VRApplication_Max EVRApplicationType_VRApplication_Max}</li>
      * </ul>
      */
@@ -1490,7 +1647,8 @@ public class VR {
         EVRApplicationType_VRApplication_VRMonitor     = 5,
         EVRApplicationType_VRApplication_SteamWatchdog = 6,
         EVRApplicationType_VRApplication_Bootstrapper  = 7,
-        EVRApplicationType_VRApplication_Max           = 8;
+        EVRApplicationType_VRApplication_WebHelper     = 8,
+        EVRApplicationType_VRApplication_Max           = 9;
 
     /**
      * {@code EVRFirmwareError}: error codes for firmware.
@@ -1529,7 +1687,7 @@ public class VR {
         EVRNotificationError_VRNotificationError_SystemWithUserValueAlreadyExists = 103;
 
     /**
-     * EVRSkeletalMotionRange
+     * {@code EVRSkeletalMotionRange}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1547,6 +1705,40 @@ public class VR {
     public static final int
         EVRSkeletalMotionRange_VRSkeletalMotionRange_WithController    = 0,
         EVRSkeletalMotionRange_VRSkeletalMotionRange_WithoutController = 1;
+
+    /**
+     * {@code EVRSkeletalTrackingLevel}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #EVRSkeletalTrackingLevel_VRSkeletalTracking_Estimated EVRSkeletalTrackingLevel_VRSkeletalTracking_Estimated} - 
+     * Body part location can't be directly determined by the device.
+     * 
+     * <p>Any skeletal pose provided by the device is estimated by assuming the position required to active buttons, triggers, joysticks, or other input
+     * sensors. E.g. Vive Controller, Gamepad.</p>
+     * </li>
+     * <li>{@link #EVRSkeletalTrackingLevel_VRSkeletalTracking_Partial EVRSkeletalTrackingLevel_VRSkeletalTracking_Partial} - 
+     * Body part location can be measured directly but with fewer degrees of freedom than the actual body part.
+     * 
+     * <p>Certain body part positions may be unmeasured by the device and estimated from other input data. E.g. Knuckles, gloves that only measure finger
+     * curl.</p>
+     * </li>
+     * <li>{@link #EVRSkeletalTrackingLevel_VRSkeletalTracking_Full EVRSkeletalTrackingLevel_VRSkeletalTracking_Full} - 
+     * Body part location can be measured directly throughout the entire range of motion of the body part.
+     * 
+     * <p>E.g. Mocap suit for the full body, gloves that measure rotation of each finger segment.</p>
+     * </li>
+     * <li>{@link #EVRSkeletalTrackingLevel_VRSkeletalTrackingLevel_Count EVRSkeletalTrackingLevel_VRSkeletalTrackingLevel_Count}</li>
+     * <li>{@link #EVRSkeletalTrackingLevel_VRSkeletalTrackingLevel_Max EVRSkeletalTrackingLevel_VRSkeletalTrackingLevel_Max}</li>
+     * </ul>
+     */
+    public static final int
+        EVRSkeletalTrackingLevel_VRSkeletalTracking_Estimated  = 0,
+        EVRSkeletalTrackingLevel_VRSkeletalTracking_Partial    = 1,
+        EVRSkeletalTrackingLevel_VRSkeletalTracking_Full       = 2,
+        EVRSkeletalTrackingLevel_VRSkeletalTrackingLevel_Count = 3,
+        EVRSkeletalTrackingLevel_VRSkeletalTrackingLevel_Max   = 2;
 
     /**
      * {@code EVRInitError}: error codes returned by {@link #VR_InitInternal InitInternal}.
@@ -1599,6 +1791,7 @@ public class VR {
      * <li>{@link #EVRInitError_VRInitError_Init_USBServiceBusy EVRInitError_VRInitError_Init_USBServiceBusy}</li>
      * <li>{@link #EVRInitError_VRInitError_Init_VRWebHelperStartupFailed EVRInitError_VRInitError_Init_VRWebHelperStartupFailed}</li>
      * <li>{@link #EVRInitError_VRInitError_Init_TrackerManagerInitFailed EVRInitError_VRInitError_Init_TrackerManagerInitFailed}</li>
+     * <li>{@link #EVRInitError_VRInitError_Init_AlreadyRunning EVRInitError_VRInitError_Init_AlreadyRunning}</li>
      * <li>{@link #EVRInitError_VRInitError_Driver_Failed EVRInitError_VRInitError_Driver_Failed}</li>
      * <li>{@link #EVRInitError_VRInitError_Driver_Unknown EVRInitError_VRInitError_Driver_Unknown}</li>
      * <li>{@link #EVRInitError_VRInitError_Driver_HmdUnknown EVRInitError_VRInitError_Driver_HmdUnknown}</li>
@@ -1626,6 +1819,85 @@ public class VR {
      * <li>{@link #EVRInitError_VRInitError_Compositor_OverlayInitFailed EVRInitError_VRInitError_Compositor_OverlayInitFailed}</li>
      * <li>{@link #EVRInitError_VRInitError_Compositor_ScreenshotsInitFailed EVRInitError_VRInitError_Compositor_ScreenshotsInitFailed}</li>
      * <li>{@link #EVRInitError_VRInitError_Compositor_UnableToCreateDevice EVRInitError_VRInitError_Compositor_UnableToCreateDevice}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_SharedStateIsNull EVRInitError_VRInitError_Compositor_SharedStateIsNull}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_NotificationManagerIsNull EVRInitError_VRInitError_Compositor_NotificationManagerIsNull}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_ResourceManagerClientIsNull EVRInitError_VRInitError_Compositor_ResourceManagerClientIsNull}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_MessageOverlaySharedStateInitFailure EVRInitError_VRInitError_Compositor_MessageOverlaySharedStateInitFailure}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_PropertiesInterfaceIsNull EVRInitError_VRInitError_Compositor_PropertiesInterfaceIsNull}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateFullscreenWindowFailed EVRInitError_VRInitError_Compositor_CreateFullscreenWindowFailed}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_SettingsInterfaceIsNull EVRInitError_VRInitError_Compositor_SettingsInterfaceIsNull}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToShowWindow EVRInitError_VRInitError_Compositor_FailedToShowWindow}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_DistortInterfaceIsNull EVRInitError_VRInitError_Compositor_DistortInterfaceIsNull}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_DisplayFrequencyFailure EVRInitError_VRInitError_Compositor_DisplayFrequencyFailure}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_RendererInitializationFailed EVRInitError_VRInitError_Compositor_RendererInitializationFailed}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_DXGIFactoryInterfaceIsNull EVRInitError_VRInitError_Compositor_DXGIFactoryInterfaceIsNull}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_DXGIFactoryCreateFailed EVRInitError_VRInitError_Compositor_DXGIFactoryCreateFailed}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_DXGIFactoryQueryFailed EVRInitError_VRInitError_Compositor_DXGIFactoryQueryFailed}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_InvalidAdapterDesktop EVRInitError_VRInitError_Compositor_InvalidAdapterDesktop}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_InvalidHmdAttachment EVRInitError_VRInitError_Compositor_InvalidHmdAttachment}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_InvalidOutputDesktop EVRInitError_VRInitError_Compositor_InvalidOutputDesktop}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_InvalidDeviceProvided EVRInitError_VRInitError_Compositor_InvalidDeviceProvided}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_D3D11RendererInitializationFailed EVRInitError_VRInitError_Compositor_D3D11RendererInitializationFailed}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToFindDisplayMode EVRInitError_VRInitError_Compositor_FailedToFindDisplayMode}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToCreateSwapChain EVRInitError_VRInitError_Compositor_FailedToCreateSwapChain}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToGetBackBuffer EVRInitError_VRInitError_Compositor_FailedToGetBackBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToCreateRenderTarget EVRInitError_VRInitError_Compositor_FailedToCreateRenderTarget}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToCreateDXGI2SwapChain EVRInitError_VRInitError_Compositor_FailedToCreateDXGI2SwapChain}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedtoGetDXGI2BackBuffer EVRInitError_VRInitError_Compositor_FailedtoGetDXGI2BackBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToCreateDXGI2RenderTarget EVRInitError_VRInitError_Compositor_FailedToCreateDXGI2RenderTarget}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToGetDXGIDeviceInterface EVRInitError_VRInitError_Compositor_FailedToGetDXGIDeviceInterface}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_SelectDisplayMode EVRInitError_VRInitError_Compositor_SelectDisplayMode}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToCreateNvAPIRenderTargets EVRInitError_VRInitError_Compositor_FailedToCreateNvAPIRenderTargets}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_NvAPISetDisplayMode EVRInitError_VRInitError_Compositor_NvAPISetDisplayMode}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_FailedToCreateDirectModeDisplay EVRInitError_VRInitError_Compositor_FailedToCreateDirectModeDisplay}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_InvalidHmdPropertyContainer EVRInitError_VRInitError_Compositor_InvalidHmdPropertyContainer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_UpdateDisplayFrequency EVRInitError_VRInitError_Compositor_UpdateDisplayFrequency}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateRasterizerState EVRInitError_VRInitError_Compositor_CreateRasterizerState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateWireframeRasterizerState EVRInitError_VRInitError_Compositor_CreateWireframeRasterizerState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateSamplerState EVRInitError_VRInitError_Compositor_CreateSamplerState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateClampToBorderSamplerState EVRInitError_VRInitError_Compositor_CreateClampToBorderSamplerState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateAnisoSamplerState EVRInitError_VRInitError_Compositor_CreateAnisoSamplerState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateOverlaySamplerState EVRInitError_VRInitError_Compositor_CreateOverlaySamplerState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreatePanoramaSamplerState EVRInitError_VRInitError_Compositor_CreatePanoramaSamplerState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateFontSamplerState EVRInitError_VRInitError_Compositor_CreateFontSamplerState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateNoBlendState EVRInitError_VRInitError_Compositor_CreateNoBlendState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateBlendState EVRInitError_VRInitError_Compositor_CreateBlendState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateAlphaBlendState EVRInitError_VRInitError_Compositor_CreateAlphaBlendState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateBlendStateMaskR EVRInitError_VRInitError_Compositor_CreateBlendStateMaskR}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateBlendStateMaskG EVRInitError_VRInitError_Compositor_CreateBlendStateMaskG}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateBlendStateMaskB EVRInitError_VRInitError_Compositor_CreateBlendStateMaskB}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateDepthStencilState EVRInitError_VRInitError_Compositor_CreateDepthStencilState}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateDepthStencilStateNoWrite EVRInitError_VRInitError_Compositor_CreateDepthStencilStateNoWrite}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateDepthStencilStateNoDepth EVRInitError_VRInitError_Compositor_CreateDepthStencilStateNoDepth}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateFlushTexture EVRInitError_VRInitError_Compositor_CreateFlushTexture}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateDistortionSurfaces EVRInitError_VRInitError_Compositor_CreateDistortionSurfaces}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateConstantBuffer EVRInitError_VRInitError_Compositor_CreateConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateHmdPoseConstantBuffer EVRInitError_VRInitError_Compositor_CreateHmdPoseConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateHmdPoseStagingConstantBuffer EVRInitError_VRInitError_Compositor_CreateHmdPoseStagingConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateSharedFrameInfoConstantBuffer EVRInitError_VRInitError_Compositor_CreateSharedFrameInfoConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateOverlayConstantBuffer EVRInitError_VRInitError_Compositor_CreateOverlayConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateSceneTextureIndexConstantBuffer EVRInitError_VRInitError_Compositor_CreateSceneTextureIndexConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateReadableSceneTextureIndexConstantBuffer EVRInitError_VRInitError_Compositor_CreateReadableSceneTextureIndexConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateLayerGraphicsTextureIndexConstantBuffer EVRInitError_VRInitError_Compositor_CreateLayerGraphicsTextureIndexConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateLayerComputeTextureIndexConstantBuffer EVRInitError_VRInitError_Compositor_CreateLayerComputeTextureIndexConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateLayerComputeSceneTextureIndexConstantBuffer EVRInitError_VRInitError_Compositor_CreateLayerComputeSceneTextureIndexConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateComputeHmdPoseConstantBuffer EVRInitError_VRInitError_Compositor_CreateComputeHmdPoseConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateGeomConstantBuffer EVRInitError_VRInitError_Compositor_CreateGeomConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreatePanelMaskConstantBuffer EVRInitError_VRInitError_Compositor_CreatePanelMaskConstantBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreatePixelSimUBO EVRInitError_VRInitError_Compositor_CreatePixelSimUBO}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateMSAARenderTextures EVRInitError_VRInitError_Compositor_CreateMSAARenderTextures}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateResolveRenderTextures EVRInitError_VRInitError_Compositor_CreateResolveRenderTextures}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateComputeResolveRenderTextures EVRInitError_VRInitError_Compositor_CreateComputeResolveRenderTextures}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateDriverDirectModeResolveTextures EVRInitError_VRInitError_Compositor_CreateDriverDirectModeResolveTextures}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_OpenDriverDirectModeResolveTextures EVRInitError_VRInitError_Compositor_OpenDriverDirectModeResolveTextures}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateFallbackSyncTexture EVRInitError_VRInitError_Compositor_CreateFallbackSyncTexture}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_ShareFallbackSyncTexture EVRInitError_VRInitError_Compositor_ShareFallbackSyncTexture}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateOverlayIndexBuffer EVRInitError_VRInitError_Compositor_CreateOverlayIndexBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateOverlayVertextBuffer EVRInitError_VRInitError_Compositor_CreateOverlayVertextBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateTextVertexBuffer EVRInitError_VRInitError_Compositor_CreateTextVertexBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateTextIndexBuffer EVRInitError_VRInitError_Compositor_CreateTextIndexBuffer}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateMirrorTextures EVRInitError_VRInitError_Compositor_CreateMirrorTextures}</li>
+     * <li>{@link #EVRInitError_VRInitError_Compositor_CreateLastFrameRenderTexture EVRInitError_VRInitError_Compositor_CreateLastFrameRenderTexture}</li>
      * <li>{@link #EVRInitError_VRInitError_VendorSpecific_UnableToConnectToOculusRuntime EVRInitError_VRInitError_VendorSpecific_UnableToConnectToOculusRuntime}</li>
      * <li>{@link #EVRInitError_VRInitError_VendorSpecific_WindowsNotInDevMode EVRInitError_VRInitError_VendorSpecific_WindowsNotInDevMode}</li>
      * <li>{@link #EVRInitError_VRInitError_VendorSpecific_HmdFound_CantOpenDevice EVRInitError_VRInitError_VendorSpecific_HmdFound_CantOpenDevice}</li>
@@ -1642,100 +1914,182 @@ public class VR {
      * <li>{@link #EVRInitError_VRInitError_VendorSpecific_HmdFound_UserDataError EVRInitError_VRInitError_VendorSpecific_HmdFound_UserDataError}</li>
      * <li>{@link #EVRInitError_VRInitError_VendorSpecific_HmdFound_ConfigFailedSanityCheck EVRInitError_VRInitError_VendorSpecific_HmdFound_ConfigFailedSanityCheck}</li>
      * <li>{@link #EVRInitError_VRInitError_Steam_SteamInstallationNotFound EVRInitError_VRInitError_Steam_SteamInstallationNotFound}</li>
+     * <li>{@link #EVRInitError_VRInitError_LastError EVRInitError_VRInitError_LastError}</li>
      * </ul>
      */
     public static final int
-        EVRInitError_VRInitError_None                                               = 0,
-        EVRInitError_VRInitError_Unknown                                            = 1,
-        EVRInitError_VRInitError_Init_InstallationNotFound                          = 100,
-        EVRInitError_VRInitError_Init_InstallationCorrupt                           = 101,
-        EVRInitError_VRInitError_Init_VRClientDLLNotFound                           = 102,
-        EVRInitError_VRInitError_Init_FileNotFound                                  = 103,
-        EVRInitError_VRInitError_Init_FactoryNotFound                               = 104,
-        EVRInitError_VRInitError_Init_InterfaceNotFound                             = 105,
-        EVRInitError_VRInitError_Init_InvalidInterface                              = 106,
-        EVRInitError_VRInitError_Init_UserConfigDirectoryInvalid                    = 107,
-        EVRInitError_VRInitError_Init_HmdNotFound                                   = 108,
-        EVRInitError_VRInitError_Init_NotInitialized                                = 109,
-        EVRInitError_VRInitError_Init_PathRegistryNotFound                          = 110,
-        EVRInitError_VRInitError_Init_NoConfigPath                                  = 111,
-        EVRInitError_VRInitError_Init_NoLogPath                                     = 112,
-        EVRInitError_VRInitError_Init_PathRegistryNotWritable                       = 113,
-        EVRInitError_VRInitError_Init_AppInfoInitFailed                             = 114,
-        EVRInitError_VRInitError_Init_Retry                                         = 115,
-        EVRInitError_VRInitError_Init_InitCanceledByUser                            = 116,
-        EVRInitError_VRInitError_Init_AnotherAppLaunching                           = 117,
-        EVRInitError_VRInitError_Init_SettingsInitFailed                            = 118,
-        EVRInitError_VRInitError_Init_ShuttingDown                                  = 119,
-        EVRInitError_VRInitError_Init_TooManyObjects                                = 120,
-        EVRInitError_VRInitError_Init_NoServerForBackgroundApp                      = 121,
-        EVRInitError_VRInitError_Init_NotSupportedWithCompositor                    = 122,
-        EVRInitError_VRInitError_Init_NotAvailableToUtilityApps                     = 123,
-        EVRInitError_VRInitError_Init_Internal                                      = 124,
-        EVRInitError_VRInitError_Init_HmdDriverIdIsNone                             = 125,
-        EVRInitError_VRInitError_Init_HmdNotFoundPresenceFailed                     = 126,
-        EVRInitError_VRInitError_Init_VRMonitorNotFound                             = 127,
-        EVRInitError_VRInitError_Init_VRMonitorStartupFailed                        = 128,
-        EVRInitError_VRInitError_Init_LowPowerWatchdogNotSupported                  = 129,
-        EVRInitError_VRInitError_Init_InvalidApplicationType                        = 130,
-        EVRInitError_VRInitError_Init_NotAvailableToWatchdogApps                    = 131,
-        EVRInitError_VRInitError_Init_WatchdogDisabledInSettings                    = 132,
-        EVRInitError_VRInitError_Init_VRDashboardNotFound                           = 133,
-        EVRInitError_VRInitError_Init_VRDashboardStartupFailed                      = 134,
-        EVRInitError_VRInitError_Init_VRHomeNotFound                                = 135,
-        EVRInitError_VRInitError_Init_VRHomeStartupFailed                           = 136,
-        EVRInitError_VRInitError_Init_RebootingBusy                                 = 137,
-        EVRInitError_VRInitError_Init_FirmwareUpdateBusy                            = 138,
-        EVRInitError_VRInitError_Init_FirmwareRecoveryBusy                          = 139,
-        EVRInitError_VRInitError_Init_USBServiceBusy                                = 140,
-        EVRInitError_VRInitError_Init_VRWebHelperStartupFailed                      = 141,
-        EVRInitError_VRInitError_Init_TrackerManagerInitFailed                      = 142,
-        EVRInitError_VRInitError_Driver_Failed                                      = 200,
-        EVRInitError_VRInitError_Driver_Unknown                                     = 201,
-        EVRInitError_VRInitError_Driver_HmdUnknown                                  = 202,
-        EVRInitError_VRInitError_Driver_NotLoaded                                   = 203,
-        EVRInitError_VRInitError_Driver_RuntimeOutOfDate                            = 204,
-        EVRInitError_VRInitError_Driver_HmdInUse                                    = 205,
-        EVRInitError_VRInitError_Driver_NotCalibrated                               = 206,
-        EVRInitError_VRInitError_Driver_CalibrationInvalid                          = 207,
-        EVRInitError_VRInitError_Driver_HmdDisplayNotFound                          = 208,
-        EVRInitError_VRInitError_Driver_TrackedDeviceInterfaceUnknown               = 209,
-        EVRInitError_VRInitError_Driver_HmdDriverIdOutOfBounds                      = 211,
-        EVRInitError_VRInitError_Driver_HmdDisplayMirrored                          = 212,
-        EVRInitError_VRInitError_IPC_ServerInitFailed                               = 300,
-        EVRInitError_VRInitError_IPC_ConnectFailed                                  = 301,
-        EVRInitError_VRInitError_IPC_SharedStateInitFailed                          = 302,
-        EVRInitError_VRInitError_IPC_CompositorInitFailed                           = 303,
-        EVRInitError_VRInitError_IPC_MutexInitFailed                                = 304,
-        EVRInitError_VRInitError_IPC_Failed                                         = 305,
-        EVRInitError_VRInitError_IPC_CompositorConnectFailed                        = 306,
-        EVRInitError_VRInitError_IPC_CompositorInvalidConnectResponse               = 307,
-        EVRInitError_VRInitError_IPC_ConnectFailedAfterMultipleAttempts             = 308,
-        EVRInitError_VRInitError_Compositor_Failed                                  = 400,
-        EVRInitError_VRInitError_Compositor_D3D11HardwareRequired                   = 401,
-        EVRInitError_VRInitError_Compositor_FirmwareRequiresUpdate                  = 402,
-        EVRInitError_VRInitError_Compositor_OverlayInitFailed                       = 403,
-        EVRInitError_VRInitError_Compositor_ScreenshotsInitFailed                   = 404,
-        EVRInitError_VRInitError_Compositor_UnableToCreateDevice                    = 405,
-        EVRInitError_VRInitError_VendorSpecific_UnableToConnectToOculusRuntime      = 1000,
-        EVRInitError_VRInitError_VendorSpecific_WindowsNotInDevMode                 = 1001,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_CantOpenDevice             = 1101,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToRequestConfigStart = 1102,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_NoStoredConfig             = 1103,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_ConfigTooBig               = 1104,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_ConfigTooSmall             = 1105,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToInitZLib           = 1106,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_CantReadFirmwareVersion    = 1107,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToSendUserDataStart  = 1108,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataStart   = 1109,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataNext    = 1110,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_UserDataAddressRange       = 1111,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_UserDataError              = 1112,
-        EVRInitError_VRInitError_VendorSpecific_HmdFound_ConfigFailedSanityCheck    = 1113,
-        EVRInitError_VRInitError_Steam_SteamInstallationNotFound                    = 2000;
+        EVRInitError_VRInitError_None                                                         = 0,
+        EVRInitError_VRInitError_Unknown                                                      = 1,
+        EVRInitError_VRInitError_Init_InstallationNotFound                                    = 100,
+        EVRInitError_VRInitError_Init_InstallationCorrupt                                     = 101,
+        EVRInitError_VRInitError_Init_VRClientDLLNotFound                                     = 102,
+        EVRInitError_VRInitError_Init_FileNotFound                                            = 103,
+        EVRInitError_VRInitError_Init_FactoryNotFound                                         = 104,
+        EVRInitError_VRInitError_Init_InterfaceNotFound                                       = 105,
+        EVRInitError_VRInitError_Init_InvalidInterface                                        = 106,
+        EVRInitError_VRInitError_Init_UserConfigDirectoryInvalid                              = 107,
+        EVRInitError_VRInitError_Init_HmdNotFound                                             = 108,
+        EVRInitError_VRInitError_Init_NotInitialized                                          = 109,
+        EVRInitError_VRInitError_Init_PathRegistryNotFound                                    = 110,
+        EVRInitError_VRInitError_Init_NoConfigPath                                            = 111,
+        EVRInitError_VRInitError_Init_NoLogPath                                               = 112,
+        EVRInitError_VRInitError_Init_PathRegistryNotWritable                                 = 113,
+        EVRInitError_VRInitError_Init_AppInfoInitFailed                                       = 114,
+        EVRInitError_VRInitError_Init_Retry                                                   = 115,
+        EVRInitError_VRInitError_Init_InitCanceledByUser                                      = 116,
+        EVRInitError_VRInitError_Init_AnotherAppLaunching                                     = 117,
+        EVRInitError_VRInitError_Init_SettingsInitFailed                                      = 118,
+        EVRInitError_VRInitError_Init_ShuttingDown                                            = 119,
+        EVRInitError_VRInitError_Init_TooManyObjects                                          = 120,
+        EVRInitError_VRInitError_Init_NoServerForBackgroundApp                                = 121,
+        EVRInitError_VRInitError_Init_NotSupportedWithCompositor                              = 122,
+        EVRInitError_VRInitError_Init_NotAvailableToUtilityApps                               = 123,
+        EVRInitError_VRInitError_Init_Internal                                                = 124,
+        EVRInitError_VRInitError_Init_HmdDriverIdIsNone                                       = 125,
+        EVRInitError_VRInitError_Init_HmdNotFoundPresenceFailed                               = 126,
+        EVRInitError_VRInitError_Init_VRMonitorNotFound                                       = 127,
+        EVRInitError_VRInitError_Init_VRMonitorStartupFailed                                  = 128,
+        EVRInitError_VRInitError_Init_LowPowerWatchdogNotSupported                            = 129,
+        EVRInitError_VRInitError_Init_InvalidApplicationType                                  = 130,
+        EVRInitError_VRInitError_Init_NotAvailableToWatchdogApps                              = 131,
+        EVRInitError_VRInitError_Init_WatchdogDisabledInSettings                              = 132,
+        EVRInitError_VRInitError_Init_VRDashboardNotFound                                     = 133,
+        EVRInitError_VRInitError_Init_VRDashboardStartupFailed                                = 134,
+        EVRInitError_VRInitError_Init_VRHomeNotFound                                          = 135,
+        EVRInitError_VRInitError_Init_VRHomeStartupFailed                                     = 136,
+        EVRInitError_VRInitError_Init_RebootingBusy                                           = 137,
+        EVRInitError_VRInitError_Init_FirmwareUpdateBusy                                      = 138,
+        EVRInitError_VRInitError_Init_FirmwareRecoveryBusy                                    = 139,
+        EVRInitError_VRInitError_Init_USBServiceBusy                                          = 140,
+        EVRInitError_VRInitError_Init_VRWebHelperStartupFailed                                = 141,
+        EVRInitError_VRInitError_Init_TrackerManagerInitFailed                                = 142,
+        EVRInitError_VRInitError_Init_AlreadyRunning                                          = 143,
+        EVRInitError_VRInitError_Driver_Failed                                                = 200,
+        EVRInitError_VRInitError_Driver_Unknown                                               = 201,
+        EVRInitError_VRInitError_Driver_HmdUnknown                                            = 202,
+        EVRInitError_VRInitError_Driver_NotLoaded                                             = 203,
+        EVRInitError_VRInitError_Driver_RuntimeOutOfDate                                      = 204,
+        EVRInitError_VRInitError_Driver_HmdInUse                                              = 205,
+        EVRInitError_VRInitError_Driver_NotCalibrated                                         = 206,
+        EVRInitError_VRInitError_Driver_CalibrationInvalid                                    = 207,
+        EVRInitError_VRInitError_Driver_HmdDisplayNotFound                                    = 208,
+        EVRInitError_VRInitError_Driver_TrackedDeviceInterfaceUnknown                         = 209,
+        EVRInitError_VRInitError_Driver_HmdDriverIdOutOfBounds                                = 211,
+        EVRInitError_VRInitError_Driver_HmdDisplayMirrored                                    = 212,
+        EVRInitError_VRInitError_IPC_ServerInitFailed                                         = 300,
+        EVRInitError_VRInitError_IPC_ConnectFailed                                            = 301,
+        EVRInitError_VRInitError_IPC_SharedStateInitFailed                                    = 302,
+        EVRInitError_VRInitError_IPC_CompositorInitFailed                                     = 303,
+        EVRInitError_VRInitError_IPC_MutexInitFailed                                          = 304,
+        EVRInitError_VRInitError_IPC_Failed                                                   = 305,
+        EVRInitError_VRInitError_IPC_CompositorConnectFailed                                  = 306,
+        EVRInitError_VRInitError_IPC_CompositorInvalidConnectResponse                         = 307,
+        EVRInitError_VRInitError_IPC_ConnectFailedAfterMultipleAttempts                       = 308,
+        EVRInitError_VRInitError_Compositor_Failed                                            = 400,
+        EVRInitError_VRInitError_Compositor_D3D11HardwareRequired                             = 401,
+        EVRInitError_VRInitError_Compositor_FirmwareRequiresUpdate                            = 402,
+        EVRInitError_VRInitError_Compositor_OverlayInitFailed                                 = 403,
+        EVRInitError_VRInitError_Compositor_ScreenshotsInitFailed                             = 404,
+        EVRInitError_VRInitError_Compositor_UnableToCreateDevice                              = 405,
+        EVRInitError_VRInitError_Compositor_SharedStateIsNull                                 = 406,
+        EVRInitError_VRInitError_Compositor_NotificationManagerIsNull                         = 407,
+        EVRInitError_VRInitError_Compositor_ResourceManagerClientIsNull                       = 408,
+        EVRInitError_VRInitError_Compositor_MessageOverlaySharedStateInitFailure              = 409,
+        EVRInitError_VRInitError_Compositor_PropertiesInterfaceIsNull                         = 410,
+        EVRInitError_VRInitError_Compositor_CreateFullscreenWindowFailed                      = 411,
+        EVRInitError_VRInitError_Compositor_SettingsInterfaceIsNull                           = 412,
+        EVRInitError_VRInitError_Compositor_FailedToShowWindow                                = 413,
+        EVRInitError_VRInitError_Compositor_DistortInterfaceIsNull                            = 414,
+        EVRInitError_VRInitError_Compositor_DisplayFrequencyFailure                           = 415,
+        EVRInitError_VRInitError_Compositor_RendererInitializationFailed                      = 416,
+        EVRInitError_VRInitError_Compositor_DXGIFactoryInterfaceIsNull                        = 417,
+        EVRInitError_VRInitError_Compositor_DXGIFactoryCreateFailed                           = 418,
+        EVRInitError_VRInitError_Compositor_DXGIFactoryQueryFailed                            = 419,
+        EVRInitError_VRInitError_Compositor_InvalidAdapterDesktop                             = 420,
+        EVRInitError_VRInitError_Compositor_InvalidHmdAttachment                              = 421,
+        EVRInitError_VRInitError_Compositor_InvalidOutputDesktop                              = 422,
+        EVRInitError_VRInitError_Compositor_InvalidDeviceProvided                             = 423,
+        EVRInitError_VRInitError_Compositor_D3D11RendererInitializationFailed                 = 424,
+        EVRInitError_VRInitError_Compositor_FailedToFindDisplayMode                           = 425,
+        EVRInitError_VRInitError_Compositor_FailedToCreateSwapChain                           = 426,
+        EVRInitError_VRInitError_Compositor_FailedToGetBackBuffer                             = 427,
+        EVRInitError_VRInitError_Compositor_FailedToCreateRenderTarget                        = 428,
+        EVRInitError_VRInitError_Compositor_FailedToCreateDXGI2SwapChain                      = 429,
+        EVRInitError_VRInitError_Compositor_FailedtoGetDXGI2BackBuffer                        = 430,
+        EVRInitError_VRInitError_Compositor_FailedToCreateDXGI2RenderTarget                   = 431,
+        EVRInitError_VRInitError_Compositor_FailedToGetDXGIDeviceInterface                    = 432,
+        EVRInitError_VRInitError_Compositor_SelectDisplayMode                                 = 433,
+        EVRInitError_VRInitError_Compositor_FailedToCreateNvAPIRenderTargets                  = 434,
+        EVRInitError_VRInitError_Compositor_NvAPISetDisplayMode                               = 435,
+        EVRInitError_VRInitError_Compositor_FailedToCreateDirectModeDisplay                   = 436,
+        EVRInitError_VRInitError_Compositor_InvalidHmdPropertyContainer                       = 437,
+        EVRInitError_VRInitError_Compositor_UpdateDisplayFrequency                            = 438,
+        EVRInitError_VRInitError_Compositor_CreateRasterizerState                             = 439,
+        EVRInitError_VRInitError_Compositor_CreateWireframeRasterizerState                    = 440,
+        EVRInitError_VRInitError_Compositor_CreateSamplerState                                = 441,
+        EVRInitError_VRInitError_Compositor_CreateClampToBorderSamplerState                   = 442,
+        EVRInitError_VRInitError_Compositor_CreateAnisoSamplerState                           = 443,
+        EVRInitError_VRInitError_Compositor_CreateOverlaySamplerState                         = 444,
+        EVRInitError_VRInitError_Compositor_CreatePanoramaSamplerState                        = 445,
+        EVRInitError_VRInitError_Compositor_CreateFontSamplerState                            = 446,
+        EVRInitError_VRInitError_Compositor_CreateNoBlendState                                = 447,
+        EVRInitError_VRInitError_Compositor_CreateBlendState                                  = 448,
+        EVRInitError_VRInitError_Compositor_CreateAlphaBlendState                             = 449,
+        EVRInitError_VRInitError_Compositor_CreateBlendStateMaskR                             = 450,
+        EVRInitError_VRInitError_Compositor_CreateBlendStateMaskG                             = 451,
+        EVRInitError_VRInitError_Compositor_CreateBlendStateMaskB                             = 452,
+        EVRInitError_VRInitError_Compositor_CreateDepthStencilState                           = 453,
+        EVRInitError_VRInitError_Compositor_CreateDepthStencilStateNoWrite                    = 454,
+        EVRInitError_VRInitError_Compositor_CreateDepthStencilStateNoDepth                    = 455,
+        EVRInitError_VRInitError_Compositor_CreateFlushTexture                                = 456,
+        EVRInitError_VRInitError_Compositor_CreateDistortionSurfaces                          = 457,
+        EVRInitError_VRInitError_Compositor_CreateConstantBuffer                              = 458,
+        EVRInitError_VRInitError_Compositor_CreateHmdPoseConstantBuffer                       = 459,
+        EVRInitError_VRInitError_Compositor_CreateHmdPoseStagingConstantBuffer                = 460,
+        EVRInitError_VRInitError_Compositor_CreateSharedFrameInfoConstantBuffer               = 461,
+        EVRInitError_VRInitError_Compositor_CreateOverlayConstantBuffer                       = 462,
+        EVRInitError_VRInitError_Compositor_CreateSceneTextureIndexConstantBuffer             = 463,
+        EVRInitError_VRInitError_Compositor_CreateReadableSceneTextureIndexConstantBuffer     = 464,
+        EVRInitError_VRInitError_Compositor_CreateLayerGraphicsTextureIndexConstantBuffer     = 465,
+        EVRInitError_VRInitError_Compositor_CreateLayerComputeTextureIndexConstantBuffer      = 466,
+        EVRInitError_VRInitError_Compositor_CreateLayerComputeSceneTextureIndexConstantBuffer = 467,
+        EVRInitError_VRInitError_Compositor_CreateComputeHmdPoseConstantBuffer                = 468,
+        EVRInitError_VRInitError_Compositor_CreateGeomConstantBuffer                          = 469,
+        EVRInitError_VRInitError_Compositor_CreatePanelMaskConstantBuffer                     = 470,
+        EVRInitError_VRInitError_Compositor_CreatePixelSimUBO                                 = 471,
+        EVRInitError_VRInitError_Compositor_CreateMSAARenderTextures                          = 472,
+        EVRInitError_VRInitError_Compositor_CreateResolveRenderTextures                       = 473,
+        EVRInitError_VRInitError_Compositor_CreateComputeResolveRenderTextures                = 474,
+        EVRInitError_VRInitError_Compositor_CreateDriverDirectModeResolveTextures             = 475,
+        EVRInitError_VRInitError_Compositor_OpenDriverDirectModeResolveTextures               = 476,
+        EVRInitError_VRInitError_Compositor_CreateFallbackSyncTexture                         = 477,
+        EVRInitError_VRInitError_Compositor_ShareFallbackSyncTexture                          = 478,
+        EVRInitError_VRInitError_Compositor_CreateOverlayIndexBuffer                          = 479,
+        EVRInitError_VRInitError_Compositor_CreateOverlayVertextBuffer                        = 480,
+        EVRInitError_VRInitError_Compositor_CreateTextVertexBuffer                            = 481,
+        EVRInitError_VRInitError_Compositor_CreateTextIndexBuffer                             = 482,
+        EVRInitError_VRInitError_Compositor_CreateMirrorTextures                              = 483,
+        EVRInitError_VRInitError_Compositor_CreateLastFrameRenderTexture                      = 484,
+        EVRInitError_VRInitError_VendorSpecific_UnableToConnectToOculusRuntime                = 1000,
+        EVRInitError_VRInitError_VendorSpecific_WindowsNotInDevMode                           = 1001,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_CantOpenDevice                       = 1101,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToRequestConfigStart           = 1102,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_NoStoredConfig                       = 1103,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_ConfigTooBig                         = 1104,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_ConfigTooSmall                       = 1105,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToInitZLib                     = 1106,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_CantReadFirmwareVersion              = 1107,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToSendUserDataStart            = 1108,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataStart             = 1109,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataNext              = 1110,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_UserDataAddressRange                 = 1111,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_UserDataError                        = 1112,
+        EVRInitError_VRInitError_VendorSpecific_HmdFound_ConfigFailedSanityCheck              = 1113,
+        EVRInitError_VRInitError_Steam_SteamInstallationNotFound                              = 2000,
+        EVRInitError_VRInitError_LastError                                                    = 2001;
 
     /**
-     * EVRScreenshotType
+     * {@code EVRScreenshotType}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1757,7 +2111,7 @@ public class VR {
         EVRScreenshotType_VRScreenshotType_StereoPanorama = 5;
 
     /**
-     * EVRScreenshotPropertyFilenames
+     * {@code EVRScreenshotPropertyFilenames}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1771,7 +2125,7 @@ public class VR {
         EVRScreenshotPropertyFilenames_VRScreenshotPropertyFilenames_VR      = 1;
 
     /**
-     * EVRTrackedCameraError
+     * {@code EVRTrackedCameraError}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1815,7 +2169,7 @@ public class VR {
         EVRTrackedCameraError_VRTrackedCameraError_InvalidFrameBufferSize     = 115;
 
     /**
-     * EVRTrackedCameraFrameLayout
+     * {@code EVRTrackedCameraFrameLayout}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1833,7 +2187,7 @@ public class VR {
         EVRTrackedCameraFrameLayout_HorizontalLayout = 32;
 
     /**
-     * EVRTrackedCameraFrameType
+     * {@code EVRTrackedCameraFrameType}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1851,7 +2205,25 @@ public class VR {
         EVRTrackedCameraFrameType_MAX_CAMERA_FRAME_TYPES                      = 3;
 
     /**
-     * EVSync
+     * {@code EVRDistortionFunctionType}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #EVRDistortionFunctionType_VRDistortionFunctionType_None EVRDistortionFunctionType_VRDistortionFunctionType_None}</li>
+     * <li>{@link #EVRDistortionFunctionType_VRDistortionFunctionType_FTheta EVRDistortionFunctionType_VRDistortionFunctionType_FTheta}</li>
+     * <li>{@link #EVRDistortionFunctionType_VRDistortionFunctionType_Extended_FTheta EVRDistortionFunctionType_VRDistortionFunctionType_Extended_FTheta}</li>
+     * <li>{@link #EVRDistortionFunctionType_MAX_DISTORTION_FUNCTION_TYPES EVRDistortionFunctionType_MAX_DISTORTION_FUNCTION_TYPES}</li>
+     * </ul>
+     */
+    public static final int
+        EVRDistortionFunctionType_VRDistortionFunctionType_None            = 0,
+        EVRDistortionFunctionType_VRDistortionFunctionType_FTheta          = 1,
+        EVRDistortionFunctionType_VRDistortionFunctionType_Extended_FTheta = 2,
+        EVRDistortionFunctionType_MAX_DISTORTION_FUNCTION_TYPES            = 3;
+
+    /**
+     * {@code EVSync}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -1867,7 +2239,7 @@ public class VR {
         EVSync_VSync_NoWaitRender = 2;
 
     /**
-     * EVRMuraCorrectionMode
+     * {@code EVRMuraCorrectionMode}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -2017,7 +2389,7 @@ public class VR {
         EVRApplicationTransitionState_VRApplicationTransition_NewAppLaunched           = 20;
 
     /**
-     * ChaperoneCalibrationState
+     * {@code ChaperoneCalibrationState}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -2047,7 +2419,7 @@ public class VR {
         ChaperoneCalibrationState_Error_CollisionBoundsInvalid    = 204;
 
     /**
-     * EChaperoneConfigFile
+     * {@code EChaperoneConfigFile}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -2060,7 +2432,7 @@ public class VR {
         EChaperoneConfigFile_Live = 1,
         EChaperoneConfigFile_Temp = 2;
 
-    /** EChaperoneImportFlags */
+    /** {@code EChaperoneImportFlags} */
     public static final int EChaperoneImportFlags_EChaperoneImport_BoundsOnly = 1;
 
     /**
@@ -2159,8 +2531,8 @@ public class VR {
      * <li>{@link #VROverlayFlags_NoDashboardTab VROverlayFlags_NoDashboardTab} - Set this flag on a dashboard overlay to prevent a tab from showing up for that overlay.</li>
      * <li>{@link #VROverlayFlags_AcceptsGamepadEvents VROverlayFlags_AcceptsGamepadEvents} - Set this flag on a dashboard that is able to deal with gamepad focus events.</li>
      * <li>{@link #VROverlayFlags_ShowGamepadFocus VROverlayFlags_ShowGamepadFocus} - Indicates that the overlay should dim/brighten to show gamepad focus.</li>
-     * <li>{@link #VROverlayFlags_SendVRScrollEvents VROverlayFlags_SendVRScrollEvents} - When in {@link #VROverlayInputMethod_Mouse} you can optionally enable sending {@link VREventScroll}.</li>
-     * <li>{@link #VROverlayFlags_SendVRTouchpadEvents VROverlayFlags_SendVRTouchpadEvents}</li>
+     * <li>{@link #VROverlayFlags_SendVRDiscreteScrollEvents VROverlayFlags_SendVRDiscreteScrollEvents} - When this is set the overlay will receive {@code VREvent_ScrollDiscrete} events like a mouse wheel. Requires mouse input mode.</li>
+     * <li>{@link #VROverlayFlags_SendVRTouchpadEvents VROverlayFlags_SendVRTouchpadEvents} - Indicates that the overlay would like to receive.</li>
      * <li>{@link #VROverlayFlags_ShowTouchPadScrollWheel VROverlayFlags_ShowTouchPadScrollWheel} - 
      * If set this will render a vertical scroll wheel on the primary controller, only needed if not using VROverlayFlags_SendVRScrollEvents but you still
      * want to represent a scroll wheel.
@@ -2175,6 +2547,8 @@ public class VR {
      * overlays.
      * </li>
      * <li>{@link #VROverlayFlags_VisibleInDashboard VROverlayFlags_VisibleInDashboard} - If set, the overlay will be shown in the dashboard, otherwise it will be hidden.</li>
+     * <li>{@link #VROverlayFlags_MakeOverlaysInteractiveIfVisible VROverlayFlags_MakeOverlaysInteractiveIfVisible} - If this is set and the overlay's input method is not none, the system-wide laser mouse mode will be activated whenever this overlay is visible.</li>
+     * <li>{@link #VROverlayFlags_SendVRSmoothScrollEvents VROverlayFlags_SendVRSmoothScrollEvents} - If this is set the overlay will receive smooth {@code VREvent_ScrollSmooth} that emulate trackpad scrolling. Requires mouse input mode.</li>
      * </ul>
      */
     public static final int
@@ -2184,7 +2558,7 @@ public class VR {
         VROverlayFlags_NoDashboardTab                     = 3,
         VROverlayFlags_AcceptsGamepadEvents               = 4,
         VROverlayFlags_ShowGamepadFocus                   = 5,
-        VROverlayFlags_SendVRScrollEvents                 = 6,
+        VROverlayFlags_SendVRDiscreteScrollEvents         = 6,
         VROverlayFlags_SendVRTouchpadEvents               = 7,
         VROverlayFlags_ShowTouchPadScrollWheel            = 8,
         VROverlayFlags_TransferOwnershipToInternalProcess = 9,
@@ -2193,10 +2567,12 @@ public class VR {
         VROverlayFlags_Panorama                           = 12,
         VROverlayFlags_StereoPanorama                     = 13,
         VROverlayFlags_SortWithNonSceneOverlays           = 14,
-        VROverlayFlags_VisibleInDashboard                 = 15;
+        VROverlayFlags_VisibleInDashboard                 = 15,
+        VROverlayFlags_MakeOverlaysInteractiveIfVisible   = 16,
+        VROverlayFlags_SendVRSmoothScrollEvents           = 17;
 
     /**
-     * VRMessageOverlayResponse
+     * {@code VRMessageOverlayResponse}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -2270,7 +2646,7 @@ public class VR {
         EOverlayDirection_OverlayDirection_Count = 4;
 
     /**
-     * EVROverlayIntersectionMaskPrimitiveType
+     * {@code EVROverlayIntersectionMaskPrimitiveType}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -2320,7 +2696,7 @@ public class VR {
         EVRRenderModelError_VRRenderModelError_InvalidTexture     = 400;
 
     /**
-     * EVRComponentProperty
+     * {@code EVRComponentProperty}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -2365,7 +2741,7 @@ public class VR {
         EVRNotificationType_Transient_SystemWithUserValue = 2;
 
     /**
-     * EVRNotificationStyle
+     * {@code EVRNotificationStyle}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -2388,7 +2764,7 @@ public class VR {
         EVRNotificationStyle_Contact_Active   = 202;
 
     /**
-     * EVRSettingsError
+     * {@code EVRSettingsError}
      * 
      * <h5>Enum values:</h5>
      * 
@@ -2439,13 +2815,71 @@ public class VR {
      * <ul>
      * <li>{@link #EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Model EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Model}</li>
      * <li>{@link #EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Parent EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Parent}</li>
-     * <li>{@link #EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Additive EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Additive}</li>
      * </ul>
      */
     public static final int
-        EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Model    = 0,
-        EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Parent   = 1,
-        EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Additive = 2;
+        EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Model  = 0,
+        EVRSkeletalTransformSpace_VRSkeletalTransformSpace_Parent = 1;
+
+    /**
+     * {@code EVRSkeletalReferencePose}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #EVRSkeletalReferencePose_VRSkeletalReferencePose_BindPose EVRSkeletalReferencePose_VRSkeletalReferencePose_BindPose}</li>
+     * <li>{@link #EVRSkeletalReferencePose_VRSkeletalReferencePose_OpenHand EVRSkeletalReferencePose_VRSkeletalReferencePose_OpenHand}</li>
+     * <li>{@link #EVRSkeletalReferencePose_VRSkeletalReferencePose_Fist EVRSkeletalReferencePose_VRSkeletalReferencePose_Fist}</li>
+     * <li>{@link #EVRSkeletalReferencePose_VRSkeletalReferencePose_GripLimit EVRSkeletalReferencePose_VRSkeletalReferencePose_GripLimit}</li>
+     * </ul>
+     */
+    public static final int
+        EVRSkeletalReferencePose_VRSkeletalReferencePose_BindPose  = 0,
+        EVRSkeletalReferencePose_VRSkeletalReferencePose_OpenHand  = 1,
+        EVRSkeletalReferencePose_VRSkeletalReferencePose_Fist      = 2,
+        EVRSkeletalReferencePose_VRSkeletalReferencePose_GripLimit = 3;
+
+    /**
+     * {@code EVRFinger}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #EVRFinger_VRFinger_Thumb EVRFinger_VRFinger_Thumb}</li>
+     * <li>{@link #EVRFinger_VRFinger_Index EVRFinger_VRFinger_Index}</li>
+     * <li>{@link #EVRFinger_VRFinger_Middle EVRFinger_VRFinger_Middle}</li>
+     * <li>{@link #EVRFinger_VRFinger_Ring EVRFinger_VRFinger_Ring}</li>
+     * <li>{@link #EVRFinger_VRFinger_Pinky EVRFinger_VRFinger_Pinky}</li>
+     * <li>{@link #EVRFinger_VRFinger_Count EVRFinger_VRFinger_Count}</li>
+     * </ul>
+     */
+    public static final int
+        EVRFinger_VRFinger_Thumb  = 0,
+        EVRFinger_VRFinger_Index  = 1,
+        EVRFinger_VRFinger_Middle = 2,
+        EVRFinger_VRFinger_Ring   = 3,
+        EVRFinger_VRFinger_Pinky  = 4,
+        EVRFinger_VRFinger_Count  = 5;
+
+    /**
+     * {@code EVRFingerSplay}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #EVRFingerSplay_VRFingerSplay_Thumb_Index EVRFingerSplay_VRFingerSplay_Thumb_Index}</li>
+     * <li>{@link #EVRFingerSplay_VRFingerSplay_Index_Middle EVRFingerSplay_VRFingerSplay_Index_Middle}</li>
+     * <li>{@link #EVRFingerSplay_VRFingerSplay_Middle_Ring EVRFingerSplay_VRFingerSplay_Middle_Ring}</li>
+     * <li>{@link #EVRFingerSplay_VRFingerSplay_Ring_Pinky EVRFingerSplay_VRFingerSplay_Ring_Pinky}</li>
+     * <li>{@link #EVRFingerSplay_VRFingerSplay_Count EVRFingerSplay_VRFingerSplay_Count}</li>
+     * </ul>
+     */
+    public static final int
+        EVRFingerSplay_VRFingerSplay_Thumb_Index  = 0,
+        EVRFingerSplay_VRFingerSplay_Index_Middle = 1,
+        EVRFingerSplay_VRFingerSplay_Middle_Ring  = 2,
+        EVRFingerSplay_VRFingerSplay_Ring_Pinky   = 3,
+        EVRFingerSplay_VRFingerSplay_Count        = 4;
 
     /**
      * {@code EVRInputFilterCancelType}
@@ -2460,6 +2894,24 @@ public class VR {
     public static final int
         EVRInputFilterCancelType_VRInputFilterCancel_Timers   = 0,
         EVRInputFilterCancelType_VRInputFilterCancel_Momentum = 1;
+
+    /**
+     * {@code EVRInputStringBits}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #EVRInputStringBits_VRInputString_Hand EVRInputStringBits_VRInputString_Hand}</li>
+     * <li>{@link #EVRInputStringBits_VRInputString_ControllerType EVRInputStringBits_VRInputString_ControllerType}</li>
+     * <li>{@link #EVRInputStringBits_VRInputString_InputSource EVRInputStringBits_VRInputString_InputSource}</li>
+     * <li>{@link #EVRInputStringBits_VRInputString_All EVRInputStringBits_VRInputString_All}</li>
+     * </ul>
+     */
+    public static final int
+        EVRInputStringBits_VRInputString_Hand           = 1,
+        EVRInputStringBits_VRInputString_ControllerType = 2,
+        EVRInputStringBits_VRInputString_InputSource    = 4,
+        EVRInputStringBits_VRInputString_All            = -1;
 
     /**
      * {@code EIOBufferError}
@@ -2537,14 +2989,14 @@ public class VR {
     /** Unsafe version of: {@link #VR_InitInternal InitInternal} */
     public static int nVR_InitInternal(long peError, int eType) {
         long __functionAddress = Functions.InitInternal;
-        return invokePI(__functionAddress, peError, eType);
+        return invokePI(peError, eType, __functionAddress);
     }
 
     /**
      * Initializes the connection to the VR hardware.
      *
      * @param peError a buffer in which to store the error code
-     * @param eType   the application type. One of:<br><table><tr><td>{@link #EVRApplicationType_VRApplication_Other}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Scene}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Overlay}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Background}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Utility}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_VRMonitor}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_SteamWatchdog}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Bootstrapper}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Max}</td></tr></table>
+     * @param eType   the application type. One of:<br><table><tr><td>{@link #EVRApplicationType_VRApplication_Other}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Scene}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Overlay}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Background}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Utility}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_VRMonitor}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_SteamWatchdog}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Bootstrapper}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_WebHelper}</td></tr><tr><td>{@link #EVRApplicationType_VRApplication_Max}</td></tr></table>
      *
      * @return a VR interface handles token
      */
@@ -2587,7 +3039,7 @@ public class VR {
     /** Unsafe version of: {@link #VR_GetGenericInterface GetGenericInterface} */
     public static long nVR_GetGenericInterface(long pchInterfaceVersion, long peError) {
         long __functionAddress = Functions.GetGenericInterface;
-        return invokePPP(__functionAddress, pchInterfaceVersion, peError);
+        return invokePPP(pchInterfaceVersion, peError, __functionAddress);
     }
 
     /**
@@ -2620,8 +3072,9 @@ public class VR {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchInterfaceVersionEncoded = stack.ASCII(pchInterfaceVersion);
-            return nVR_GetGenericInterface(memAddress(pchInterfaceVersionEncoded), memAddress(peError));
+            stack.nASCII(pchInterfaceVersion, true);
+            long pchInterfaceVersionEncoded = stack.getPointerAddress();
+            return nVR_GetGenericInterface(pchInterfaceVersionEncoded, memAddress(peError));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2657,7 +3110,7 @@ public class VR {
     /** Unsafe version of: {@link #VR_IsInterfaceVersionValid IsInterfaceVersionValid} */
     public static boolean nVR_IsInterfaceVersionValid(long pchInterfaceVersion) {
         long __functionAddress = Functions.IsInterfaceVersionValid;
-        return invokePZ(__functionAddress, pchInterfaceVersion);
+        return invokePZ(pchInterfaceVersion, __functionAddress);
     }
 
     /**
@@ -2682,8 +3135,9 @@ public class VR {
     public static boolean VR_IsInterfaceVersionValid(@NativeType("char const *") CharSequence pchInterfaceVersion) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pchInterfaceVersionEncoded = stack.ASCII(pchInterfaceVersion);
-            return nVR_IsInterfaceVersionValid(memAddress(pchInterfaceVersionEncoded));
+            stack.nASCII(pchInterfaceVersion, true);
+            long pchInterfaceVersionEncoded = stack.getPointerAddress();
+            return nVR_IsInterfaceVersionValid(pchInterfaceVersionEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2703,7 +3157,7 @@ public class VR {
     /** Unsafe version of: {@link #VR_GetVRInitErrorAsSymbol GetVRInitErrorAsSymbol} */
     public static long nVR_GetVRInitErrorAsSymbol(int error) {
         long __functionAddress = Functions.GetVRInitErrorAsSymbol;
-        return invokeP(__functionAddress, error);
+        return invokeP(error, __functionAddress);
     }
 
     /**
@@ -2723,7 +3177,7 @@ public class VR {
     /** Unsafe version of: {@link #VR_GetVRInitErrorAsEnglishDescription GetVRInitErrorAsEnglishDescription} */
     public static long nVR_GetVRInitErrorAsEnglishDescription(int error) {
         long __functionAddress = Functions.GetVRInitErrorAsEnglishDescription;
-        return invokeP(__functionAddress, error);
+        return invokeP(error, __functionAddress);
     }
 
     /**

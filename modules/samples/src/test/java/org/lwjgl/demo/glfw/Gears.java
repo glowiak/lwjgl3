@@ -74,6 +74,7 @@ public class Gears extends AbstractGears {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
         if (Platform.get() == Platform.MACOSX) {
             glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
@@ -93,11 +94,11 @@ public class Gears extends AbstractGears {
 			long cocoaWindow = glfwGetCocoaWindow(window);
 
 			long objc_msgSend = ObjCRuntime.getLibrary().getFunctionAddress("objc_msgSend");
-			long contentView = invokePPP(objc_msgSend, cocoaWindow, sel_getUid("contentView"));
+			long contentView = invokePPP(cocoaWindow, sel_getUid("contentView"), objc_msgSend);
 
-			invokePPV(objc_msgSend, contentView, sel_getUid("setWantsBestResolutionOpenGLSurface:"), false);
+			invokePPV(contentView, sel_getUid("setWantsBestResolutionOpenGLSurface:"), false, objc_msgSend);
 
-			boolean bool = invokePPZ(objc_msgSend, contentView, sel_getUid("wantsBestResolutionOpenGLSurface"));
+			boolean bool = invokePPZ(contentView, sel_getUid("wantsBestResolutionOpenGLSurface"), objc_msgSend);
 			System.out.println("wantsBestResolutionOpenGLSurface = " + bool);
 		}
 		*/

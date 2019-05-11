@@ -1362,8 +1362,9 @@ public class Nuklear {
     public static boolean nk_begin(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence title, @NativeType("struct nk_rect") NkRect bounds, @NativeType("nk_flags") int flags) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_begin(ctx.address(), memAddress(titleEncoded), bounds.address(), flags) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_begin(ctx.address(), titleEncoded, bounds.address(), flags) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1375,7 +1376,7 @@ public class Nuklear {
     public static native int nnk_begin_titled(long ctx, long name, long title, long bounds, int flags);
 
     /**
-     * Extended window start with separated title and identifier to allow multiple windows with same name but not title.
+     * Extended window start with separated title and identifier to allow multiple windows with same title but not name.
      *
      * @param ctx   the nuklear context
      * @param flags one or more of:<br><table><tr><td>{@link #NK_WINDOW_PRIVATE WINDOW_PRIVATE}</td><td>{@link #NK_WINDOW_DYNAMIC WINDOW_DYNAMIC}</td><td>{@link #NK_WINDOW_ROM WINDOW_ROM}</td><td>{@link #NK_WINDOW_HIDDEN WINDOW_HIDDEN}</td><td>{@link #NK_WINDOW_CLOSED WINDOW_CLOSED}</td></tr><tr><td>{@link #NK_WINDOW_MINIMIZED WINDOW_MINIMIZED}</td><td>{@link #NK_WINDOW_REMOVE_ROM WINDOW_REMOVE_ROM}</td></tr></table>
@@ -1390,7 +1391,7 @@ public class Nuklear {
     }
 
     /**
-     * Extended window start with separated title and identifier to allow multiple windows with same name but not title.
+     * Extended window start with separated title and identifier to allow multiple windows with same title but not name.
      *
      * @param ctx   the nuklear context
      * @param flags one or more of:<br><table><tr><td>{@link #NK_WINDOW_PRIVATE WINDOW_PRIVATE}</td><td>{@link #NK_WINDOW_DYNAMIC WINDOW_DYNAMIC}</td><td>{@link #NK_WINDOW_ROM WINDOW_ROM}</td><td>{@link #NK_WINDOW_HIDDEN WINDOW_HIDDEN}</td><td>{@link #NK_WINDOW_CLOSED WINDOW_CLOSED}</td></tr><tr><td>{@link #NK_WINDOW_MINIMIZED WINDOW_MINIMIZED}</td><td>{@link #NK_WINDOW_REMOVE_ROM WINDOW_REMOVE_ROM}</td></tr></table>
@@ -1399,9 +1400,11 @@ public class Nuklear {
     public static boolean nk_begin_titled(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, @NativeType("char const *") CharSequence title, @NativeType("struct nk_rect") NkRect bounds, @NativeType("nk_flags") int flags) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_begin_titled(ctx.address(), memAddress(nameEncoded), memAddress(titleEncoded), bounds.address(), flags) != 0;
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_begin_titled(ctx.address(), nameEncoded, titleEncoded, bounds.address(), flags) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1427,7 +1430,7 @@ public class Nuklear {
     public static native long nnk_window_find(long ctx, long name);
 
     /**
-     * Finds and returns the window with give name.
+     * Finds and returns a window from passed name.
      *
      * @param ctx the nuklear context
      */
@@ -1442,7 +1445,7 @@ public class Nuklear {
     }
 
     /**
-     * Finds and returns the window with give name.
+     * Finds and returns a window from passed name.
      *
      * @param ctx the nuklear context
      */
@@ -1451,8 +1454,9 @@ public class Nuklear {
     public static NkWindow nk_window_find(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            long __result = nnk_window_find(ctx.address(), memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            long __result = nnk_window_find(ctx.address(), nameEncoded);
             return NkWindow.createSafe(__result);
         } finally {
             stack.setPointer(stackPointer);
@@ -1470,7 +1474,7 @@ public class Nuklear {
      * @param ctx the nuklear context
      */
     @NativeType("struct nk_rect")
-    public static NkRect nk_window_get_bounds(@NativeType("struct nk_context const *") NkContext ctx, NkRect __result) {
+    public static NkRect nk_window_get_bounds(@NativeType("struct nk_context const *") NkContext ctx, @NativeType("struct nk_rect") NkRect __result) {
         nnk_window_get_bounds(ctx.address(), __result.address());
         return __result;
     }
@@ -1486,7 +1490,7 @@ public class Nuklear {
      * @param ctx the nuklear context
      */
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_window_get_position(@NativeType("struct nk_context const *") NkContext ctx, NkVec2 __result) {
+    public static NkVec2 nk_window_get_position(@NativeType("struct nk_context const *") NkContext ctx, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_window_get_position(ctx.address(), __result.address());
         return __result;
     }
@@ -1502,7 +1506,7 @@ public class Nuklear {
      * @param ctx the nuklear context
      */
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_window_get_size(@NativeType("struct nk_context const *") NkContext ctx, NkVec2 __result) {
+    public static NkVec2 nk_window_get_size(@NativeType("struct nk_context const *") NkContext ctx, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_window_get_size(ctx.address(), __result.address());
         return __result;
     }
@@ -1563,7 +1567,7 @@ public class Nuklear {
      * @param ctx the nuklear context
      */
     @NativeType("struct nk_rect")
-    public static NkRect nk_window_get_content_region(@NativeType("struct nk_context *") NkContext ctx, NkRect __result) {
+    public static NkRect nk_window_get_content_region(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_rect") NkRect __result) {
         nnk_window_get_content_region(ctx.address(), __result.address());
         return __result;
     }
@@ -1579,7 +1583,7 @@ public class Nuklear {
      * @param ctx the nuklear context
      */
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_window_get_content_region_min(@NativeType("struct nk_context *") NkContext ctx, NkVec2 __result) {
+    public static NkVec2 nk_window_get_content_region_min(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_window_get_content_region_min(ctx.address(), __result.address());
         return __result;
     }
@@ -1595,7 +1599,7 @@ public class Nuklear {
      * @param ctx the nuklear context
      */
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_window_get_content_region_max(@NativeType("struct nk_context *") NkContext ctx, NkVec2 __result) {
+    public static NkVec2 nk_window_get_content_region_max(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_window_get_content_region_max(ctx.address(), __result.address());
         return __result;
     }
@@ -1611,7 +1615,7 @@ public class Nuklear {
      * @param ctx the nuklear context
      */
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_window_get_content_region_size(@NativeType("struct nk_context *") NkContext ctx, NkVec2 __result) {
+    public static NkVec2 nk_window_get_content_region_size(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_window_get_content_region_size(ctx.address(), __result.address());
         return __result;
     }
@@ -1675,8 +1679,9 @@ public class Nuklear {
     public static boolean nk_window_is_collapsed(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nnk_window_is_collapsed(ctx.address(), memAddress(nameEncoded)) != 0;
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nnk_window_is_collapsed(ctx.address(), nameEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1709,8 +1714,9 @@ public class Nuklear {
     public static boolean nk_window_is_closed(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nnk_window_is_closed(ctx.address(), memAddress(nameEncoded)) != 0;
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nnk_window_is_closed(ctx.address(), nameEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1743,8 +1749,9 @@ public class Nuklear {
     public static boolean nk_window_is_hidden(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nnk_window_is_hidden(ctx.address(), memAddress(nameEncoded)) != 0;
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nnk_window_is_hidden(ctx.address(), nameEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1777,8 +1784,9 @@ public class Nuklear {
     public static boolean nk_window_is_active(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nnk_window_is_active(ctx.address(), memAddress(nameEncoded)) != 0;
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nnk_window_is_active(ctx.address(), nameEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1858,8 +1866,9 @@ public class Nuklear {
     public static void nk_window_set_bounds(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, @NativeType("struct nk_rect") NkRect bounds) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_window_set_bounds(ctx.address(), memAddress(nameEncoded), bounds.address());
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_window_set_bounds(ctx.address(), nameEncoded, bounds.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1894,8 +1903,9 @@ public class Nuklear {
     public static void nk_window_set_position(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, @NativeType("struct nk_vec2") NkVec2 position) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_window_set_position(ctx.address(), memAddress(nameEncoded), position.address());
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_window_set_position(ctx.address(), nameEncoded, position.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1930,8 +1940,9 @@ public class Nuklear {
     public static void nk_window_set_size(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_window_set_size(ctx.address(), memAddress(nameEncoded), size.address());
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_window_set_size(ctx.address(), nameEncoded, size.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1964,8 +1975,9 @@ public class Nuklear {
     public static void nk_window_set_focus(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_window_set_focus(ctx.address(), memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_window_set_focus(ctx.address(), nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1996,8 +2008,9 @@ public class Nuklear {
     public static void nk_window_close(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_window_close(ctx.address(), memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_window_close(ctx.address(), nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2030,8 +2043,9 @@ public class Nuklear {
     public static void nk_window_collapse(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, @NativeType("enum nk_collapse_states") int c) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_window_collapse(ctx.address(), memAddress(nameEncoded), c);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_window_collapse(ctx.address(), nameEncoded, c);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2064,8 +2078,9 @@ public class Nuklear {
     public static void nk_window_collapse_if(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, @NativeType("enum nk_collapse_states") int c, @NativeType("int") boolean cond) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_window_collapse_if(ctx.address(), memAddress(nameEncoded), c, cond ? 1 : 0);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_window_collapse_if(ctx.address(), nameEncoded, c, cond ? 1 : 0);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2098,8 +2113,9 @@ public class Nuklear {
     public static void nk_window_show(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, @NativeType("enum nk_show_states") int s) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_window_show(ctx.address(), memAddress(nameEncoded), s);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_window_show(ctx.address(), nameEncoded, s);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2132,8 +2148,9 @@ public class Nuklear {
     public static void nk_window_show_if(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, @NativeType("enum nk_show_states") int s, @NativeType("int") boolean cond) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_window_show_if(ctx.address(), memAddress(nameEncoded), s, cond ? 1 : 0);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_window_show_if(ctx.address(), nameEncoded, s, cond ? 1 : 0);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2182,7 +2199,7 @@ public class Nuklear {
      * @param ctx the nuklear context
      */
     @NativeType("struct nk_rect")
-    public static NkRect nk_layout_widget_bounds(@NativeType("struct nk_context *") NkContext ctx, NkRect __result) {
+    public static NkRect nk_layout_widget_bounds(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_rect") NkRect __result) {
         nnk_layout_widget_bounds(ctx.address(), __result.address());
         return __result;
     }
@@ -2433,7 +2450,7 @@ public class Nuklear {
      * @param ctx the nuklear context
      */
     @NativeType("struct nk_rect")
-    public static NkRect nk_layout_space_bounds(@NativeType("struct nk_context *") NkContext ctx, NkRect __result) {
+    public static NkRect nk_layout_space_bounds(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_rect") NkRect __result) {
         nnk_layout_space_bounds(ctx.address(), __result.address());
         return __result;
     }
@@ -2525,8 +2542,9 @@ public class Nuklear {
     public static boolean nk_group_begin(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence title, @NativeType("nk_flags") int flags) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_group_begin(ctx.address(), memAddress(titleEncoded), flags) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_group_begin(ctx.address(), titleEncoded, flags) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2566,9 +2584,11 @@ public class Nuklear {
     public static boolean nk_group_begin_titled(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, @NativeType("char const *") CharSequence title, @NativeType("nk_flags") int flags) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_group_begin_titled(ctx.address(), memAddress(nameEncoded), memAddress(titleEncoded), flags) != 0;
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_group_begin_titled(ctx.address(), nameEncoded, titleEncoded, flags) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2599,8 +2619,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_group_scrolled_offset_begin(ctx.address(), memAddress(x_offset), memAddress(y_offset), memAddress(titleEncoded), flags) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_group_scrolled_offset_begin(ctx.address(), memAddress(x_offset), memAddress(y_offset), titleEncoded, flags) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2625,8 +2646,9 @@ public class Nuklear {
     public static boolean nk_group_scrolled_begin(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_scroll *") NkScroll scroll, @NativeType("char const *") CharSequence title, @NativeType("nk_flags") int flags) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_group_scrolled_begin(ctx.address(), scroll.address(), memAddress(titleEncoded), flags) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_group_scrolled_begin(ctx.address(), scroll.address(), titleEncoded, flags) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2671,8 +2693,9 @@ public class Nuklear {
     public static boolean nk_list_view_begin(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_list_view *") NkListView view, @NativeType("char const *") CharSequence title, @NativeType("nk_flags") int flags, int row_height, int row_count) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_list_view_begin(ctx.address(), view.address(), memAddress(titleEncoded), flags, row_height, row_count) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_list_view_begin(ctx.address(), view.address(), titleEncoded, flags, row_height, row_count) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2727,8 +2750,9 @@ public class Nuklear {
     public static boolean nk_tree_push_hashed(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_tree_type") int type, @NativeType("char const *") CharSequence title, @NativeType("enum nk_collapse_states") int initial_state, @NativeType("char const *") ByteBuffer hash, @NativeType("nk_int") int seed) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_push_hashed(ctx.address(), type, memAddress(titleEncoded), initial_state, memAddress(hash), hash.remaining(), seed) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_push_hashed(ctx.address(), type, titleEncoded, initial_state, memAddress(hash), hash.remaining(), seed) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2777,8 +2801,9 @@ public class Nuklear {
     public static boolean nk_tree_image_push_hashed(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_tree_type") int type, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence title, @NativeType("enum nk_collapse_states") int initial_state, @NativeType("char const *") ByteBuffer hash, @NativeType("nk_int") int seed) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_image_push_hashed(ctx.address(), type, img.address(), memAddress(titleEncoded), initial_state, memAddress(hash), hash.remaining(), seed) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_image_push_hashed(ctx.address(), type, img.address(), titleEncoded, initial_state, memAddress(hash), hash.remaining(), seed) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2835,8 +2860,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_state_push(ctx.address(), type, memAddress(titleEncoded), memAddress(state)) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_state_push(ctx.address(), type, titleEncoded, memAddress(state)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2879,8 +2905,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_state_image_push(ctx.address(), type, image.address(), memAddress(titleEncoded), memAddress(state)) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_state_image_push(ctx.address(), type, image.address(), titleEncoded, memAddress(state)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2931,8 +2958,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_element_push_hashed(ctx.address(), type, memAddress(titleEncoded), initial_state, memAddress(selected), memAddress(hash), hash.remaining(), seed) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_element_push_hashed(ctx.address(), type, titleEncoded, initial_state, memAddress(selected), memAddress(hash), hash.remaining(), seed) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2969,8 +2997,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_element_image_push_hashed(ctx.address(), type, img.address(), memAddress(titleEncoded), initial_state, memAddress(selected), memAddress(hash), hash.remaining(), seed) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_element_image_push_hashed(ctx.address(), type, img.address(), titleEncoded, initial_state, memAddress(selected), memAddress(hash), hash.remaining(), seed) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3006,8 +3035,9 @@ public class Nuklear {
     public static void nk_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            nnk_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), alignment);
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            nnk_text(ctx.address(), strEncoded, strEncodedLength, alignment);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3033,8 +3063,9 @@ public class Nuklear {
     public static void nk_text_colored(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int alignment, @NativeType("struct nk_color") NkColor color) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            nnk_text_colored(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), alignment, color.address());
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            nnk_text_colored(ctx.address(), strEncoded, strEncodedLength, alignment, color.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3054,8 +3085,9 @@ public class Nuklear {
     public static void nk_text_wrap(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            nnk_text_wrap(ctx.address(), memAddress(strEncoded), strEncoded.remaining());
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            nnk_text_wrap(ctx.address(), strEncoded, strEncodedLength);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3075,8 +3107,9 @@ public class Nuklear {
     public static void nk_text_wrap_colored(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("struct nk_color") NkColor color) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            nnk_text_wrap_colored(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), color.address());
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            nnk_text_wrap_colored(ctx.address(), strEncoded, strEncodedLength, color.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3105,8 +3138,9 @@ public class Nuklear {
     public static void nk_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int align) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            nnk_label(ctx.address(), memAddress(strEncoded), align);
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            nnk_label(ctx.address(), strEncoded, align);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3135,8 +3169,9 @@ public class Nuklear {
     public static void nk_label_colored(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int align, @NativeType("struct nk_color") NkColor color) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            nnk_label_colored(ctx.address(), memAddress(strEncoded), align, color.address());
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            nnk_label_colored(ctx.address(), strEncoded, align, color.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3159,8 +3194,9 @@ public class Nuklear {
     public static void nk_label_wrap(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            nnk_label_wrap(ctx.address(), memAddress(strEncoded));
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            nnk_label_wrap(ctx.address(), strEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3183,8 +3219,9 @@ public class Nuklear {
     public static void nk_label_colored_wrap(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("struct nk_color") NkColor color) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            nnk_label_colored_wrap(ctx.address(), memAddress(strEncoded), color.address());
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            nnk_label_colored_wrap(ctx.address(), strEncoded, color.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3264,8 +3301,9 @@ public class Nuklear {
     public static boolean nk_button_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence title) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title, false);
-            return nnk_button_text(ctx.address(), memAddress(titleEncoded), titleEncoded.remaining()) != 0;
+            int titleEncodedLength = stack.nUTF8(title, false);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_button_text(ctx.address(), titleEncoded, titleEncodedLength) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3290,8 +3328,9 @@ public class Nuklear {
     public static boolean nk_button_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence title) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_button_label(ctx.address(), memAddress(titleEncoded)) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_button_label(ctx.address(), titleEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3360,8 +3399,9 @@ public class Nuklear {
     public static boolean nk_button_symbol_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int text_alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_button_symbol_label(ctx.address(), symbol, memAddress(textEncoded), text_alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_button_symbol_label(ctx.address(), symbol, textEncoded, text_alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3391,8 +3431,9 @@ public class Nuklear {
     public static boolean nk_button_symbol_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_button_symbol_text(ctx.address(), symbol, memAddress(textEncoded), textEncoded.remaining(), alignment) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_button_symbol_text(ctx.address(), symbol, textEncoded, textEncodedLength, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3423,8 +3464,9 @@ public class Nuklear {
     public static boolean nk_button_image_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int text_alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_button_image_label(ctx.address(), img.address(), memAddress(textEncoded), text_alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_button_image_label(ctx.address(), img.address(), textEncoded, text_alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3452,8 +3494,9 @@ public class Nuklear {
     public static boolean nk_button_image_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_button_image_text(ctx.address(), img.address(), memAddress(textEncoded), textEncoded.remaining(), alignment) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_button_image_text(ctx.address(), img.address(), textEncoded, textEncodedLength, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3478,8 +3521,9 @@ public class Nuklear {
     public static boolean nk_button_text_styled(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_style_button const *") NkStyleButton style, @NativeType("char const *") CharSequence title, int len) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_button_text_styled(ctx.address(), style.address(), memAddress(titleEncoded), len) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_button_text_styled(ctx.address(), style.address(), titleEncoded, len) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3504,8 +3548,9 @@ public class Nuklear {
     public static boolean nk_button_label_styled(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_style_button const *") NkStyleButton style, @NativeType("char const *") CharSequence title) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_button_label_styled(ctx.address(), style.address(), memAddress(titleEncoded)) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_button_label_styled(ctx.address(), style.address(), titleEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3552,8 +3597,9 @@ public class Nuklear {
     public static boolean nk_button_symbol_text_styled(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_style_button const *") NkStyleButton style, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence title, int len, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_button_symbol_text_styled(ctx.address(), style.address(), symbol, memAddress(titleEncoded), len, alignment) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_button_symbol_text_styled(ctx.address(), style.address(), symbol, titleEncoded, len, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3578,8 +3624,9 @@ public class Nuklear {
     public static boolean nk_button_symbol_label_styled(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_style_button const *") NkStyleButton style, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence title, @NativeType("nk_flags") int text_alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_button_symbol_label_styled(ctx.address(), style.address(), symbol, memAddress(titleEncoded), text_alignment) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_button_symbol_label_styled(ctx.address(), style.address(), symbol, titleEncoded, text_alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3604,8 +3651,9 @@ public class Nuklear {
     public static boolean nk_button_image_label_styled(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_style_button const *") NkStyleButton style, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence title, @NativeType("nk_flags") int text_alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_button_image_label_styled(ctx.address(), style.address(), img.address(), memAddress(titleEncoded), text_alignment) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_button_image_label_styled(ctx.address(), style.address(), img.address(), titleEncoded, text_alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3630,8 +3678,9 @@ public class Nuklear {
     public static boolean nk_button_image_text_styled(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_style_button const *") NkStyleButton style, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence title, int len, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_button_image_text_styled(ctx.address(), style.address(), img.address(), memAddress(titleEncoded), len, alignment) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_button_image_text_styled(ctx.address(), style.address(), img.address(), titleEncoded, len, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3656,8 +3705,9 @@ public class Nuklear {
     public static boolean nk_check_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("int") boolean active) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_check_label(ctx.address(), memAddress(strEncoded), active ? 1 : 0) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_check_label(ctx.address(), strEncoded, active ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3679,8 +3729,9 @@ public class Nuklear {
     public static boolean nk_check_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("int") boolean active) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_check_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), active ? 1 : 0) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_check_text(ctx.address(), strEncoded, strEncodedLength, active ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3705,8 +3756,9 @@ public class Nuklear {
     public static int nk_check_flags_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("unsigned int") int flags, @NativeType("unsigned int") int value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_check_flags_label(ctx.address(), memAddress(strEncoded), flags, value);
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_check_flags_label(ctx.address(), strEncoded, flags, value);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3728,8 +3780,9 @@ public class Nuklear {
     public static int nk_check_flags_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("unsigned int") int flags, @NativeType("unsigned int") int value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_check_flags_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), flags, value);
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_check_flags_text(ctx.address(), strEncoded, strEncodedLength, flags, value);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3758,8 +3811,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_checkbox_label(ctx.address(), memAddress(strEncoded), memAddress(active)) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_checkbox_label(ctx.address(), strEncoded, memAddress(active)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3787,8 +3841,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_checkbox_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), memAddress(active)) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_checkbox_text(ctx.address(), strEncoded, strEncodedLength, memAddress(active)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3817,8 +3872,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_checkbox_flags_label(ctx.address(), memAddress(strEncoded), memAddress(flags), value) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_checkbox_flags_label(ctx.address(), strEncoded, memAddress(flags), value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3846,8 +3902,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_checkbox_flags_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), memAddress(flags), value) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_checkbox_flags_text(ctx.address(), strEncoded, strEncodedLength, memAddress(flags), value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3876,8 +3933,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_radio_label(ctx.address(), memAddress(strEncoded), memAddress(active)) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_radio_label(ctx.address(), strEncoded, memAddress(active)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3905,8 +3963,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_radio_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), memAddress(active)) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_radio_text(ctx.address(), strEncoded, strEncodedLength, memAddress(active)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3931,8 +3990,9 @@ public class Nuklear {
     public static boolean nk_option_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("int") boolean active) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_option_label(ctx.address(), memAddress(strEncoded), active ? 1 : 0) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_option_label(ctx.address(), strEncoded, active ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3954,8 +4014,9 @@ public class Nuklear {
     public static boolean nk_option_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("int") boolean active) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_option_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), active ? 1 : 0) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_option_text(ctx.address(), strEncoded, strEncodedLength, active ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -3990,8 +4051,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_selectable_label(ctx.address(), memAddress(strEncoded), align, memAddress(value)) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_label(ctx.address(), strEncoded, align, memAddress(value)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4025,8 +4087,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_selectable_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), align, memAddress(value)) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_text(ctx.address(), strEncoded, strEncodedLength, align, memAddress(value)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4061,8 +4124,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_selectable_image_label(ctx.address(), img.address(), memAddress(strEncoded), align, memAddress(value)) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_image_label(ctx.address(), img.address(), strEncoded, align, memAddress(value)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4096,8 +4160,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_selectable_image_text(ctx.address(), img.address(), memAddress(strEncoded), strEncoded.remaining(), align, memAddress(value)) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_image_text(ctx.address(), img.address(), strEncoded, strEncodedLength, align, memAddress(value)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4134,8 +4199,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_selectable_symbol_label(ctx.address(), symbol, memAddress(strEncoded), align, memAddress(value)) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_symbol_label(ctx.address(), symbol, strEncoded, align, memAddress(value)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4171,8 +4237,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_selectable_symbol_text(ctx.address(), symbol, memAddress(strEncoded), strEncoded.remaining(), align, memAddress(value)) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_symbol_text(ctx.address(), symbol, strEncoded, strEncodedLength, align, memAddress(value)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4203,8 +4270,9 @@ public class Nuklear {
     public static boolean nk_select_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int align, @NativeType("int") boolean value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_select_label(ctx.address(), memAddress(strEncoded), align, value ? 1 : 0) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_select_label(ctx.address(), strEncoded, align, value ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4232,8 +4300,9 @@ public class Nuklear {
     public static boolean nk_select_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int align, @NativeType("int") boolean value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_select_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), align, value ? 1 : 0) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_select_text(ctx.address(), strEncoded, strEncodedLength, align, value ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4264,8 +4333,9 @@ public class Nuklear {
     public static boolean nk_select_image_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int align, @NativeType("int") boolean value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_select_image_label(ctx.address(), img.address(), memAddress(strEncoded), align, value ? 1 : 0) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_select_image_label(ctx.address(), img.address(), strEncoded, align, value ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4293,8 +4363,9 @@ public class Nuklear {
     public static boolean nk_select_image_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int align, @NativeType("int") boolean value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_select_image_text(ctx.address(), img.address(), memAddress(strEncoded), strEncoded.remaining(), align, value ? 1 : 0) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_select_image_text(ctx.address(), img.address(), strEncoded, strEncodedLength, align, value ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4327,8 +4398,9 @@ public class Nuklear {
     public static boolean nk_select_symbol_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int align, @NativeType("int") boolean value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_select_symbol_label(ctx.address(), symbol, memAddress(strEncoded), align, value ? 1 : 0) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_select_symbol_label(ctx.address(), symbol, strEncoded, align, value ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4358,8 +4430,9 @@ public class Nuklear {
     public static boolean nk_select_symbol_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence str, @NativeType("nk_flags") int align, @NativeType("int") boolean value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_select_symbol_text(ctx.address(), symbol, memAddress(strEncoded), strEncoded.remaining(), align, value ? 1 : 0) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_select_symbol_text(ctx.address(), symbol, strEncoded, strEncodedLength, align, value ? 1 : 0) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4486,8 +4559,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_property_int(ctx.address(), memAddress(nameEncoded), min, memAddress(val), max, step, inc_per_pixel);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_property_int(ctx.address(), nameEncoded, min, memAddress(val), max, step, inc_per_pixel);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4514,8 +4588,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_property_float(ctx.address(), memAddress(nameEncoded), min, memAddress(val), max, step, inc_per_pixel);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_property_float(ctx.address(), nameEncoded, min, memAddress(val), max, step, inc_per_pixel);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4542,8 +4617,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_property_double(ctx.address(), memAddress(nameEncoded), min, memAddress(val), max, step, inc_per_pixel);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_property_double(ctx.address(), nameEncoded, min, memAddress(val), max, step, inc_per_pixel);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4566,8 +4642,9 @@ public class Nuklear {
     public static int nk_propertyi(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, int min, int val, int max, int step, float inc_per_pixel) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nnk_propertyi(ctx.address(), memAddress(nameEncoded), min, val, max, step, inc_per_pixel);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nnk_propertyi(ctx.address(), nameEncoded, min, val, max, step, inc_per_pixel);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4590,8 +4667,9 @@ public class Nuklear {
     public static float nk_propertyf(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, float min, float val, float max, float step, float inc_per_pixel) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nnk_propertyf(ctx.address(), memAddress(nameEncoded), min, val, max, step, inc_per_pixel);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nnk_propertyf(ctx.address(), nameEncoded, min, val, max, step, inc_per_pixel);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4614,8 +4692,9 @@ public class Nuklear {
     public static double nk_propertyd(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence name, double min, double val, double max, double step, float inc_per_pixel) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nnk_propertyd(ctx.address(), memAddress(nameEncoded), min, val, max, step, inc_per_pixel);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nnk_propertyd(ctx.address(), nameEncoded, min, val, max, step, inc_per_pixel);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4673,8 +4752,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer memoryEncoded = stack.UTF8(memory);
-            return nnk_edit_string(ctx.address(), flags, memAddress(memoryEncoded), memAddress(len), max, memAddressSafe(filter));
+            stack.nUTF8(memory, true);
+            long memoryEncoded = stack.getPointerAddress();
+            return nnk_edit_string(ctx.address(), flags, memoryEncoded, memAddress(len), max, memAddressSafe(filter));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4719,8 +4799,9 @@ public class Nuklear {
     public static int nk_edit_string_zero_terminated(@NativeType("struct nk_context *") NkContext ctx, @NativeType("nk_flags") int flags, @NativeType("char *") CharSequence buffer, int max, @Nullable @NativeType("nk_plugin_filter") NkPluginFilterI filter) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer bufferEncoded = stack.UTF8(buffer);
-            return nnk_edit_string_zero_terminated(ctx.address(), flags, memAddress(bufferEncoded), max, memAddressSafe(filter));
+            stack.nUTF8(buffer, true);
+            long bufferEncoded = stack.getPointerAddress();
+            return nnk_edit_string_zero_terminated(ctx.address(), flags, bufferEncoded, max, memAddressSafe(filter));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4871,8 +4952,9 @@ public class Nuklear {
     public static boolean nk_popup_begin(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_popup_type") int type, @NativeType("char const *") CharSequence title, @NativeType("nk_flags") int flags, @NativeType("struct nk_rect") NkRect rect) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_popup_begin(ctx.address(), type, memAddress(titleEncoded), flags, rect.address()) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_popup_begin(ctx.address(), type, titleEncoded, flags, rect.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4928,8 +5010,9 @@ public class Nuklear {
     public static boolean nk_combo_separator(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence items_separated_by_separator, int separator, @NativeType("int") boolean selected, int count, int item_height, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer items_separated_by_separatorEncoded = stack.UTF8(items_separated_by_separator);
-            return nnk_combo_separator(ctx.address(), memAddress(items_separated_by_separatorEncoded), separator, selected ? 1 : 0, count, item_height, size.address()) != 0;
+            stack.nUTF8(items_separated_by_separator, true);
+            long items_separated_by_separatorEncoded = stack.getPointerAddress();
+            return nnk_combo_separator(ctx.address(), items_separated_by_separatorEncoded, separator, selected ? 1 : 0, count, item_height, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -4954,8 +5037,9 @@ public class Nuklear {
     public static boolean nk_combo_string(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence items_separated_by_zeros, @NativeType("int") boolean selected, int count, int item_height, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer items_separated_by_zerosEncoded = stack.UTF8(items_separated_by_zeros);
-            return nnk_combo_string(ctx.address(), memAddress(items_separated_by_zerosEncoded), selected ? 1 : 0, count, item_height, size.address()) != 0;
+            stack.nUTF8(items_separated_by_zeros, true);
+            long items_separated_by_zerosEncoded = stack.getPointerAddress();
+            return nnk_combo_string(ctx.address(), items_separated_by_zerosEncoded, selected ? 1 : 0, count, item_height, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5009,8 +5093,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer items_separated_by_zerosEncoded = stack.UTF8(items_separated_by_zeros);
-            nnk_combobox_string(ctx.address(), memAddress(items_separated_by_zerosEncoded), memAddress(selected), count, item_height, size.address());
+            stack.nUTF8(items_separated_by_zeros, true);
+            long items_separated_by_zerosEncoded = stack.getPointerAddress();
+            nnk_combobox_string(ctx.address(), items_separated_by_zerosEncoded, memAddress(selected), count, item_height, size.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5037,8 +5122,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer items_separated_by_separatorEncoded = stack.UTF8(items_separated_by_separator);
-            nnk_combobox_separator(ctx.address(), memAddress(items_separated_by_separatorEncoded), separator, memAddress(selected), count, item_height, size.address());
+            stack.nUTF8(items_separated_by_separator, true);
+            long items_separated_by_separatorEncoded = stack.getPointerAddress();
+            nnk_combobox_separator(ctx.address(), items_separated_by_separatorEncoded, separator, memAddress(selected), count, item_height, size.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5074,8 +5160,9 @@ public class Nuklear {
     public static boolean nk_combo_begin_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence selected, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer selectedEncoded = stack.UTF8(selected, false);
-            return nnk_combo_begin_text(ctx.address(), memAddress(selectedEncoded), selectedEncoded.remaining(), size.address()) != 0;
+            int selectedEncodedLength = stack.nUTF8(selected, false);
+            long selectedEncoded = stack.getPointerAddress();
+            return nnk_combo_begin_text(ctx.address(), selectedEncoded, selectedEncodedLength, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5100,8 +5187,9 @@ public class Nuklear {
     public static boolean nk_combo_begin_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence selected, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer selectedEncoded = stack.UTF8(selected);
-            return nnk_combo_begin_label(ctx.address(), memAddress(selectedEncoded), size.address()) != 0;
+            stack.nUTF8(selected, true);
+            long selectedEncoded = stack.getPointerAddress();
+            return nnk_combo_begin_label(ctx.address(), selectedEncoded, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5157,8 +5245,9 @@ public class Nuklear {
     public static boolean nk_combo_begin_symbol_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence selected, @NativeType("enum nk_symbol_type") int symbol, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer selectedEncoded = stack.UTF8(selected);
-            return nnk_combo_begin_symbol_label(ctx.address(), memAddress(selectedEncoded), symbol, size.address()) != 0;
+            stack.nUTF8(selected, true);
+            long selectedEncoded = stack.getPointerAddress();
+            return nnk_combo_begin_symbol_label(ctx.address(), selectedEncoded, symbol, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5186,8 +5275,9 @@ public class Nuklear {
     public static boolean nk_combo_begin_symbol_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence selected, @NativeType("enum nk_symbol_type") int symbol, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer selectedEncoded = stack.UTF8(selected, false);
-            return nnk_combo_begin_symbol_text(ctx.address(), memAddress(selectedEncoded), selectedEncoded.remaining(), symbol, size.address()) != 0;
+            int selectedEncodedLength = stack.nUTF8(selected, false);
+            long selectedEncoded = stack.getPointerAddress();
+            return nnk_combo_begin_symbol_text(ctx.address(), selectedEncoded, selectedEncodedLength, symbol, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5223,8 +5313,9 @@ public class Nuklear {
     public static boolean nk_combo_begin_image_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence selected, @NativeType("struct nk_image") NkImage img, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer selectedEncoded = stack.UTF8(selected);
-            return nnk_combo_begin_image_label(ctx.address(), memAddress(selectedEncoded), img.address(), size.address()) != 0;
+            stack.nUTF8(selected, true);
+            long selectedEncoded = stack.getPointerAddress();
+            return nnk_combo_begin_image_label(ctx.address(), selectedEncoded, img.address(), size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5246,8 +5337,9 @@ public class Nuklear {
     public static boolean nk_combo_begin_image_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence selected, @NativeType("struct nk_image") NkImage img, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer selectedEncoded = stack.UTF8(selected, false);
-            return nnk_combo_begin_image_text(ctx.address(), memAddress(selectedEncoded), selectedEncoded.remaining(), img.address(), size.address()) != 0;
+            int selectedEncodedLength = stack.nUTF8(selected, false);
+            long selectedEncoded = stack.getPointerAddress();
+            return nnk_combo_begin_image_text(ctx.address(), selectedEncoded, selectedEncodedLength, img.address(), size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5278,8 +5370,9 @@ public class Nuklear {
     public static boolean nk_combo_item_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_combo_item_label(ctx.address(), memAddress(textEncoded), alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_combo_item_label(ctx.address(), textEncoded, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5307,8 +5400,9 @@ public class Nuklear {
     public static boolean nk_combo_item_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_combo_item_text(ctx.address(), memAddress(textEncoded), textEncoded.remaining(), alignment) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_combo_item_text(ctx.address(), textEncoded, textEncodedLength, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5339,8 +5433,9 @@ public class Nuklear {
     public static boolean nk_combo_item_image_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_combo_item_image_label(ctx.address(), img.address(), memAddress(textEncoded), alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_combo_item_image_label(ctx.address(), img.address(), textEncoded, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5368,8 +5463,9 @@ public class Nuklear {
     public static boolean nk_combo_item_image_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_combo_item_image_text(ctx.address(), img.address(), memAddress(textEncoded), textEncoded.remaining(), alignment) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_combo_item_image_text(ctx.address(), img.address(), textEncoded, textEncodedLength, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5402,8 +5498,9 @@ public class Nuklear {
     public static boolean nk_combo_item_symbol_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_combo_item_symbol_label(ctx.address(), symbol, memAddress(textEncoded), alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_combo_item_symbol_label(ctx.address(), symbol, textEncoded, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5433,8 +5530,9 @@ public class Nuklear {
     public static boolean nk_combo_item_symbol_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_combo_item_symbol_text(ctx.address(), symbol, memAddress(textEncoded), textEncoded.remaining(), alignment) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_combo_item_symbol_text(ctx.address(), symbol, textEncoded, textEncodedLength, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5496,8 +5594,9 @@ public class Nuklear {
     public static boolean nk_contextual_item_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int align) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_contextual_item_text(ctx.address(), memAddress(textEncoded), textEncoded.remaining(), align) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_contextual_item_text(ctx.address(), textEncoded, textEncodedLength, align) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5528,8 +5627,9 @@ public class Nuklear {
     public static boolean nk_contextual_item_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int align) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_contextual_item_label(ctx.address(), memAddress(textEncoded), align) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_contextual_item_label(ctx.address(), textEncoded, align) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5560,8 +5660,9 @@ public class Nuklear {
     public static boolean nk_contextual_item_image_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_contextual_item_image_label(ctx.address(), img.address(), memAddress(textEncoded), alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_contextual_item_image_label(ctx.address(), img.address(), textEncoded, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5589,8 +5690,9 @@ public class Nuklear {
     public static boolean nk_contextual_item_image_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_contextual_item_image_text(ctx.address(), img.address(), memAddress(textEncoded), textEncoded.remaining(), alignment) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_contextual_item_image_text(ctx.address(), img.address(), textEncoded, textEncodedLength, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5623,8 +5725,9 @@ public class Nuklear {
     public static boolean nk_contextual_item_symbol_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_contextual_item_symbol_label(ctx.address(), symbol, memAddress(textEncoded), alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_contextual_item_symbol_label(ctx.address(), symbol, textEncoded, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5654,8 +5757,9 @@ public class Nuklear {
     public static boolean nk_contextual_item_symbol_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_contextual_item_symbol_text(ctx.address(), symbol, memAddress(textEncoded), textEncoded.remaining(), alignment) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_contextual_item_symbol_text(ctx.address(), symbol, textEncoded, textEncodedLength, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5698,8 +5802,9 @@ public class Nuklear {
     public static void nk_tooltip(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            nnk_tooltip(ctx.address(), memAddress(textEncoded));
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            nnk_tooltip(ctx.address(), textEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5768,8 +5873,9 @@ public class Nuklear {
     public static boolean nk_menu_begin_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int align, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_menu_begin_text(ctx.address(), memAddress(textEncoded), textEncoded.remaining(), align, size.address()) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_begin_text(ctx.address(), textEncoded, textEncodedLength, align, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5800,8 +5906,9 @@ public class Nuklear {
     public static boolean nk_menu_begin_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int align, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_menu_begin_label(ctx.address(), memAddress(textEncoded), align, size.address()) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_begin_label(ctx.address(), textEncoded, align, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5826,8 +5933,9 @@ public class Nuklear {
     public static boolean nk_menu_begin_image(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("struct nk_image") NkImage img, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_menu_begin_image(ctx.address(), memAddress(textEncoded), img.address(), size.address()) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_begin_image(ctx.address(), textEncoded, img.address(), size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5855,8 +5963,9 @@ public class Nuklear {
     public static boolean nk_menu_begin_image_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int align, @NativeType("struct nk_image") NkImage img, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_menu_begin_image_text(ctx.address(), memAddress(textEncoded), textEncoded.remaining(), align, img.address(), size.address()) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_begin_image_text(ctx.address(), textEncoded, textEncodedLength, align, img.address(), size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5887,8 +5996,9 @@ public class Nuklear {
     public static boolean nk_menu_begin_image_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int align, @NativeType("struct nk_image") NkImage img, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_menu_begin_image_label(ctx.address(), memAddress(textEncoded), align, img.address(), size.address()) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_begin_image_label(ctx.address(), textEncoded, align, img.address(), size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5919,8 +6029,9 @@ public class Nuklear {
     public static boolean nk_menu_begin_symbol(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("enum nk_symbol_type") int symbol, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_menu_begin_symbol(ctx.address(), memAddress(textEncoded), symbol, size.address()) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_begin_symbol(ctx.address(), textEncoded, symbol, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5950,8 +6061,9 @@ public class Nuklear {
     public static boolean nk_menu_begin_symbol_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int align, @NativeType("enum nk_symbol_type") int symbol, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_menu_begin_symbol_text(ctx.address(), memAddress(textEncoded), textEncoded.remaining(), align, symbol, size.address()) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_begin_symbol_text(ctx.address(), textEncoded, textEncodedLength, align, symbol, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -5984,8 +6096,9 @@ public class Nuklear {
     public static boolean nk_menu_begin_symbol_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int align, @NativeType("enum nk_symbol_type") int symbol, @NativeType("struct nk_vec2") NkVec2 size) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_menu_begin_symbol_label(ctx.address(), memAddress(textEncoded), align, symbol, size.address()) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_begin_symbol_label(ctx.address(), textEncoded, align, symbol, size.address()) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -6013,8 +6126,9 @@ public class Nuklear {
     public static boolean nk_menu_item_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int align) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_menu_item_text(ctx.address(), memAddress(textEncoded), textEncoded.remaining(), align) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_item_text(ctx.address(), textEncoded, textEncodedLength, align) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -6045,8 +6159,9 @@ public class Nuklear {
     public static boolean nk_menu_item_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_menu_item_label(ctx.address(), memAddress(textEncoded), alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_item_label(ctx.address(), textEncoded, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -6077,8 +6192,9 @@ public class Nuklear {
     public static boolean nk_menu_item_image_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_menu_item_image_label(ctx.address(), img.address(), memAddress(textEncoded), alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_item_image_label(ctx.address(), img.address(), textEncoded, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -6106,8 +6222,9 @@ public class Nuklear {
     public static boolean nk_menu_item_image_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_image") NkImage img, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_menu_item_image_text(ctx.address(), img.address(), memAddress(textEncoded), textEncoded.remaining(), alignment) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_item_image_text(ctx.address(), img.address(), textEncoded, textEncodedLength, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -6137,8 +6254,9 @@ public class Nuklear {
     public static boolean nk_menu_item_symbol_text(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            return nnk_menu_item_symbol_text(ctx.address(), symbol, memAddress(textEncoded), textEncoded.remaining(), alignment) != 0;
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_item_symbol_text(ctx.address(), symbol, textEncoded, textEncodedLength, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -6171,8 +6289,9 @@ public class Nuklear {
     public static boolean nk_menu_item_symbol_label(@NativeType("struct nk_context *") NkContext ctx, @NativeType("enum nk_symbol_type") int symbol, @NativeType("char const *") CharSequence text, @NativeType("nk_flags") int alignment) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text);
-            return nnk_menu_item_symbol_label(ctx.address(), symbol, memAddress(textEncoded), alignment) != 0;
+            stack.nUTF8(text, true);
+            long textEncoded = stack.getPointerAddress();
+            return nnk_menu_item_symbol_label(ctx.address(), symbol, textEncoded, alignment) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -6222,7 +6341,7 @@ public class Nuklear {
     public static native void nnk_input_begin(long ctx);
 
     /**
-     * Begins the input mirroring process. Needs to be called before all other {@code nk_input_xxx} calls
+     * Begins the input mirroring process by resetting text, scroll, mouse, previous mouse position and movement as well as key state transitions.
      *
      * @param ctx the nuklear context
      */
@@ -6236,7 +6355,7 @@ public class Nuklear {
     public static native void nnk_input_motion(long ctx, int x, int y);
 
     /**
-     * Mirrors mouse cursor position.
+     * Mirrors current mouse position to nuklear.
      *
      * @param ctx the nuklear context
      */
@@ -6250,7 +6369,7 @@ public class Nuklear {
     public static native void nnk_input_key(long ctx, int key, int down);
 
     /**
-     * Mirrors key state with either pressed or released.
+     * Mirrors the state of a specific key to nuklear.
      *
      * @param ctx the nuklear context
      * @param key one of:<br><table><tr><td>{@link #NK_KEY_NONE KEY_NONE}</td><td>{@link #NK_KEY_SHIFT KEY_SHIFT}</td><td>{@link #NK_KEY_CTRL KEY_CTRL}</td><td>{@link #NK_KEY_DEL KEY_DEL}</td><td>{@link #NK_KEY_ENTER KEY_ENTER}</td><td>{@link #NK_KEY_TAB KEY_TAB}</td></tr><tr><td>{@link #NK_KEY_BACKSPACE KEY_BACKSPACE}</td><td>{@link #NK_KEY_COPY KEY_COPY}</td><td>{@link #NK_KEY_CUT KEY_CUT}</td><td>{@link #NK_KEY_PASTE KEY_PASTE}</td><td>{@link #NK_KEY_UP KEY_UP}</td><td>{@link #NK_KEY_DOWN KEY_DOWN}</td></tr><tr><td>{@link #NK_KEY_LEFT KEY_LEFT}</td><td>{@link #NK_KEY_RIGHT KEY_RIGHT}</td><td>{@link #NK_KEY_TEXT_INSERT_MODE KEY_TEXT_INSERT_MODE}</td><td>{@link #NK_KEY_TEXT_REPLACE_MODE KEY_TEXT_REPLACE_MODE}</td><td>{@link #NK_KEY_TEXT_RESET_MODE KEY_TEXT_RESET_MODE}</td><td>{@link #NK_KEY_TEXT_LINE_START KEY_TEXT_LINE_START}</td></tr><tr><td>{@link #NK_KEY_TEXT_LINE_END KEY_TEXT_LINE_END}</td><td>{@link #NK_KEY_TEXT_START KEY_TEXT_START}</td><td>{@link #NK_KEY_TEXT_END KEY_TEXT_END}</td><td>{@link #NK_KEY_TEXT_UNDO KEY_TEXT_UNDO}</td><td>{@link #NK_KEY_TEXT_REDO KEY_TEXT_REDO}</td><td>{@link #NK_KEY_TEXT_SELECT_ALL KEY_TEXT_SELECT_ALL}</td></tr><tr><td>{@link #NK_KEY_TEXT_WORD_LEFT KEY_TEXT_WORD_LEFT}</td><td>{@link #NK_KEY_TEXT_WORD_RIGHT KEY_TEXT_WORD_RIGHT}</td><td>{@link #NK_KEY_SCROLL_START KEY_SCROLL_START}</td><td>{@link #NK_KEY_SCROLL_END KEY_SCROLL_END}</td><td>{@link #NK_KEY_SCROLL_DOWN KEY_SCROLL_DOWN}</td><td>{@link #NK_KEY_SCROLL_UP KEY_SCROLL_UP}</td></tr></table>
@@ -6265,7 +6384,7 @@ public class Nuklear {
     public static native void nnk_input_button(long ctx, int id, int x, int y, int down);
 
     /**
-     * Mirrors mouse button state with either pressed or released.
+     * Mirrors the state of a specific mouse button to nuklear.
      *
      * @param ctx the nuklear context
      * @param id  one of:<br><table><tr><td>{@link #NK_BUTTON_LEFT BUTTON_LEFT}</td><td>{@link #NK_BUTTON_MIDDLE BUTTON_MIDDLE}</td><td>{@link #NK_BUTTON_RIGHT BUTTON_RIGHT}</td><td>{@link #NK_BUTTON_DOUBLE BUTTON_DOUBLE}</td></tr></table>
@@ -6587,7 +6706,7 @@ public class Nuklear {
 
     /** @param ctx the nuklear context */
     @NativeType("struct nk_rect")
-    public static NkRect nk_widget_bounds(@NativeType("struct nk_context *") NkContext ctx, NkRect __result) {
+    public static NkRect nk_widget_bounds(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_rect") NkRect __result) {
         nnk_widget_bounds(ctx.address(), __result.address());
         return __result;
     }
@@ -6599,7 +6718,7 @@ public class Nuklear {
 
     /** @param ctx the nuklear context */
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_widget_position(@NativeType("struct nk_context *") NkContext ctx, NkVec2 __result) {
+    public static NkVec2 nk_widget_position(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_widget_position(ctx.address(), __result.address());
         return __result;
     }
@@ -6611,7 +6730,7 @@ public class Nuklear {
 
     /** @param ctx the nuklear context */
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_widget_size(@NativeType("struct nk_context *") NkContext ctx, NkVec2 __result) {
+    public static NkVec2 nk_widget_size(@NativeType("struct nk_context *") NkContext ctx, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_widget_size(ctx.address(), __result.address());
         return __result;
     }
@@ -6709,7 +6828,7 @@ public class Nuklear {
     public static native void nnk_rgb(int r, int g, int b, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb(int r, int g, int b, NkColor __result) {
+    public static NkColor nk_rgb(int r, int g, int b, @NativeType("struct nk_color") NkColor __result) {
         nnk_rgb(r, g, b, __result.address());
         return __result;
     }
@@ -6719,7 +6838,7 @@ public class Nuklear {
     public static native void nnk_rgb_iv(long rgb, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb_iv(@NativeType("int const *") IntBuffer rgb, NkColor __result) {
+    public static NkColor nk_rgb_iv(@NativeType("int const *") IntBuffer rgb, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgb, 3);
         }
@@ -6732,7 +6851,7 @@ public class Nuklear {
     public static native void nnk_rgb_bv(long rgb, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb_bv(@NativeType("nk_byte const *") ByteBuffer rgb, NkColor __result) {
+    public static NkColor nk_rgb_bv(@NativeType("nk_byte const *") ByteBuffer rgb, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgb, 3);
         }
@@ -6745,7 +6864,7 @@ public class Nuklear {
     public static native void nnk_rgb_f(float r, float g, float b, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb_f(float r, float g, float b, NkColor __result) {
+    public static NkColor nk_rgb_f(float r, float g, float b, @NativeType("struct nk_color") NkColor __result) {
         nnk_rgb_f(r, g, b, __result.address());
         return __result;
     }
@@ -6755,7 +6874,7 @@ public class Nuklear {
     public static native void nnk_rgb_fv(long rgb, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb_fv(@NativeType("float const *") FloatBuffer rgb, NkColor __result) {
+    public static NkColor nk_rgb_fv(@NativeType("float const *") FloatBuffer rgb, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgb, 3);
         }
@@ -6768,7 +6887,7 @@ public class Nuklear {
     public static native void nnk_rgb_cf(long c, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb_cf(@NativeType("struct nk_colorf") NkColorf c, NkColor __result) {
+    public static NkColor nk_rgb_cf(@NativeType("struct nk_colorf") NkColorf c, @NativeType("struct nk_color") NkColor __result) {
         nnk_rgb_cf(c.address(), __result.address());
         return __result;
     }
@@ -6778,7 +6897,7 @@ public class Nuklear {
     public static native void nnk_rgb_hex(long rgb, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb_hex(@NativeType("char const *") ByteBuffer rgb, NkColor __result) {
+    public static NkColor nk_rgb_hex(@NativeType("char const *") ByteBuffer rgb, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgb, 6);
         }
@@ -6787,14 +6906,15 @@ public class Nuklear {
     }
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb_hex(@NativeType("char const *") CharSequence rgb, NkColor __result) {
+    public static NkColor nk_rgb_hex(@NativeType("char const *") CharSequence rgb, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgb, 6);
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer rgbEncoded = stack.ASCII(rgb);
-            nnk_rgb_hex(memAddress(rgbEncoded), __result.address());
+            stack.nASCII(rgb, true);
+            long rgbEncoded = stack.getPointerAddress();
+            nnk_rgb_hex(rgbEncoded, __result.address());
             return __result;
         } finally {
             stack.setPointer(stackPointer);
@@ -6806,7 +6926,7 @@ public class Nuklear {
     public static native void nnk_rgba(int r, int g, int b, int a, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba(int r, int g, int b, int a, NkColor __result) {
+    public static NkColor nk_rgba(int r, int g, int b, int a, @NativeType("struct nk_color") NkColor __result) {
         nnk_rgba(r, g, b, a, __result.address());
         return __result;
     }
@@ -6816,7 +6936,7 @@ public class Nuklear {
     public static native void nnk_rgba_u32(int in, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_u32(@NativeType("nk_uint") int in, NkColor __result) {
+    public static NkColor nk_rgba_u32(@NativeType("nk_uint") int in, @NativeType("struct nk_color") NkColor __result) {
         nnk_rgba_u32(in, __result.address());
         return __result;
     }
@@ -6826,7 +6946,7 @@ public class Nuklear {
     public static native void nnk_rgba_iv(long rgba, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_iv(@NativeType("int const *") IntBuffer rgba, NkColor __result) {
+    public static NkColor nk_rgba_iv(@NativeType("int const *") IntBuffer rgba, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgba, 4);
         }
@@ -6839,7 +6959,7 @@ public class Nuklear {
     public static native void nnk_rgba_bv(long rgba, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_bv(@NativeType("nk_byte const *") ByteBuffer rgba, NkColor __result) {
+    public static NkColor nk_rgba_bv(@NativeType("nk_byte const *") ByteBuffer rgba, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgba, 4);
         }
@@ -6852,7 +6972,7 @@ public class Nuklear {
     public static native void nnk_rgba_f(float r, float g, float b, float a, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_f(float r, float g, float b, float a, NkColor __result) {
+    public static NkColor nk_rgba_f(float r, float g, float b, float a, @NativeType("struct nk_color") NkColor __result) {
         nnk_rgba_f(r, g, b, a, __result.address());
         return __result;
     }
@@ -6862,7 +6982,7 @@ public class Nuklear {
     public static native void nnk_rgba_fv(long rgba, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_fv(@NativeType("float const *") FloatBuffer rgba, NkColor __result) {
+    public static NkColor nk_rgba_fv(@NativeType("float const *") FloatBuffer rgba, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgba, 4);
         }
@@ -6875,7 +6995,7 @@ public class Nuklear {
     public static native void nnk_rgba_cf(long c, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_cf(@NativeType("struct nk_colorf") NkColorf c, NkColor __result) {
+    public static NkColor nk_rgba_cf(@NativeType("struct nk_colorf") NkColorf c, @NativeType("struct nk_color") NkColor __result) {
         nnk_rgba_cf(c.address(), __result.address());
         return __result;
     }
@@ -6885,7 +7005,7 @@ public class Nuklear {
     public static native void nnk_rgba_hex(long rgba, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_hex(@NativeType("char const *") ByteBuffer rgba, NkColor __result) {
+    public static NkColor nk_rgba_hex(@NativeType("char const *") ByteBuffer rgba, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgba, 8);
         }
@@ -6894,14 +7014,15 @@ public class Nuklear {
     }
 
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_hex(@NativeType("char const *") CharSequence rgba, NkColor __result) {
+    public static NkColor nk_rgba_hex(@NativeType("char const *") CharSequence rgba, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgba, 8);
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer rgbaEncoded = stack.ASCII(rgba);
-            nnk_rgba_hex(memAddress(rgbaEncoded), __result.address());
+            stack.nASCII(rgba, true);
+            long rgbaEncoded = stack.getPointerAddress();
+            nnk_rgba_hex(rgbaEncoded, __result.address());
             return __result;
         } finally {
             stack.setPointer(stackPointer);
@@ -6913,7 +7034,7 @@ public class Nuklear {
     public static native void nnk_hsva_colorf(float h, float s, float v, float a, long __result);
 
     @NativeType("struct nk_colorf")
-    public static NkColorf nk_hsva_colorf(float h, float s, float v, float a, NkColorf __result) {
+    public static NkColorf nk_hsva_colorf(float h, float s, float v, float a, @NativeType("struct nk_colorf") NkColorf __result) {
         nnk_hsva_colorf(h, s, v, a, __result.address());
         return __result;
     }
@@ -6923,7 +7044,7 @@ public class Nuklear {
     public static native void nnk_hsva_colorfv(long c, long __result);
 
     @NativeType("struct nk_colorf")
-    public static NkColorf nk_hsva_colorfv(@NativeType("float *") FloatBuffer c, NkColorf __result) {
+    public static NkColorf nk_hsva_colorfv(@NativeType("float *") FloatBuffer c, @NativeType("struct nk_colorf") NkColorf __result) {
         if (CHECKS) {
             check(c, 4);
         }
@@ -6961,7 +7082,7 @@ public class Nuklear {
     public static native void nnk_hsv(int h, int s, int v, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsv(int h, int s, int v, NkColor __result) {
+    public static NkColor nk_hsv(int h, int s, int v, @NativeType("struct nk_color") NkColor __result) {
         nnk_hsv(h, s, v, __result.address());
         return __result;
     }
@@ -6971,7 +7092,7 @@ public class Nuklear {
     public static native void nnk_hsv_iv(long hsv, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsv_iv(@NativeType("int const *") IntBuffer hsv, NkColor __result) {
+    public static NkColor nk_hsv_iv(@NativeType("int const *") IntBuffer hsv, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsv, 3);
         }
@@ -6984,7 +7105,7 @@ public class Nuklear {
     public static native void nnk_hsv_bv(long hsv, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsv_bv(@NativeType("nk_byte const *") ByteBuffer hsv, NkColor __result) {
+    public static NkColor nk_hsv_bv(@NativeType("nk_byte const *") ByteBuffer hsv, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsv, 3);
         }
@@ -6997,7 +7118,7 @@ public class Nuklear {
     public static native void nnk_hsv_f(float h, float s, float v, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsv_f(float h, float s, float v, NkColor __result) {
+    public static NkColor nk_hsv_f(float h, float s, float v, @NativeType("struct nk_color") NkColor __result) {
         nnk_hsv_f(h, s, v, __result.address());
         return __result;
     }
@@ -7007,7 +7128,7 @@ public class Nuklear {
     public static native void nnk_hsv_fv(long hsv, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsv_fv(@NativeType("float const *") FloatBuffer hsv, NkColor __result) {
+    public static NkColor nk_hsv_fv(@NativeType("float const *") FloatBuffer hsv, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsv, 3);
         }
@@ -7020,7 +7141,7 @@ public class Nuklear {
     public static native void nnk_hsva(int h, int s, int v, int a, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsva(int h, int s, int v, int a, NkColor __result) {
+    public static NkColor nk_hsva(int h, int s, int v, int a, @NativeType("struct nk_color") NkColor __result) {
         nnk_hsva(h, s, v, a, __result.address());
         return __result;
     }
@@ -7030,7 +7151,7 @@ public class Nuklear {
     public static native void nnk_hsva_iv(long hsva, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsva_iv(@NativeType("int const *") IntBuffer hsva, NkColor __result) {
+    public static NkColor nk_hsva_iv(@NativeType("int const *") IntBuffer hsva, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsva, 4);
         }
@@ -7043,7 +7164,7 @@ public class Nuklear {
     public static native void nnk_hsva_bv(long hsva, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsva_bv(@NativeType("nk_byte const *") ByteBuffer hsva, NkColor __result) {
+    public static NkColor nk_hsva_bv(@NativeType("nk_byte const *") ByteBuffer hsva, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsva, 4);
         }
@@ -7056,7 +7177,7 @@ public class Nuklear {
     public static native void nnk_hsva_f(float h, float s, float v, float a, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsva_f(float h, float s, float v, float a, NkColor __result) {
+    public static NkColor nk_hsva_f(float h, float s, float v, float a, @NativeType("struct nk_color") NkColor __result) {
         nnk_hsva_f(h, s, v, a, __result.address());
         return __result;
     }
@@ -7066,7 +7187,7 @@ public class Nuklear {
     public static native void nnk_hsva_fv(long hsva, long __result);
 
     @NativeType("struct nk_color")
-    public static NkColor nk_hsva_fv(@NativeType("float const *") FloatBuffer hsva, NkColor __result) {
+    public static NkColor nk_hsva_fv(@NativeType("float const *") FloatBuffer hsva, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsva, 4);
         }
@@ -7104,7 +7225,7 @@ public class Nuklear {
     public static native void nnk_color_cf(long color, long __result);
 
     @NativeType("struct nk_colorf")
-    public static NkColorf nk_color_cf(@NativeType("struct nk_color") NkColor color, NkColorf __result) {
+    public static NkColorf nk_color_cf(@NativeType("struct nk_color") NkColor color, @NativeType("struct nk_colorf") NkColorf __result) {
         nnk_color_cf(color.address(), __result.address());
         return __result;
     }
@@ -7317,7 +7438,7 @@ public class Nuklear {
     public static native void nnk_handle_ptr(long ptr, long __result);
 
     @NativeType("nk_handle")
-    public static NkHandle nk_handle_ptr(@NativeType("void *") long ptr, NkHandle __result) {
+    public static NkHandle nk_handle_ptr(@NativeType("void *") long ptr, @NativeType("nk_handle") NkHandle __result) {
         if (CHECKS) {
             check(ptr);
         }
@@ -7330,7 +7451,7 @@ public class Nuklear {
     public static native void nnk_handle_id(int id, long __result);
 
     @NativeType("nk_handle")
-    public static NkHandle nk_handle_id(int id, NkHandle __result) {
+    public static NkHandle nk_handle_id(int id, @NativeType("nk_handle") NkHandle __result) {
         nnk_handle_id(id, __result.address());
         return __result;
     }
@@ -7340,7 +7461,7 @@ public class Nuklear {
     public static native void nnk_image_handle(long handle, long __result);
 
     @NativeType("struct nk_image")
-    public static NkImage nk_image_handle(@NativeType("nk_handle") NkHandle handle, NkImage __result) {
+    public static NkImage nk_image_handle(@NativeType("nk_handle") NkHandle handle, @NativeType("struct nk_image") NkImage __result) {
         nnk_image_handle(handle.address(), __result.address());
         return __result;
     }
@@ -7350,7 +7471,7 @@ public class Nuklear {
     public static native void nnk_image_ptr(long ptr, long __result);
 
     @NativeType("struct nk_image")
-    public static NkImage nk_image_ptr(@NativeType("void *") long ptr, NkImage __result) {
+    public static NkImage nk_image_ptr(@NativeType("void *") long ptr, @NativeType("struct nk_image") NkImage __result) {
         if (CHECKS) {
             check(ptr);
         }
@@ -7363,7 +7484,7 @@ public class Nuklear {
     public static native void nnk_image_id(int id, long __result);
 
     @NativeType("struct nk_image")
-    public static NkImage nk_image_id(int id, NkImage __result) {
+    public static NkImage nk_image_id(int id, @NativeType("struct nk_image") NkImage __result) {
         nnk_image_id(id, __result.address());
         return __result;
     }
@@ -7382,7 +7503,7 @@ public class Nuklear {
     public static native void nnk_subimage_ptr(long ptr, short w, short h, long sub_region, long __result);
 
     @NativeType("struct nk_image")
-    public static NkImage nk_subimage_ptr(@NativeType("void *") long ptr, @NativeType("unsigned short") short w, @NativeType("unsigned short") short h, @NativeType("struct nk_rect") NkRect sub_region, NkImage __result) {
+    public static NkImage nk_subimage_ptr(@NativeType("void *") long ptr, @NativeType("unsigned short") short w, @NativeType("unsigned short") short h, @NativeType("struct nk_rect") NkRect sub_region, @NativeType("struct nk_image") NkImage __result) {
         if (CHECKS) {
             check(ptr);
         }
@@ -7395,7 +7516,7 @@ public class Nuklear {
     public static native void nnk_subimage_id(int id, short w, short h, long sub_region, long __result);
 
     @NativeType("struct nk_image")
-    public static NkImage nk_subimage_id(int id, @NativeType("unsigned short") short w, @NativeType("unsigned short") short h, @NativeType("struct nk_rect") NkRect sub_region, NkImage __result) {
+    public static NkImage nk_subimage_id(int id, @NativeType("unsigned short") short w, @NativeType("unsigned short") short h, @NativeType("struct nk_rect") NkRect sub_region, @NativeType("struct nk_image") NkImage __result) {
         nnk_subimage_id(id, w, h, sub_region.address(), __result.address());
         return __result;
     }
@@ -7405,7 +7526,7 @@ public class Nuklear {
     public static native void nnk_subimage_handle(long handle, short w, short h, long sub_region, long __result);
 
     @NativeType("struct nk_image")
-    public static NkImage nk_subimage_handle(@NativeType("nk_handle") NkHandle handle, @NativeType("unsigned short") short w, @NativeType("unsigned short") short h, @NativeType("struct nk_rect") NkRect sub_region, NkImage __result) {
+    public static NkImage nk_subimage_handle(@NativeType("nk_handle") NkHandle handle, @NativeType("unsigned short") short w, @NativeType("unsigned short") short h, @NativeType("struct nk_rect") NkRect sub_region, @NativeType("struct nk_image") NkImage __result) {
         nnk_subimage_handle(handle.address(), w, h, sub_region.address(), __result.address());
         return __result;
     }
@@ -7434,7 +7555,7 @@ public class Nuklear {
     public static native void nnk_vec2(float x, float y, long __result);
 
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_vec2(float x, float y, NkVec2 __result) {
+    public static NkVec2 nk_vec2(float x, float y, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_vec2(x, y, __result.address());
         return __result;
     }
@@ -7444,7 +7565,7 @@ public class Nuklear {
     public static native void nnk_vec2i(int x, int y, long __result);
 
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_vec2i(int x, int y, NkVec2 __result) {
+    public static NkVec2 nk_vec2i(int x, int y, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_vec2i(x, y, __result.address());
         return __result;
     }
@@ -7454,7 +7575,7 @@ public class Nuklear {
     public static native void nnk_vec2v(long xy, long __result);
 
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_vec2v(@NativeType("float const *") FloatBuffer xy, NkVec2 __result) {
+    public static NkVec2 nk_vec2v(@NativeType("float const *") FloatBuffer xy, @NativeType("struct nk_vec2") NkVec2 __result) {
         if (CHECKS) {
             check(xy, 2);
         }
@@ -7467,7 +7588,7 @@ public class Nuklear {
     public static native void nnk_vec2iv(long xy, long __result);
 
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_vec2iv(@NativeType("int const *") IntBuffer xy, NkVec2 __result) {
+    public static NkVec2 nk_vec2iv(@NativeType("int const *") IntBuffer xy, @NativeType("struct nk_vec2") NkVec2 __result) {
         if (CHECKS) {
             check(xy, 2);
         }
@@ -7480,7 +7601,7 @@ public class Nuklear {
     public static native void nnk_get_null_rect(long __result);
 
     @NativeType("struct nk_rect")
-    public static NkRect nk_get_null_rect(NkRect __result) {
+    public static NkRect nk_get_null_rect(@NativeType("struct nk_rect") NkRect __result) {
         nnk_get_null_rect(__result.address());
         return __result;
     }
@@ -7490,7 +7611,7 @@ public class Nuklear {
     public static native void nnk_rect(float x, float y, float w, float h, long __result);
 
     @NativeType("struct nk_rect")
-    public static NkRect nk_rect(float x, float y, float w, float h, NkRect __result) {
+    public static NkRect nk_rect(float x, float y, float w, float h, @NativeType("struct nk_rect") NkRect __result) {
         nnk_rect(x, y, w, h, __result.address());
         return __result;
     }
@@ -7500,7 +7621,7 @@ public class Nuklear {
     public static native void nnk_recti(int x, int y, int w, int h, long __result);
 
     @NativeType("struct nk_rect")
-    public static NkRect nk_recti(int x, int y, int w, int h, NkRect __result) {
+    public static NkRect nk_recti(int x, int y, int w, int h, @NativeType("struct nk_rect") NkRect __result) {
         nnk_recti(x, y, w, h, __result.address());
         return __result;
     }
@@ -7510,7 +7631,7 @@ public class Nuklear {
     public static native void nnk_recta(long pos, long size, long __result);
 
     @NativeType("struct nk_rect")
-    public static NkRect nk_recta(@NativeType("struct nk_vec2") NkVec2 pos, @NativeType("struct nk_vec2") NkVec2 size, NkRect __result) {
+    public static NkRect nk_recta(@NativeType("struct nk_vec2") NkVec2 pos, @NativeType("struct nk_vec2") NkVec2 size, @NativeType("struct nk_rect") NkRect __result) {
         nnk_recta(pos.address(), size.address(), __result.address());
         return __result;
     }
@@ -7520,7 +7641,7 @@ public class Nuklear {
     public static native void nnk_rectv(long xywh, long __result);
 
     @NativeType("struct nk_rect")
-    public static NkRect nk_rectv(@NativeType("float const *") FloatBuffer xywh, NkRect __result) {
+    public static NkRect nk_rectv(@NativeType("float const *") FloatBuffer xywh, @NativeType("struct nk_rect") NkRect __result) {
         if (CHECKS) {
             check(xywh, 4);
         }
@@ -7533,7 +7654,7 @@ public class Nuklear {
     public static native void nnk_rectiv(long xywh, long __result);
 
     @NativeType("struct nk_rect")
-    public static NkRect nk_rectiv(@NativeType("int const *") IntBuffer xywh, NkRect __result) {
+    public static NkRect nk_rectiv(@NativeType("int const *") IntBuffer xywh, @NativeType("struct nk_rect") NkRect __result) {
         if (CHECKS) {
             check(xywh, 4);
         }
@@ -7546,7 +7667,7 @@ public class Nuklear {
     public static native void nnk_rect_pos(long r, long __result);
 
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_rect_pos(@NativeType("struct nk_rect") NkRect r, NkVec2 __result) {
+    public static NkVec2 nk_rect_pos(@NativeType("struct nk_rect") NkRect r, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_rect_pos(r.address(), __result.address());
         return __result;
     }
@@ -7556,7 +7677,7 @@ public class Nuklear {
     public static native void nnk_rect_size(long r, long __result);
 
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_rect_size(@NativeType("struct nk_rect") NkRect r, NkVec2 __result) {
+    public static NkVec2 nk_rect_size(@NativeType("struct nk_rect") NkRect r, @NativeType("struct nk_vec2") NkVec2 __result) {
         nnk_rect_size(r.address(), __result.address());
         return __result;
     }
@@ -7575,8 +7696,9 @@ public class Nuklear {
     public static int nk_strlen(@NativeType("char const *") CharSequence str) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_strlen(memAddress(strEncoded));
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_strlen(strEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -7597,9 +7719,11 @@ public class Nuklear {
     public static int nk_stricmp(@NativeType("char const *") CharSequence s1, @NativeType("char const *") CharSequence s2) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer s1Encoded = stack.UTF8(s1);
-            ByteBuffer s2Encoded = stack.UTF8(s2);
-            return nnk_stricmp(memAddress(s1Encoded), memAddress(s2Encoded));
+            stack.nUTF8(s1, true);
+            long s1Encoded = stack.getPointerAddress();
+            stack.nUTF8(s2, true);
+            long s2Encoded = stack.getPointerAddress();
+            return nnk_stricmp(s1Encoded, s2Encoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -7620,9 +7744,11 @@ public class Nuklear {
     public static int nk_stricmpn(@NativeType("char const *") CharSequence s1, @NativeType("char const *") CharSequence s2, int n) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer s1Encoded = stack.UTF8(s1);
-            ByteBuffer s2Encoded = stack.UTF8(s2);
-            return nnk_stricmpn(memAddress(s1Encoded), memAddress(s2Encoded), n);
+            stack.nUTF8(s1, true);
+            long s1Encoded = stack.getPointerAddress();
+            stack.nUTF8(s2, true);
+            long s2Encoded = stack.getPointerAddress();
+            return nnk_stricmpn(s1Encoded, s2Encoded, n);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -7646,8 +7772,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_strtoi(memAddress(strEncoded), memAddress(endptr));
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_strtoi(strEncoded, memAddress(endptr));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -7671,8 +7798,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_strtof(memAddress(strEncoded), memAddress(endptr));
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_strtof(strEncoded, memAddress(endptr));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -7696,8 +7824,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_strtod(memAddress(strEncoded), memAddress(endptr));
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_strtod(strEncoded, memAddress(endptr));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -7739,9 +7868,11 @@ public class Nuklear {
     public static boolean nk_strfilter(@NativeType("char const *") CharSequence str, @NativeType("char const *") CharSequence regexp) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            ByteBuffer regexpEncoded = stack.UTF8(regexp);
-            return nnk_strfilter(memAddress(strEncoded), memAddress(regexpEncoded)) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            stack.nUTF8(regexp, true);
+            long regexpEncoded = stack.getPointerAddress();
+            return nnk_strfilter(strEncoded, regexpEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -7777,9 +7908,11 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            ByteBuffer patternEncoded = stack.UTF8(pattern);
-            return nnk_strmatch_fuzzy_string(memAddress(strEncoded), memAddress(patternEncoded), memAddress(out_score)) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            stack.nUTF8(pattern, true);
+            long patternEncoded = stack.getPointerAddress();
+            return nnk_strmatch_fuzzy_string(strEncoded, patternEncoded, memAddress(out_score)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -7803,9 +7936,11 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer txtEncoded = stack.UTF8(txt, false);
-            ByteBuffer patternEncoded = stack.UTF8(pattern);
-            return nnk_strmatch_fuzzy_text(memAddress(txtEncoded), txtEncoded.remaining(), memAddress(patternEncoded), memAddress(out_score));
+            int txtEncodedLength = stack.nUTF8(txt, false);
+            long txtEncoded = stack.getPointerAddress();
+            stack.nUTF8(pattern, true);
+            long patternEncoded = stack.getPointerAddress();
+            return nnk_strmatch_fuzzy_text(txtEncoded, txtEncodedLength, patternEncoded, memAddress(out_score));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -8356,8 +8491,9 @@ public class Nuklear {
     public static void nk_textedit_text(@NativeType("struct nk_text_edit *") NkTextEdit box, @NativeType("char const *") CharSequence text) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            nnk_textedit_text(box.address(), memAddress(textEncoded), textEncoded.remaining());
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            nnk_textedit_text(box.address(), textEncoded, textEncodedLength);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -8409,8 +8545,9 @@ public class Nuklear {
     public static boolean nk_textedit_paste(@NativeType("struct nk_text_edit *") NkTextEdit box, @NativeType("char const *") CharSequence ctext) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer ctextEncoded = stack.UTF8(ctext, false);
-            return nnk_textedit_paste(box.address(), memAddress(ctextEncoded), ctextEncoded.remaining()) != 0;
+            int ctextEncodedLength = stack.nUTF8(ctext, false);
+            long ctextEncoded = stack.getPointerAddress();
+            return nnk_textedit_paste(box.address(), ctextEncoded, ctextEncodedLength) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -8563,8 +8700,9 @@ public class Nuklear {
     public static void nk_draw_text(@NativeType("struct nk_command_buffer *") NkCommandBuffer b, @NativeType("struct nk_rect") NkRect rect, @NativeType("char const *") CharSequence string, @NativeType("struct nk_user_font const *") NkUserFont font, @NativeType("struct nk_color") NkColor bg, @NativeType("struct nk_color") NkColor fg) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer stringEncoded = stack.UTF8(string, false);
-            nnk_draw_text(b.address(), rect.address(), memAddress(stringEncoded), stringEncoded.remaining(), font.address(), bg.address(), fg.address());
+            int stringEncodedLength = stack.nUTF8(string, false);
+            long stringEncoded = stack.getPointerAddress();
+            nnk_draw_text(b.address(), rect.address(), stringEncoded, stringEncodedLength, font.address(), bg.address(), fg.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -8609,7 +8747,7 @@ public class Nuklear {
     public static native long nnk__begin(long ctx);
 
     /**
-     * Returns the first draw command in the context draw command list to be drawn.
+     * Returns draw command pointer pointing to the next command inside the draw command list.
      *
      * @param ctx the nuklear context
      */
@@ -8826,7 +8964,7 @@ public class Nuklear {
     public static native long nnk__draw_begin(long ctx, long buffer);
 
     /**
-     * Returns the first vertex command in the context vertex draw list to be executed.
+     * Returns a draw vertex command buffer iterator to iterate over the vertex draw command buffer.
      *
      * @param ctx the nuklear context
      */
@@ -9051,8 +9189,9 @@ public class Nuklear {
     public static void nk_draw_list_add_text(@NativeType("struct nk_draw_list *") NkDrawList list, @NativeType("struct nk_user_font const *") NkUserFont font, @NativeType("struct nk_rect") NkRect rect, @NativeType("char const *") CharSequence text, float font_height, @NativeType("struct nk_color") NkColor color) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer textEncoded = stack.UTF8(text, false);
-            nnk_draw_list_add_text(list.address(), font.address(), rect.address(), memAddress(textEncoded), textEncoded.remaining(), font_height, color.address());
+            int textEncodedLength = stack.nUTF8(text, false);
+            long textEncoded = stack.getPointerAddress();
+            nnk_draw_list_add_text(list.address(), font.address(), rect.address(), textEncoded, textEncodedLength, font_height, color.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9071,7 +9210,7 @@ public class Nuklear {
     public static native void nnk_style_item_image(long img, long __result);
 
     @NativeType("struct nk_style_item")
-    public static NkStyleItem nk_style_item_image(@NativeType("struct nk_image") NkImage img, NkStyleItem __result) {
+    public static NkStyleItem nk_style_item_image(@NativeType("struct nk_image") NkImage img, @NativeType("struct nk_style_item") NkStyleItem __result) {
         nnk_style_item_image(img.address(), __result.address());
         return __result;
     }
@@ -9081,7 +9220,7 @@ public class Nuklear {
     public static native void nnk_style_item_color(long color, long __result);
 
     @NativeType("struct nk_style_item")
-    public static NkStyleItem nk_style_item_color(@NativeType("struct nk_color") NkColor color, NkStyleItem __result) {
+    public static NkStyleItem nk_style_item_color(@NativeType("struct nk_color") NkColor color, @NativeType("struct nk_style_item") NkStyleItem __result) {
         nnk_style_item_color(color.address(), __result.address());
         return __result;
     }
@@ -9091,7 +9230,7 @@ public class Nuklear {
     public static native void nnk_style_item_hide(long __result);
 
     @NativeType("struct nk_style_item")
-    public static NkStyleItem nk_style_item_hide(NkStyleItem __result) {
+    public static NkStyleItem nk_style_item_hide(@NativeType("struct nk_style_item") NkStyleItem __result) {
         nnk_style_item_hide(__result.address());
         return __result;
     }
@@ -9127,8 +9266,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_group_scrolled_offset_begin(ctx.address(), x_offset, y_offset, memAddress(titleEncoded), flags) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_group_scrolled_offset_begin(ctx.address(), x_offset, y_offset, titleEncoded, flags) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9155,8 +9295,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_state_push(ctx.address(), type, memAddress(titleEncoded), state) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_state_push(ctx.address(), type, titleEncoded, state) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9183,8 +9324,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_state_image_push(ctx.address(), type, image.address(), memAddress(titleEncoded), state) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_state_image_push(ctx.address(), type, image.address(), titleEncoded, state) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9211,8 +9353,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_element_push_hashed(ctx.address(), type, memAddress(titleEncoded), initial_state, selected, memAddress(hash), hash.remaining(), seed) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_element_push_hashed(ctx.address(), type, titleEncoded, initial_state, selected, memAddress(hash), hash.remaining(), seed) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9239,8 +9382,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer titleEncoded = stack.UTF8(title);
-            return nnk_tree_element_image_push_hashed(ctx.address(), type, img.address(), memAddress(titleEncoded), initial_state, selected, memAddress(hash), hash.remaining(), seed) != 0;
+            stack.nUTF8(title, true);
+            long titleEncoded = stack.getPointerAddress();
+            return nnk_tree_element_image_push_hashed(ctx.address(), type, img.address(), titleEncoded, initial_state, selected, memAddress(hash), hash.remaining(), seed) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9267,8 +9411,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_checkbox_label(ctx.address(), memAddress(strEncoded), active) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_checkbox_label(ctx.address(), strEncoded, active) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9294,8 +9439,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_checkbox_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), active) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_checkbox_text(ctx.address(), strEncoded, strEncodedLength, active) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9322,8 +9468,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_checkbox_flags_label(ctx.address(), memAddress(strEncoded), flags, value) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_checkbox_flags_label(ctx.address(), strEncoded, flags, value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9349,8 +9496,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_checkbox_flags_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), flags, value) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_checkbox_flags_text(ctx.address(), strEncoded, strEncodedLength, flags, value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9377,8 +9525,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_radio_label(ctx.address(), memAddress(strEncoded), active) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_radio_label(ctx.address(), strEncoded, active) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9404,8 +9553,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_radio_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), active) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_radio_text(ctx.address(), strEncoded, strEncodedLength, active) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9432,8 +9582,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_selectable_label(ctx.address(), memAddress(strEncoded), align, value) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_label(ctx.address(), strEncoded, align, value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9459,8 +9610,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_selectable_text(ctx.address(), memAddress(strEncoded), strEncoded.remaining(), align, value) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_text(ctx.address(), strEncoded, strEncodedLength, align, value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9487,8 +9639,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_selectable_image_label(ctx.address(), img.address(), memAddress(strEncoded), align, value) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_image_label(ctx.address(), img.address(), strEncoded, align, value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9514,8 +9667,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_selectable_image_text(ctx.address(), img.address(), memAddress(strEncoded), strEncoded.remaining(), align, value) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_image_text(ctx.address(), img.address(), strEncoded, strEncodedLength, align, value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9542,8 +9696,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            return nnk_selectable_symbol_label(ctx.address(), symbol, memAddress(strEncoded), align, value) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_symbol_label(ctx.address(), symbol, strEncoded, align, value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9569,8 +9724,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str, false);
-            return nnk_selectable_symbol_text(ctx.address(), symbol, memAddress(strEncoded), strEncoded.remaining(), align, value) != 0;
+            int strEncodedLength = stack.nUTF8(str, false);
+            long strEncoded = stack.getPointerAddress();
+            return nnk_selectable_symbol_text(ctx.address(), symbol, strEncoded, strEncodedLength, align, value) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9617,8 +9773,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_property_int(ctx.address(), memAddress(nameEncoded), min, val, max, step, inc_per_pixel);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_property_int(ctx.address(), nameEncoded, min, val, max, step, inc_per_pixel);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9643,8 +9800,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_property_float(ctx.address(), memAddress(nameEncoded), min, val, max, step, inc_per_pixel);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_property_float(ctx.address(), nameEncoded, min, val, max, step, inc_per_pixel);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9669,8 +9827,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            nnk_property_double(ctx.address(), memAddress(nameEncoded), min, val, max, step, inc_per_pixel);
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            nnk_property_double(ctx.address(), nameEncoded, min, val, max, step, inc_per_pixel);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9697,8 +9856,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer memoryEncoded = stack.UTF8(memory);
-            return nnk_edit_string(ctx.address(), flags, memAddress(memoryEncoded), len, max, memAddressSafe(filter));
+            stack.nUTF8(memory, true);
+            long memoryEncoded = stack.getPointerAddress();
+            return nnk_edit_string(ctx.address(), flags, memoryEncoded, len, max, memAddressSafe(filter));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9745,8 +9905,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer items_separated_by_zerosEncoded = stack.UTF8(items_separated_by_zeros);
-            nnk_combobox_string(ctx.address(), memAddress(items_separated_by_zerosEncoded), selected, count, item_height, size.address());
+            stack.nUTF8(items_separated_by_zeros, true);
+            long items_separated_by_zerosEncoded = stack.getPointerAddress();
+            nnk_combobox_string(ctx.address(), items_separated_by_zerosEncoded, selected, count, item_height, size.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9771,8 +9932,9 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer items_separated_by_separatorEncoded = stack.UTF8(items_separated_by_separator);
-            nnk_combobox_separator(ctx.address(), memAddress(items_separated_by_separatorEncoded), separator, selected, count, item_height, size.address());
+            stack.nUTF8(items_separated_by_separator, true);
+            long items_separated_by_separatorEncoded = stack.getPointerAddress();
+            nnk_combobox_separator(ctx.address(), items_separated_by_separatorEncoded, separator, selected, count, item_height, size.address());
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -9817,7 +9979,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_rgb_iv rgb_iv} */
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb_iv(@NativeType("int const *") int[] rgb, NkColor __result) {
+    public static NkColor nk_rgb_iv(@NativeType("int const *") int[] rgb, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgb, 3);
         }
@@ -9830,7 +9992,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_rgb_fv rgb_fv} */
     @NativeType("struct nk_color")
-    public static NkColor nk_rgb_fv(@NativeType("float const *") float[] rgb, NkColor __result) {
+    public static NkColor nk_rgb_fv(@NativeType("float const *") float[] rgb, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgb, 3);
         }
@@ -9843,7 +10005,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_rgba_iv rgba_iv} */
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_iv(@NativeType("int const *") int[] rgba, NkColor __result) {
+    public static NkColor nk_rgba_iv(@NativeType("int const *") int[] rgba, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgba, 4);
         }
@@ -9856,7 +10018,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_rgba_fv rgba_fv} */
     @NativeType("struct nk_color")
-    public static NkColor nk_rgba_fv(@NativeType("float const *") float[] rgba, NkColor __result) {
+    public static NkColor nk_rgba_fv(@NativeType("float const *") float[] rgba, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(rgba, 4);
         }
@@ -9869,7 +10031,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_hsva_colorfv hsva_colorfv} */
     @NativeType("struct nk_colorf")
-    public static NkColorf nk_hsva_colorfv(@NativeType("float *") float[] c, NkColorf __result) {
+    public static NkColorf nk_hsva_colorfv(@NativeType("float *") float[] c, @NativeType("struct nk_colorf") NkColorf __result) {
         if (CHECKS) {
             check(c, 4);
         }
@@ -9907,7 +10069,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_hsv_iv hsv_iv} */
     @NativeType("struct nk_color")
-    public static NkColor nk_hsv_iv(@NativeType("int const *") int[] hsv, NkColor __result) {
+    public static NkColor nk_hsv_iv(@NativeType("int const *") int[] hsv, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsv, 3);
         }
@@ -9920,7 +10082,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_hsv_fv hsv_fv} */
     @NativeType("struct nk_color")
-    public static NkColor nk_hsv_fv(@NativeType("float const *") float[] hsv, NkColor __result) {
+    public static NkColor nk_hsv_fv(@NativeType("float const *") float[] hsv, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsv, 3);
         }
@@ -9933,7 +10095,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_hsva_iv hsva_iv} */
     @NativeType("struct nk_color")
-    public static NkColor nk_hsva_iv(@NativeType("int const *") int[] hsva, NkColor __result) {
+    public static NkColor nk_hsva_iv(@NativeType("int const *") int[] hsva, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsva, 4);
         }
@@ -9946,7 +10108,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_hsva_fv hsva_fv} */
     @NativeType("struct nk_color")
-    public static NkColor nk_hsva_fv(@NativeType("float const *") float[] hsva, NkColor __result) {
+    public static NkColor nk_hsva_fv(@NativeType("float const *") float[] hsva, @NativeType("struct nk_color") NkColor __result) {
         if (CHECKS) {
             check(hsva, 4);
         }
@@ -10107,7 +10269,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_vec2v vec2v} */
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_vec2v(@NativeType("float const *") float[] xy, NkVec2 __result) {
+    public static NkVec2 nk_vec2v(@NativeType("float const *") float[] xy, @NativeType("struct nk_vec2") NkVec2 __result) {
         if (CHECKS) {
             check(xy, 2);
         }
@@ -10120,7 +10282,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_vec2iv vec2iv} */
     @NativeType("struct nk_vec2")
-    public static NkVec2 nk_vec2iv(@NativeType("int const *") int[] xy, NkVec2 __result) {
+    public static NkVec2 nk_vec2iv(@NativeType("int const *") int[] xy, @NativeType("struct nk_vec2") NkVec2 __result) {
         if (CHECKS) {
             check(xy, 2);
         }
@@ -10133,7 +10295,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_rectv rectv} */
     @NativeType("struct nk_rect")
-    public static NkRect nk_rectv(@NativeType("float const *") float[] xywh, NkRect __result) {
+    public static NkRect nk_rectv(@NativeType("float const *") float[] xywh, @NativeType("struct nk_rect") NkRect __result) {
         if (CHECKS) {
             check(xywh, 4);
         }
@@ -10146,7 +10308,7 @@ public class Nuklear {
 
     /** Array version of: {@link #nk_rectiv rectiv} */
     @NativeType("struct nk_rect")
-    public static NkRect nk_rectiv(@NativeType("int const *") int[] xywh, NkRect __result) {
+    public static NkRect nk_rectiv(@NativeType("int const *") int[] xywh, @NativeType("struct nk_rect") NkRect __result) {
         if (CHECKS) {
             check(xywh, 4);
         }
@@ -10176,9 +10338,11 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer strEncoded = stack.UTF8(str);
-            ByteBuffer patternEncoded = stack.UTF8(pattern);
-            return nnk_strmatch_fuzzy_string(memAddress(strEncoded), memAddress(patternEncoded), out_score) != 0;
+            stack.nUTF8(str, true);
+            long strEncoded = stack.getPointerAddress();
+            stack.nUTF8(pattern, true);
+            long patternEncoded = stack.getPointerAddress();
+            return nnk_strmatch_fuzzy_string(strEncoded, patternEncoded, out_score) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -10203,9 +10367,11 @@ public class Nuklear {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer txtEncoded = stack.UTF8(txt, false);
-            ByteBuffer patternEncoded = stack.UTF8(pattern);
-            return nnk_strmatch_fuzzy_text(memAddress(txtEncoded), txtEncoded.remaining(), memAddress(patternEncoded), out_score);
+            int txtEncodedLength = stack.nUTF8(txt, false);
+            long txtEncoded = stack.getPointerAddress();
+            stack.nUTF8(pattern, true);
+            long patternEncoded = stack.getPointerAddress();
+            return nnk_strmatch_fuzzy_text(txtEncoded, txtEncodedLength, patternEncoded, out_score);
         } finally {
             stack.setPointer(stackPointer);
         }

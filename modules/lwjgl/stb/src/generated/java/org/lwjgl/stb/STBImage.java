@@ -41,7 +41,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * <p>Features:</p>
  * 
  * <ul>
- * <li>decode from memory <s>or through FILE (define STBI_NO_STDIO to remove code)</s></li>
+ * <li>decode from memory</li>
  * <li>decode from arbitrary I/O callbacks</li>
  * <li>SIMD acceleration on x86/x64 (SSE2) and ARM (NEON)</li>
  * </ul>
@@ -67,9 +67,9 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>HDR image support</h3>
  * 
- * <p>stb_image now supports loading HDR images in general, and currently the Radiance .HDR file format, although the support is provided generically. You
- * can still load any file through the existing interface; if you attempt to load an HDR file, it will be automatically remapped to LDR, assuming gamma
- * 2.2 and an arbitrary scale factor defaulting to 1; both of these constants can be reconfigured through this interface:</p>
+ * <p>stb_image supports loading HDR images in general, and currently the Radiance .HDR file format specifically. You can still load any file through the
+ * existing interface; if you attempt to load an HDR file, it will be automatically remapped to LDR, assuming gamma 2.2 and an arbitrary scale factor
+ * defaulting to 1; both of these constants can be reconfigured through this interface:</p>
  * 
  * <pre><code>
  * stbi_hdr_to_ldr_gamma(2.2f);
@@ -221,8 +221,9 @@ public class STBImage {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            long __result = nstbi_load(memAddress(filenameEncoded), memAddress(x), memAddress(y), memAddress(channels_in_file), desired_channels);
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            long __result = nstbi_load(filenameEncoded, memAddress(x), memAddress(y), memAddress(channels_in_file), desired_channels);
             return memByteBufferSafe(__result, x.get(x.position()) * y.get(y.position()) * (desired_channels != 0 ? desired_channels : channels_in_file.get(channels_in_file.position())));
         } finally {
             stack.setPointer(stackPointer);
@@ -373,8 +374,9 @@ public class STBImage {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            long __result = nstbi_load_16(memAddress(filenameEncoded), memAddress(x), memAddress(y), memAddress(channels_in_file), desired_channels);
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            long __result = nstbi_load_16(filenameEncoded, memAddress(x), memAddress(y), memAddress(channels_in_file), desired_channels);
             return memShortBufferSafe(__result, x.get(x.position()) * y.get(y.position()) * (desired_channels != 0 ? desired_channels : channels_in_file.get(channels_in_file.position())));
         } finally {
             stack.setPointer(stackPointer);
@@ -485,8 +487,9 @@ public class STBImage {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            long __result = nstbi_loadf(memAddress(filenameEncoded), memAddress(x), memAddress(y), memAddress(channels_in_file), desired_channels);
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            long __result = nstbi_loadf(filenameEncoded, memAddress(x), memAddress(y), memAddress(channels_in_file), desired_channels);
             return memFloatBufferSafe(__result, x.get(x.position()) * y.get(y.position()) * (desired_channels != 0 ? desired_channels : channels_in_file.get(channels_in_file.position())));
         } finally {
             stack.setPointer(stackPointer);
@@ -618,8 +621,9 @@ public class STBImage {
     public static boolean stbi_is_hdr(@NativeType("char const *") CharSequence filename) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            return nstbi_is_hdr(memAddress(filenameEncoded)) != 0;
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            return nstbi_is_hdr(filenameEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -753,8 +757,9 @@ public class STBImage {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            return nstbi_info(memAddress(filenameEncoded), memAddress(x), memAddress(y), memAddress(comp)) != 0;
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            return nstbi_info(filenameEncoded, memAddress(x), memAddress(y), memAddress(comp)) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -839,8 +844,9 @@ public class STBImage {
     public static boolean stbi_is_16_bit(@NativeType("char const *") CharSequence filename) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            return nstbi_is_16_bit(memAddress(filenameEncoded)) != 0;
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            return nstbi_is_16_bit(filenameEncoded) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1051,8 +1057,9 @@ public class STBImage {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            long __result = nstbi_load(memAddress(filenameEncoded), x, y, channels_in_file, desired_channels);
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            long __result = nstbi_load(filenameEncoded, x, y, channels_in_file, desired_channels);
             return memByteBufferSafe(__result, x[0] * y[0] * (desired_channels != 0 ? desired_channels : channels_in_file[0]));
         } finally {
             stack.setPointer(stackPointer);
@@ -1138,8 +1145,9 @@ public class STBImage {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            long __result = nstbi_load_16(memAddress(filenameEncoded), x, y, channels_in_file, desired_channels);
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            long __result = nstbi_load_16(filenameEncoded, x, y, channels_in_file, desired_channels);
             return memShortBufferSafe(__result, x[0] * y[0] * (desired_channels != 0 ? desired_channels : channels_in_file[0]));
         } finally {
             stack.setPointer(stackPointer);
@@ -1207,8 +1215,9 @@ public class STBImage {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            long __result = nstbi_loadf(memAddress(filenameEncoded), x, y, channels_in_file, desired_channels);
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            long __result = nstbi_loadf(filenameEncoded, x, y, channels_in_file, desired_channels);
             return memFloatBufferSafe(__result, x[0] * y[0] * (desired_channels != 0 ? desired_channels : channels_in_file[0]));
         } finally {
             stack.setPointer(stackPointer);
@@ -1273,8 +1282,9 @@ public class STBImage {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer filenameEncoded = stack.ASCII(filename);
-            return nstbi_info(memAddress(filenameEncoded), x, y, comp) != 0;
+            stack.nUTF8(filename, true);
+            long filenameEncoded = stack.getPointerAddress();
+            return nstbi_info(filenameEncoded, x, y, comp) != 0;
         } finally {
             stack.setPointer(stackPointer);
         }

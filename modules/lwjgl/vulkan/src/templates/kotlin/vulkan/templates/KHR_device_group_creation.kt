@@ -66,7 +66,7 @@ val KHR_device_group_creation = "KHRDeviceGroupCreation".nativeClassVK("KHR_devi
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -127,8 +127,8 @@ val KHR_device_group_creation = "KHRDeviceGroupCreation".nativeClassVK("KHR_devi
         "EnumeratePhysicalDeviceGroupsKHR",
         "See #EnumeratePhysicalDeviceGroups().",
 
-        VkInstance.IN("instance", "a handle to a Vulkan instance previously created with #CreateInstance()."),
-        AutoSize("pPhysicalDeviceGroupProperties")..Check(1)..uint32_t.p.INOUT("pPhysicalDeviceGroupCount", "a pointer to an integer related to the number of device groups available or queried, as described below."),
-        nullable..VkPhysicalDeviceGroupProperties.p.OUT("pPhysicalDeviceGroupProperties", "either {@code NULL} or a pointer to an array of ##VkPhysicalDeviceGroupProperties structures.")
+        VkInstance("instance", "a handle to a Vulkan instance previously created with #CreateInstance()."),
+        AutoSize("pPhysicalDeviceGroupProperties")..Check(1)..uint32_t.p("pPhysicalDeviceGroupCount", "a pointer to an integer related to the number of device groups available or queried, as described below."),
+        nullable..VkPhysicalDeviceGroupProperties.p("pPhysicalDeviceGroupProperties", "either {@code NULL} or a pointer to an array of ##VkPhysicalDeviceGroupProperties structures.")
     )
 }

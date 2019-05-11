@@ -120,7 +120,19 @@ val AMD_shader_info = "AMDShaderInfo".nativeClassVK("AMD_shader_info", type = "d
     )
 
     EnumConstant(
-        "VkShaderInfoTypeAMD",
+        """
+        VkShaderInfoTypeAMD - Enum specifying which type of shader info to query
+
+        <h5>Description</h5>
+        <ul>
+            <li>#SHADER_INFO_TYPE_STATISTICS_AMD specifies that device resources used by a shader will be queried.</li>
+            <li>#SHADER_INFO_TYPE_BINARY_AMD specifies that implementation-specific information will be queried.</li>
+            <li>#SHADER_INFO_TYPE_DISASSEMBLY_AMD specifies that human-readable dissassembly of a shader.</li>
+        </ul>
+
+        <h5>See Also</h5>
+        #GetShaderInfoAMD()
+        """,
 
         "SHADER_INFO_TYPE_STATISTICS_AMD".."0",
         "SHADER_INFO_TYPE_BINARY_AMD".."1",
@@ -147,17 +159,17 @@ val AMD_shader_info = "AMDShaderInfo".nativeClassVK("AMD_shader_info", type = "d
         <h5>Description</h5>
         If {@code pInfo} is {@code NULL}, then the maximum size of the information that <b>can</b> be retrieved about the shader, in bytes, is returned in {@code pInfoSize}. Otherwise, {@code pInfoSize} <b>must</b> point to a variable set by the user to the size of the buffer, in bytes, pointed to by {@code pInfo}, and on return the variable is overwritten with the amount of data actually written to {@code pInfo}.
 
-        If {@code pInfoSize} is less than the maximum size that <b>can</b> be retrieved by the pipeline cache, then at most {@code pInfoSize} bytes will be written to {@code pInfo}, and #GetShaderInfoAMD() will return #INCOMPLETE.
+        If {@code pInfoSize} is less than the maximum size that <b>can</b> be retrieved by the pipeline cache, then at most {@code pInfoSize} bytes will be written to {@code pInfo}, and {@code vkGetShaderInfoAMD} will return #INCOMPLETE.
 
         Not all information is available for every shader and implementations may not support all kinds of information for any shader. When a certain type of information is unavailable, the function returns #ERROR_FEATURE_NOT_PRESENT.
 
         If information is successfully and fully queried, the function will return #SUCCESS.
 
-        For #SHADER_INFO_TYPE_STATISTICS_AMD, an instance of ##VkShaderStatisticsInfoAMD will be written to the buffer pointed to by {@code pInfo}. This structure will be populated with statistics regarding the physical device resources used by that shader along with other miscellaneous information and is described in further detail below.
+        For {@code infoType} #SHADER_INFO_TYPE_STATISTICS_AMD, an instance of ##VkShaderStatisticsInfoAMD will be written to the buffer pointed to by {@code pInfo}. This structure will be populated with statistics regarding the physical device resources used by that shader along with other miscellaneous information and is described in further detail below.
 
-        For #SHADER_INFO_TYPE_DISASSEMBLY_AMD, {@code pInfo} points to a UTF-8 null-terminated string containing human-readable disassembly. The exact formatting and contents of the disassembly string are vendor-specific.
+        For {@code infoType} #SHADER_INFO_TYPE_DISASSEMBLY_AMD, {@code pInfo} points to a UTF-8 null-terminated string containing human-readable disassembly. The exact formatting and contents of the disassembly string are vendor-specific.
 
-        The formatting and contents of all other types of information, including #SHADER_INFO_TYPE_BINARY_AMD, are left to the vendor and are not further specified by this extension.
+        The formatting and contents of all other types of information, including {@code infoType} #SHADER_INFO_TYPE_BINARY_AMD, are left to the vendor and are not further specified by this extension.
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
@@ -186,11 +198,11 @@ val AMD_shader_info = "AMDShaderInfo".nativeClassVK("AMD_shader_info", type = "d
         </dl>
         """,
 
-        VkDevice.IN("device", "the device that created {@code pipeline}."),
-        VkPipeline.IN("pipeline", "the target of the query."),
-        VkShaderStageFlagBits.IN("shaderStage", "identifies the particular shader within the pipeline about which information is being queried."),
-        VkShaderInfoTypeAMD.IN("infoType", "describes what kind of information is being queried."),
-        AutoSize("pInfo")..Check(1)..size_t.p.INOUT("pInfoSize", "a pointer to a value related to the amount of data the query returns, as described below."),
-        nullable..void.p.OUT("pInfo", "either NULL or a pointer to a buffer.")
+        VkDevice("device", "the device that created {@code pipeline}."),
+        VkPipeline("pipeline", "the target of the query."),
+        VkShaderStageFlagBits("shaderStage", "identifies the particular shader within the pipeline about which information is being queried."),
+        VkShaderInfoTypeAMD("infoType", "describes what kind of information is being queried."),
+        AutoSize("pInfo")..Check(1)..size_t.p("pInfoSize", "a pointer to a value related to the amount of data the query returns, as described below."),
+        nullable..void.p("pInfo", "either NULL or a pointer to a buffer.")
     )
 }

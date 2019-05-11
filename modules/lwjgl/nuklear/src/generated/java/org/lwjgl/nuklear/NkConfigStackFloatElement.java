@@ -49,18 +49,14 @@ class NkConfigStackFloatElement extends Struct {
         OLD_VALUE = layout.offsetof(1);
     }
 
-    NkConfigStackFloatElement(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link NkConfigStackFloatElement} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code NkConfigStackFloatElement} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     NkConfigStackFloatElement(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -78,15 +74,15 @@ class NkConfigStackFloatElement extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link NkConfigStackFloatElement} instance for the specified memory address. */
+    /** Returns a new {@code NkConfigStackFloatElement} instance for the specified memory address. */
     public static NkConfigStackFloatElement create(long address) {
-        return new NkConfigStackFloatElement(address, null);
+        return wrap(NkConfigStackFloatElement.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkConfigStackFloatElement createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(NkConfigStackFloatElement.class, address);
     }
 
     /**
@@ -96,13 +92,13 @@ class NkConfigStackFloatElement extends Struct {
      * @param capacity the buffer capacity
      */
     public static NkConfigStackFloatElement.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkConfigStackFloatElement.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
@@ -110,15 +106,17 @@ class NkConfigStackFloatElement extends Struct {
     /** Unsafe version of {@link #pValues(int) pValues}. */
     public static FloatBuffer npValues(long struct, int capacity) { return memFloatBuffer(memGetAddress(struct + NkConfigStackFloatElement.PVALUES), capacity); }
     /** Unsafe version of {@link #old_value}. */
-    public static float nold_value(long struct) { return memGetFloat(struct + NkConfigStackFloatElement.OLD_VALUE); }
+    public static float nold_value(long struct) { return UNSAFE.getFloat(null, struct + NkConfigStackFloatElement.OLD_VALUE); }
 
     // -----------------------------------
 
     /** An array of {@link NkConfigStackFloatElement} structs. */
     public static class Buffer extends StructBuffer<NkConfigStackFloatElement, Buffer> {
 
+        private static final NkConfigStackFloatElement ELEMENT_FACTORY = NkConfigStackFloatElement.create(-1L);
+
         /**
-         * Creates a new {@link NkConfigStackFloatElement.Buffer} instance backed by the specified container.
+         * Creates a new {@code NkConfigStackFloatElement.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -144,18 +142,8 @@ class NkConfigStackFloatElement extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected NkConfigStackFloatElement newInstance(long address) {
-            return new NkConfigStackFloatElement(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected NkConfigStackFloatElement getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /**

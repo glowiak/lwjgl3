@@ -88,7 +88,7 @@ val KHR_external_semaphore_win32 = "KHRExternalSemaphoreWin32".nativeClassVK("KH
 ￿    const VkImportSemaphoreWin32HandleInfoKHR*  pImportSemaphoreWin32HandleInfo);</code></pre>
 
         <h5>Description</h5>
-        Importing a semaphore payload from Windows handles does not transfer ownership of the handle to the Vulkan implementation. For handle types defined as NT handles, the application <b>must</b> release ownership using the fname:CloseHandle system call when the handle is no longer needed.
+        Importing a semaphore payload from Windows handles does not transfer ownership of the handle to the Vulkan implementation. For handle types defined as NT handles, the application <b>must</b> release ownership using the {@code CloseHandle} system call when the handle is no longer needed.
 
         Applications <b>can</b> import the same semaphore payload into multiple instances of Vulkan, into the same instance from which it was exported, and multiple times into a given Vulkan instance.
 
@@ -116,8 +116,8 @@ val KHR_external_semaphore_win32 = "KHRExternalSemaphoreWin32".nativeClassVK("KH
         ##VkImportSemaphoreWin32HandleInfoKHR
         """,
 
-        VkDevice.IN("device", "the logical device that created the semaphore."),
-        VkImportSemaphoreWin32HandleInfoKHR.const.p.IN("pImportSemaphoreWin32HandleInfo", "points to a ##VkImportSemaphoreWin32HandleInfoKHR structure specifying the semaphore and import parameters.")
+        VkDevice("device", "the logical device that created the semaphore."),
+        VkImportSemaphoreWin32HandleInfoKHR.const.p("pImportSemaphoreWin32HandleInfo", "points to a ##VkImportSemaphoreWin32HandleInfoKHR structure specifying the semaphore and import parameters.")
     )
 
     VkResult(
@@ -135,9 +135,9 @@ val KHR_external_semaphore_win32 = "KHRExternalSemaphoreWin32".nativeClassVK("KH
 ￿    HANDLE*                                     pHandle);</code></pre>
 
         <h5>Description</h5>
-        For handle types defined as NT handles, the handles returned by #GetSemaphoreWin32HandleKHR() are owned by the application. To avoid leaking resources, the application <b>must</b> release ownership of them using the fname:CloseHandle system call when they are no longer needed.
+        For handle types defined as NT handles, the handles returned by {@code vkGetSemaphoreWin32HandleKHR} are owned by the application. To avoid leaking resources, the application <b>must</b> release ownership of them using the {@code CloseHandle} system call when they are no longer needed.
 
-        Exporting a Windows handle from a semaphore <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-semaphores-importing">Importing Semaphore Payloads</a>.
+        Exporting a Windows handle from a semaphore <b>may</b> have side effects depending on the transference of the specified handle type, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-semaphores-importing">Importing Semaphore Payloads</a>.
 
         <h5>Valid Usage (Implicit)</h5>
         <ul>
@@ -164,8 +164,8 @@ val KHR_external_semaphore_win32 = "KHRExternalSemaphoreWin32".nativeClassVK("KH
         ##VkSemaphoreGetWin32HandleInfoKHR
         """,
 
-        VkDevice.IN("device", "the logical device that created the semaphore being exported."),
-        VkSemaphoreGetWin32HandleInfoKHR.const.p.IN("pGetWin32HandleInfo", "a pointer to an instance of the ##VkSemaphoreGetWin32HandleInfoKHR structure containing parameters of the export operation."),
-        Check(1)..HANDLE.p.OUT("pHandle", "will return the Windows handle representing the semaphore state.")
+        VkDevice("device", "the logical device that created the semaphore being exported."),
+        VkSemaphoreGetWin32HandleInfoKHR.const.p("pGetWin32HandleInfo", "a pointer to an instance of the ##VkSemaphoreGetWin32HandleInfoKHR structure containing parameters of the export operation."),
+        Check(1)..HANDLE.p("pHandle", "will return the Windows handle representing the semaphore state.")
     )
 }

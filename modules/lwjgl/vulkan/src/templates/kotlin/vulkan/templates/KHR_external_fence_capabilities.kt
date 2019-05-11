@@ -37,7 +37,7 @@ val KHR_external_fence_capabilities = "KHRExternalFenceCapabilities".nativeClass
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -112,8 +112,8 @@ val KHR_external_fence_capabilities = "KHRExternalFenceCapabilities".nativeClass
         "GetPhysicalDeviceExternalFencePropertiesKHR",
         "See #GetPhysicalDeviceExternalFenceProperties().",
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device from which to query the fence capabilities."),
-        VkPhysicalDeviceExternalFenceInfo.const.p.IN("pExternalFenceInfo", "points to an instance of the ##VkPhysicalDeviceExternalFenceInfo structure, describing the parameters that would be consumed by #CreateFence()."),
-        VkExternalFenceProperties.p.OUT("pExternalFenceProperties", "points to an instance of the ##VkExternalFenceProperties structure in which capabilities are returned.")
+        VkPhysicalDevice("physicalDevice", "the physical device from which to query the fence capabilities."),
+        VkPhysicalDeviceExternalFenceInfo.const.p("pExternalFenceInfo", "points to an instance of the ##VkPhysicalDeviceExternalFenceInfo structure, describing the parameters that would be consumed by #CreateFence()."),
+        VkExternalFenceProperties.p("pExternalFenceProperties", "points to an instance of the ##VkExternalFenceProperties structure in which capabilities are returned.")
     )
 }

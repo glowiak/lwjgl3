@@ -124,6 +124,20 @@ public class Configuration<T> {
     public static final Configuration<Integer> STACK_SIZE = new Configuration<>("org.lwjgl.system.stackSize", StateInit.INT);
 
     /**
+     * Sets the size of arrays cached in thread-local storage to minimize allocations while decoding text.
+     *
+     * <p>The memory cost for the cache is up to two arrays per thread that does text decoding. When the text length is up to this value, a cached array will
+     * be used. When the text length is longer than this value, a new array buffer will be allocated.</p>
+     *
+     * <p>If this option is not set, it defaults to 8192. Setting the value to 0 will disable the array cache.</p>
+     *
+     * <p style="font-family: monospace">
+     * Property: <b>org.lwjgl.system.arrayTLCSize</b><br>
+     * &nbsp; &nbsp;Usage: Static</p>
+     */
+    public static final Configuration<Integer> ARRAY_TLC_SIZE = new Configuration<>("org.lwjgl.system.arrayTLCSize", StateInit.INT);
+
+    /**
      * Set to true to disable LWJGL's basic checks. These are trivial checks that LWJGL performs to avoid JVM crashes, very useful during development.
      * Their performance impact is usually minimal, but they may be disabled for release builds.
      *
@@ -167,7 +181,7 @@ public class Configuration<T> {
     /**
      * Can be set to override the default {@link APIUtil#DEBUG_STREAM}. It must be the name of a class that implements the
      * {@link Supplier Supplier&lt;PrintStream&gt;} interface. The class will be instantiated using reflection and the result of {@link Supplier#get get} will
-     * become the {@link #DEBUG_STREAM} used by LWJGL.
+     * become the {@code #DEBUG_STREAM} used by LWJGL.
      *
      * <p>When set programmatically, it can also be a {@link PrintStream} instance.</p>
      *
@@ -239,6 +253,49 @@ public class Configuration<T> {
     /** Similar to {@link #LIBRARY_NAME} for the BGFX library (<b>org.lwjgl.bgfx.libname</b>). */
     public static final Configuration<String> BGFX_LIBRARY_NAME = new Configuration<>("org.lwjgl.bgfx.libname", StateInit.STRING);
 
+    // -- CUDA
+
+    /** Similar to {@link #LIBRARY_NAME} for the CUDA Driver library &ndash; nvcuda (<b>org.lwjgl.cuda.libname</b>). */
+    public static final Configuration<String> CUDA_LIBRARY_NAME = new Configuration<>("org.lwjgl.cuda.libname", StateInit.STRING);
+
+    /**
+     * By default, when LWJGL detects multiple CUDA Toolkits, it will use the toolkit with the greatest version. This option can be used to force a specific
+     * CUDA Toolkit version.
+     *
+     * <p style="font-family: monospace">
+     * Property: <b>org.lwjgl.cuda.toolkit.version</b><br>
+     * &nbsp; &nbsp;Usage: Static</p>
+     */
+    public static final Configuration<String> CUDA_TOOLKIT_VERSION = new Configuration<>("org.lwjgl.cuda.toolkit.version", StateInit.STRING);
+
+    /**
+     * By default, LWJGL will try to detect CUDA Toolkits in the default installation folder. This option can be used to load toolkit libraries from a
+     * non-standard installation folder.
+     *
+     * <p style="font-family: monospace">
+     * Property: <b>org.lwjgl.cuda.toolkit.path</b><br>
+     * &nbsp; &nbsp;Usage: Static</p>
+     */
+    public static final Configuration<String> CUDA_TOOLKIT_PATH = new Configuration<>("org.lwjgl.cuda.toolkit.path", StateInit.STRING);
+
+    /** Similar to {@link #LIBRARY_NAME} for the CUDA NVRTC library (<b>org.lwjgl.cuda.nvrtc.libname</b>). */
+    public static final Configuration<String> CUDA_NVRTC_LIBRARY_NAME = new Configuration<>("org.lwjgl.cuda.nvrtc.libname", StateInit.STRING);
+
+    /** Similar to {@link #LIBRARY_NAME} for the CUDA NVRTC Builtins library (<b>org.lwjgl.cuda.nvrtc-builtins.libname</b>). */
+    public static final Configuration<String> CUDA_NVRTC_BUILTINS_LIBRARY_NAME = new Configuration<>("org.lwjgl.cuda.nvrtc-builtins.libname", StateInit.STRING);
+
+    /**
+     * By default, CUDA uses the legacy default stream. To enable per-thread synchronization, set this option to {@code true} before initializing the CUDA
+     * driver.
+     *
+     * <p>To check if the CUDA driver supports PTDS, call {@code org.lwjgl.cuda.CUDA.isPerThreadDefaultStreamSupported()}</p>
+     *
+     * <p style="font-family: monospace">
+     * Property: <b>org.lwjgl.cuda.ptds</b><br>
+     * &nbsp; &nbsp;Usage: Static</p>
+     */
+    public static final Configuration<Boolean> CUDA_API_PER_THREAD_DEFAULT_STREAM = new Configuration<>("org.lwjgl.cuda.ptds", StateInit.BOOLEAN);
+
     // -- EGL
 
     /**
@@ -277,6 +334,17 @@ public class Configuration<T> {
 
     /** Similar to {@link #LIBRARY_NAME} for the jemalloc library (<b>org.lwjgl.system.jemalloc.libname</b>). */
     public static final Configuration<String> JEMALLOC_LIBRARY_NAME = new Configuration<>("org.lwjgl.system.jemalloc.libname", StateInit.STRING);
+
+    // -- LLVM
+
+    /** Similar to {@link #LIBRARY_NAME} for the LLVM library (<b>org.lwjgl.llvm.libname</b>). */
+    public static final Configuration<String> LLVM_LIBRARY_NAME = new Configuration<>("org.lwjgl.llvm.libname", StateInit.STRING);
+
+    /** Similar to {@link #LIBRARY_NAME} for the LLVM/Clang Library (<b>org.lwjgl.llvm.clang.libname</b>). */
+    public static final Configuration<String> LLVM_CLANG_LIBRARY_NAME = new Configuration<>("org.lwjgl.llvm.clang.libname", StateInit.STRING);
+
+    /** Similar to {@link #LIBRARY_NAME} for the LLVM/LTO library (<b>org.lwjgl.llvm.clang.libname</b>). */
+    public static final Configuration<String> LLVM_LTO_LIBRARY_NAME = new Configuration<>("org.lwjgl.llvm.lto.libname", StateInit.STRING);
 
     // -- ODBC
 
@@ -335,6 +403,11 @@ public class Configuration<T> {
 
     /** Similar to {@link #LIBRARY_NAME} for the OpenVR library (<b>org.lwjgl.openvr.libname</b>). */
     public static final Configuration<String> OPENVR_LIBRARY_NAME = new Configuration<>("org.lwjgl.openvr.libname", StateInit.STRING);
+
+    // -- OPUS
+
+    /** Similar to {@link #LIBRARY_NAME} for the Opus library (<b>org.lwjgl.opus.libname</b>). */
+    public static final Configuration<String> OPUS_LIBRARY_NAME = new Configuration<>("org.lwjgl.opus.libname", StateInit.STRING);
 
     // -- VULKAN
 

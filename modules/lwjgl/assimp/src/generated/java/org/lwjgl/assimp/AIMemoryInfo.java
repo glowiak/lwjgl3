@@ -90,18 +90,14 @@ public class AIMemoryInfo extends Struct implements NativeResource {
         TOTAL = layout.offsetof(7);
     }
 
-    AIMemoryInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link AIMemoryInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code AIMemoryInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public AIMemoryInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -134,30 +130,31 @@ public class AIMemoryInfo extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link AIMemoryInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIMemoryInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static AIMemoryInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(AIMemoryInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link AIMemoryInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIMemoryInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static AIMemoryInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(AIMemoryInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link AIMemoryInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code AIMemoryInfo} instance allocated with {@link BufferUtils}. */
     public static AIMemoryInfo create() {
-        return new AIMemoryInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(AIMemoryInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link AIMemoryInfo} instance for the specified memory address. */
+    /** Returns a new {@code AIMemoryInfo} instance for the specified memory address. */
     public static AIMemoryInfo create(long address) {
-        return new AIMemoryInfo(address, null);
+        return wrap(AIMemoryInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIMemoryInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(AIMemoryInfo.class, address);
     }
 
     /**
@@ -166,7 +163,7 @@ public class AIMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIMemoryInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -175,7 +172,7 @@ public class AIMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIMemoryInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -184,7 +181,8 @@ public class AIMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIMemoryInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -194,43 +192,43 @@ public class AIMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIMemoryInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIMemoryInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link AIMemoryInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code AIMemoryInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static AIMemoryInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link AIMemoryInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code AIMemoryInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static AIMemoryInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link AIMemoryInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code AIMemoryInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static AIMemoryInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(AIMemoryInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link AIMemoryInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code AIMemoryInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static AIMemoryInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(AIMemoryInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -258,7 +256,7 @@ public class AIMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIMemoryInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -268,35 +266,37 @@ public class AIMemoryInfo extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIMemoryInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #textures}. */
-    public static int ntextures(long struct) { return memGetInt(struct + AIMemoryInfo.TEXTURES); }
+    public static int ntextures(long struct) { return UNSAFE.getInt(null, struct + AIMemoryInfo.TEXTURES); }
     /** Unsafe version of {@link #materials}. */
-    public static int nmaterials(long struct) { return memGetInt(struct + AIMemoryInfo.MATERIALS); }
+    public static int nmaterials(long struct) { return UNSAFE.getInt(null, struct + AIMemoryInfo.MATERIALS); }
     /** Unsafe version of {@link #meshes}. */
-    public static int nmeshes(long struct) { return memGetInt(struct + AIMemoryInfo.MESHES); }
+    public static int nmeshes(long struct) { return UNSAFE.getInt(null, struct + AIMemoryInfo.MESHES); }
     /** Unsafe version of {@link #nodes}. */
-    public static int nnodes(long struct) { return memGetInt(struct + AIMemoryInfo.NODES); }
+    public static int nnodes(long struct) { return UNSAFE.getInt(null, struct + AIMemoryInfo.NODES); }
     /** Unsafe version of {@link #animations}. */
-    public static int nanimations(long struct) { return memGetInt(struct + AIMemoryInfo.ANIMATIONS); }
+    public static int nanimations(long struct) { return UNSAFE.getInt(null, struct + AIMemoryInfo.ANIMATIONS); }
     /** Unsafe version of {@link #cameras}. */
-    public static int ncameras(long struct) { return memGetInt(struct + AIMemoryInfo.CAMERAS); }
+    public static int ncameras(long struct) { return UNSAFE.getInt(null, struct + AIMemoryInfo.CAMERAS); }
     /** Unsafe version of {@link #lights}. */
-    public static int nlights(long struct) { return memGetInt(struct + AIMemoryInfo.LIGHTS); }
+    public static int nlights(long struct) { return UNSAFE.getInt(null, struct + AIMemoryInfo.LIGHTS); }
     /** Unsafe version of {@link #total}. */
-    public static int ntotal(long struct) { return memGetInt(struct + AIMemoryInfo.TOTAL); }
+    public static int ntotal(long struct) { return UNSAFE.getInt(null, struct + AIMemoryInfo.TOTAL); }
 
     // -----------------------------------
 
     /** An array of {@link AIMemoryInfo} structs. */
     public static class Buffer extends StructBuffer<AIMemoryInfo, Buffer> implements NativeResource {
 
+        private static final AIMemoryInfo ELEMENT_FACTORY = AIMemoryInfo.create(-1L);
+
         /**
-         * Creates a new {@link AIMemoryInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code AIMemoryInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -322,18 +322,8 @@ public class AIMemoryInfo extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected AIMemoryInfo newInstance(long address) {
-            return new AIMemoryInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected AIMemoryInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code textures} field. */

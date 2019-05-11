@@ -77,18 +77,14 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
         PSHADINGRATEPALETTEENTRIES = layout.offsetof(1);
     }
 
-    VkShadingRatePaletteNV(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkShadingRatePaletteNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkShadingRatePaletteNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkShadingRatePaletteNV(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -118,30 +114,31 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkShadingRatePaletteNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkShadingRatePaletteNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkShadingRatePaletteNV malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkShadingRatePaletteNV.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkShadingRatePaletteNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkShadingRatePaletteNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkShadingRatePaletteNV calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkShadingRatePaletteNV.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkShadingRatePaletteNV} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkShadingRatePaletteNV} instance allocated with {@link BufferUtils}. */
     public static VkShadingRatePaletteNV create() {
-        return new VkShadingRatePaletteNV(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkShadingRatePaletteNV.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkShadingRatePaletteNV} instance for the specified memory address. */
+    /** Returns a new {@code VkShadingRatePaletteNV} instance for the specified memory address. */
     public static VkShadingRatePaletteNV create(long address) {
-        return new VkShadingRatePaletteNV(address, null);
+        return wrap(VkShadingRatePaletteNV.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkShadingRatePaletteNV createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkShadingRatePaletteNV.class, address);
     }
 
     /**
@@ -150,7 +147,7 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkShadingRatePaletteNV.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -159,7 +156,7 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkShadingRatePaletteNV.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -168,7 +165,8 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkShadingRatePaletteNV.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -178,43 +176,43 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkShadingRatePaletteNV.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkShadingRatePaletteNV.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkShadingRatePaletteNV} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkShadingRatePaletteNV} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkShadingRatePaletteNV mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkShadingRatePaletteNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkShadingRatePaletteNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkShadingRatePaletteNV callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkShadingRatePaletteNV} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkShadingRatePaletteNV} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkShadingRatePaletteNV mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkShadingRatePaletteNV.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkShadingRatePaletteNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkShadingRatePaletteNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkShadingRatePaletteNV callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkShadingRatePaletteNV.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -242,7 +240,7 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkShadingRatePaletteNV.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -252,18 +250,18 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkShadingRatePaletteNV.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #shadingRatePaletteEntryCount}. */
-    public static int nshadingRatePaletteEntryCount(long struct) { return memGetInt(struct + VkShadingRatePaletteNV.SHADINGRATEPALETTEENTRYCOUNT); }
+    public static int nshadingRatePaletteEntryCount(long struct) { return UNSAFE.getInt(null, struct + VkShadingRatePaletteNV.SHADINGRATEPALETTEENTRYCOUNT); }
     /** Unsafe version of {@link #pShadingRatePaletteEntries() pShadingRatePaletteEntries}. */
     public static IntBuffer npShadingRatePaletteEntries(long struct) { return memIntBuffer(memGetAddress(struct + VkShadingRatePaletteNV.PSHADINGRATEPALETTEENTRIES), nshadingRatePaletteEntryCount(struct)); }
 
     /** Sets the specified value to the {@code shadingRatePaletteEntryCount} field of the specified {@code struct}. */
-    public static void nshadingRatePaletteEntryCount(long struct, int value) { memPutInt(struct + VkShadingRatePaletteNV.SHADINGRATEPALETTEENTRYCOUNT, value); }
+    public static void nshadingRatePaletteEntryCount(long struct, int value) { UNSAFE.putInt(null, struct + VkShadingRatePaletteNV.SHADINGRATEPALETTEENTRYCOUNT, value); }
     /** Unsafe version of {@link #pShadingRatePaletteEntries(IntBuffer) pShadingRatePaletteEntries}. */
     public static void npShadingRatePaletteEntries(long struct, IntBuffer value) { memPutAddress(struct + VkShadingRatePaletteNV.PSHADINGRATEPALETTEENTRIES, memAddress(value)); nshadingRatePaletteEntryCount(struct, value.remaining()); }
 
@@ -284,7 +282,7 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -293,8 +291,10 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
     /** An array of {@link VkShadingRatePaletteNV} structs. */
     public static class Buffer extends StructBuffer<VkShadingRatePaletteNV, Buffer> implements NativeResource {
 
+        private static final VkShadingRatePaletteNV ELEMENT_FACTORY = VkShadingRatePaletteNV.create(-1L);
+
         /**
-         * Creates a new {@link VkShadingRatePaletteNV.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkShadingRatePaletteNV.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -320,18 +320,8 @@ public class VkShadingRatePaletteNV extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkShadingRatePaletteNV newInstance(long address) {
-            return new VkShadingRatePaletteNV(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkShadingRatePaletteNV getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code shadingRatePaletteEntryCount} field. */

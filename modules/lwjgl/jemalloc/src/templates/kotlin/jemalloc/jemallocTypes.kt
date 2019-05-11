@@ -8,33 +8,6 @@ import org.lwjgl.generator.*
 import java.io.*
 
 fun config() {
-    packageInfo(
-        Module.JEMALLOC,
-        """
-        Contains bindings to the ${url("http://jemalloc.net/", "jemalloc")} library. jemalloc is a general purpose malloc implementation that emphasizes
-        fragmentation avoidance and scalable concurrency support.
-
-        The jemalloc documentation can be found ${url("http://jemalloc.net/jemalloc.3.html", "here")}. The jemalloc
-        ${url("https://github.com/jemalloc/jemalloc/wiki", "wiki")} also contains useful information.
-
-        The jemalloc shared library that comes with LWJGL is configured with:
-        ${ul(
-            "--with-jemalloc-prefix=je_",
-            "--enable-lazy-lock (Linux)",
-            "--disable-stats",
-            "--disable-fill",
-            "--disable-cxx",
-            "--disable-initial-exec-tls (Linux &amp; macOS)",
-            "--disable-zone-allocator (macOS)"
-        )}
-
-        The shared library may be replaced with a custom build that has more features enabled.
-
-        Dynamic configuration (for enabled features) is also possible, using either the {@code MALLOC_CONF} environment variable or the
-        ${url("http://jemalloc.net/jemalloc.3.html\\#mallctl_namespace", "MALLCTL NAMESPACE")} and the {@code mallctl*} functions.
-        """
-    )
-
     Generator.register(object : GeneratorTarget(Module.JEMALLOC, "JEmallocAllocator") {
 
         init {
@@ -110,8 +83,8 @@ val write_cb = Module.JEMALLOC.callback {
         "MallocMessageCallback",
         "Will be called by the #malloc_usable_size() method.",
 
-        void.p.IN("cbopaque", "the opaque pointer passed to #malloc_usable_size()"),
-        NullTerminated..charASCII.const.p.IN("s", "the message")
+        void.p("cbopaque", "the opaque pointer passed to #malloc_usable_size()"),
+        NullTerminated..charASCII.const.p("s", "the message")
     ) {
         documentation = "Instances of this interface may be passed to the #malloc_usable_size() method."
         additionalCode = """
@@ -150,13 +123,13 @@ val extent_alloc_t = Module.JEMALLOC.callback {
         {@code arena.i.dss} setting irrelevant.
         """,
 
-        _extent_hooks_t.p.IN("extent_hooks", ""),
-        nullable..void.p.IN("new_addr", ""),
-        size_t.IN("size", ""),
-        size_t.IN("alignment", ""),
-        Check(1)..bool.p.INOUT("zero", ""),
-        Check(1)..bool.p.INOUT("commit", ""),
-        unsigned_int.IN("arena_ind", ""),
+        _extent_hooks_t.p("extent_hooks", ""),
+        nullable..void.p("new_addr", ""),
+        size_t("size", ""),
+        size_t("alignment", ""),
+        Check(1)..bool.p("zero", ""),
+        Check(1)..bool.p("commit", ""),
+        unsigned_int("arena_ind", ""),
 
         nativeType = "extent_alloc_t"
     ) {
@@ -176,11 +149,11 @@ val extent_dalloc_t = Module.JEMALLOC.callback {
         future use, in which case it will be automatically retained for later reuse.
         """,
 
-        _extent_hooks_t.p.IN("extent_hooks", ""),
-        void.p.IN("addr", ""),
-        AutoSize("addr")..size_t.IN("size", ""),
-        bool.IN("committed", ""),
-        unsigned_int.IN("arena_ind", ""),
+        _extent_hooks_t.p("extent_hooks", ""),
+        void.p("addr", ""),
+        AutoSize("addr")..size_t("size", ""),
+        bool("committed", ""),
+        unsigned_int("arena_ind", ""),
 
         nativeType = "extent_dalloc_t"
     ) {
@@ -199,11 +172,11 @@ val extent_destroy_t = Module.JEMALLOC.callback {
         arena destruction (see {@code arena.i.destroy}).
         """,
 
-        _extent_hooks_t.p.IN("extent_hooks", ""),
-        void.p.IN("addr", ""),
-        AutoSize("addr")..size_t.IN("size", ""),
-        bool.IN("committed", ""),
-        unsigned_int.IN("arena_ind", ""),
+        _extent_hooks_t.p("extent_hooks", ""),
+        void.p("addr", ""),
+        AutoSize("addr")..size_t("size", ""),
+        bool("committed", ""),
+        unsigned_int("arena_ind", ""),
 
         nativeType = "extent_destroy_t"
     ) {
@@ -224,12 +197,12 @@ val extent_commit_t = Module.JEMALLOC.callback {
         request.
         """,
 
-        _extent_hooks_t.p.IN("extent_hooks", ""),
-        void.p.IN("addr", ""),
-        AutoSize("addr")..size_t.IN("size", ""),
-        size_t.IN("offset", ""),
-        size_t.IN("length", ""),
-        unsigned_int.IN("arena_ind", ""),
+        _extent_hooks_t.p("extent_hooks", ""),
+        void.p("addr", ""),
+        AutoSize("addr")..size_t("size", ""),
+        size_t("offset", ""),
+        size_t("length", ""),
+        unsigned_int("arena_ind", ""),
 
         nativeType = "extent_commit_t"
     ) {
@@ -249,12 +222,12 @@ val extent_decommit_t = Module.JEMALLOC.callback {
         opt-out from decommit; the memory remains committed and available for future use, in which case it will be automatically retained for later reuse.
         """,
 
-        _extent_hooks_t.p.IN("extent_hooks", ""),
-        void.p.IN("addr", ""),
-        AutoSize("addr")..size_t.IN("size", ""),
-        size_t.IN("offset", ""),
-        size_t.IN("length", ""),
-        unsigned_int.IN("arena_ind", ""),
+        _extent_hooks_t.p("extent_hooks", ""),
+        void.p("addr", ""),
+        AutoSize("addr")..size_t("size", ""),
+        size_t("offset", ""),
+        size_t("length", ""),
+        unsigned_int("arena_ind", ""),
 
         nativeType = "extent_decommit_t"
     ) {
@@ -274,12 +247,12 @@ val extent_purge_t = Module.JEMALLOC.callback {
         zero-filled the next time they are accessed. If the function returns true, this indicates failure to purge.
         """,
 
-        _extent_hooks_t.p.IN("extent_hooks", ""),
-        void.p.IN("addr", ""),
-        AutoSize("addr")..size_t.IN("size", ""),
-        size_t.IN("offset", ""),
-        size_t.IN("length", ""),
-        unsigned_int.IN("arena_ind", ""),
+        _extent_hooks_t.p("extent_hooks", ""),
+        void.p("addr", ""),
+        AutoSize("addr")..size_t("size", ""),
+        size_t("offset", ""),
+        size_t("length", ""),
+        unsigned_int("arena_ind", ""),
 
         nativeType = "extent_purge_t"
     ) {
@@ -299,13 +272,13 @@ val extent_split_t = Module.JEMALLOC.callback {
         and therefore should continue to be operated on as a whole.
         """,
 
-        _extent_hooks_t.p.IN("extent_hooks", ""),
-        void.p.IN("addr", ""),
-        AutoSize("addr")..size_t.IN("size", ""),
-        size_t.IN("size_a", ""),
-        size_t.IN("size_b", ""),
-        bool.IN("committed", ""),
-        unsigned_int.IN("arena_ind", ""),
+        _extent_hooks_t.p("extent_hooks", ""),
+        void.p("addr", ""),
+        AutoSize("addr")..size_t("size", ""),
+        size_t("size_a", ""),
+        size_t("size_b", ""),
+        bool("committed", ""),
+        unsigned_int("arena_ind", ""),
 
         nativeType = "extent_split_t"
     ) {
@@ -325,13 +298,13 @@ val extent_merge_t = Module.JEMALLOC.callback {
         should continue to be operated on independently.
         """,
 
-        _extent_hooks_t.p.IN("extent_hooks", ""),
-        void.p.IN("addr_a", ""),
-        AutoSize("addr_a")..size_t.IN("size_a", ""),
-        void.p.IN("addr_b", ""),
-        AutoSize("addr_b")..size_t.IN("size_b", ""),
-        bool.IN("committed", ""),
-        unsigned_int.IN("arena_ind", ""),
+        _extent_hooks_t.p("extent_hooks", ""),
+        void.p("addr_a", ""),
+        AutoSize("addr_a")..size_t("size_a", ""),
+        void.p("addr_b", ""),
+        AutoSize("addr_b")..size_t("size_b", ""),
+        bool("committed", ""),
+        unsigned_int("arena_ind", ""),
 
         nativeType = "extent_merge_t"
     ) {
@@ -350,13 +323,13 @@ val extent_hooks_t = struct(Module.JEMALLOC, "ExtentHooks", nativeName = "extent
         returning failure.
         """
 
-    extent_alloc_t.member("alloc", "the extent allocation hook")
-    nullable..extent_dalloc_t.member("dalloc", "the extent deallocation hook")
-    nullable..extent_destroy_t.member("destroy", "the extent destruction hook")
-    nullable..extent_commit_t.member("commit", "the extent commit hook")
-    nullable..extent_decommit_t.member("decommit", "the extent decommit hook")
-    nullable..extent_purge_t.member("purge_lazy", "the extent lazy purge hook")
-    nullable..extent_purge_t.member("purge_forced", "the extent forced purge hook")
-    nullable..extent_split_t.member("split", "the extent split hook")
-    nullable..extent_merge_t.member("merge", "the extent merge hook")
+    extent_alloc_t("alloc", "the extent allocation hook")
+    nullable..extent_dalloc_t("dalloc", "the extent deallocation hook")
+    nullable..extent_destroy_t("destroy", "the extent destruction hook")
+    nullable..extent_commit_t("commit", "the extent commit hook")
+    nullable..extent_decommit_t("decommit", "the extent decommit hook")
+    nullable..extent_purge_t("purge_lazy", "the extent lazy purge hook")
+    nullable..extent_purge_t("purge_forced", "the extent forced purge hook")
+    nullable..extent_split_t("split", "the extent split hook")
+    nullable..extent_merge_t("merge", "the extent merge hook")
 }

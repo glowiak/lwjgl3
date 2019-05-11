@@ -20,43 +20,44 @@
 
 #import <Metal/Metal.h>
 
+#ifdef __cplusplus
+    #define EXTERN_C extern "C"
+#else
+    #define EXTERN_C
+#endif
 
 // Store command buffer in thread-local so that each thread can point to its own
-void SetCommandBuffer(id command_buffer)
+static void SetCommandBuffer(id command_buffer)
 {
     NSMutableDictionary* thread_data = [[NSThread currentThread] threadDictionary];
     thread_data[@"rmtMTLCommandBuffer"] = command_buffer;
 }
-id GetCommandBuffer()
+
+static id GetCommandBuffer()
 {
     NSMutableDictionary* thread_data = [[NSThread currentThread] threadDictionary];
     return thread_data[@"rmtMTLCommandBuffer"];
 }
 
-
-void _rmt_BindMetal(id command_buffer)
+EXTERN_C void _rmt_BindMetal(id command_buffer)
 {
     SetCommandBuffer(command_buffer);
 }
 
-
-void _rmt_UnbindMetal()
+EXTERN_C void _rmt_UnbindMetal()
 {
     SetCommandBuffer(0);
 }
 
-
 // Needs to be in the same lib for this to work
-unsigned long long rmtMetal_usGetTime();
-
+EXTERN_C unsigned long long rmtMetal_usGetTime();
 
 static void SetTimestamp(void* data)
 {
     *((unsigned long long*)data) = rmtMetal_usGetTime();
 }
 
-
-void rmtMetal_MeasureCommandBuffer(unsigned long long* out_start, unsigned long long* out_end, unsigned int* out_ready)
+EXTERN_C void rmtMetal_MeasureCommandBuffer(unsigned long long* out_start, unsigned long long* out_end, unsigned int* out_ready)
 {
     id command_buffer = GetCommandBuffer();
     [command_buffer addScheduledHandler:^(id <MTLCommandBuffer> buffer){ SetTimestamp(out_start); }];

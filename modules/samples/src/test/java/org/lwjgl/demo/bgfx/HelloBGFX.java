@@ -11,7 +11,6 @@ import org.lwjgl.system.*;
 import java.nio.*;
 
 import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.bgfx.BGFXPlatform.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -26,10 +25,9 @@ public final class HelloBGFX {
 
     private HelloBGFX() {}
 
-    @SuppressWarnings("UnnecessaryLocalVariable")
     public static void main(String[] args) {
-        int width  = 1280;
-        int height = 720;
+        int width  = 1024;
+        int height = 480;
 
         if (!glfwInit()) {
             throw new RuntimeException("Error initializing GLFW");
@@ -37,6 +35,9 @@ public final class HelloBGFX {
 
         // the client (renderer) API is managed by bgfx
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        if (Platform.get() == Platform.MACOSX) {
+            glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+        }
 
         long window = glfwCreateWindow(width, height, "25-C99", 0, 0);
         if (window == NULL) {
@@ -56,23 +57,6 @@ public final class HelloBGFX {
         });
 
         try (MemoryStack stack = stackPush()) {
-            BGFXPlatformData platformData = BGFXPlatformData.callocStack(stack);
-
-            switch (Platform.get()) {
-                case LINUX:
-                    platformData.ndt(GLFWNativeX11.glfwGetX11Display());
-                    platformData.nwh(GLFWNativeX11.glfwGetX11Window(window));
-                    break;
-                case MACOSX:
-                    platformData.nwh(GLFWNativeCocoa.glfwGetCocoaWindow(window));
-                    break;
-                case WINDOWS:
-                    platformData.nwh(GLFWNativeWin32.glfwGetWin32Window(window));
-                    break;
-            }
-
-            bgfx_set_platform_data(platformData);
-
             BGFXInit init = BGFXInit.mallocStack(stack);
             bgfx_init_ctor(init);
             init
@@ -80,6 +64,22 @@ public final class HelloBGFX {
                     .width(width)
                     .height(height)
                     .reset(BGFX_RESET_VSYNC));
+
+            switch (Platform.get()) {
+                case LINUX:
+                    init.platformData()
+                        .ndt(GLFWNativeX11.glfwGetX11Display())
+                        .nwh(GLFWNativeX11.glfwGetX11Window(window));
+                    break;
+                case MACOSX:
+                    init.platformData()
+                        .nwh(GLFWNativeCocoa.glfwGetCocoaWindow(window));
+                    break;
+                case WINDOWS:
+                    init.platformData()
+                        .nwh(GLFWNativeWin32.glfwGetWin32Window(window));
+                    break;
+            }
 
             if (!bgfx_init(init)) {
                 throw new RuntimeException("Error initializing bgfx renderer");
@@ -103,7 +103,7 @@ public final class HelloBGFX {
 
             // This dummy draw call is here to make sure that view 0 is cleared
             // if no other draw calls are submitted to view 0.
-            bgfx_touch((byte)0);
+            bgfx_touch(0);
 
             // Use debug font to print information about this example.
             bgfx_dbg_text_clear(0, false);

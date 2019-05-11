@@ -38,7 +38,7 @@ val KHR_16bit_storage = "KHR16bitStorage".nativeClassVK("KHR_16bit_storage", typ
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -54,7 +54,7 @@ val KHR_16bit_storage = "KHR16bitStorage".nativeClassVK("KHR_16bit_storage", typ
 
             <dt><b>Interactions and External Dependencies</b></dt>
             <dd><ul>
-                <li>This extension requires <a target="_blank" href="https://www.khronos.org/registry/spir-v/extensions/KHR/SPV_KHR_16bit_storage.html">SPV_KHR_16bit_storage</a></li>
+                <li>This extension requires <a target="_blank" href="https://www.khronos.org/registry/spir-v/extensions/KHR/SPV_KHR_16bit_storage.html">{@code SPV_KHR_16bit_storage}</a></li>
                 <li>Promoted to Vulkan 1.1 Core</li>
             </ul></dd>
 

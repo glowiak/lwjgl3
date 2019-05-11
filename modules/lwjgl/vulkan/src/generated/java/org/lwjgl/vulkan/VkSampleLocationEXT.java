@@ -69,18 +69,14 @@ public class VkSampleLocationEXT extends Struct implements NativeResource {
         Y = layout.offsetof(1);
     }
 
-    VkSampleLocationEXT(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkSampleLocationEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkSampleLocationEXT} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkSampleLocationEXT(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -121,30 +117,31 @@ public class VkSampleLocationEXT extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSampleLocationEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSampleLocationEXT} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkSampleLocationEXT malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkSampleLocationEXT.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkSampleLocationEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkSampleLocationEXT} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkSampleLocationEXT calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkSampleLocationEXT.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkSampleLocationEXT} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkSampleLocationEXT} instance allocated with {@link BufferUtils}. */
     public static VkSampleLocationEXT create() {
-        return new VkSampleLocationEXT(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkSampleLocationEXT.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkSampleLocationEXT} instance for the specified memory address. */
+    /** Returns a new {@code VkSampleLocationEXT} instance for the specified memory address. */
     public static VkSampleLocationEXT create(long address) {
-        return new VkSampleLocationEXT(address, null);
+        return wrap(VkSampleLocationEXT.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSampleLocationEXT createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkSampleLocationEXT.class, address);
     }
 
     /**
@@ -153,7 +150,7 @@ public class VkSampleLocationEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationEXT.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -162,7 +159,7 @@ public class VkSampleLocationEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationEXT.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -171,7 +168,8 @@ public class VkSampleLocationEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationEXT.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -181,43 +179,43 @@ public class VkSampleLocationEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationEXT.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkSampleLocationEXT.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkSampleLocationEXT} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkSampleLocationEXT} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkSampleLocationEXT mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkSampleLocationEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkSampleLocationEXT} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkSampleLocationEXT callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkSampleLocationEXT} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkSampleLocationEXT} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSampleLocationEXT mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkSampleLocationEXT.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkSampleLocationEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkSampleLocationEXT} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkSampleLocationEXT callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkSampleLocationEXT.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -245,7 +243,7 @@ public class VkSampleLocationEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationEXT.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -255,28 +253,30 @@ public class VkSampleLocationEXT extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkSampleLocationEXT.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #x}. */
-    public static float nx(long struct) { return memGetFloat(struct + VkSampleLocationEXT.X); }
+    public static float nx(long struct) { return UNSAFE.getFloat(null, struct + VkSampleLocationEXT.X); }
     /** Unsafe version of {@link #y}. */
-    public static float ny(long struct) { return memGetFloat(struct + VkSampleLocationEXT.Y); }
+    public static float ny(long struct) { return UNSAFE.getFloat(null, struct + VkSampleLocationEXT.Y); }
 
     /** Unsafe version of {@link #x(float) x}. */
-    public static void nx(long struct, float value) { memPutFloat(struct + VkSampleLocationEXT.X, value); }
+    public static void nx(long struct, float value) { UNSAFE.putFloat(null, struct + VkSampleLocationEXT.X, value); }
     /** Unsafe version of {@link #y(float) y}. */
-    public static void ny(long struct, float value) { memPutFloat(struct + VkSampleLocationEXT.Y, value); }
+    public static void ny(long struct, float value) { UNSAFE.putFloat(null, struct + VkSampleLocationEXT.Y, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkSampleLocationEXT} structs. */
     public static class Buffer extends StructBuffer<VkSampleLocationEXT, Buffer> implements NativeResource {
 
+        private static final VkSampleLocationEXT ELEMENT_FACTORY = VkSampleLocationEXT.create(-1L);
+
         /**
-         * Creates a new {@link VkSampleLocationEXT.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkSampleLocationEXT.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -302,18 +302,8 @@ public class VkSampleLocationEXT extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkSampleLocationEXT newInstance(long address) {
-            return new VkSampleLocationEXT(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkSampleLocationEXT getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code x} field. */

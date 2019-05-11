@@ -106,9 +106,9 @@ val KHR_push_descriptor = "KHRPushDescriptor".nativeClassVK("KHR_push_descriptor
         <h5>Description</h5>
         <em>Push descriptors</em> are a small bank of descriptors whose storage is internally managed by the command buffer rather than being written into a descriptor set and later bound to a command buffer. Push descriptors allow for incremental updates of descriptors without managing the lifetime of descriptor sets.
 
-        When a command buffer begins recording, all push descriptors have undefined contents. Push descriptors <b>can</b> be updated incrementally and cause shaders to use the updated descriptors for subsequent rendering commands (either compute or graphics, according to the {@code pipelineBindPoint}) until the descriptor is overwritten, or else until the set is disturbed as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#descriptorsets-compatibility">Pipeline Layout Compatibility</a>. When the set is disturbed or push descriptors with a different descriptor set layout are set, all push descriptors become invalid.
+        When a command buffer begins recording, all push descriptors are undefined. Push descriptors <b>can</b> be updated incrementally and cause shaders to use the updated descriptors for subsequent rendering commands (either compute or graphics, according to the {@code pipelineBindPoint}) until the descriptor is overwritten, or else until the set is disturbed as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#descriptorsets-compatibility">Pipeline Layout Compatibility</a>. When the set is disturbed or push descriptors with a different descriptor set layout are set, all push descriptors are undefined.
 
-        Valid descriptors <b>must</b> be pushed for all bindings that any shaders in a pipeline access, at the time that a draw or dispatch command is recorded to execute using that pipeline. This includes immutable sampler descriptors, which <b>must</b> be pushed before they are accessed by a pipeline. However, if none of the shaders in a pipeline statically use certain bindings in the push descriptor set, then those descriptors need not be valid.
+        Push descriptors that are <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#shaders-staticuse">statically used</a> by a pipeline <b>must</b> not be undefined at the time that a draw or dispatch command is recorded to execute using that pipeline. This includes immutable sampler descriptors, which <b>must</b> be pushed before they are accessed by a pipeline. Push descriptors that are not statically used <b>can</b> remain undefined.
 
         Push descriptors do not use dynamic offsets. Instead, the corresponding non-dynamic descriptor types <b>can</b> be used and the {@code offset} member of ##VkDescriptorBufferInfo <b>can</b> be changed each time the descriptor is written.
 
@@ -129,7 +129,7 @@ val KHR_push_descriptor = "KHRPushDescriptor".nativeClassVK("KHR_push_descriptor
             <li>{@code pipelineBindPoint} <b>must</b> be a valid {@code VkPipelineBindPoint} value</li>
             <li>{@code layout} <b>must</b> be a valid {@code VkPipelineLayout} handle</li>
             <li>{@code pDescriptorWrites} <b>must</b> be a valid pointer to an array of {@code descriptorWriteCount} valid ##VkWriteDescriptorSet structures</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
             <li>{@code descriptorWriteCount} <b>must</b> be greater than 0</li>
             <li>Both of {@code commandBuffer}, and {@code layout} <b>must</b> have been created, allocated, or retrieved from the same {@code VkDevice}</li>
@@ -143,7 +143,7 @@ val KHR_push_descriptor = "KHRPushDescriptor".nativeClassVK("KHR_push_descriptor
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute</td><td></td></tr></tbody>
         </table>
 
@@ -151,12 +151,12 @@ val KHR_push_descriptor = "KHRPushDescriptor".nativeClassVK("KHR_push_descriptor
         ##VkWriteDescriptorSet
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer that the descriptors will be recorded in."),
-        VkPipelineBindPoint.IN("pipelineBindPoint", "a {@code VkPipelineBindPoint} indicating whether the descriptors will be used by graphics pipelines or compute pipelines. There is a separate set of push descriptor bindings for each of graphics and compute, so binding one does not disturb the other."),
-        VkPipelineLayout.IN("layout", "a {@code VkPipelineLayout} object used to program the bindings."),
-        uint32_t.IN("set", "the set number of the descriptor set in the pipeline layout that will be updated."),
-        AutoSize("pDescriptorWrites")..uint32_t.IN("descriptorWriteCount", "the number of elements in the {@code pDescriptorWrites} array."),
-        VkWriteDescriptorSet.const.p.IN("pDescriptorWrites", "a pointer to an array of ##VkWriteDescriptorSet structures describing the descriptors to be updated.")
+        VkCommandBuffer("commandBuffer", "the command buffer that the descriptors will be recorded in."),
+        VkPipelineBindPoint("pipelineBindPoint", "a {@code VkPipelineBindPoint} indicating whether the descriptors will be used by graphics pipelines or compute pipelines. There is a separate set of push descriptor bindings for each of graphics and compute, so binding one does not disturb the other."),
+        VkPipelineLayout("layout", "a {@code VkPipelineLayout} object used to program the bindings."),
+        uint32_t("set", "the set number of the descriptor set in the pipeline layout that will be updated."),
+        AutoSize("pDescriptorWrites")..uint32_t("descriptorWriteCount", "the number of elements in the {@code pDescriptorWrites} array."),
+        VkWriteDescriptorSet.const.p("pDescriptorWrites", "a pointer to an array of ##VkWriteDescriptorSet structures describing the descriptors to be updated.")
     )
 
     DependsOn("Vulkan11")..void(
@@ -177,7 +177,7 @@ val KHR_push_descriptor = "KHRPushDescriptor".nativeClassVK("KHR_push_descriptor
 
         <h5>Valid Usage</h5>
         <ul>
-            <li>The pipelineBindPoint specified during the creation of the descriptor update template <b>must</b> be supported by the {@code commandBuffer}&#8217;s parent {@code VkCommandPool}&#8217;s queue family</li>
+            <li>The {@code pipelineBindPoint} specified during the creation of the descriptor update template <b>must</b> be supported by the {@code commandBuffer}&#8217;s parent {@code VkCommandPool}&#8217;s queue family</li>
             <li>{@code pData} <b>must</b> be a valid pointer to a memory that contains one or more valid instances of ##VkDescriptorImageInfo, ##VkDescriptorBufferInfo, or {@code VkBufferView} in a layout defined by {@code descriptorUpdateTemplate} when it was created with #CreateDescriptorUpdateTemplateKHR()</li>
         </ul>
 
@@ -186,7 +186,7 @@ val KHR_push_descriptor = "KHRPushDescriptor".nativeClassVK("KHR_push_descriptor
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
             <li>{@code descriptorUpdateTemplate} <b>must</b> be a valid {@code VkDescriptorUpdateTemplate} handle</li>
             <li>{@code layout} <b>must</b> be a valid {@code VkPipelineLayout} handle</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, or compute operations</li>
             <li>Each of {@code commandBuffer}, {@code descriptorUpdateTemplate}, and {@code layout} <b>must</b> have been created, allocated, or retrieved from the same {@code VkDevice}</li>
         </ul>
@@ -199,16 +199,11 @@ val KHR_push_descriptor = "KHRPushDescriptor".nativeClassVK("KHR_push_descriptor
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute</td><td></td></tr></tbody>
         </table>
 
         <pre><code>
-￿struct AppBufferView {
-￿    VkBufferView bufferView;
-￿    uint32_t     applicationRelatedInformation;
-￿};
-￿
 ￿struct AppDataStructure
 ￿{
 ￿    VkDescriptorImageInfo  imageInfo;          // a single image info
@@ -224,24 +219,23 @@ val KHR_push_descriptor = "KHRPushDescriptor".nativeClassVK("KHR_push_descriptor
 ￿        1,                                           // descriptorCount
 ￿        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,   // descriptorType
 ￿        offsetof(AppDataStructure, imageInfo),       // offset
-￿        0                                            // stride is not required if descriptorCount is 1.
+￿        0                                            // stride is not required if descriptorCount is 1
 ￿    }
-￿
 ￿};
 ￿
 ￿// create a descriptor update template for descriptor set updates
 ￿const VkDescriptorUpdateTemplateCreateInfo createInfo =
 ￿{
 ￿    VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,  // sType
-￿    NULL,                                                          // pNext
-￿    0,                                                             // flags
-￿    1,                                                             // descriptorUpdateEntryCount
-￿    descriptorUpdateTemplateEntries,                               // pDescriptorUpdateEntries
-￿    VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR,       // templateType
-￿    0,                                                             // descriptorSetLayout, ignored by given templateType
-￿    VK_PIPELINE_BIND_POINT_GRAPHICS,                               // pipelineBindPoint
-￿    myPipelineLayout,                                              // pipelineLayout
-￿    0,                                                             // set
+￿    NULL,                                                      // pNext
+￿    0,                                                         // flags
+￿    1,                                                         // descriptorUpdateEntryCount
+￿    descriptorUpdateTemplateEntries,                           // pDescriptorUpdateEntries
+￿    VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR,   // templateType
+￿    0,                                                         // descriptorSetLayout, ignored by given templateType
+￿    VK_PIPELINE_BIND_POINT_GRAPHICS,                           // pipelineBindPoint
+￿    myPipelineLayout,                                          // pipelineLayout
+￿    0,                                                         // set
 ￿};
 ￿
 ￿VkDescriptorUpdateTemplate myDescriptorUpdateTemplate;
@@ -257,10 +251,10 @@ val KHR_push_descriptor = "KHRPushDescriptor".nativeClassVK("KHR_push_descriptor
 ￿vkCmdPushDescriptorSetWithTemplateKHR(myCmdBuffer, myDescriptorUpdateTemplate, myPipelineLayout, 0,&amp;appData);</code></pre>
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer that the descriptors will be recorded in."),
-        VkDescriptorUpdateTemplate.IN("descriptorUpdateTemplate", "A descriptor update template which defines how to interpret the descriptor information in pData."),
-        VkPipelineLayout.IN("layout", "a {@code VkPipelineLayout} object used to program the bindings. It <b>must</b> be compatible with the layout used to create the {@code descriptorUpdateTemplate} handle."),
-        uint32_t.IN("set", "the set number of the descriptor set in the pipeline layout that will be updated. This <b>must</b> be the same number used to create the {@code descriptorUpdateTemplate} handle."),
-        opaque_const_p.IN("pData", "Points to memory which contains the descriptors for the templated update.")
+        VkCommandBuffer("commandBuffer", "the command buffer that the descriptors will be recorded in."),
+        VkDescriptorUpdateTemplate("descriptorUpdateTemplate", "a descriptor update template that defines how to interpret the descriptor information in {@code pData}."),
+        VkPipelineLayout("layout", "a {@code VkPipelineLayout} object used to program the bindings. It <b>must</b> be compatible with the layout used to create the {@code descriptorUpdateTemplate} handle."),
+        uint32_t("set", "the set number of the descriptor set in the pipeline layout that will be updated. This <b>must</b> be the same number used to create the {@code descriptorUpdateTemplate} handle."),
+        opaque_const_p("pData", "points to memory which contains the descriptors for the templated update.")
     )
 }

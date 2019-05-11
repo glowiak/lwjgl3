@@ -37,17 +37,17 @@ val EXT_timer_query = "EXTTimerQuery".nativeClassGL("EXT_timer_query", postfix =
         "GetQueryObjecti64vEXT",
         "",
 
-        GLuint.IN("id", ""),
-        GLenum.IN("pname", ""),
-        ReturnParam..Check(1)..GLint64.p.OUT("params", "")
+        GLuint("id", ""),
+        GLenum("pname", ""),
+        ReturnParam..Check(1)..GLint64.p("params", "")
     )
 
     void(
         "GetQueryObjectui64vEXT",
         "",
 
-        GLuint.IN("id", ""),
-        GLenum.IN("pname", ""),
-        ReturnParam..Check(1)..GLuint64.p.OUT("params", "")
+        GLuint("id", ""),
+        GLenum("pname", ""),
+        ReturnParam..Check(1)..GLuint64.p("params", "")
     )
 }

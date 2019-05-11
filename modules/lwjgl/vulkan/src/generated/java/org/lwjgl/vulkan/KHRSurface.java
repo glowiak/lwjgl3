@@ -168,6 +168,7 @@ public class KHRSurface {
      * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT COLOR_SPACE_ADOBERGB_LINEAR_EXT} specifies support for the AdobeRGB color space and applies a linear OETF.</li>
      * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT COLOR_SPACE_ADOBERGB_NONLINEAR_EXT} specifies support for the AdobeRGB color space and applies the Gamma 2.2 OETF.</li>
      * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_PASS_THROUGH_EXT COLOR_SPACE_PASS_THROUGH_EXT} specifies that color components are used “as is”. This is intended to allow applications to supply data for color spaces not described here.</li>
+     * <li>{@link AMDDisplayNativeHdr#VK_COLOR_SPACE_DISPLAY_NATIVE_AMD COLOR_SPACE_DISPLAY_NATIVE_AMD} specifies support for the display&#8217;s native color space. This matches the color space expectations of AMD&#8217;s FreeSync2 standard, for displays supporting it.</li>
      * </ul>
      * 
      * <p>The color components of Non-linear color space swap chain images have had the appropriate transfer function applied. Vulkan requires that all implementations support the sRGB transfer function when using an SRGB pixel format. Other transfer functions, such as SMPTE 170M or SMPTE2084, <b>must</b> not be performed by the implementation, but <b>can</b> be performed by the application shader. This extension defines enums for {@code VkColorSpaceKHR} that correspond to the following color spaces:</p>
@@ -246,7 +247,7 @@ public class KHRSurface {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkSwapchainCreateInfoKHR}, {@link #vkGetPhysicalDeviceSurfacePresentModesKHR GetPhysicalDeviceSurfacePresentModesKHR}</p>
+     * <p>{@link VkSwapchainCreateInfoKHR}, {@link EXTFullScreenExclusive#vkGetPhysicalDeviceSurfacePresentModes2EXT GetPhysicalDeviceSurfacePresentModes2EXT}, {@link #vkGetPhysicalDeviceSurfacePresentModesKHR GetPhysicalDeviceSurfacePresentModesKHR}</p>
      */
     public static final int
         VK_PRESENT_MODE_IMMEDIATE_KHR    = 0,
@@ -277,7 +278,7 @@ public class KHRSurface {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, instance.address(), surface, pAllocator);
+        callPJPV(instance.address(), surface, pAllocator, __functionAddress);
     }
 
     /**
@@ -326,7 +327,7 @@ public class KHRSurface {
      *
      * @param instance   the instance used to create the surface.
      * @param surface    the surface to destroy.
-     * @param pAllocator the allocator used for host memory allocated for the surface object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
+     * @param pAllocator the allocator used for host memory allocated for the surface object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
      */
     public static void vkDestroySurfaceKHR(VkInstance instance, @NativeType("VkSurfaceKHR") long surface, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroySurfaceKHR(instance, surface, memAddressSafe(pAllocator));
@@ -340,7 +341,7 @@ public class KHRSurface {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPI(__functionAddress, physicalDevice.address(), queueFamilyIndex, surface, pSupported);
+        return callPJPI(physicalDevice.address(), queueFamilyIndex, surface, pSupported, __functionAddress);
     }
 
     /**
@@ -360,7 +361,7 @@ public class KHRSurface {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code queueFamilyIndex} <b>must</b> be less than {@code pQueueFamilyPropertyCount} returned by {@link VK10#vkGetPhysicalDeviceQueueFamilyProperties GetPhysicalDeviceQueueFamilyProperties} for the given {@code physicalDevice}</li>
+     * <li>{@code queueFamilyIndex} <b>must</b> be less than {@code pQueueFamilyPropertyCount} returned by {@code vkGetPhysicalDeviceQueueFamilyProperties} for the given {@code physicalDevice}</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -408,7 +409,7 @@ public class KHRSurface {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPI(__functionAddress, physicalDevice.address(), surface, pSurfaceCapabilities);
+        return callPJPI(physicalDevice.address(), surface, pSurfaceCapabilities, __functionAddress);
     }
 
     /**
@@ -473,7 +474,7 @@ public class KHRSurface {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), surface, pSurfaceFormatCount, pSurfaceFormats);
+        return callPJPPI(physicalDevice.address(), surface, pSurfaceFormatCount, pSurfaceFormats, __functionAddress);
     }
 
     /**
@@ -550,7 +551,7 @@ public class KHRSurface {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), surface, pPresentModeCount, pPresentModes);
+        return callPJPPI(physicalDevice.address(), surface, pPresentModeCount, pPresentModes, __functionAddress);
     }
 
     /**
@@ -619,7 +620,7 @@ public class KHRSurface {
             check(__functionAddress);
             check(pSupported, 1);
         }
-        return callPJPI(__functionAddress, physicalDevice.address(), queueFamilyIndex, surface, pSupported);
+        return callPJPI(physicalDevice.address(), queueFamilyIndex, surface, pSupported, __functionAddress);
     }
 
     /** Array version of: {@link #vkGetPhysicalDeviceSurfaceFormatsKHR GetPhysicalDeviceSurfaceFormatsKHR} */
@@ -631,7 +632,7 @@ public class KHRSurface {
             check(pSurfaceFormatCount, 1);
             checkSafe(pSurfaceFormats, pSurfaceFormatCount[0]);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), surface, pSurfaceFormatCount, memAddressSafe(pSurfaceFormats));
+        return callPJPPI(physicalDevice.address(), surface, pSurfaceFormatCount, memAddressSafe(pSurfaceFormats), __functionAddress);
     }
 
     /** Array version of: {@link #vkGetPhysicalDeviceSurfacePresentModesKHR GetPhysicalDeviceSurfacePresentModesKHR} */
@@ -643,7 +644,7 @@ public class KHRSurface {
             check(pPresentModeCount, 1);
             checkSafe(pPresentModes, pPresentModeCount[0]);
         }
-        return callPJPPI(__functionAddress, physicalDevice.address(), surface, pPresentModeCount, pPresentModes);
+        return callPJPPI(physicalDevice.address(), surface, pPresentModeCount, pPresentModes, __functionAddress);
     }
 
 }

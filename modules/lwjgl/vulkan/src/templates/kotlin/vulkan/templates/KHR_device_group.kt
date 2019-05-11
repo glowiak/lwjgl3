@@ -65,7 +65,7 @@ val KHR_device_group = "KHRDeviceGroup".nativeClassVK("KHR_device_group", type =
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -181,32 +181,32 @@ val KHR_device_group = "KHRDeviceGroup".nativeClassVK("KHR_device_group", type =
         "GetDeviceGroupPeerMemoryFeaturesKHR",
         "See #GetDeviceGroupPeerMemoryFeatures().",
 
-        VkDevice.IN("device", "the logical device that owns the memory."),
-        uint32_t.IN("heapIndex", "the index of the memory heap from which the memory is allocated."),
-        uint32_t.IN("localDeviceIndex", "the device index of the physical device that performs the memory access."),
-        uint32_t.IN("remoteDeviceIndex", "the device index of the physical device that the memory is allocated for."),
-        Check(1)..VkPeerMemoryFeatureFlags.p.OUT("pPeerMemoryFeatures", "a pointer to a bitmask of {@code VkPeerMemoryFeatureFlagBits} indicating which types of memory accesses are supported for the combination of heap, local, and remote devices.")
+        VkDevice("device", "the logical device that owns the memory."),
+        uint32_t("heapIndex", "the index of the memory heap from which the memory is allocated."),
+        uint32_t("localDeviceIndex", "the device index of the physical device that performs the memory access."),
+        uint32_t("remoteDeviceIndex", "the device index of the physical device that the memory is allocated for."),
+        Check(1)..VkPeerMemoryFeatureFlags.p("pPeerMemoryFeatures", "a pointer to a bitmask of {@code VkPeerMemoryFeatureFlagBits} indicating which types of memory accesses are supported for the combination of heap, local, and remote devices.")
     )
 
     void(
         "CmdSetDeviceMaskKHR",
         "See #CmdSetDeviceMask().",
 
-        VkCommandBuffer.IN("commandBuffer", "command buffer whose current device mask is modified."),
-        uint32_t.IN("deviceMask", "the new value of the current device mask.")
+        VkCommandBuffer("commandBuffer", "command buffer whose current device mask is modified."),
+        uint32_t("deviceMask", "the new value of the current device mask.")
     )
 
     void(
         "CmdDispatchBaseKHR",
         "See #CmdDispatchBase().",
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command will be recorded."),
-        uint32_t.IN("baseGroupX", "the start value for the X component of {@code WorkgroupId}."),
-        uint32_t.IN("baseGroupY", "the start value for the Y component of {@code WorkgroupId}."),
-        uint32_t.IN("baseGroupZ", "the start value for the Z component of {@code WorkgroupId}."),
-        uint32_t.IN("groupCountX", "the number of local workgroups to dispatch in the X dimension."),
-        uint32_t.IN("groupCountY", "the number of local workgroups to dispatch in the Y dimension."),
-        uint32_t.IN("groupCountZ", "the number of local workgroups to dispatch in the Z dimension.")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command will be recorded."),
+        uint32_t("baseGroupX", "the start value for the X component of {@code WorkgroupId}."),
+        uint32_t("baseGroupY", "the start value for the Y component of {@code WorkgroupId}."),
+        uint32_t("baseGroupZ", "the start value for the Z component of {@code WorkgroupId}."),
+        uint32_t("groupCountX", "the number of local workgroups to dispatch in the X dimension."),
+        uint32_t("groupCountY", "the number of local workgroups to dispatch in the Y dimension."),
+        uint32_t("groupCountZ", "the number of local workgroups to dispatch in the Z dimension.")
     )
 
     DependsOn("VK_KHR_surface")..VkResult(
@@ -248,8 +248,8 @@ val KHR_device_group = "KHRDeviceGroup".nativeClassVK("KHR_device_group", type =
         ##VkDeviceGroupPresentCapabilitiesKHR
         """,
 
-        VkDevice.IN("device", "the logical device."),
-        VkDeviceGroupPresentCapabilitiesKHR.p.OUT("pDeviceGroupPresentCapabilities", "a pointer to a structure of type ##VkDeviceGroupPresentCapabilitiesKHR that is filled with the logical device&#8217;s capabilities.")
+        VkDevice("device", "the logical device."),
+        VkDeviceGroupPresentCapabilitiesKHR.p("pDeviceGroupPresentCapabilities", "a pointer to a structure of type ##VkDeviceGroupPresentCapabilitiesKHR that is filled with the logical device&#8217;s capabilities.")
     )
 
     DependsOn("VK_KHR_surface")..VkResult(
@@ -300,9 +300,9 @@ val KHR_device_group = "KHRDeviceGroup".nativeClassVK("KHR_device_group", type =
         </dl>
         """,
 
-        VkDevice.IN("device", "the logical device."),
-        VkSurfaceKHR.IN("surface", "the surface."),
-        Check(1)..VkDeviceGroupPresentModeFlagsKHR.p.INOUT("pModes", "a pointer to a value of type {@code VkDeviceGroupPresentModeFlagsKHR} that is filled with the supported device group present modes for the surface.")
+        VkDevice("device", "the logical device."),
+        VkSurfaceKHR("surface", "the surface."),
+        Check(1)..VkDeviceGroupPresentModeFlagsKHR.p("pModes", "a pointer to a value of type {@code VkDeviceGroupPresentModeFlagsKHR} that is filled with the supported device group present modes for the surface.")
     )
 
     DependsOn("VK_KHR_surface")..VkResult(
@@ -362,10 +362,10 @@ val KHR_device_group = "KHRDeviceGroup".nativeClassVK("KHR_device_group", type =
         ##VkRect2D
         """,
 
-        VkPhysicalDevice.IN("physicalDevice", "the physical device."),
-        VkSurfaceKHR.IN("surface", "the surface."),
-        AutoSize("pRects")..Check(1)..uint32_t.p.INOUT("pRectCount", "a pointer to an integer related to the number of rectangles available or queried, as described below."),
-        nullable..VkRect2D.p.OUT("pRects", "either {@code NULL} or a pointer to an array of ##VkRect2D structures.")
+        VkPhysicalDevice("physicalDevice", "the physical device."),
+        VkSurfaceKHR("surface", "the surface."),
+        AutoSize("pRects")..Check(1)..uint32_t.p("pRectCount", "a pointer to an integer related to the number of rectangles available or queried, as described below."),
+        nullable..VkRect2D.p("pRects", "either {@code NULL} or a pointer to an array of ##VkRect2D structures.")
     )
 
     DependsOn("VK_KHR_swapchain")..VkResult(
@@ -411,6 +411,7 @@ val KHR_device_group = "KHRDeviceGroup".nativeClassVK("KHR_device_group", type =
                 <li>#ERROR_DEVICE_LOST</li>
                 <li>#ERROR_OUT_OF_DATE_KHR</li>
                 <li>#ERROR_SURFACE_LOST_KHR</li>
+                <li>#ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT</li>
             </ul></dd>
         </dl>
 
@@ -418,8 +419,56 @@ val KHR_device_group = "KHRDeviceGroup".nativeClassVK("KHR_device_group", type =
         ##VkAcquireNextImageInfoKHR
         """,
 
-        VkDevice.IN("device", "the device associated with {@code swapchain}."),
-        VkAcquireNextImageInfoKHR.const.p.IN("pAcquireInfo", "a pointer to a structure of type ##VkAcquireNextImageInfoKHR containing parameters of the acquire."),
-        Check(1)..uint32_t.p.OUT("pImageIndex", "a pointer to a {@code uint32_t} that is set to the index of the next image to use.")
+        VkDevice("device", "the device associated with {@code swapchain}."),
+        VkAcquireNextImageInfoKHR.const.p("pAcquireInfo", "a pointer to a structure of type ##VkAcquireNextImageInfoKHR containing parameters of the acquire."),
+        Check(1)..uint32_t.p("pImageIndex", "a pointer to a {@code uint32_t} that is set to the index of the next image to use.")
+    )
+
+    DependsOn("VK_EXT_full_screen_exclusive")..VkResult(
+        "GetDeviceGroupSurfacePresentModes2EXT",
+        """
+        Query device group present capabilities for a surface.
+
+        <h5>C Specification</h5>
+        Alternatively, to query the supported device group presentation modes for a surface combined with select other fixed swapchain creation parameters, call:
+
+        <pre><code>
+￿VkResult vkGetDeviceGroupSurfacePresentModes2EXT(
+￿    VkDevice                                    device,
+￿    const VkPhysicalDeviceSurfaceInfo2KHR*      pSurfaceInfo,
+￿    VkDeviceGroupPresentModeFlagsKHR*           pModes);</code></pre>
+
+        <h5>Description</h5>
+        {@code vkGetDeviceGroupSurfacePresentModes2EXT} behaves similarly to #GetDeviceGroupSurfacePresentModesKHR(), with the ability to specify extended inputs via chained input structures.
+
+        <h5>Valid Usage (Implicit)</h5>
+        <ul>
+            <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
+            <li>{@code pSurfaceInfo} <b>must</b> be a valid pointer to a valid ##VkPhysicalDeviceSurfaceInfo2KHR structure</li>
+            <li>{@code pModes} <b>must</b> be a valid pointer to a {@code VkDeviceGroupPresentModeFlagsKHR} value</li>
+        </ul>
+
+        <h5>Return Codes</h5>
+        <dl>
+            <dt>On success, this command returns</dt>
+            <dd><ul>
+                <li>#SUCCESS</li>
+            </ul></dd>
+
+            <dt>On failure, this command returns</dt>
+            <dd><ul>
+                <li>#ERROR_OUT_OF_HOST_MEMORY</li>
+                <li>#ERROR_OUT_OF_DEVICE_MEMORY</li>
+                <li>#ERROR_SURFACE_LOST_KHR</li>
+            </ul></dd>
+        </dl>
+
+        <h5>See Also</h5>
+        ##VkPhysicalDeviceSurfaceInfo2KHR
+        """,
+
+        VkDevice("device", "the logical device."),
+        VkPhysicalDeviceSurfaceInfo2KHR.const.p("pSurfaceInfo", "points to an instance of the VkPhysicalDeviceSurfaceInfo2KHR structure, describing the surface and other fixed parameters that would be consumed by vkCreateSwapchainKHR."),
+        Check(1)..VkDeviceGroupPresentModeFlagsKHR.p("pModes", "a pointer to a value of type {@code VkDeviceGroupPresentModeFlagsKHR} that is filled with the supported device group present modes for the surface.")
     )
 }

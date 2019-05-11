@@ -31,8 +31,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code sType} <b>must</b> be {@link VK10#VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO}</li>
  * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
  * <li>{@code flags} <b>must</b> be 0</li>
- * <li>{@code pDynamicStates} <b>must</b> be a valid pointer to an array of {@code dynamicStateCount} valid {@code VkDynamicState} values</li>
- * <li>{@code dynamicStateCount} <b>must</b> be greater than 0</li>
+ * <li>If {@code dynamicStateCount} is not 0, {@code pDynamicStates} <b>must</b> be a valid pointer to an array of {@code dynamicStateCount} valid {@code VkDynamicState} values</li>
  * </ul>
  * 
  * <h5>See Also</h5>
@@ -95,18 +94,14 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
         PDYNAMICSTATES = layout.offsetof(4);
     }
 
-    VkPipelineDynamicStateCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPipelineDynamicStateCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPipelineDynamicStateCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPipelineDynamicStateCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -125,6 +120,7 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
     @NativeType("uint32_t")
     public int dynamicStateCount() { return ndynamicStateCount(address()); }
     /** Returns a {@link IntBuffer} view of the data pointed to by the {@code pDynamicStates} field. */
+    @Nullable
     @NativeType("VkDynamicState const *")
     public IntBuffer pDynamicStates() { return npDynamicStates(address()); }
 
@@ -135,14 +131,14 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
     /** Sets the specified value to the {@code flags} field. */
     public VkPipelineDynamicStateCreateInfo flags(@NativeType("VkPipelineDynamicStateCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the address of the specified {@link IntBuffer} to the {@code pDynamicStates} field. */
-    public VkPipelineDynamicStateCreateInfo pDynamicStates(@NativeType("VkDynamicState const *") IntBuffer value) { npDynamicStates(address(), value); return this; }
+    public VkPipelineDynamicStateCreateInfo pDynamicStates(@Nullable @NativeType("VkDynamicState const *") IntBuffer value) { npDynamicStates(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public VkPipelineDynamicStateCreateInfo set(
         int sType,
         long pNext,
         int flags,
-        IntBuffer pDynamicStates
+        @Nullable IntBuffer pDynamicStates
     ) {
         sType(sType);
         pNext(pNext);
@@ -166,30 +162,31 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineDynamicStateCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineDynamicStateCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPipelineDynamicStateCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPipelineDynamicStateCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineDynamicStateCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineDynamicStateCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPipelineDynamicStateCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPipelineDynamicStateCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineDynamicStateCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPipelineDynamicStateCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkPipelineDynamicStateCreateInfo create() {
-        return new VkPipelineDynamicStateCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPipelineDynamicStateCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPipelineDynamicStateCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkPipelineDynamicStateCreateInfo} instance for the specified memory address. */
     public static VkPipelineDynamicStateCreateInfo create(long address) {
-        return new VkPipelineDynamicStateCreateInfo(address, null);
+        return wrap(VkPipelineDynamicStateCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineDynamicStateCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPipelineDynamicStateCreateInfo.class, address);
     }
 
     /**
@@ -198,7 +195,7 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPipelineDynamicStateCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -207,7 +204,7 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPipelineDynamicStateCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -216,7 +213,8 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPipelineDynamicStateCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -226,43 +224,43 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPipelineDynamicStateCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineDynamicStateCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineDynamicStateCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPipelineDynamicStateCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPipelineDynamicStateCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPipelineDynamicStateCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPipelineDynamicStateCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPipelineDynamicStateCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPipelineDynamicStateCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPipelineDynamicStateCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineDynamicStateCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPipelineDynamicStateCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPipelineDynamicStateCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPipelineDynamicStateCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineDynamicStateCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPipelineDynamicStateCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -290,7 +288,7 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPipelineDynamicStateCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -300,32 +298,32 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
      * @param capacity the buffer capacity
      */
     public static VkPipelineDynamicStateCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPipelineDynamicStateCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDynamicStateCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPipelineDynamicStateCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkPipelineDynamicStateCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDynamicStateCreateInfo.FLAGS); }
     /** Unsafe version of {@link #dynamicStateCount}. */
-    public static int ndynamicStateCount(long struct) { return memGetInt(struct + VkPipelineDynamicStateCreateInfo.DYNAMICSTATECOUNT); }
+    public static int ndynamicStateCount(long struct) { return UNSAFE.getInt(null, struct + VkPipelineDynamicStateCreateInfo.DYNAMICSTATECOUNT); }
     /** Unsafe version of {@link #pDynamicStates() pDynamicStates}. */
-    public static IntBuffer npDynamicStates(long struct) { return memIntBuffer(memGetAddress(struct + VkPipelineDynamicStateCreateInfo.PDYNAMICSTATES), ndynamicStateCount(struct)); }
+    @Nullable public static IntBuffer npDynamicStates(long struct) { return memIntBufferSafe(memGetAddress(struct + VkPipelineDynamicStateCreateInfo.PDYNAMICSTATES), ndynamicStateCount(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPipelineDynamicStateCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDynamicStateCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPipelineDynamicStateCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkPipelineDynamicStateCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDynamicStateCreateInfo.FLAGS, value); }
     /** Sets the specified value to the {@code dynamicStateCount} field of the specified {@code struct}. */
-    public static void ndynamicStateCount(long struct, int value) { memPutInt(struct + VkPipelineDynamicStateCreateInfo.DYNAMICSTATECOUNT, value); }
+    public static void ndynamicStateCount(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineDynamicStateCreateInfo.DYNAMICSTATECOUNT, value); }
     /** Unsafe version of {@link #pDynamicStates(IntBuffer) pDynamicStates}. */
-    public static void npDynamicStates(long struct, IntBuffer value) { memPutAddress(struct + VkPipelineDynamicStateCreateInfo.PDYNAMICSTATES, memAddress(value)); ndynamicStateCount(struct, value.remaining()); }
+    public static void npDynamicStates(long struct, @Nullable IntBuffer value) { memPutAddress(struct + VkPipelineDynamicStateCreateInfo.PDYNAMICSTATES, memAddressSafe(value)); ndynamicStateCount(struct, value == null ? 0 : value.remaining()); }
 
     /**
      * Validates pointer members that should not be {@code NULL}.
@@ -333,7 +331,9 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
      * @param struct the struct to validate
      */
     public static void validate(long struct) {
-        check(memGetAddress(struct + VkPipelineDynamicStateCreateInfo.PDYNAMICSTATES));
+        if (ndynamicStateCount(struct) != 0) {
+            check(memGetAddress(struct + VkPipelineDynamicStateCreateInfo.PDYNAMICSTATES));
+        }
     }
 
     /**
@@ -344,7 +344,7 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -353,8 +353,10 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
     /** An array of {@link VkPipelineDynamicStateCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkPipelineDynamicStateCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkPipelineDynamicStateCreateInfo ELEMENT_FACTORY = VkPipelineDynamicStateCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkPipelineDynamicStateCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPipelineDynamicStateCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -380,18 +382,8 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPipelineDynamicStateCreateInfo newInstance(long address) {
-            return new VkPipelineDynamicStateCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPipelineDynamicStateCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */
@@ -407,6 +399,7 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
         @NativeType("uint32_t")
         public int dynamicStateCount() { return VkPipelineDynamicStateCreateInfo.ndynamicStateCount(address()); }
         /** Returns a {@link IntBuffer} view of the data pointed to by the {@code pDynamicStates} field. */
+        @Nullable
         @NativeType("VkDynamicState const *")
         public IntBuffer pDynamicStates() { return VkPipelineDynamicStateCreateInfo.npDynamicStates(address()); }
 
@@ -417,7 +410,7 @@ public class VkPipelineDynamicStateCreateInfo extends Struct implements NativeRe
         /** Sets the specified value to the {@code flags} field. */
         public VkPipelineDynamicStateCreateInfo.Buffer flags(@NativeType("VkPipelineDynamicStateCreateFlags") int value) { VkPipelineDynamicStateCreateInfo.nflags(address(), value); return this; }
         /** Sets the address of the specified {@link IntBuffer} to the {@code pDynamicStates} field. */
-        public VkPipelineDynamicStateCreateInfo.Buffer pDynamicStates(@NativeType("VkDynamicState const *") IntBuffer value) { VkPipelineDynamicStateCreateInfo.npDynamicStates(address(), value); return this; }
+        public VkPipelineDynamicStateCreateInfo.Buffer pDynamicStates(@Nullable @NativeType("VkDynamicState const *") IntBuffer value) { VkPipelineDynamicStateCreateInfo.npDynamicStates(address(), value); return this; }
 
     }
 

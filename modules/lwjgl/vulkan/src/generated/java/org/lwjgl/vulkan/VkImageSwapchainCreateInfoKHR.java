@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>If {@code swapchain} is not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, the fields of {@link VkImageCreateInfo} <b>must</b> match the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#swapchain-wsi-image-create-info">implied image creation parameters</a> of the swapchain</li>
+ * <li>If {@code swapchain} is not {@link VK10#VK_NULL_HANDLE NULL_HANDLE}, the fields of {@link VkImageCreateInfo} <b>must</b> match the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#swapchain-wsi-image-create-info">implied image creation parameters</a> of the swapchain</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -77,18 +77,14 @@ public class VkImageSwapchainCreateInfoKHR extends Struct implements NativeResou
         SWAPCHAIN = layout.offsetof(2);
     }
 
-    VkImageSwapchainCreateInfoKHR(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkImageSwapchainCreateInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkImageSwapchainCreateInfoKHR} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkImageSwapchainCreateInfoKHR(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -138,30 +134,31 @@ public class VkImageSwapchainCreateInfoKHR extends Struct implements NativeResou
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImageSwapchainCreateInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImageSwapchainCreateInfoKHR} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkImageSwapchainCreateInfoKHR malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkImageSwapchainCreateInfoKHR.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkImageSwapchainCreateInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImageSwapchainCreateInfoKHR} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkImageSwapchainCreateInfoKHR calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkImageSwapchainCreateInfoKHR.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkImageSwapchainCreateInfoKHR} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkImageSwapchainCreateInfoKHR} instance allocated with {@link BufferUtils}. */
     public static VkImageSwapchainCreateInfoKHR create() {
-        return new VkImageSwapchainCreateInfoKHR(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkImageSwapchainCreateInfoKHR.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkImageSwapchainCreateInfoKHR} instance for the specified memory address. */
+    /** Returns a new {@code VkImageSwapchainCreateInfoKHR} instance for the specified memory address. */
     public static VkImageSwapchainCreateInfoKHR create(long address) {
-        return new VkImageSwapchainCreateInfoKHR(address, null);
+        return wrap(VkImageSwapchainCreateInfoKHR.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImageSwapchainCreateInfoKHR createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkImageSwapchainCreateInfoKHR.class, address);
     }
 
     /**
@@ -170,7 +167,7 @@ public class VkImageSwapchainCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkImageSwapchainCreateInfoKHR.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -179,7 +176,7 @@ public class VkImageSwapchainCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkImageSwapchainCreateInfoKHR.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -188,7 +185,8 @@ public class VkImageSwapchainCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkImageSwapchainCreateInfoKHR.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -198,43 +196,43 @@ public class VkImageSwapchainCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkImageSwapchainCreateInfoKHR.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImageSwapchainCreateInfoKHR.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImageSwapchainCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkImageSwapchainCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkImageSwapchainCreateInfoKHR mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkImageSwapchainCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkImageSwapchainCreateInfoKHR} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkImageSwapchainCreateInfoKHR callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkImageSwapchainCreateInfoKHR} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkImageSwapchainCreateInfoKHR} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImageSwapchainCreateInfoKHR mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkImageSwapchainCreateInfoKHR.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkImageSwapchainCreateInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkImageSwapchainCreateInfoKHR} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImageSwapchainCreateInfoKHR callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkImageSwapchainCreateInfoKHR.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -262,7 +260,7 @@ public class VkImageSwapchainCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkImageSwapchainCreateInfoKHR.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -272,32 +270,34 @@ public class VkImageSwapchainCreateInfoKHR extends Struct implements NativeResou
      * @param capacity the buffer capacity
      */
     public static VkImageSwapchainCreateInfoKHR.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkImageSwapchainCreateInfoKHR.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkImageSwapchainCreateInfoKHR.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkImageSwapchainCreateInfoKHR.PNEXT); }
     /** Unsafe version of {@link #swapchain}. */
-    public static long nswapchain(long struct) { return memGetLong(struct + VkImageSwapchainCreateInfoKHR.SWAPCHAIN); }
+    public static long nswapchain(long struct) { return UNSAFE.getLong(null, struct + VkImageSwapchainCreateInfoKHR.SWAPCHAIN); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkImageSwapchainCreateInfoKHR.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkImageSwapchainCreateInfoKHR.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkImageSwapchainCreateInfoKHR.PNEXT, value); }
     /** Unsafe version of {@link #swapchain(long) swapchain}. */
-    public static void nswapchain(long struct, long value) { memPutLong(struct + VkImageSwapchainCreateInfoKHR.SWAPCHAIN, value); }
+    public static void nswapchain(long struct, long value) { UNSAFE.putLong(null, struct + VkImageSwapchainCreateInfoKHR.SWAPCHAIN, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkImageSwapchainCreateInfoKHR} structs. */
     public static class Buffer extends StructBuffer<VkImageSwapchainCreateInfoKHR, Buffer> implements NativeResource {
 
+        private static final VkImageSwapchainCreateInfoKHR ELEMENT_FACTORY = VkImageSwapchainCreateInfoKHR.create(-1L);
+
         /**
-         * Creates a new {@link VkImageSwapchainCreateInfoKHR.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkImageSwapchainCreateInfoKHR.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -323,18 +323,8 @@ public class VkImageSwapchainCreateInfoKHR extends Struct implements NativeResou
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkImageSwapchainCreateInfoKHR newInstance(long address) {
-            return new VkImageSwapchainCreateInfoKHR(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkImageSwapchainCreateInfoKHR getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

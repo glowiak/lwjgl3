@@ -301,8 +301,19 @@ public class VK11 extends VK10 {
     /** Extends {@code VkDependencyFlagBits}. */
     public static final int VK_DEPENDENCY_VIEW_LOCAL_BIT = 0x2;
 
-    /** Extends {@code VkStructureType}. */
-    public static final int VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = 1000120000;
+    /**
+     * Extends {@code VkStructureType}.
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES}</li>
+     * <li>{@link #VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES}</li>
+     * </ul>
+     */
+    public static final int
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES = 1000120000,
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES  = 1000120000;
 
     /**
      * Extends {@code VkStructureType}.
@@ -579,8 +590,19 @@ public class VK11 extends VK10 {
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = 1000168000,
         VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT            = 1000168001;
 
-    /** Extends {@code VkStructureType}. */
-    public static final int VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = 1000063000;
+    /**
+     * Extends {@code VkStructureType}.
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES}</li>
+     * <li>{@link #VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES}</li>
+     * </ul>
+     */
+    public static final int
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES = 1000063000,
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES  = 1000063000;
 
     /**
      * VkSubgroupFeatureFlagBits - Enum describing what subgroup operations are supported
@@ -619,15 +641,15 @@ public class VK11 extends VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT PEER_MEMORY_FEATURE_COPY_SRC_BIT} specifies that the memory <b>can</b> be accessed as the source of a ftext:vkCmdCopyBuffer, ftext:vkCmdCopyImage, ftext:vkCmdCopyBufferToImage, or ftext:vkCmdCopyImageToBuffer command.</li>
-     * <li>{@link #VK_PEER_MEMORY_FEATURE_COPY_DST_BIT PEER_MEMORY_FEATURE_COPY_DST_BIT} specifies that the memory <b>can</b> be accessed as the destination of a ftext:vkCmdCopyBuffer, ftext:vkCmdCopyImage, ftext:vkCmdCopyBufferToImage, or ftext:vkCmdCopyImageToBuffer command.</li>
+     * <li>{@link #VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT PEER_MEMORY_FEATURE_COPY_SRC_BIT} specifies that the memory <b>can</b> be accessed as the source of a {@link VK10#vkCmdCopyBuffer CmdCopyBuffer}, {@link VK10#vkCmdCopyImage CmdCopyImage}, {@link VK10#vkCmdCopyBufferToImage CmdCopyBufferToImage}, or {@link VK10#vkCmdCopyImageToBuffer CmdCopyImageToBuffer} command.</li>
+     * <li>{@link #VK_PEER_MEMORY_FEATURE_COPY_DST_BIT PEER_MEMORY_FEATURE_COPY_DST_BIT} specifies that the memory <b>can</b> be accessed as the destination of a {@link VK10#vkCmdCopyBuffer CmdCopyBuffer}, {@link VK10#vkCmdCopyImage CmdCopyImage}, {@link VK10#vkCmdCopyBufferToImage CmdCopyBufferToImage}, or {@link VK10#vkCmdCopyImageToBuffer CmdCopyImageToBuffer} command.</li>
      * <li>{@link #VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT PEER_MEMORY_FEATURE_GENERIC_SRC_BIT} specifies that the memory <b>can</b> be read as any memory access type.</li>
      * <li>{@link #VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT PEER_MEMORY_FEATURE_GENERIC_DST_BIT} specifies that the memory <b>can</b> be written as any memory access type. Shader atomics are considered to be writes.</li>
      * </ul>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
-     * <p>The peer memory features of a memory heap also apply to any accesses that <b>may</b> be performed during <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-image-layout-transitions">image layout transitions</a>.</p>
+     * <p>The peer memory features of a memory heap also apply to any accesses that <b>may</b> be performed during <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-image-layout-transitions">image layout transitions</a>.</p>
      * </div>
      * 
      * <p>{@link #VK_PEER_MEMORY_FEATURE_COPY_DST_BIT PEER_MEMORY_FEATURE_COPY_DST_BIT} <b>must</b> be supported for all host local heaps and for at least one device local heap.</p>
@@ -660,7 +682,7 @@ public class VK11 extends VK10 {
     public static final int VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT = 0x1;
 
     /**
-     * VkPointClippingBehavior - Enum specifying the point clipping behaviour
+     * VkPointClippingBehavior - Enum specifying the point clipping behavior
      * 
      * <h5>Description</h5>
      * 
@@ -683,8 +705,8 @@ public class VK11 extends VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT} specifies that the origin of the domain space is in the upper left corner, as shown in figure <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#img-tessellation-topology-ul">Domain parameterization for tessellation primitive modes (upper-left origin)</a>.</li>
-     * <li>{@link #VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT} specifies that the origin of the domain space is in the lower left corner, as shown in figure <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#img-tessellation-topology-ll">Domain parameterization for tessellation primitive modes (lower-left origin)</a>.</li>
+     * <li>{@link #VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT} specifies that the origin of the domain space is in the upper left corner, as shown in figure <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#img-tessellation-topology-ul">Domain parameterization for tessellation primitive modes (upper-left origin)</a>.</li>
+     * <li>{@link #VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT} specifies that the origin of the domain space is in the lower left corner, as shown in figure <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#img-tessellation-topology-ll">Domain parameterization for tessellation primitive modes (lower-left origin)</a>.</li>
      * </ul>
      * 
      * <p>This enum affects how the {@code VertexOrderCw} and {@code VertexOrderCcw} tessellation execution modes are interpreted, since the winding is defined relative to the orientation of the domain.</p>
@@ -705,9 +727,9 @@ public class VK11 extends VK10 {
      * <ul>
      * <li>{@link #VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY} specifies that the input values to the conversion are unmodified.</li>
      * <li>{@link #VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY} specifies no model conversion but the inputs are range expanded as for Y&#8217;C<sub>B</sub>C<sub>R</sub>.</li>
-     * <li>{@link #VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709} specifies the color model conversion from Y&#8217;C<sub>B</sub>C<sub>R</sub> to R&#8217;G&#8217;B' defined in BT.709 and described in the “BT.709 Y’C<sub>B</sub>C<sub>R</sub> conversion” section of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#data-format">Khronos Data Format Specification</a>.</li>
-     * <li>{@link #VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601} specifies the color model conversion from Y&#8217;C<sub>B</sub>C<sub>R</sub> to R&#8217;G&#8217;B' defined in BT.601 and described in the “BT.601 Y’C<sub>B</sub>C<sub>R</sub> conversion” section of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#data-format">Khronos Data Format Specification</a>.</li>
-     * <li>{@link #VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020} specifies the color model conversion from Y&#8217;C<sub>B</sub>C<sub>R</sub> to R&#8217;G&#8217;B' defined in BT.2020 and described in the “BT.2020 Y’C<sub>B</sub>C<sub>R</sub> conversion” section of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#data-format">Khronos Data Format Specification</a>.</li>
+     * <li>{@link #VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709} specifies the color model conversion from Y&#8217;C<sub>B</sub>C<sub>R</sub> to R&#8217;G&#8217;B' defined in BT.709 and described in the “BT.709 Y’C<sub>B</sub>C<sub>R</sub> conversion” section of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#data-format">Khronos Data Format Specification</a>.</li>
+     * <li>{@link #VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601} specifies the color model conversion from Y&#8217;C<sub>B</sub>C<sub>R</sub> to R&#8217;G&#8217;B' defined in BT.601 and described in the “BT.601 Y’C<sub>B</sub>C<sub>R</sub> conversion” section of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#data-format">Khronos Data Format Specification</a>.</li>
+     * <li>{@link #VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020} specifies the color model conversion from Y&#8217;C<sub>B</sub>C<sub>R</sub> to R&#8217;G&#8217;B' defined in BT.2020 and described in the “BT.2020 Y’C<sub>B</sub>C<sub>R</sub> conversion” section of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#data-format">Khronos Data Format Specification</a>.</li>
      * </ul>
      * 
      * <p>In the {@code VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_*} color models, for the input to the sampler Y'C<sub>B</sub>C<sub>R</sub> range expansion and model conversion:</p>
@@ -754,7 +776,7 @@ public class VK11 extends VK10 {
      * <li>{@link #VK_SAMPLER_YCBCR_RANGE_ITU_NARROW SAMPLER_YCBCR_RANGE_ITU_NARROW} specifies that headroom and foot room are reserved in the numerical range of encoded values, and the remaining values are expanded according to the ITU “narrow range” quantization rules.</li>
      * </ul>
      * 
-     * <p>The formulae for these conversions is described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion-rangeexpand">Sampler Y'C<sub>B</sub>C<sub>R</sub> Range Expansion</a> section of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures">Image Operations</a> chapter.</p>
+     * <p>The formulae for these conversions is described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion-rangeexpand">Sampler Y'C<sub>B</sub>C<sub>R</sub> Range Expansion</a> section of the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures">Image Operations</a> chapter.</p>
      * 
      * <p>No range modification takes place if {@code ycbcrModel} is {@link #VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY}; the {@code ycbcrRange} field of {@link VkSamplerYcbcrConversionCreateInfo} is ignored in this case.</p>
      * 
@@ -806,8 +828,8 @@ public class VK11 extends VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT} specifies a POSIX file descriptor handle that has only limited valid usage outside of Vulkan and other compatible APIs. It <b>must</b> be compatible with the POSIX system calls ftext:dup, ftext:dup2, ftext:close, and the non-standard system call ftext:dup3. Additionally, it <b>must</b> be transportable over a socket using an {@code SCM_RIGHTS} control message. It owns a reference to the underlying memory resource represented by its Vulkan memory object.</li>
-     * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT} specifies an NT handle that has only limited valid usage outside of Vulkan and other compatible APIs. It <b>must</b> be compatible with the functions ftext:DuplicateHandle, ftext:CloseHandle, ftext:CompareObjectHandles, ftext:GetHandleInformation, and ftext:SetHandleInformation. It owns a reference to the underlying memory resource represented by its Vulkan memory object.</li>
+     * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT} specifies a POSIX file descriptor handle that has only limited valid usage outside of Vulkan and other compatible APIs. It <b>must</b> be compatible with the POSIX system calls {@code dup}, {@code dup2}, {@code close}, and the non-standard system call {@code dup3}. Additionally, it <b>must</b> be transportable over a socket using an {@code SCM_RIGHTS} control message. It owns a reference to the underlying memory resource represented by its Vulkan memory object.</li>
+     * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT} specifies an NT handle that has only limited valid usage outside of Vulkan and other compatible APIs. It <b>must</b> be compatible with the functions {@code DuplicateHandle}, {@code CloseHandle}, {@code CompareObjectHandles}, {@code GetHandleInformation}, and {@code SetHandleInformation}. It owns a reference to the underlying memory resource represented by its Vulkan memory object.</li>
      * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT} specifies a global share handle that has only limited valid usage outside of Vulkan and other compatible APIs. It is not compatible with any native APIs. It does not own a reference to the underlying memory resource represented its Vulkan memory object, and will therefore become invalid when all Vulkan memory objects associated with it are destroyed.</li>
      * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT} specifies an NT handle returned by {@code IDXGIResource1}::{@code CreateSharedHandle} referring to a Direct3D 10 or 11 texture resource. It owns a reference to the memory used by the Direct3D resource.</li>
      * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT} specifies a global share handle returned by {@code IDXGIResource}::{@code GetSharedHandle} referring to a Direct3D 10 or 11 texture resource. It does not own a reference to the underlying Direct3D resource, and will therefore become invalid when all Vulkan memory objects and Direct3D resources associated with it are destroyed.</li>
@@ -867,7 +889,7 @@ public class VK11 extends VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT} specifies that images or buffers created with the specified parameters and handle type <b>must</b> use the mechanisms defined in the {@link NVDedicatedAllocation VK_NV_dedicated_allocation} extension to create (or import) a dedicated allocation for the image or buffer.</li>
+     * <li>{@link #VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT} specifies that images or buffers created with the specified parameters and handle type <b>must</b> use the mechanisms defined by {@link VkMemoryDedicatedRequirements} and {@link VkMemoryDedicatedAllocateInfo} to create (or import) a dedicated allocation for the image or buffer.</li>
      * <li>{@link #VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT} specifies that handles of this type <b>can</b> be exported from Vulkan memory objects.</li>
      * <li>{@link #VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT} specifies that handles of this type <b>can</b> be imported as Vulkan memory objects.</li>
      * </ul>
@@ -949,7 +971,7 @@ public class VK11 extends VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_FENCE_IMPORT_TEMPORARY_BIT FENCE_IMPORT_TEMPORARY_BIT} specifies that the fence payload will be imported only temporarily, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing">Importing Fence Payloads</a>, regardless of the permanence of {@code handleType}.</li>
+     * <li>{@link #VK_FENCE_IMPORT_TEMPORARY_BIT FENCE_IMPORT_TEMPORARY_BIT} specifies that the fence payload will be imported only temporarily, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-importing">Importing Fence Payloads</a>, regardless of the permanence of {@code handleType}.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
@@ -966,7 +988,7 @@ public class VK11 extends VK10 {
      * <p>These bits have the following meanings:</p>
      * 
      * <ul>
-     * <li>{@link #VK_SEMAPHORE_IMPORT_TEMPORARY_BIT SEMAPHORE_IMPORT_TEMPORARY_BIT} specifies that the semaphore payload will be imported only temporarily, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore Payloads</a>, regardless of the permanence of {@code handleType}.</li>
+     * <li>{@link #VK_SEMAPHORE_IMPORT_TEMPORARY_BIT SEMAPHORE_IMPORT_TEMPORARY_BIT} specifies that the semaphore payload will be imported only temporarily, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing">Importing Semaphore Payloads</a>, regardless of the permanence of {@code handleType}.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
@@ -1095,7 +1117,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPI(__functionAddress, pApiVersion);
+        return callPI(pApiVersion, __functionAddress);
     }
 
     /**
@@ -1103,7 +1125,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>The version of Vulkan that is supported by an instance <b>may</b> be different than the version of Vulkan supported by a device or physical device. To query properties that <b>can</b> be used in creating an instance, call:</p>
+     * <p>To query the version of instance-level functionality supported by the implementation, call:</p>
      * 
      * <pre><code>
      * VkResult vkEnumerateInstanceVersion(
@@ -1124,7 +1146,7 @@ public class VK11 extends VK10 {
      * </ul></dd>
      * </dl>
      *
-     * @param pApiVersion points to a {@code uint32_t}, which is the version of Vulkan supported by instance-level functionality, encoded as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-versionnum">API Version Numbers and Semantics</a> section.
+     * @param pApiVersion points to a {@code uint32_t}, which is the version of Vulkan supported by instance-level functionality, encoded as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers">Version Numbers</a>.
      */
     @NativeType("VkResult")
     public static int vkEnumerateInstanceVersion(@NativeType("uint32_t *") IntBuffer pApiVersion) {
@@ -1146,7 +1168,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, device.address(), bindInfoCount, pBindInfos);
+        return callPPI(device.address(), bindInfoCount, pBindInfos, __functionAddress);
     }
 
     /**
@@ -1220,7 +1242,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, device.address(), bindInfoCount, pBindInfos);
+        return callPPI(device.address(), bindInfoCount, pBindInfos, __functionAddress);
     }
 
     /**
@@ -1290,7 +1312,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, device.address(), heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+        callPPV(device.address(), heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures, __functionAddress);
     }
 
     /**
@@ -1326,7 +1348,7 @@ public class VK11 extends VK10 {
      * <li>{@code heapIndex} <b>must</b> be less than {@code memoryHeapCount}</li>
      * <li>{@code localDeviceIndex} <b>must</b> be a valid device index</li>
      * <li>{@code remoteDeviceIndex} <b>must</b> be a valid device index</li>
-     * <li>{@code localDeviceIndex} <b>must</b> not equal remoteDeviceIndex</li>
+     * <li>{@code localDeviceIndex} <b>must</b> not equal {@code remoteDeviceIndex}</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -1372,7 +1394,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@code deviceMask} is used to filter out subsequent commands from executing on all physical devices whose bit indices are not set in the mask.</p>
+     * <p>{@code deviceMask} is used to filter out subsequent commands from executing on all physical devices whose bit indices are not set in the mask, except commands beginning a render pass instance, commands transitioning to the next subpass in the render pass instance, and commands ending a render pass instance, which always execute on the set of physical devices whose bit indices are included in the {@code deviceMask} member of the instance of the {@link VkDeviceGroupRenderPassBeginInfoKHR} structure passed to the command beginning the corresponding render pass instance.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -1380,14 +1402,14 @@ public class VK11 extends VK10 {
      * <li>{@code deviceMask} <b>must</b> be a valid device mask value</li>
      * <li>{@code deviceMask} <b>must</b> not be zero</li>
      * <li>{@code deviceMask} <b>must</b> not include any set bits that were not in the {@link VkDeviceGroupCommandBufferBeginInfo}{@code ::deviceMask} value when the command buffer began recording.</li>
-     * <li>If {@link #vkCmdSetDeviceMask CmdSetDeviceMask} is called inside a render pass instance, {@code deviceMask} <b>must</b> not include any set bits that were not in the {@link VkDeviceGroupRenderPassBeginInfo}{@code ::deviceMask} value when the render pass instance began recording.</li>
+     * <li>If {@code vkCmdSetDeviceMask} is called inside a render pass instance, {@code deviceMask} <b>must</b> not include any set bits that were not in the {@link VkDeviceGroupRenderPassBeginInfo}{@code ::deviceMask} value when the render pass instance began recording.</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
      * <ul>
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, compute, or transfer operations</li>
      * </ul>
      * 
@@ -1401,7 +1423,7 @@ public class VK11 extends VK10 {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute Transfer</td><td></td></tr></tbody>
      * </table>
      *
@@ -1413,7 +1435,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, commandBuffer.address(), deviceMask);
+        callPV(commandBuffer.address(), deviceMask, __functionAddress);
     }
 
     // --- [ vkCmdDispatchBase ] ---
@@ -1449,12 +1471,28 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>When the command is executed, a global workgroup consisting of <code>groupCountX × groupCountY × groupCountZ</code> local workgroups is assembled, with {@code WorkgroupId} values ranging from <code>[baseGroup, baseGroup + groupCount)</code> in each component. {@link VK10#vkCmdDispatch CmdDispatch} is equivalent to {@code vkCmdDispatchBase(0,0,0,groupCountX,groupCountY,groupCountZ)}.</p>
+     * <p>When the command is executed, a global workgroup consisting of <code>groupCountX × groupCountY × groupCountZ</code> local workgroups is assembled, with {@code WorkgroupId} values ranging from <code>[baseGroup*, baseGroup* + groupCount*)</code> in each component. {@link VK10#vkCmdDispatch CmdDispatch} is equivalent to {@code vkCmdDispatchBase(0,0,0,groupCountX,groupCountY,groupCountZ)}.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>All valid usage rules from {@link VK10#vkCmdDispatch CmdDispatch} apply</li>
+     * <li>If a {@code VkImageView} is sampled with {@link VK10#VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command, then the image view&#8217;s <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-view-format-features">format features</a> <b>must</b> contain {@link VK10#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT}</li>
+     * <li>If a {@code VkImageView} is accessed using atomic operations as a result of this command, then the image view&#8217;s <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-view-format-features">format features</a> <b>must</b> contain {@link VK10#VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT}</li>
+     * <li>If a {@code VkImageView} is sampled with {@link EXTFilterCubic#VK_FILTER_CUBIC_EXT FILTER_CUBIC_EXT} as a result of this command, then the image view&#8217;s <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-view-format-features">format features</a> <b>must</b> contain {@link EXTFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT}</li>
+     * <li>Any {@code VkImageView} being sampled with {@link EXTFilterCubic#VK_FILTER_CUBIC_EXT FILTER_CUBIC_EXT} as a result of this command <b>must</b> have a {@code VkImageViewType} and format that supports cubic filtering, as specified by {@link VkFilterCubicImageViewImageFormatPropertiesEXT}{@code ::filterCubic} returned by {@code vkGetPhysicalDeviceImageFormatProperties2}</li>
+     * <li>Any {@code VkImageView} being sampled with {@link EXTFilterCubic#VK_FILTER_CUBIC_EXT FILTER_CUBIC_EXT} with a reduction mode of either {@link EXTSamplerFilterMinmax#VK_SAMPLER_REDUCTION_MODE_MIN_EXT SAMPLER_REDUCTION_MODE_MIN_EXT} or {@link EXTSamplerFilterMinmax#VK_SAMPLER_REDUCTION_MODE_MAX_EXT SAMPLER_REDUCTION_MODE_MAX_EXT} as a result of this command <b>must</b> have a {@code VkImageViewType} and format that supports cubic filtering together with minmax filtering, as specified by {@link VkFilterCubicImageViewImageFormatPropertiesEXT}{@code ::filterCubicMinmax} returned by {@code vkGetPhysicalDeviceImageFormatProperties2}</li>
+     * <li>Any {@code VkImage} created with a {@link VkImageCreateInfo}{@code ::flags} containing {@link NVCornerSampledImage#VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV IMAGE_CREATE_CORNER_SAMPLED_BIT_NV} sampled as a result of this command <b>must</b> only be sampled using a {@code VkSamplerAddressMode} of {@link VK10#VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE}.</li>
+     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} bound to the pipeline bind point used by this command, a descriptor set <b>must</b> have been bound to <em>n</em> at the same pipeline bind point, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-compatibility">Pipeline Layout Compatibility</a></li>
+     * <li>For each push constant that is statically used by the {@code VkPipeline} bound to the pipeline bind point used by this command, a push constant value <b>must</b> have been set for the same pipeline bind point, with a {@code VkPipelineLayout} that is compatible for push constants, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-compatibility">Pipeline Layout Compatibility</a></li>
+     * <li>Descriptors in each bound descriptor set, specified via {@code vkCmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the {@code VkPipeline} bound to the pipeline bind point used by this command</li>
+     * <li>A valid pipeline <b>must</b> be bound to the pipeline bind point used by this command</li>
+     * <li>If the {@code VkPipeline} object bound to the pipeline bind point used by this command requires any dynamic state, that state <b>must</b> have been set for {@code commandBuffer}</li>
+     * <li>If the {@code VkPipeline} object bound to the pipeline bind point used by this command accesses a {@code VkSampler} object that uses unnormalized coordinates, that sampler <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link VK10#VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link VK10#VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link VK10#VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link VK10#VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link VK10#VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
+     * <li>If the {@code VkPipeline} object bound to the pipeline bind point used by this command accesses a {@code VkSampler} object that uses unnormalized coordinates, that sampler <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
+     * <li>If the {@code VkPipeline} object bound to the pipeline bind point used by this command accesses a {@code VkSampler} object that uses unnormalized coordinates, that sampler <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-robustBufferAccess">robust buffer access</a> feature is not enabled, and if the {@code VkPipeline} object bound to the pipeline bind point used by this command accesses a uniform buffer, it <b>must</b> not access values outside of the range of the buffer as specified in the descriptor set bound to the same pipeline bind point</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-robustBufferAccess">robust buffer access</a> feature is not enabled, and if the {@code VkPipeline} object bound to the pipeline bind point used by this command accesses a storage buffer, it <b>must</b> not access values outside of the range of the buffer as specified in the descriptor set bound to the same pipeline bind point</li>
+     * <li>If {@code commandBuffer} is an unprotected command buffer, any resource accessed by the {@code VkPipeline} object bound to the pipeline bind point used by this command <b>must</b> not be a protected resource</li>
      * <li>{@code baseGroupX} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxComputeWorkGroupCount}[0]</li>
      * <li>{@code baseGroupX} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxComputeWorkGroupCount}[1]</li>
      * <li>{@code baseGroupZ} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxComputeWorkGroupCount}[2]</li>
@@ -1468,7 +1506,7 @@ public class VK11 extends VK10 {
      * 
      * <ul>
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support compute operations</li>
      * <li>This command <b>must</b> only be called outside of a render pass instance</li>
      * </ul>
@@ -1483,7 +1521,7 @@ public class VK11 extends VK10 {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Primary Secondary</td><td>Outside</td><td>Compute</td><td></td></tr></tbody>
      * </table>
      *
@@ -1500,7 +1538,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, commandBuffer.address(), baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
+        callPV(commandBuffer.address(), baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ, __functionAddress);
     }
 
     // --- [ vkEnumeratePhysicalDeviceGroups ] ---
@@ -1515,7 +1553,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, instance.address(), pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
+        return callPPPI(instance.address(), pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties, __functionAddress);
     }
 
     /**
@@ -1594,7 +1632,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, device.address(), pInfo, pMemoryRequirements);
+        callPPPV(device.address(), pInfo, pMemoryRequirements, __functionAddress);
     }
 
     /**
@@ -1646,7 +1684,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, device.address(), pInfo, pMemoryRequirements);
+        callPPPV(device.address(), pInfo, pMemoryRequirements, __functionAddress);
     }
 
     /**
@@ -1702,7 +1740,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPPV(__functionAddress, device.address(), pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+        callPPPPV(device.address(), pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements, __functionAddress);
     }
 
     /**
@@ -1762,7 +1800,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, physicalDevice.address(), pFeatures);
+        callPPV(physicalDevice.address(), pFeatures, __functionAddress);
     }
 
     /**
@@ -1786,7 +1824,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>Each structure in {@code pFeatures} and its {@code pNext} chain contain members corresponding to fine-grained features. {@link #vkGetPhysicalDeviceFeatures2 GetPhysicalDeviceFeatures2} writes each member to a boolean value indicating whether that feature is supported.</p>
+     * <p>Each structure in {@code pFeatures} and its {@code pNext} chain contain members corresponding to fine-grained features. {@code vkGetPhysicalDeviceFeatures2} writes each member to a boolean value indicating whether that feature is supported.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -1814,7 +1852,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, physicalDevice.address(), pProperties);
+        callPPV(physicalDevice.address(), pProperties, __functionAddress);
     }
 
     /**
@@ -1838,7 +1876,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>Each structure in {@code pProperties} and its {@code pNext} chain contain members corresponding to properties or implementation-dependent limits. {@link #vkGetPhysicalDeviceProperties2 GetPhysicalDeviceProperties2} writes each member to a value indicating the value of that property or limit.</p>
+     * <p>Each structure in {@code pProperties} and its {@code pNext} chain contain members corresponding to properties or implementation-dependent limits. {@code vkGetPhysicalDeviceProperties2} writes each member to a value indicating the value of that property or limit.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -1866,7 +1904,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, physicalDevice.address(), format, pFormatProperties);
+        callPPV(physicalDevice.address(), format, pFormatProperties, __functionAddress);
     }
 
     /**
@@ -1892,7 +1930,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetPhysicalDeviceFormatProperties2 GetPhysicalDeviceFormatProperties2} behaves similarly to {@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}, with the ability to return extended information in a {@code pNext} chain of output structures.</p>
+     * <p>{@code vkGetPhysicalDeviceFormatProperties2} behaves similarly to {@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}, with the ability to return extended information in a {@code pNext} chain of output structures.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -1922,7 +1960,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPPI(__functionAddress, physicalDevice.address(), pImageFormatInfo, pImageFormatProperties);
+        return callPPPI(physicalDevice.address(), pImageFormatInfo, pImageFormatProperties, __functionAddress);
     }
 
     /**
@@ -1948,7 +1986,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetPhysicalDeviceImageFormatProperties2 GetPhysicalDeviceImageFormatProperties2} behaves similarly to {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}, with the ability to return extended information in a {@code pNext} chain of output structures.</p>
+     * <p>{@code vkGetPhysicalDeviceImageFormatProperties2} behaves similarly to {@link VK10#vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}, with the ability to return extended information in a {@code pNext} chain of output structures.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -1998,7 +2036,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, physicalDevice.address(), pQueueFamilyPropertyCount, pQueueFamilyProperties);
+        callPPPV(physicalDevice.address(), pQueueFamilyPropertyCount, pQueueFamilyProperties, __functionAddress);
     }
 
     /**
@@ -2024,7 +2062,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetPhysicalDeviceQueueFamilyProperties2 GetPhysicalDeviceQueueFamilyProperties2} behaves similarly to {@link VK10#vkGetPhysicalDeviceQueueFamilyProperties GetPhysicalDeviceQueueFamilyProperties}, with the ability to return extended information in a {@code pNext} chain of output structures.</p>
+     * <p>{@code vkGetPhysicalDeviceQueueFamilyProperties2} behaves similarly to {@link VK10#vkGetPhysicalDeviceQueueFamilyProperties GetPhysicalDeviceQueueFamilyProperties}, with the ability to return extended information in a {@code pNext} chain of output structures.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -2058,7 +2096,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, physicalDevice.address(), pMemoryProperties);
+        callPPV(physicalDevice.address(), pMemoryProperties, __functionAddress);
     }
 
     /**
@@ -2082,7 +2120,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetPhysicalDeviceMemoryProperties2 GetPhysicalDeviceMemoryProperties2} behaves similarly to {@link VK10#vkGetPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProperties}, with the ability to return extended information in a {@code pNext} chain of output structures.</p>
+     * <p>{@code vkGetPhysicalDeviceMemoryProperties2} behaves similarly to {@link VK10#vkGetPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProperties}, with the ability to return extended information in a {@code pNext} chain of output structures.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -2114,7 +2152,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPPV(__functionAddress, physicalDevice.address(), pFormatInfo, pPropertyCount, pProperties);
+        callPPPPV(physicalDevice.address(), pFormatInfo, pPropertyCount, pProperties, __functionAddress);
     }
 
     /**
@@ -2122,7 +2160,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>{@link #vkGetPhysicalDeviceSparseImageFormatProperties2 GetPhysicalDeviceSparseImageFormatProperties2} returns an array of {@link VkSparseImageFormatProperties2}. Each element will describe properties for one set of image aspects that are bound simultaneously in the image. This is usually one element for each aspect in the image, but for interleaved depth/stencil images there is only one element describing the combined aspects.</p>
+     * <p>{@code vkGetPhysicalDeviceSparseImageFormatProperties2} returns an array of {@link VkSparseImageFormatProperties2}. Each element will describe properties for one set of image aspects that are bound simultaneously in the image. This is usually one element for each aspect in the image, but for interleaved depth/stencil images there is only one element describing the combined aspects.</p>
      * 
      * <pre><code>
      * void vkGetPhysicalDeviceSparseImageFormatProperties2(
@@ -2142,7 +2180,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetPhysicalDeviceSparseImageFormatProperties2 GetPhysicalDeviceSparseImageFormatProperties2} behaves identically to {@link VK10#vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}, with the ability to return extended information by adding extension structures to the {@code pNext} chain of its {@code pProperties} parameter.</p>
+     * <p>{@code vkGetPhysicalDeviceSparseImageFormatProperties2} behaves identically to {@link VK10#vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}, with the ability to return extended information by adding extension structures to the {@code pNext} chain of its {@code pProperties} parameter.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -2207,7 +2245,7 @@ public class VK11 extends VK10 {
      * 
      * <p>Implementations utilize many internal allocation strategies that make it impossible to guarantee that all unused memory is released back to the system. For instance, an implementation of a command pool <b>may</b> involve allocating memory in bulk from the system and sub-allocating from that memory. In such an implementation any live command buffer that holds a reference to a bulk allocation would prevent that allocation from being freed, even if only a small proportion of the bulk allocation is in use.</p>
      * 
-     * <p>In most cases trimming will result in a reduction in allocated but unused memory, but it does not guarantee the "{@code ideal}" behaviour.</p>
+     * <p>In most cases trimming will result in a reduction in allocated but unused memory, but it does not guarantee the "{@code ideal}" behavior.</p>
      * 
      * <p>Trimming <b>may</b> be an expensive operation, and <b>should</b> not be called frequently. Trimming <b>should</b> be treated as a way to relieve memory pressure after application-known points when there exists enough unused memory that the cost of trimming is "{@code worth}" it.</p>
      * </div>
@@ -2236,7 +2274,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPJV(__functionAddress, device.address(), commandPool, flags);
+        callPJV(device.address(), commandPool, flags, __functionAddress);
     }
 
     // --- [ vkGetDeviceQueue2 ] ---
@@ -2247,7 +2285,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, device.address(), pQueueInfo, pQueue);
+        callPPPV(device.address(), pQueueInfo, pQueue, __functionAddress);
     }
 
     /**
@@ -2295,7 +2333,7 @@ public class VK11 extends VK10 {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo, pAllocator, pYcbcrConversion);
+        return callPPPPI(device.address(), pCreateInfo, pAllocator, pYcbcrConversion, __functionAddress);
     }
 
     /**
@@ -2323,12 +2361,12 @@ public class VK11 extends VK10 {
      * 
      * <h5>Description</h5>
      * 
-     * <p>The interpretation of the configured sampler Y'C<sub>B</sub>C<sub>R</sub> conversion is described in more detail in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion">the description of sampler Y'C<sub>B</sub>C<sub>R</sub> conversion</a> in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures">Image Operations</a> chapter.</p>
+     * <p>The interpretation of the configured sampler Y'C<sub>B</sub>C<sub>R</sub> conversion is described in more detail in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion">the description of sampler Y'C<sub>B</sub>C<sub>R</sub> conversion</a> in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures">Image Operations</a> chapter.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sampler-YCbCr-conversion">sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion feature</a> <b>must</b> be enabled</li>
+     * <li>The <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-sampler-YCbCr-conversion">sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion feature</a> <b>must</b> be enabled</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -2360,7 +2398,7 @@ public class VK11 extends VK10 {
      *
      * @param device           the logical device that creates the sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion.
      * @param pCreateInfo      a pointer to an instance of the {@link VkSamplerYcbcrConversionCreateInfo} specifying the requested sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion.
-     * @param pAllocator       controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator       controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pYcbcrConversion points to a {@code VkSamplerYcbcrConversion} handle in which the resulting sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion is returned.
      */
     @NativeType("VkResult")
@@ -2380,7 +2418,7 @@ public class VK11 extends VK10 {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, device.address(), ycbcrConversion, pAllocator);
+        callPJPV(device.address(), ycbcrConversion, pAllocator, __functionAddress);
     }
 
     /**
@@ -2425,7 +2463,7 @@ public class VK11 extends VK10 {
      *
      * @param device          the logical device that destroys the Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion.
      * @param ycbcrConversion the conversion to destroy.
-     * @param pAllocator      controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator      controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
     public static void vkDestroySamplerYcbcrConversion(VkDevice device, @NativeType("VkSamplerYcbcrConversion") long ycbcrConversion, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroySamplerYcbcrConversion(device, ycbcrConversion, memAddressSafe(pAllocator));
@@ -2441,7 +2479,7 @@ public class VK11 extends VK10 {
             VkDescriptorUpdateTemplateCreateInfo.validate(pCreateInfo);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
+        return callPPPPI(device.address(), pCreateInfo, pAllocator, pDescriptorUpdateTemplate, __functionAddress);
     }
 
     /**
@@ -2500,7 +2538,7 @@ public class VK11 extends VK10 {
      *
      * @param device                    the logical device that creates the descriptor update template.
      * @param pCreateInfo               a pointer to an instance of the {@link VkDescriptorUpdateTemplateCreateInfo} structure specifying the set of descriptors to update with a single call to {@link KHRPushDescriptor#vkCmdPushDescriptorSetWithTemplateKHR CmdPushDescriptorSetWithTemplateKHR} or {@link #vkUpdateDescriptorSetWithTemplate UpdateDescriptorSetWithTemplate}.
-     * @param pAllocator                controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator                controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pDescriptorUpdateTemplate points to a {@code VkDescriptorUpdateTemplate} handle in which the resulting descriptor update template object is returned.
      */
     @NativeType("VkResult")
@@ -2520,7 +2558,7 @@ public class VK11 extends VK10 {
             check(__functionAddress);
             if (pAllocator != NULL) { VkAllocationCallbacks.validate(pAllocator); }
         }
-        callPJPV(__functionAddress, device.address(), descriptorUpdateTemplate, pAllocator);
+        callPJPV(device.address(), descriptorUpdateTemplate, pAllocator, __functionAddress);
     }
 
     /**
@@ -2572,7 +2610,7 @@ public class VK11 extends VK10 {
      *
      * @param device                   the logical device that has been used to create the descriptor update template
      * @param descriptorUpdateTemplate the descriptor update template to destroy.
-     * @param pAllocator               controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
+     * @param pAllocator               controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
     public static void vkDestroyDescriptorUpdateTemplate(VkDevice device, @NativeType("VkDescriptorUpdateTemplate") long descriptorUpdateTemplate, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
         nvkDestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, memAddressSafe(pAllocator));
@@ -2647,12 +2685,12 @@ public class VK11 extends VK10 {
      *         1,                                           // descriptorCount
      *         VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,   // descriptorType
      *         offsetof(AppDataStructure, imageInfo),       // offset
-     *         0                                            // stride is not required if descriptorCount is 1.
+     *         0                                            // stride is not required if descriptorCount is 1
      *     },
      * 
      *     // binding to an array of buffer descriptors
      *     {
-     *         0,                                           // binding
+     *         1,                                           // binding
      *         0,                                           // dstArrayElement
      *         3,                                           // descriptorCount
      *         VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,           // descriptorType
@@ -2662,11 +2700,12 @@ public class VK11 extends VK10 {
      * 
      *     // binding to an array of buffer views
      *     {
-     *         0,                                           // binding
-     *         3,                                           // dstArrayElement
-     *         1,                                           // descriptorCount
+     *         2,                                           // binding
+     *         0,                                           // dstArrayElement
+     *         2,                                           // descriptorCount
      *         VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER,     // descriptorType
-     *         offsetof(AppDataStructure, bufferView),      // offset
+     *         offsetof(AppDataStructure, bufferView) +
+     *           offsetof(AppBufferView, bufferView),       // offset
      *         sizeof(AppBufferView)                        // stride, bufferViews do not have to be compact
      *     },
      * };
@@ -2675,15 +2714,15 @@ public class VK11 extends VK10 {
      * const VkDescriptorUpdateTemplateCreateInfo createInfo =
      * {
      *     VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,  // sType
-     *     NULL,                                                          // pNext
-     *     0,                                                             // flags
-     *     3,                                                             // descriptorUpdateEntryCount
-     *     descriptorUpdateTemplateEntries,                               // pDescriptorUpdateEntries
+     *     NULL,                                                      // pNext
+     *     0,                                                         // flags
+     *     3,                                                         // descriptorUpdateEntryCount
+     *     descriptorUpdateTemplateEntries,                           // pDescriptorUpdateEntries
      *     VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET,         // templateType
-     *     myLayout,                                                      // descriptorSetLayout
-     *     0,                                                             // pipelineBindPoint, ignored by given templateType
-     *     0,                                                             // pipelineLayout, ignored by given templateType
-     *     0,                                                             // set, ignored by given templateType
+     *     myLayout,                                                  // descriptorSetLayout
+     *     0,                                                         // pipelineBindPoint, ignored by given templateType
+     *     0,                                                         // pipelineLayout, ignored by given templateType
+     *     0,                                                         // set, ignored by given templateType
      * };
      * 
      * VkDescriptorUpdateTemplate myDescriptorUpdateTemplate;
@@ -2711,7 +2750,7 @@ public class VK11 extends VK10 {
             check(__functionAddress);
             check(pData);
         }
-        callPJJPV(__functionAddress, device.address(), descriptorSet, descriptorUpdateTemplate, pData);
+        callPJJPV(device.address(), descriptorSet, descriptorUpdateTemplate, pData, __functionAddress);
     }
 
     // --- [ vkGetPhysicalDeviceExternalBufferProperties ] ---
@@ -2722,7 +2761,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, physicalDevice.address(), pExternalBufferInfo, pExternalBufferProperties);
+        callPPPV(physicalDevice.address(), pExternalBufferInfo, pExternalBufferProperties, __functionAddress);
     }
 
     /**
@@ -2774,7 +2813,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, physicalDevice.address(), pExternalFenceInfo, pExternalFenceProperties);
+        callPPPV(physicalDevice.address(), pExternalFenceInfo, pExternalFenceProperties, __functionAddress);
     }
 
     /**
@@ -2782,7 +2821,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>Fences <b>may</b> support import and export of their <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-payloads">payload</a> to external handles. To query the external handle types supported by fences, call:</p>
+     * <p>Fences <b>may</b> support import and export of their <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-payloads">payload</a> to external handles. To query the external handle types supported by fences, call:</p>
      * 
      * <pre><code>
      * void vkGetPhysicalDeviceExternalFenceProperties(
@@ -2826,7 +2865,7 @@ public class VK11 extends VK10 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, physicalDevice.address(), pExternalSemaphoreInfo, pExternalSemaphoreProperties);
+        callPPPV(physicalDevice.address(), pExternalSemaphoreInfo, pExternalSemaphoreProperties, __functionAddress);
     }
 
     /**
@@ -2834,7 +2873,7 @@ public class VK11 extends VK10 {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>Semaphores <b>may</b> support import and export of their <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-payloads">payload</a> to external handles. To query the external handle types supported by semaphores, call:</p>
+     * <p>Semaphores <b>may</b> support import and export of their <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-payloads">payload</a> to external handles. To query the external handle types supported by semaphores, call:</p>
      * 
      * <pre><code>
      * void vkGetPhysicalDeviceExternalSemaphoreProperties(
@@ -2879,7 +2918,7 @@ public class VK11 extends VK10 {
             check(__functionAddress);
             VkDescriptorSetLayoutCreateInfo.validate(pCreateInfo);
         }
-        callPPPV(__functionAddress, device.address(), pCreateInfo, pSupport);
+        callPPPV(device.address(), pCreateInfo, pSupport, __functionAddress);
     }
 
     /**
@@ -2942,7 +2981,7 @@ public class VK11 extends VK10 {
             check(__functionAddress);
             check(pApiVersion, 1);
         }
-        return callPI(__functionAddress, pApiVersion);
+        return callPI(pApiVersion, __functionAddress);
     }
 
     /** Array version of: {@link #vkGetDeviceGroupPeerMemoryFeatures GetDeviceGroupPeerMemoryFeatures} */
@@ -2952,7 +2991,7 @@ public class VK11 extends VK10 {
             check(__functionAddress);
             check(pPeerMemoryFeatures, 1);
         }
-        callPPV(__functionAddress, device.address(), heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+        callPPV(device.address(), heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures, __functionAddress);
     }
 
     /** Array version of: {@link #vkEnumeratePhysicalDeviceGroups EnumeratePhysicalDeviceGroups} */
@@ -2964,7 +3003,7 @@ public class VK11 extends VK10 {
             check(pPhysicalDeviceGroupCount, 1);
             checkSafe(pPhysicalDeviceGroupProperties, pPhysicalDeviceGroupCount[0]);
         }
-        return callPPPI(__functionAddress, instance.address(), pPhysicalDeviceGroupCount, memAddressSafe(pPhysicalDeviceGroupProperties));
+        return callPPPI(instance.address(), pPhysicalDeviceGroupCount, memAddressSafe(pPhysicalDeviceGroupProperties), __functionAddress);
     }
 
     /** Array version of: {@link #vkGetImageSparseMemoryRequirements2 GetImageSparseMemoryRequirements2} */
@@ -2975,7 +3014,7 @@ public class VK11 extends VK10 {
             check(pSparseMemoryRequirementCount, 1);
             checkSafe(pSparseMemoryRequirements, pSparseMemoryRequirementCount[0]);
         }
-        callPPPPV(__functionAddress, device.address(), pInfo.address(), pSparseMemoryRequirementCount, memAddressSafe(pSparseMemoryRequirements));
+        callPPPPV(device.address(), pInfo.address(), pSparseMemoryRequirementCount, memAddressSafe(pSparseMemoryRequirements), __functionAddress);
     }
 
     /** Array version of: {@link #vkGetPhysicalDeviceQueueFamilyProperties2 GetPhysicalDeviceQueueFamilyProperties2} */
@@ -2986,7 +3025,7 @@ public class VK11 extends VK10 {
             check(pQueueFamilyPropertyCount, 1);
             checkSafe(pQueueFamilyProperties, pQueueFamilyPropertyCount[0]);
         }
-        callPPPV(__functionAddress, physicalDevice.address(), pQueueFamilyPropertyCount, memAddressSafe(pQueueFamilyProperties));
+        callPPPV(physicalDevice.address(), pQueueFamilyPropertyCount, memAddressSafe(pQueueFamilyProperties), __functionAddress);
     }
 
     /** Array version of: {@link #vkGetPhysicalDeviceSparseImageFormatProperties2 GetPhysicalDeviceSparseImageFormatProperties2} */
@@ -2997,7 +3036,7 @@ public class VK11 extends VK10 {
             check(pPropertyCount, 1);
             checkSafe(pProperties, pPropertyCount[0]);
         }
-        callPPPPV(__functionAddress, physicalDevice.address(), pFormatInfo.address(), pPropertyCount, memAddressSafe(pProperties));
+        callPPPPV(physicalDevice.address(), pFormatInfo.address(), pPropertyCount, memAddressSafe(pProperties), __functionAddress);
     }
 
     /** Array version of: {@link #vkCreateSamplerYcbcrConversion CreateSamplerYcbcrConversion} */
@@ -3009,7 +3048,7 @@ public class VK11 extends VK10 {
             check(pYcbcrConversion, 1);
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pYcbcrConversion);
+        return callPPPPI(device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pYcbcrConversion, __functionAddress);
     }
 
     /** Array version of: {@link #vkCreateDescriptorUpdateTemplate CreateDescriptorUpdateTemplate} */
@@ -3022,7 +3061,7 @@ public class VK11 extends VK10 {
             VkDescriptorUpdateTemplateCreateInfo.validate(pCreateInfo.address());
             if (pAllocator != null) { VkAllocationCallbacks.validate(pAllocator.address()); }
         }
-        return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pDescriptorUpdateTemplate);
+        return callPPPPI(device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pDescriptorUpdateTemplate, __functionAddress);
     }
 
 }

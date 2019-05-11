@@ -7,7 +7,7 @@ package ovr.templates
 import org.lwjgl.generator.*
 import ovr.*
 
-val OVR_Util = "OVRUtil".nativeClass(Module.OVR, prefixMethod = "ovr", prefixConstant = "ovr", library = OVR_LIBRARY) {
+val OVR_Util = "OVRUtil".nativeClass(Module.OVR, prefixMethod = "ovr", prefixConstant = "ovr") {
     includeOVRCAPI()
 
     documentation = "Native bindings to the libOVR utility functions."
@@ -67,17 +67,17 @@ val OVR_Util = "OVRUtil".nativeClass(Module.OVR, prefixMethod = "ovr", prefixCon
         decide whether or not to initialize LibOVR.
         """,
 
-        int.IN("timeoutMilliseconds", "a timeout to wait for HMD to be attached or 0 to poll")
+        int("timeoutMilliseconds", "a timeout to wait for HMD to be attached or 0 to poll")
     )
 
     ovrMatrix4f(
         "Matrix4f_Projection",
         "Used to generate projection from {@code ovrEyeDesc::Fov}.",
 
-        ovrFovPort.IN("fov", "the ##OVRFovPort to use"),
-        float.IN("znear", "distance to near Z limit"),
-        float.IN("zfar", "distance to far Z limit"),
-        unsigned_int.IN(
+        ovrFovPort("fov", "the ##OVRFovPort to use"),
+        float("znear", "distance to near Z limit"),
+        float("zfar", "distance to far Z limit"),
+        unsigned_int(
             "projectionModFlags",
             "a combination of the {@code ovrProjectionModifier} flags",
             "#Projection_None #Projection_FarLessThanNear #Projection_FarClipAtInfinity #Projection_ClipRangeOpenGL",
@@ -91,8 +91,8 @@ val OVR_Util = "OVRUtil".nativeClass(Module.OVR, prefixMethod = "ovr", prefixCon
         "TimewarpProjectionDesc_FromProjection",
         "Extracts the required data from the result of #Matrix4f_Projection().",
 
-        ovrMatrix4f.IN("projection", "the project matrix from which to extract ##OVRTimewarpProjectionDesc"),
-        unsigned_int.IN("projectionModFlags", "a combination of the ovrProjectionModifier flags", ProjectionModifiers, LinkMode.BITFIELD),
+        ovrMatrix4f("projection", "the project matrix from which to extract ##OVRTimewarpProjectionDesc"),
+        unsigned_int("projectionModFlags", "a combination of the ovrProjectionModifier flags", ProjectionModifiers, LinkMode.BITFIELD),
 
         returnDoc = "the extracted ovrTimewarpProjectionDesc"
     )
@@ -105,10 +105,10 @@ val OVR_Util = "OVRUtil".nativeClass(Module.OVR, prefixMethod = "ovr", prefixCon
         Used for 2D rendering, Y is down.
         """,
 
-        ovrMatrix4f.IN("projection", "the perspective matrix that the orthographic matrix is derived from"),
-        ovrVector2f.IN("orthoScale", "equal to {@code 1.0f / pixelsPerTanAngleAtCenter}"),
-        float.IN("orthoDistance", "equal to the distance from the camera in meters, such as 0.8m"),
-        float.IN("HmdToEyeOffsetX", "the offset of the eye from the center"),
+        ovrMatrix4f("projection", "the perspective matrix that the orthographic matrix is derived from"),
+        ovrVector2f("orthoScale", "equal to {@code 1.0f / pixelsPerTanAngleAtCenter}"),
+        float("orthoDistance", "equal to the distance from the camera in meters, such as 0.8m"),
+        float("HmdToEyeOffsetX", "the offset of the eye from the center"),
 
         returnDoc = "the calculated projection matrix"
     )
@@ -117,15 +117,15 @@ val OVR_Util = "OVRUtil".nativeClass(Module.OVR, prefixMethod = "ovr", prefixCon
         "_CalcEyePoses",
         "Computes offset eye poses based on {@code headPose} returned by ##OVRTrackingState.",
 
-        ovrPosef.IN("headPose", "indicates the HMD position and orientation to use for the calculation"),
-        Check(2)..ovrPosef.const.p.IN(
+        ovrPosef("headPose", "indicates the HMD position and orientation to use for the calculation"),
+        Check(2)..ovrPosef.const.p(
             "HmdToEyePose",
             """
             can be ##OVREyeRenderDesc{@code .HmdToEyePose} returned from #GetRenderDesc(). For monoscopic rendering, use a position vector that is average of
             the two position vectors for each eye   .
             """
         ),
-        Check(2)..ovrPosef.p.OUT(
+        Check(2)..ovrPosef.p(
             "outEyePoses",
             """
             if {@code outEyePoses} are used for rendering, they should be passed to #SubmitFrame() in ##OVRLayerEyeFov{@code ::RenderPose} or
@@ -144,24 +144,24 @@ val OVR_Util = "OVRUtil".nativeClass(Module.OVR, prefixMethod = "ovr", prefixCon
         not need to worry about applying {@code HmdToEyePose} to the returned {@code outEyePoses} variables.
         """,
 
-        ovrSession.IN("session", "an {@code ovrSession} previously returned by #Create()"),
-        long_long.IN("frameIndex", "the targeted frame index, or 0 to refer to one frame after the last time #SubmitFrame() was called"),
-        ovrBool.IN(
+        ovrSession("session", "an {@code ovrSession} previously returned by #Create()"),
+        long_long("frameIndex", "the targeted frame index, or 0 to refer to one frame after the last time #SubmitFrame() was called"),
+        ovrBool(
             "latencyMarker",
             """
             Specifies that this call is the point in time where the "App-to-Mid-Photon" latency timer starts from. If a given {@code ovrLayer} provides
             "SensorSampleTimestamp", that will override the value stored here.
             """
         ),
-        Check(2)..ovrPosef.const.p.IN(
+        Check(2)..ovrPosef.const.p(
             "HmdToEyePose",
             """
             can be ##OVREyeRenderDesc{@code .HmdToEyePose} returned from #GetRenderDesc(). For monoscopic rendering, use a position vector that is the
             average of the two position vectors for each eye.
             """
         ),
-        Check(2)..ovrPosef.p.OUT("outEyePoses", "the predicted eye poses"),
-        Check(1)..nullable..double.p.OUT("outSensorSampleTime", "the time when this function was called. May be NULL, in which case it is ignored.")
+        Check(2)..ovrPosef.p("outEyePoses", "the predicted eye poses"),
+        Check(1)..nullable..double.p("outSensorSampleTime", "the time when this function was called. May be NULL, in which case it is ignored.")
     )
 
     void(
@@ -174,8 +174,8 @@ val OVR_Util = "OVRUtil".nativeClass(Module.OVR, prefixMethod = "ovr", prefixCon
         right-handed to left-handed since the flip operation is the same for both cases.
         """,
 
-        ovrPosef.const.p.IN("inPose", "a pose that is right-handed"),
-        ovrPosef.p.OUT("outPose", "the pose that is requested to be left-handed (can be the same pointer to {@code inPose})")
+        ovrPosef.const.p("inPose", "a pose that is right-handed"),
+        ovrPosef.p("outPose", "the pose that is requested to be left-handed (can be the same pointer to {@code inPose})")
     )
 
     ovrResult(
@@ -189,32 +189,32 @@ val OVR_Util = "OVRUtil".nativeClass(Module.OVR, prefixMethod = "ovr", prefixCon
         Supported formats: PCM 8b, 16b, 32b and IEEE float (little-endian only).
         """,
 
-        ovrAudioChannelData.p.OUT("outAudioChannel", "output audio channel data"),
-        void.const.p.IN("inputData", "a binary buffer representing a valid Wav file data"),
-        AutoSize("inputData")..int.IN("dataSizeInBytes", "size of the buffer in bytes"),
-        int.IN("stereoChannelToUse", "audio channel index to extract (0 for mono)")
+        ovrAudioChannelData.p("outAudioChannel", "output audio channel data"),
+        void.const.p("inputData", "a binary buffer representing a valid Wav file data"),
+        AutoSize("inputData")..int("dataSizeInBytes", "size of the buffer in bytes"),
+        int("stereoChannelToUse", "audio channel index to extract (0 for mono)")
     )
 
     ovrResult(
         "_GenHapticsFromAudioData",
         "Generates playable Touch Haptics data from an audio channel.",
 
-        ovrHapticsClip.p.OUT("outHapticsClip", "generated Haptics clip"),
-        ovrAudioChannelData.const.p.IN("audioChannel", "input audio channel data"),
-        ovrHapticsGenMode.IN("genMode", "mode used to convert and audio channel data to Haptics data", "#HapticsGenMode_PointSample")
+        ovrHapticsClip.p("outHapticsClip", "generated Haptics clip"),
+        ovrAudioChannelData.const.p("audioChannel", "input audio channel data"),
+        ovrHapticsGenMode("genMode", "mode used to convert and audio channel data to Haptics data", "#HapticsGenMode_PointSample")
     )
 
     void(
         "_ReleaseAudioChannelData",
         "Releases memory allocated for ovrAudioChannelData. Must be called to avoid memory leak.",
 
-        ovrAudioChannelData.p.IN("audioChannel", "pointer to an audio channel")
+        ovrAudioChannelData.p("audioChannel", "pointer to an audio channel")
     )
 
     void(
         "_ReleaseHapticsClip",
         "Releases memory allocated for ovrHapticsClip. Must be called to avoid memory leak.",
 
-        ovrHapticsClip.p.IN("hapticsClip", "pointer to a haptics clip")
+        ovrHapticsClip.p("hapticsClip", "pointer to a haptics clip")
     )
 }

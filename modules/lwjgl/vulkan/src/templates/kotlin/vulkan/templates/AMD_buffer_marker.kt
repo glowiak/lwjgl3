@@ -90,7 +90,7 @@ val AMD_buffer_marker = "AMDBufferMarker".nativeClassVK("AMD_buffer_marker", typ
         While consecutive buffer marker writes with the same {@code pipelineStage} parameter are implicitly complete in submission order, memory and execution dependencies between buffer marker writes and other operations must still be explicitly ordered using synchronization commands. The access scope for buffer marker writes falls under the #ACCESS_TRANSFER_WRITE_BIT, and the pipeline stages for identifying the synchronization scope <b>must</b> include both {@code pipelineStage} and #PIPELINE_STAGE_TRANSFER_BIT.
 
         <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
-        Similar to #CmdWriteTimestamp(), if an implementation is unable to write a marker at any specific pipeline stage, it <b>may</b> instead do so at any logically later stage.
+        Similar to {@code vkCmdWriteTimestamp}, if an implementation is unable to write a marker at any specific pipeline stage, it <b>may</b> instead do so at any logically later stage.
         </div>
 
         <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
@@ -110,7 +110,7 @@ val AMD_buffer_marker = "AMDBufferMarker".nativeClassVK("AMD_buffer_marker", typ
             <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
             <li>{@code pipelineStage} <b>must</b> be a valid {@code VkPipelineStageFlagBits} value</li>
             <li>{@code dstBuffer} <b>must</b> be a valid {@code VkBuffer} handle</li>
-            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
+            <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#commandbuffers-lifecycle">recording state</a></li>
             <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support transfer, graphics, or compute operations</li>
             <li>Both of {@code commandBuffer}, and {@code dstBuffer} <b>must</b> have been created, allocated, or retrieved from the same {@code VkDevice}</li>
         </ul>
@@ -123,15 +123,15 @@ val AMD_buffer_marker = "AMDBufferMarker".nativeClassVK("AMD_buffer_marker", typ
 
         <h5>Command Properties</h5>
         <table class="lwjgl">
-            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+            <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
             <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Transfer Graphics Compute</td><td>Transfer</td></tr></tbody>
         </table>
         """,
 
-        VkCommandBuffer.IN("commandBuffer", "the command buffer into which the command will be recorded."),
-        VkPipelineStageFlagBits.IN("pipelineStage", "one of the {@code VkPipelineStageFlagBits} values, specifying the pipeline stage whose completion triggers the marker write."),
-        VkBuffer.IN("dstBuffer", "the buffer where the marker will be written to."),
-        VkDeviceSize.IN("dstOffset", "the byte offset into the buffer where the marker will be written to."),
-        uint32_t.IN("marker", "the 32-bit value of the marker.")
+        VkCommandBuffer("commandBuffer", "the command buffer into which the command will be recorded."),
+        VkPipelineStageFlagBits("pipelineStage", "one of the {@code VkPipelineStageFlagBits} values, specifying the pipeline stage whose completion triggers the marker write."),
+        VkBuffer("dstBuffer", "the buffer where the marker will be written to."),
+        VkDeviceSize("dstOffset", "the byte offset into the buffer where the marker will be written to."),
+        uint32_t("marker", "the 32-bit value of the marker.")
     )
 }

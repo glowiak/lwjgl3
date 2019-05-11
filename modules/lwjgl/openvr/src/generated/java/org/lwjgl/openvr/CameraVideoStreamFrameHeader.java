@@ -16,6 +16,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code ulFrameExposureTime} &ndash; mid-point of the exposure of the image in host system ticks</li>
+ * </ul>
+ * 
  * <h3>Layout</h3>
  * 
  * <pre><code>
@@ -26,6 +32,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     uint32_t nBytesPerPixel;
  *     uint32_t nFrameSequence;
  *     {@link TrackedDevicePose TrackedDevicePose_t} standingTrackedDevicePose;
+ *     uint64_t ulFrameExposureTime;
  * }</code></pre>
  */
 @NativeType("struct CameraVideoStreamFrameHeader_t")
@@ -44,7 +51,8 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
         NHEIGHT,
         NBYTESPERPIXEL,
         NFRAMESEQUENCE,
-        STANDINGTRACKEDDEVICEPOSE;
+        STANDINGTRACKEDDEVICEPOSE,
+        ULFRAMEEXPOSURETIME;
 
     static {
         Layout layout = __struct(
@@ -53,7 +61,8 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
             __member(4),
             __member(4),
             __member(4),
-            __member(TrackedDevicePose.SIZEOF, TrackedDevicePose.ALIGNOF)
+            __member(TrackedDevicePose.SIZEOF, TrackedDevicePose.ALIGNOF),
+            __member(8)
         );
 
         SIZEOF = layout.getSize();
@@ -65,20 +74,17 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
         NBYTESPERPIXEL = layout.offsetof(3);
         NFRAMESEQUENCE = layout.offsetof(4);
         STANDINGTRACKEDDEVICEPOSE = layout.offsetof(5);
-    }
-
-    CameraVideoStreamFrameHeader(long address, @Nullable ByteBuffer container) {
-        super(address, container);
+        ULFRAMEEXPOSURETIME = layout.offsetof(6);
     }
 
     /**
-     * Creates a {@link CameraVideoStreamFrameHeader} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code CameraVideoStreamFrameHeader} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public CameraVideoStreamFrameHeader(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -104,33 +110,37 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
     public TrackedDevicePose standingTrackedDevicePose() { return nstandingTrackedDevicePose(address()); }
     /** Passes the {@code standingTrackedDevicePose} field to the specified {@link java.util.function.Consumer Consumer}. */
     public CameraVideoStreamFrameHeader standingTrackedDevicePose(java.util.function.Consumer<TrackedDevicePose> consumer) { consumer.accept(standingTrackedDevicePose()); return this; }
+    /** Returns the value of the {@code ulFrameExposureTime} field. */
+    @NativeType("uint64_t")
+    public long ulFrameExposureTime() { return nulFrameExposureTime(address()); }
 
     // -----------------------------------
 
-    /** Returns a new {@link CameraVideoStreamFrameHeader} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code CameraVideoStreamFrameHeader} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static CameraVideoStreamFrameHeader malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(CameraVideoStreamFrameHeader.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link CameraVideoStreamFrameHeader} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code CameraVideoStreamFrameHeader} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static CameraVideoStreamFrameHeader calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(CameraVideoStreamFrameHeader.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link CameraVideoStreamFrameHeader} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code CameraVideoStreamFrameHeader} instance allocated with {@link BufferUtils}. */
     public static CameraVideoStreamFrameHeader create() {
-        return new CameraVideoStreamFrameHeader(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(CameraVideoStreamFrameHeader.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link CameraVideoStreamFrameHeader} instance for the specified memory address. */
+    /** Returns a new {@code CameraVideoStreamFrameHeader} instance for the specified memory address. */
     public static CameraVideoStreamFrameHeader create(long address) {
-        return new CameraVideoStreamFrameHeader(address, null);
+        return wrap(CameraVideoStreamFrameHeader.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static CameraVideoStreamFrameHeader createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(CameraVideoStreamFrameHeader.class, address);
     }
 
     /**
@@ -139,7 +149,7 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static CameraVideoStreamFrameHeader.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -148,7 +158,7 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static CameraVideoStreamFrameHeader.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -157,7 +167,8 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static CameraVideoStreamFrameHeader.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -167,43 +178,43 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static CameraVideoStreamFrameHeader.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static CameraVideoStreamFrameHeader.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link CameraVideoStreamFrameHeader} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code CameraVideoStreamFrameHeader} instance allocated on the thread-local {@link MemoryStack}. */
     public static CameraVideoStreamFrameHeader mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link CameraVideoStreamFrameHeader} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code CameraVideoStreamFrameHeader} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static CameraVideoStreamFrameHeader callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link CameraVideoStreamFrameHeader} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code CameraVideoStreamFrameHeader} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static CameraVideoStreamFrameHeader mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(CameraVideoStreamFrameHeader.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link CameraVideoStreamFrameHeader} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code CameraVideoStreamFrameHeader} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static CameraVideoStreamFrameHeader callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(CameraVideoStreamFrameHeader.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -231,7 +242,7 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static CameraVideoStreamFrameHeader.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -241,31 +252,35 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static CameraVideoStreamFrameHeader.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #eFrameType}. */
-    public static int neFrameType(long struct) { return memGetInt(struct + CameraVideoStreamFrameHeader.EFRAMETYPE); }
+    public static int neFrameType(long struct) { return UNSAFE.getInt(null, struct + CameraVideoStreamFrameHeader.EFRAMETYPE); }
     /** Unsafe version of {@link #nWidth}. */
-    public static int nnWidth(long struct) { return memGetInt(struct + CameraVideoStreamFrameHeader.NWIDTH); }
+    public static int nnWidth(long struct) { return UNSAFE.getInt(null, struct + CameraVideoStreamFrameHeader.NWIDTH); }
     /** Unsafe version of {@link #nHeight}. */
-    public static int nnHeight(long struct) { return memGetInt(struct + CameraVideoStreamFrameHeader.NHEIGHT); }
+    public static int nnHeight(long struct) { return UNSAFE.getInt(null, struct + CameraVideoStreamFrameHeader.NHEIGHT); }
     /** Unsafe version of {@link #nBytesPerPixel}. */
-    public static int nnBytesPerPixel(long struct) { return memGetInt(struct + CameraVideoStreamFrameHeader.NBYTESPERPIXEL); }
+    public static int nnBytesPerPixel(long struct) { return UNSAFE.getInt(null, struct + CameraVideoStreamFrameHeader.NBYTESPERPIXEL); }
     /** Unsafe version of {@link #nFrameSequence}. */
-    public static int nnFrameSequence(long struct) { return memGetInt(struct + CameraVideoStreamFrameHeader.NFRAMESEQUENCE); }
+    public static int nnFrameSequence(long struct) { return UNSAFE.getInt(null, struct + CameraVideoStreamFrameHeader.NFRAMESEQUENCE); }
     /** Unsafe version of {@link #standingTrackedDevicePose}. */
     public static TrackedDevicePose nstandingTrackedDevicePose(long struct) { return TrackedDevicePose.create(struct + CameraVideoStreamFrameHeader.STANDINGTRACKEDDEVICEPOSE); }
+    /** Unsafe version of {@link #ulFrameExposureTime}. */
+    public static long nulFrameExposureTime(long struct) { return UNSAFE.getLong(null, struct + CameraVideoStreamFrameHeader.ULFRAMEEXPOSURETIME); }
 
     // -----------------------------------
 
     /** An array of {@link CameraVideoStreamFrameHeader} structs. */
     public static class Buffer extends StructBuffer<CameraVideoStreamFrameHeader, Buffer> implements NativeResource {
 
+        private static final CameraVideoStreamFrameHeader ELEMENT_FACTORY = CameraVideoStreamFrameHeader.create(-1L);
+
         /**
-         * Creates a new {@link CameraVideoStreamFrameHeader.Buffer} instance backed by the specified container.
+         * Creates a new {@code CameraVideoStreamFrameHeader.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -291,18 +306,8 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected CameraVideoStreamFrameHeader newInstance(long address) {
-            return new CameraVideoStreamFrameHeader(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected CameraVideoStreamFrameHeader getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code eFrameType} field. */
@@ -325,6 +330,9 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
         public TrackedDevicePose standingTrackedDevicePose() { return CameraVideoStreamFrameHeader.nstandingTrackedDevicePose(address()); }
         /** Passes the {@code standingTrackedDevicePose} field to the specified {@link java.util.function.Consumer Consumer}. */
         public CameraVideoStreamFrameHeader.Buffer standingTrackedDevicePose(java.util.function.Consumer<TrackedDevicePose> consumer) { consumer.accept(standingTrackedDevicePose()); return this; }
+        /** Returns the value of the {@code ulFrameExposureTime} field. */
+        @NativeType("uint64_t")
+        public long ulFrameExposureTime() { return CameraVideoStreamFrameHeader.nulFrameExposureTime(address()); }
 
     }
 

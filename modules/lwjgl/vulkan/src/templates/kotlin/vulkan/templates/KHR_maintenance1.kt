@@ -49,7 +49,7 @@ val KHR_maintenance1 = "KHRMaintenance1".nativeClassVK("KHR_maintenance1", type 
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -120,8 +120,8 @@ val KHR_maintenance1 = "KHRMaintenance1".nativeClassVK("KHR_maintenance1", type 
         "TrimCommandPoolKHR",
         "See #TrimCommandPool().",
 
-        VkDevice.IN("device", "the logical device that owns the command pool."),
-        VkCommandPool.IN("commandPool", "the command pool to trim."),
-        VkCommandPoolTrimFlags.IN("flags", "reserved for future use.")
+        VkDevice("device", "the logical device that owns the command pool."),
+        VkCommandPool("commandPool", "the command pool to trim."),
+        VkCommandPoolTrimFlags("flags", "reserved for future use.")
     )
 }

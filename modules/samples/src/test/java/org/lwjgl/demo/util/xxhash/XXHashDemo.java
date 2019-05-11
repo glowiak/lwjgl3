@@ -15,6 +15,7 @@ import java.util.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.util.xxhash.XXHash.*;
+import static org.testng.Assert.*;
 
 public final class XXHashDemo {
 
@@ -32,15 +33,18 @@ public final class XXHashDemo {
         int SEED = 7;
 
         // simple functions
-        int  hash32 = XXH32(buffer, SEED);
-        long hash64 = XXH64(buffer, SEED);
+        int        hash32  = XXH32(buffer, SEED);
+        long       hash64  = XXH64(buffer, SEED);
+        XXH128Hash hash128 = XXH128(buffer, SEED, XXH128Hash.create());
 
-        if (hash32 != 0xC5C8C208 || hash64 != 0x656D889F290F0BCCL) {
-            throw new IllegalStateException();
-        }
+        assertEquals(hash32, 0xC5C8C208);
+        assertEquals(hash64, 0x656D889F290F0BCCL);
+        assertEquals(hash128.high64(), 0x528E6C84427AD55BL);
+        assertEquals(hash128.low64(), 0x442190948C39B5B9L);
 
         System.out.format("test %d-bit hash = 0x%X\n", 32, hash32);
         System.out.format("test %d-bit hash = 0x%X\n", 64, hash64);
+        System.out.format("test %d-bit hash = 0x%X%X\n", 128, hash128.high64(), hash128.low64());
 
         // streaming hash with advanced functions
         String resource = "lwjgl32.png";
@@ -71,7 +75,7 @@ public final class XXHashDemo {
         // init
         XXH64_reset(state, SEED);
         try (
-            InputStream stream = XXHashDemo.class.getClassLoader().getResourceAsStream(resource);
+            InputStream stream = Objects.requireNonNull(XXHashDemo.class.getClassLoader().getResourceAsStream(resource));
             ReadableByteChannel rbc = Channels.newChannel(stream)
         ) {
             while (true) {

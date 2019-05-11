@@ -16,7 +16,7 @@ import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
- * This extension provides new entry points to query memory requirements of images and buffers in a way that can be easily extended by other extensions, without introducing any further entry points. The Vulkan 1.0 {@link VkMemoryRequirements} and {@link VkSparseImageMemoryRequirements} structures do not include a {@code sType}/{@code pNext}, this extension wraps them in new structures with {@code sType}/{@code pNext} so an application can query a chain of memory requirements structures by constructing the chain and letting the implementation fill them in. A new command is added for each ftext:vkGet*MemoryRequrements command in core Vulkan 1.0.
+ * This extension provides new entry points to query memory requirements of images and buffers in a way that can be easily extended by other extensions, without introducing any further entry points. The Vulkan 1.0 {@link VkMemoryRequirements} and {@link VkSparseImageMemoryRequirements} structures do not include a {@code sType}/{@code pNext}, this extension wraps them in new structures with {@code sType}/{@code pNext} so an application can query a chain of memory requirements structures by constructing the chain and letting the implementation fill them in. A new command is added for each {@code vkGet*MemoryRequrements} command in core Vulkan 1.0.
  * 
  * <h5>Promotion to Vulkan 1.1</h5>
  * 
@@ -37,7 +37,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Deprecation state</b></dt>
  * <dd><ul>
- * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
+ * <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
@@ -107,7 +107,7 @@ public class KHRGetMemoryRequirements2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, device.address(), pInfo, pMemoryRequirements);
+        callPPPV(device.address(), pInfo, pMemoryRequirements, __functionAddress);
     }
 
     /**
@@ -129,7 +129,7 @@ public class KHRGetMemoryRequirements2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, device.address(), pInfo, pMemoryRequirements);
+        callPPPV(device.address(), pInfo, pMemoryRequirements, __functionAddress);
     }
 
     /**
@@ -155,7 +155,7 @@ public class KHRGetMemoryRequirements2 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPPV(__functionAddress, device.address(), pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+        callPPPPV(device.address(), pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements, __functionAddress);
     }
 
     /**
@@ -182,7 +182,7 @@ public class KHRGetMemoryRequirements2 {
             check(pSparseMemoryRequirementCount, 1);
             checkSafe(pSparseMemoryRequirements, pSparseMemoryRequirementCount[0]);
         }
-        callPPPPV(__functionAddress, device.address(), pInfo.address(), pSparseMemoryRequirementCount, memAddressSafe(pSparseMemoryRequirements));
+        callPPPPV(device.address(), pInfo.address(), pSparseMemoryRequirementCount, memAddressSafe(pSparseMemoryRequirements), __functionAddress);
     }
 
 }

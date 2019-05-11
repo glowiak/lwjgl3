@@ -29,6 +29,7 @@ import static org.lwjgl.system.JNI.*;
  * <dt><b>Extension and Version Dependencies</b></dt>
  * <dd><ul>
  * <li>Requires Vulkan 1.0</li>
+ * <li>Requires {@link KHRGetPhysicalDeviceProperties2 VK_KHR_get_physical_device_properties2}</li>
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
@@ -107,7 +108,7 @@ public class EXTSampleLocations {
             check(__functionAddress);
             VkSampleLocationsInfoEXT.validate(pSampleLocationsInfo);
         }
-        callPPV(__functionAddress, commandBuffer.address(), pSampleLocationsInfo);
+        callPPV(commandBuffer.address(), pSampleLocationsInfo, __functionAddress);
     }
 
     /**
@@ -117,7 +118,7 @@ public class EXTSampleLocations {
      * 
      * <p>The custom sample locations used for rasterization when {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} is {@link VK10#VK_TRUE TRUE} are specified by the {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsInfo} property of the bound graphics pipeline, if the pipeline was not created with {@link #VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT} enabled.</p>
      * 
-     * <p>Otherwise, the sample locations used for rasterization are set by calling {@link #vkCmdSetSampleLocationsEXT CmdSetSampleLocationsEXT}:</p>
+     * <p>Otherwise, the sample locations used for rasterization are set by calling {@code vkCmdSetSampleLocationsEXT}:</p>
      * 
      * <pre><code>
      * void vkCmdSetSampleLocationsEXT(
@@ -137,7 +138,7 @@ public class EXTSampleLocations {
      * <ul>
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
      * <li>{@code pSampleLocationsInfo} <b>must</b> be a valid pointer to a valid {@link VkSampleLocationsInfoEXT} structure</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics operations</li>
      * </ul>
      * 
@@ -151,7 +152,7 @@ public class EXTSampleLocations {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics</td><td></td></tr></tbody>
      * </table>
      * 
@@ -174,7 +175,7 @@ public class EXTSampleLocations {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPV(__functionAddress, physicalDevice.address(), samples, pMultisampleProperties);
+        callPPV(physicalDevice.address(), samples, pMultisampleProperties, __functionAddress);
     }
 
     /**
@@ -182,7 +183,7 @@ public class EXTSampleLocations {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>In addition to the minimum capabilities described in the previous section (<a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits">Limits</a>), implementations <b>may</b> support additional multisampling capabilities specific to a particular sample count.</p>
+     * <p>In addition to the minimum capabilities described for (<a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits">Limits</a>) above, implementations <b>may</b> support additional multisampling capabilities specific to a particular sample count.</p>
      * 
      * <p>To query additional sample count specific multisampling capabilities, call:</p>
      * 

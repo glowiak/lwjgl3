@@ -42,7 +42,7 @@ import static org.lwjgl.vulkan.VK10.*;
  * <p>For example, in the case of a discrete GPU implementation, this <b>should</b> be the GPU chipset vendor. In the case of a hardware accelerator integrated into a system-on-chip (SoC), this <b>should</b> be the supplier of the silicon IP used to create the accelerator.</p>
  * </div>
  * 
- * <p>If the vendor has a <a target="_blank" href="https://pcisig.com/membership/member-companies">PCI vendor ID</a>, the low 16 bits of {@code vendorID} <b>must</b> contain that PCI vendor ID, and the remaining bits <b>must</b> be set to zero. Otherwise, the value returned <b>must</b> be a valid Khronos vendor ID, obtained as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vulkan-styleguide">Vulkan Documentation and Extensions: Procedures and Conventions</a> document in the section "{@code Registering a Vendor ID with Khronos}". Khronos vendor IDs are allocated starting at 0x10000, to distinguish them from the PCI vendor ID namespace. Khronos vendor IDs are symbolically defined in the {@code VkVendorId} type.</p>
+ * <p>If the vendor has a <a target="_blank" href="https://pcisig.com/membership/member-companies">PCI vendor ID</a>, the low 16 bits of {@code vendorID} <b>must</b> contain that PCI vendor ID, and the remaining bits <b>must</b> be set to zero. Otherwise, the value returned <b>must</b> be a valid Khronos vendor ID, obtained as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vulkan-styleguide">Vulkan Documentation and Extensions: Procedures and Conventions</a> document in the section "{@code Registering a Vendor ID with Khronos}". Khronos vendor IDs are allocated starting at 0x10000, to distinguish them from the PCI vendor ID namespace. Khronos vendor IDs are symbolically defined in the {@code VkVendorId} type.</p>
  * 
  * <p>The vendor is also responsible for the value returned in {@code deviceID}. If the implementation is driven primarily by a <a target="_blank" href="https://pcisig.com/">PCI device</a> with a <a target="_blank" href="https://pcisig.com/">PCI device ID</a>, the low 16 bits of {@code deviceID} <b>must</b> contain that PCI device ID, and the remaining bits <b>must</b> be set to zero. Otherwise, the choice of what values to return <b>may</b> be dictated by operating system or platform policies - but <b>should</b> uniquely identify both the device version and any major configuration options (for example, core count in the case of multicore devices).</p>
  * 
@@ -58,15 +58,15 @@ import static org.lwjgl.vulkan.VK10.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
- * <li>{@code apiVersion} &ndash; the version of Vulkan supported by the device, encoded as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-versionnum">API Version Numbers and Semantics</a> section.</li>
+ * <li>{@code apiVersion} &ndash; the version of Vulkan supported by the device, encoded as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers">Version Numbers</a>.</li>
  * <li>{@code driverVersion} &ndash; the vendor-specified version of the driver.</li>
  * <li>{@code vendorID} &ndash; a unique identifier for the <em>vendor</em> (see below) of the physical device.</li>
  * <li>{@code deviceID} &ndash; a unique identifier for the physical device among devices available from the vendor.</li>
  * <li>{@code deviceType} &ndash; a {@code VkPhysicalDeviceType} specifying the type of device.</li>
  * <li>{@code deviceName} &ndash; a null-terminated UTF-8 string containing the name of the device.</li>
  * <li>{@code pipelineCacheUUID} &ndash; an array of size {@link VK10#VK_UUID_SIZE UUID_SIZE}, containing 8-bit values that represent a universally unique identifier for the device.</li>
- * <li>{@code limits} &ndash; the {@link VkPhysicalDeviceLimits} structure which specifies device-specific limits of the physical device. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits">Limits</a> for details.</li>
- * <li>{@code sparseProperties} &ndash; the {@link VkPhysicalDeviceSparseProperties} structure which specifies various sparse related properties of the physical device. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-physicalprops">Sparse Properties</a> for details.</li>
+ * <li>{@code limits} &ndash; the {@link VkPhysicalDeviceLimits} structure which specifies device-specific limits of the physical device. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits">Limits</a> for details.</li>
+ * <li>{@code sparseProperties} &ndash; the {@link VkPhysicalDeviceSparseProperties} structure which specifies various sparse related properties of the physical device. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory-physicalprops">Sparse Properties</a> for details.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -131,18 +131,14 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
         SPARSEPROPERTIES = layout.offsetof(8);
     }
 
-    VkPhysicalDeviceProperties(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPhysicalDeviceProperties} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPhysicalDeviceProperties} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPhysicalDeviceProperties(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -182,30 +178,31 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceProperties} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceProperties} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceProperties malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPhysicalDeviceProperties.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceProperties} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPhysicalDeviceProperties} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPhysicalDeviceProperties calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPhysicalDeviceProperties.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPhysicalDeviceProperties} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPhysicalDeviceProperties} instance allocated with {@link BufferUtils}. */
     public static VkPhysicalDeviceProperties create() {
-        return new VkPhysicalDeviceProperties(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPhysicalDeviceProperties.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPhysicalDeviceProperties} instance for the specified memory address. */
+    /** Returns a new {@code VkPhysicalDeviceProperties} instance for the specified memory address. */
     public static VkPhysicalDeviceProperties create(long address) {
-        return new VkPhysicalDeviceProperties(address, null);
+        return wrap(VkPhysicalDeviceProperties.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceProperties createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPhysicalDeviceProperties.class, address);
     }
 
     /**
@@ -214,7 +211,7 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProperties.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -223,7 +220,7 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProperties.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -232,7 +229,8 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProperties.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -242,43 +240,43 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProperties.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPhysicalDeviceProperties.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPhysicalDeviceProperties} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPhysicalDeviceProperties} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPhysicalDeviceProperties mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPhysicalDeviceProperties} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPhysicalDeviceProperties} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPhysicalDeviceProperties callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceProperties} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPhysicalDeviceProperties} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceProperties mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPhysicalDeviceProperties.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPhysicalDeviceProperties} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPhysicalDeviceProperties} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPhysicalDeviceProperties callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPhysicalDeviceProperties.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -306,7 +304,7 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProperties.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -316,21 +314,21 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
      * @param capacity the buffer capacity
      */
     public static VkPhysicalDeviceProperties.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #apiVersion}. */
-    public static int napiVersion(long struct) { return memGetInt(struct + VkPhysicalDeviceProperties.APIVERSION); }
+    public static int napiVersion(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceProperties.APIVERSION); }
     /** Unsafe version of {@link #driverVersion}. */
-    public static int ndriverVersion(long struct) { return memGetInt(struct + VkPhysicalDeviceProperties.DRIVERVERSION); }
+    public static int ndriverVersion(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceProperties.DRIVERVERSION); }
     /** Unsafe version of {@link #vendorID}. */
-    public static int nvendorID(long struct) { return memGetInt(struct + VkPhysicalDeviceProperties.VENDORID); }
+    public static int nvendorID(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceProperties.VENDORID); }
     /** Unsafe version of {@link #deviceID}. */
-    public static int ndeviceID(long struct) { return memGetInt(struct + VkPhysicalDeviceProperties.DEVICEID); }
+    public static int ndeviceID(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceProperties.DEVICEID); }
     /** Unsafe version of {@link #deviceType}. */
-    public static int ndeviceType(long struct) { return memGetInt(struct + VkPhysicalDeviceProperties.DEVICETYPE); }
+    public static int ndeviceType(long struct) { return UNSAFE.getInt(null, struct + VkPhysicalDeviceProperties.DEVICETYPE); }
     /** Unsafe version of {@link #deviceName}. */
     public static ByteBuffer ndeviceName(long struct) { return memByteBuffer(struct + VkPhysicalDeviceProperties.DEVICENAME, VK_MAX_PHYSICAL_DEVICE_NAME_SIZE); }
     /** Unsafe version of {@link #deviceNameString}. */
@@ -339,7 +337,7 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
     public static ByteBuffer npipelineCacheUUID(long struct) { return memByteBuffer(struct + VkPhysicalDeviceProperties.PIPELINECACHEUUID, VK_UUID_SIZE); }
     /** Unsafe version of {@link #pipelineCacheUUID(int) pipelineCacheUUID}. */
     public static byte npipelineCacheUUID(long struct, int index) {
-        return memGetByte(struct + VkPhysicalDeviceProperties.PIPELINECACHEUUID + check(index, VK_UUID_SIZE) * 1);
+        return UNSAFE.getByte(null, struct + VkPhysicalDeviceProperties.PIPELINECACHEUUID + check(index, VK_UUID_SIZE) * 1);
     }
     /** Unsafe version of {@link #limits}. */
     public static VkPhysicalDeviceLimits nlimits(long struct) { return VkPhysicalDeviceLimits.create(struct + VkPhysicalDeviceProperties.LIMITS); }
@@ -351,8 +349,10 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
     /** An array of {@link VkPhysicalDeviceProperties} structs. */
     public static class Buffer extends StructBuffer<VkPhysicalDeviceProperties, Buffer> implements NativeResource {
 
+        private static final VkPhysicalDeviceProperties ELEMENT_FACTORY = VkPhysicalDeviceProperties.create(-1L);
+
         /**
-         * Creates a new {@link VkPhysicalDeviceProperties.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPhysicalDeviceProperties.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -378,18 +378,8 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPhysicalDeviceProperties newInstance(long address) {
-            return new VkPhysicalDeviceProperties(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPhysicalDeviceProperties getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code apiVersion} field. */

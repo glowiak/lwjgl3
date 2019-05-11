@@ -20,7 +20,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>Description</h5>
  * 
- * <p>The above layout definition allows the descriptor bindings to be specified sparsely such that not all binding numbers between 0 and the maximum binding number need to be specified in the {@code pBindings} array. Bindings that are not specified have a {@code descriptorCount} and {@code stageFlags} of zero, and the {@code descriptorType} is treated as undefined. However, all binding numbers between 0 and the maximum binding number in the {@link VkDescriptorSetLayoutCreateInfo}{@code ::pBindings} array <b>may</b> consume memory in the descriptor set layout even if not all descriptor bindings are used, though it <b>should</b> not consume additional memory from the descriptor pool.</p>
+ * <p>The above layout definition allows the descriptor bindings to be specified sparsely such that not all binding numbers between 0 and the maximum binding number need to be specified in the {@code pBindings} array. Bindings that are not specified have a {@code descriptorCount} and {@code stageFlags} of zero, and the value of {@code descriptorType} is undefined. However, all binding numbers between 0 and the maximum binding number in the {@link VkDescriptorSetLayoutCreateInfo}{@code ::pBindings} array <b>may</b> consume memory in the descriptor set layout even if not all descriptor bindings are used, though it <b>should</b> not consume additional memory from the descriptor pool.</p>
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
@@ -105,18 +105,14 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
         PIMMUTABLESAMPLERS = layout.offsetof(4);
     }
 
-    VkDescriptorSetLayoutBinding(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkDescriptorSetLayoutBinding} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkDescriptorSetLayoutBinding} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkDescriptorSetLayoutBinding(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -181,30 +177,31 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDescriptorSetLayoutBinding} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDescriptorSetLayoutBinding} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkDescriptorSetLayoutBinding malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkDescriptorSetLayoutBinding.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutBinding} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDescriptorSetLayoutBinding} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkDescriptorSetLayoutBinding calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkDescriptorSetLayoutBinding.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutBinding} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkDescriptorSetLayoutBinding} instance allocated with {@link BufferUtils}. */
     public static VkDescriptorSetLayoutBinding create() {
-        return new VkDescriptorSetLayoutBinding(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkDescriptorSetLayoutBinding.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutBinding} instance for the specified memory address. */
+    /** Returns a new {@code VkDescriptorSetLayoutBinding} instance for the specified memory address. */
     public static VkDescriptorSetLayoutBinding create(long address) {
-        return new VkDescriptorSetLayoutBinding(address, null);
+        return wrap(VkDescriptorSetLayoutBinding.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDescriptorSetLayoutBinding createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkDescriptorSetLayoutBinding.class, address);
     }
 
     /**
@@ -213,7 +210,7 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBinding.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -222,7 +219,7 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBinding.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -231,7 +228,8 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBinding.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -241,43 +239,43 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBinding.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDescriptorSetLayoutBinding.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDescriptorSetLayoutBinding} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkDescriptorSetLayoutBinding} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkDescriptorSetLayoutBinding mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutBinding} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkDescriptorSetLayoutBinding} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkDescriptorSetLayoutBinding callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkDescriptorSetLayoutBinding} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkDescriptorSetLayoutBinding} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDescriptorSetLayoutBinding mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkDescriptorSetLayoutBinding.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkDescriptorSetLayoutBinding} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkDescriptorSetLayoutBinding} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDescriptorSetLayoutBinding callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkDescriptorSetLayoutBinding.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -305,7 +303,7 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBinding.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -315,30 +313,30 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutBinding.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #binding}. */
-    public static int nbinding(long struct) { return memGetInt(struct + VkDescriptorSetLayoutBinding.BINDING); }
+    public static int nbinding(long struct) { return UNSAFE.getInt(null, struct + VkDescriptorSetLayoutBinding.BINDING); }
     /** Unsafe version of {@link #descriptorType}. */
-    public static int ndescriptorType(long struct) { return memGetInt(struct + VkDescriptorSetLayoutBinding.DESCRIPTORTYPE); }
+    public static int ndescriptorType(long struct) { return UNSAFE.getInt(null, struct + VkDescriptorSetLayoutBinding.DESCRIPTORTYPE); }
     /** Unsafe version of {@link #descriptorCount}. */
-    public static int ndescriptorCount(long struct) { return memGetInt(struct + VkDescriptorSetLayoutBinding.DESCRIPTORCOUNT); }
+    public static int ndescriptorCount(long struct) { return UNSAFE.getInt(null, struct + VkDescriptorSetLayoutBinding.DESCRIPTORCOUNT); }
     /** Unsafe version of {@link #stageFlags}. */
-    public static int nstageFlags(long struct) { return memGetInt(struct + VkDescriptorSetLayoutBinding.STAGEFLAGS); }
+    public static int nstageFlags(long struct) { return UNSAFE.getInt(null, struct + VkDescriptorSetLayoutBinding.STAGEFLAGS); }
     /** Unsafe version of {@link #pImmutableSamplers() pImmutableSamplers}. */
     @Nullable public static LongBuffer npImmutableSamplers(long struct) { return memLongBufferSafe(memGetAddress(struct + VkDescriptorSetLayoutBinding.PIMMUTABLESAMPLERS), ndescriptorCount(struct)); }
 
     /** Unsafe version of {@link #binding(int) binding}. */
-    public static void nbinding(long struct, int value) { memPutInt(struct + VkDescriptorSetLayoutBinding.BINDING, value); }
+    public static void nbinding(long struct, int value) { UNSAFE.putInt(null, struct + VkDescriptorSetLayoutBinding.BINDING, value); }
     /** Unsafe version of {@link #descriptorType(int) descriptorType}. */
-    public static void ndescriptorType(long struct, int value) { memPutInt(struct + VkDescriptorSetLayoutBinding.DESCRIPTORTYPE, value); }
+    public static void ndescriptorType(long struct, int value) { UNSAFE.putInt(null, struct + VkDescriptorSetLayoutBinding.DESCRIPTORTYPE, value); }
     /** Sets the specified value to the {@code descriptorCount} field of the specified {@code struct}. */
-    public static void ndescriptorCount(long struct, int value) { memPutInt(struct + VkDescriptorSetLayoutBinding.DESCRIPTORCOUNT, value); }
+    public static void ndescriptorCount(long struct, int value) { UNSAFE.putInt(null, struct + VkDescriptorSetLayoutBinding.DESCRIPTORCOUNT, value); }
     /** Unsafe version of {@link #stageFlags(int) stageFlags}. */
-    public static void nstageFlags(long struct, int value) { memPutInt(struct + VkDescriptorSetLayoutBinding.STAGEFLAGS, value); }
+    public static void nstageFlags(long struct, int value) { UNSAFE.putInt(null, struct + VkDescriptorSetLayoutBinding.STAGEFLAGS, value); }
     /** Unsafe version of {@link #pImmutableSamplers(LongBuffer) pImmutableSamplers}. */
     public static void npImmutableSamplers(long struct, @Nullable LongBuffer value) { memPutAddress(struct + VkDescriptorSetLayoutBinding.PIMMUTABLESAMPLERS, memAddressSafe(value)); if (value != null) { ndescriptorCount(struct, value.remaining()); } }
 
@@ -347,8 +345,10 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
     /** An array of {@link VkDescriptorSetLayoutBinding} structs. */
     public static class Buffer extends StructBuffer<VkDescriptorSetLayoutBinding, Buffer> implements NativeResource {
 
+        private static final VkDescriptorSetLayoutBinding ELEMENT_FACTORY = VkDescriptorSetLayoutBinding.create(-1L);
+
         /**
-         * Creates a new {@link VkDescriptorSetLayoutBinding.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkDescriptorSetLayoutBinding.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -374,18 +374,8 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkDescriptorSetLayoutBinding newInstance(long address) {
-            return new VkDescriptorSetLayoutBinding(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkDescriptorSetLayoutBinding getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code binding} field. */

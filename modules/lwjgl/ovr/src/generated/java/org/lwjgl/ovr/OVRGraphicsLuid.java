@@ -49,6 +49,7 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
 
     static {
         Layout layout = __struct(
+            DEFAULT_PACK_ALIGNMENT, POINTER_SIZE,
             __array(1, 8)
         );
 
@@ -58,18 +59,14 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
         RESERVED = layout.offsetof(0);
     }
 
-    OVRGraphicsLuid(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link OVRGraphicsLuid} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code OVRGraphicsLuid} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public OVRGraphicsLuid(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -84,30 +81,31 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRGraphicsLuid} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRGraphicsLuid} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static OVRGraphicsLuid malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(OVRGraphicsLuid.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link OVRGraphicsLuid} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code OVRGraphicsLuid} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static OVRGraphicsLuid calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(OVRGraphicsLuid.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link OVRGraphicsLuid} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code OVRGraphicsLuid} instance allocated with {@link BufferUtils}. */
     public static OVRGraphicsLuid create() {
-        return new OVRGraphicsLuid(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(OVRGraphicsLuid.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link OVRGraphicsLuid} instance for the specified memory address. */
+    /** Returns a new {@code OVRGraphicsLuid} instance for the specified memory address. */
     public static OVRGraphicsLuid create(long address) {
-        return new OVRGraphicsLuid(address, null);
+        return wrap(OVRGraphicsLuid.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static OVRGraphicsLuid createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(OVRGraphicsLuid.class, address);
     }
 
     /**
@@ -116,7 +114,7 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRGraphicsLuid.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -125,7 +123,7 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRGraphicsLuid.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -134,7 +132,8 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRGraphicsLuid.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -144,43 +143,43 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRGraphicsLuid.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static OVRGraphicsLuid.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link OVRGraphicsLuid} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code OVRGraphicsLuid} instance allocated on the thread-local {@link MemoryStack}. */
     public static OVRGraphicsLuid mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link OVRGraphicsLuid} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code OVRGraphicsLuid} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static OVRGraphicsLuid callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link OVRGraphicsLuid} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code OVRGraphicsLuid} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRGraphicsLuid mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(OVRGraphicsLuid.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link OVRGraphicsLuid} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code OVRGraphicsLuid} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static OVRGraphicsLuid callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(OVRGraphicsLuid.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -208,7 +207,7 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRGraphicsLuid.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -218,7 +217,7 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static OVRGraphicsLuid.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -227,7 +226,7 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
     public static ByteBuffer nReserved(long struct) { return memByteBuffer(struct + OVRGraphicsLuid.RESERVED, 8); }
     /** Unsafe version of {@link #Reserved(int) Reserved}. */
     public static byte nReserved(long struct, int index) {
-        return memGetByte(struct + OVRGraphicsLuid.RESERVED + check(index, 8) * 1);
+        return UNSAFE.getByte(null, struct + OVRGraphicsLuid.RESERVED + check(index, 8) * 1);
     }
 
     // -----------------------------------
@@ -235,8 +234,10 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
     /** An array of {@link OVRGraphicsLuid} structs. */
     public static class Buffer extends StructBuffer<OVRGraphicsLuid, Buffer> implements NativeResource {
 
+        private static final OVRGraphicsLuid ELEMENT_FACTORY = OVRGraphicsLuid.create(-1L);
+
         /**
-         * Creates a new {@link OVRGraphicsLuid.Buffer} instance backed by the specified container.
+         * Creates a new {@code OVRGraphicsLuid.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -262,18 +263,8 @@ public class OVRGraphicsLuid extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected OVRGraphicsLuid newInstance(long address) {
-            return new OVRGraphicsLuid(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected OVRGraphicsLuid getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link ByteBuffer} view of the {@code Reserved} field. */

@@ -30,7 +30,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>See Also</h5>
  * 
- * <p>{@link VkAllocationFunction}, {@link VkFreeFunction}, {@link VkInternalAllocationNotification}, {@link VkInternalFreeNotification}, {@link VkReallocationFunction}, {@link VK10#vkAllocateMemory AllocateMemory}, {@link NVXRaytracing#vkCreateAccelerationStructureNVX CreateAccelerationStructureNVX}, {@link VK10#vkCreateBuffer CreateBuffer}, {@link VK10#vkCreateBufferView CreateBufferView}, {@link VK10#vkCreateCommandPool CreateCommandPool}, {@link VK10#vkCreateComputePipelines CreateComputePipelines}, {@link EXTDebugReport#vkCreateDebugReportCallbackEXT CreateDebugReportCallbackEXT}, {@link EXTDebugUtils#vkCreateDebugUtilsMessengerEXT CreateDebugUtilsMessengerEXT}, {@link VK10#vkCreateDescriptorPool CreateDescriptorPool}, {@link VK10#vkCreateDescriptorSetLayout CreateDescriptorSetLayout}, {@link VK11#vkCreateDescriptorUpdateTemplate CreateDescriptorUpdateTemplate}, {@link KHRDescriptorUpdateTemplate#vkCreateDescriptorUpdateTemplateKHR CreateDescriptorUpdateTemplateKHR}, {@link VK10#vkCreateDevice CreateDevice}, {@link KHRDisplay#vkCreateDisplayModeKHR CreateDisplayModeKHR}, {@link KHRDisplay#vkCreateDisplayPlaneSurfaceKHR CreateDisplayPlaneSurfaceKHR}, {@link VK10#vkCreateEvent CreateEvent}, {@link VK10#vkCreateFence CreateFence}, {@link VK10#vkCreateFramebuffer CreateFramebuffer}, {@link VK10#vkCreateGraphicsPipelines CreateGraphicsPipelines}, {@link VK10#vkCreateImage CreateImage}, {@link VK10#vkCreateImageView CreateImageView}, {@link NVXDeviceGeneratedCommands#vkCreateIndirectCommandsLayoutNVX CreateIndirectCommandsLayoutNVX}, {@link VK10#vkCreateInstance CreateInstance}, {@link MVKMacosSurface#vkCreateMacOSSurfaceMVK CreateMacOSSurfaceMVK}, {@link NVXDeviceGeneratedCommands#vkCreateObjectTableNVX CreateObjectTableNVX}, {@link VK10#vkCreatePipelineCache CreatePipelineCache}, {@link VK10#vkCreatePipelineLayout CreatePipelineLayout}, {@link VK10#vkCreateQueryPool CreateQueryPool}, {@link NVXRaytracing#vkCreateRaytracingPipelinesNVX CreateRaytracingPipelinesNVX}, {@link VK10#vkCreateRenderPass CreateRenderPass}, {@link KHRCreateRenderpass2#vkCreateRenderPass2KHR CreateRenderPass2KHR}, {@link VK10#vkCreateSampler CreateSampler}, {@link VK11#vkCreateSamplerYcbcrConversion CreateSamplerYcbcrConversion}, {@link KHRSamplerYcbcrConversion#vkCreateSamplerYcbcrConversionKHR CreateSamplerYcbcrConversionKHR}, {@link VK10#vkCreateSemaphore CreateSemaphore}, {@link VK10#vkCreateShaderModule CreateShaderModule}, {@link KHRDisplaySwapchain#vkCreateSharedSwapchainsKHR CreateSharedSwapchainsKHR}, {@link KHRSwapchain#vkCreateSwapchainKHR CreateSwapchainKHR}, {@link EXTValidationCache#vkCreateValidationCacheEXT CreateValidationCacheEXT}, {@link KHRWaylandSurface#vkCreateWaylandSurfaceKHR CreateWaylandSurfaceKHR}, {@link KHRWin32Surface#vkCreateWin32SurfaceKHR CreateWin32SurfaceKHR}, {@link KHRXlibSurface#vkCreateXlibSurfaceKHR CreateXlibSurfaceKHR}, {@link NVXRaytracing#vkDestroyAccelerationStructureNVX DestroyAccelerationStructureNVX}, {@link VK10#vkDestroyBuffer DestroyBuffer}, {@link VK10#vkDestroyBufferView DestroyBufferView}, {@link VK10#vkDestroyCommandPool DestroyCommandPool}, {@link EXTDebugReport#vkDestroyDebugReportCallbackEXT DestroyDebugReportCallbackEXT}, {@link EXTDebugUtils#vkDestroyDebugUtilsMessengerEXT DestroyDebugUtilsMessengerEXT}, {@link VK10#vkDestroyDescriptorPool DestroyDescriptorPool}, {@link VK10#vkDestroyDescriptorSetLayout DestroyDescriptorSetLayout}, {@link VK11#vkDestroyDescriptorUpdateTemplate DestroyDescriptorUpdateTemplate}, {@link KHRDescriptorUpdateTemplate#vkDestroyDescriptorUpdateTemplateKHR DestroyDescriptorUpdateTemplateKHR}, {@link VK10#vkDestroyDevice DestroyDevice}, {@link VK10#vkDestroyEvent DestroyEvent}, {@link VK10#vkDestroyFence DestroyFence}, {@link VK10#vkDestroyFramebuffer DestroyFramebuffer}, {@link VK10#vkDestroyImage DestroyImage}, {@link VK10#vkDestroyImageView DestroyImageView}, {@link NVXDeviceGeneratedCommands#vkDestroyIndirectCommandsLayoutNVX DestroyIndirectCommandsLayoutNVX}, {@link VK10#vkDestroyInstance DestroyInstance}, {@link NVXDeviceGeneratedCommands#vkDestroyObjectTableNVX DestroyObjectTableNVX}, {@link VK10#vkDestroyPipeline DestroyPipeline}, {@link VK10#vkDestroyPipelineCache DestroyPipelineCache}, {@link VK10#vkDestroyPipelineLayout DestroyPipelineLayout}, {@link VK10#vkDestroyQueryPool DestroyQueryPool}, {@link VK10#vkDestroyRenderPass DestroyRenderPass}, {@link VK10#vkDestroySampler DestroySampler}, {@link VK11#vkDestroySamplerYcbcrConversion DestroySamplerYcbcrConversion}, {@link KHRSamplerYcbcrConversion#vkDestroySamplerYcbcrConversionKHR DestroySamplerYcbcrConversionKHR}, {@link VK10#vkDestroySemaphore DestroySemaphore}, {@link VK10#vkDestroyShaderModule DestroyShaderModule}, {@link KHRSurface#vkDestroySurfaceKHR DestroySurfaceKHR}, {@link KHRSwapchain#vkDestroySwapchainKHR DestroySwapchainKHR}, {@link EXTValidationCache#vkDestroyValidationCacheEXT DestroyValidationCacheEXT}, {@link VK10#vkFreeMemory FreeMemory}, {@link EXTDisplayControl#vkRegisterDeviceEventEXT RegisterDeviceEventEXT}, {@link EXTDisplayControl#vkRegisterDisplayEventEXT RegisterDisplayEventEXT}</p>
+ * <p>{@link VkAllocationFunction}, {@link VkFreeFunction}, {@link VkInternalAllocationNotification}, {@link VkInternalFreeNotification}, {@link VkReallocationFunction}, {@link VK10#vkAllocateMemory AllocateMemory}, {@link NVRayTracing#vkCreateAccelerationStructureNV CreateAccelerationStructureNV}, {@link VK10#vkCreateBuffer CreateBuffer}, {@link VK10#vkCreateBufferView CreateBufferView}, {@link VK10#vkCreateCommandPool CreateCommandPool}, {@link VK10#vkCreateComputePipelines CreateComputePipelines}, {@link EXTDebugReport#vkCreateDebugReportCallbackEXT CreateDebugReportCallbackEXT}, {@link EXTDebugUtils#vkCreateDebugUtilsMessengerEXT CreateDebugUtilsMessengerEXT}, {@link VK10#vkCreateDescriptorPool CreateDescriptorPool}, {@link VK10#vkCreateDescriptorSetLayout CreateDescriptorSetLayout}, {@link VK11#vkCreateDescriptorUpdateTemplate CreateDescriptorUpdateTemplate}, {@link KHRDescriptorUpdateTemplate#vkCreateDescriptorUpdateTemplateKHR CreateDescriptorUpdateTemplateKHR}, {@link VK10#vkCreateDevice CreateDevice}, {@link KHRDisplay#vkCreateDisplayModeKHR CreateDisplayModeKHR}, {@link KHRDisplay#vkCreateDisplayPlaneSurfaceKHR CreateDisplayPlaneSurfaceKHR}, {@link VK10#vkCreateEvent CreateEvent}, {@link VK10#vkCreateFence CreateFence}, {@link VK10#vkCreateFramebuffer CreateFramebuffer}, {@link VK10#vkCreateGraphicsPipelines CreateGraphicsPipelines}, {@link EXTHeadlessSurface#vkCreateHeadlessSurfaceEXT CreateHeadlessSurfaceEXT}, {@link VK10#vkCreateImage CreateImage}, {@link VK10#vkCreateImageView CreateImageView}, {@link NVXDeviceGeneratedCommands#vkCreateIndirectCommandsLayoutNVX CreateIndirectCommandsLayoutNVX}, {@link VK10#vkCreateInstance CreateInstance}, {@link MVKMacosSurface#vkCreateMacOSSurfaceMVK CreateMacOSSurfaceMVK}, {@link NVXDeviceGeneratedCommands#vkCreateObjectTableNVX CreateObjectTableNVX}, {@link VK10#vkCreatePipelineCache CreatePipelineCache}, {@link VK10#vkCreatePipelineLayout CreatePipelineLayout}, {@link VK10#vkCreateQueryPool CreateQueryPool}, {@link NVRayTracing#vkCreateRayTracingPipelinesNV CreateRayTracingPipelinesNV}, {@link VK10#vkCreateRenderPass CreateRenderPass}, {@link KHRCreateRenderpass2#vkCreateRenderPass2KHR CreateRenderPass2KHR}, {@link VK10#vkCreateSampler CreateSampler}, {@link VK11#vkCreateSamplerYcbcrConversion CreateSamplerYcbcrConversion}, {@link KHRSamplerYcbcrConversion#vkCreateSamplerYcbcrConversionKHR CreateSamplerYcbcrConversionKHR}, {@link VK10#vkCreateSemaphore CreateSemaphore}, {@link VK10#vkCreateShaderModule CreateShaderModule}, {@link KHRDisplaySwapchain#vkCreateSharedSwapchainsKHR CreateSharedSwapchainsKHR}, {@link KHRSwapchain#vkCreateSwapchainKHR CreateSwapchainKHR}, {@link EXTValidationCache#vkCreateValidationCacheEXT CreateValidationCacheEXT}, {@link KHRWaylandSurface#vkCreateWaylandSurfaceKHR CreateWaylandSurfaceKHR}, {@link KHRWin32Surface#vkCreateWin32SurfaceKHR CreateWin32SurfaceKHR}, {@link KHRXlibSurface#vkCreateXlibSurfaceKHR CreateXlibSurfaceKHR}, {@link NVRayTracing#vkDestroyAccelerationStructureNV DestroyAccelerationStructureNV}, {@link VK10#vkDestroyBuffer DestroyBuffer}, {@link VK10#vkDestroyBufferView DestroyBufferView}, {@link VK10#vkDestroyCommandPool DestroyCommandPool}, {@link EXTDebugReport#vkDestroyDebugReportCallbackEXT DestroyDebugReportCallbackEXT}, {@link EXTDebugUtils#vkDestroyDebugUtilsMessengerEXT DestroyDebugUtilsMessengerEXT}, {@link VK10#vkDestroyDescriptorPool DestroyDescriptorPool}, {@link VK10#vkDestroyDescriptorSetLayout DestroyDescriptorSetLayout}, {@link VK11#vkDestroyDescriptorUpdateTemplate DestroyDescriptorUpdateTemplate}, {@link KHRDescriptorUpdateTemplate#vkDestroyDescriptorUpdateTemplateKHR DestroyDescriptorUpdateTemplateKHR}, {@link VK10#vkDestroyDevice DestroyDevice}, {@link VK10#vkDestroyEvent DestroyEvent}, {@link VK10#vkDestroyFence DestroyFence}, {@link VK10#vkDestroyFramebuffer DestroyFramebuffer}, {@link VK10#vkDestroyImage DestroyImage}, {@link VK10#vkDestroyImageView DestroyImageView}, {@link NVXDeviceGeneratedCommands#vkDestroyIndirectCommandsLayoutNVX DestroyIndirectCommandsLayoutNVX}, {@link VK10#vkDestroyInstance DestroyInstance}, {@link NVXDeviceGeneratedCommands#vkDestroyObjectTableNVX DestroyObjectTableNVX}, {@link VK10#vkDestroyPipeline DestroyPipeline}, {@link VK10#vkDestroyPipelineCache DestroyPipelineCache}, {@link VK10#vkDestroyPipelineLayout DestroyPipelineLayout}, {@link VK10#vkDestroyQueryPool DestroyQueryPool}, {@link VK10#vkDestroyRenderPass DestroyRenderPass}, {@link VK10#vkDestroySampler DestroySampler}, {@link VK11#vkDestroySamplerYcbcrConversion DestroySamplerYcbcrConversion}, {@link KHRSamplerYcbcrConversion#vkDestroySamplerYcbcrConversionKHR DestroySamplerYcbcrConversionKHR}, {@link VK10#vkDestroySemaphore DestroySemaphore}, {@link VK10#vkDestroyShaderModule DestroyShaderModule}, {@link KHRSurface#vkDestroySurfaceKHR DestroySurfaceKHR}, {@link KHRSwapchain#vkDestroySwapchainKHR DestroySwapchainKHR}, {@link EXTValidationCache#vkDestroyValidationCacheEXT DestroyValidationCacheEXT}, {@link VK10#vkFreeMemory FreeMemory}, {@link EXTDisplayControl#vkRegisterDeviceEventEXT RegisterDeviceEventEXT}, {@link EXTDisplayControl#vkRegisterDisplayEventEXT RegisterDisplayEventEXT}</p>
  * 
  * <h3>Member documentation</h3>
  * 
@@ -93,18 +93,14 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
         PFNINTERNALFREE = layout.offsetof(5);
     }
 
-    VkAllocationCallbacks(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkAllocationCallbacks} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkAllocationCallbacks} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkAllocationCallbacks(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -177,30 +173,31 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkAllocationCallbacks} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkAllocationCallbacks} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkAllocationCallbacks malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkAllocationCallbacks.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkAllocationCallbacks} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkAllocationCallbacks} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkAllocationCallbacks calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkAllocationCallbacks.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkAllocationCallbacks} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkAllocationCallbacks} instance allocated with {@link BufferUtils}. */
     public static VkAllocationCallbacks create() {
-        return new VkAllocationCallbacks(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkAllocationCallbacks.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkAllocationCallbacks} instance for the specified memory address. */
+    /** Returns a new {@code VkAllocationCallbacks} instance for the specified memory address. */
     public static VkAllocationCallbacks create(long address) {
-        return new VkAllocationCallbacks(address, null);
+        return wrap(VkAllocationCallbacks.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkAllocationCallbacks createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkAllocationCallbacks.class, address);
     }
 
     /**
@@ -209,7 +206,7 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkAllocationCallbacks.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -218,7 +215,7 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkAllocationCallbacks.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -227,7 +224,8 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkAllocationCallbacks.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -237,43 +235,43 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkAllocationCallbacks.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkAllocationCallbacks.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkAllocationCallbacks} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkAllocationCallbacks} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkAllocationCallbacks mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkAllocationCallbacks} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkAllocationCallbacks} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkAllocationCallbacks callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkAllocationCallbacks} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkAllocationCallbacks} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkAllocationCallbacks mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkAllocationCallbacks.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkAllocationCallbacks} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkAllocationCallbacks} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkAllocationCallbacks callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkAllocationCallbacks.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -301,7 +299,7 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkAllocationCallbacks.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -311,7 +309,7 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkAllocationCallbacks.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -361,7 +359,7 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -370,8 +368,10 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
     /** An array of {@link VkAllocationCallbacks} structs. */
     public static class Buffer extends StructBuffer<VkAllocationCallbacks, Buffer> implements NativeResource {
 
+        private static final VkAllocationCallbacks ELEMENT_FACTORY = VkAllocationCallbacks.create(-1L);
+
         /**
-         * Creates a new {@link VkAllocationCallbacks.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkAllocationCallbacks.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -397,18 +397,8 @@ public class VkAllocationCallbacks extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkAllocationCallbacks newInstance(long address) {
-            return new VkAllocationCallbacks(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkAllocationCallbacks getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code pUserData} field. */

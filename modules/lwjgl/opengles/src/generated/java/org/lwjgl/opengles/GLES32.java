@@ -595,8 +595,9 @@ public class GLES32 extends GLES31 {
     public static void glDebugMessageInsert(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLuint") int id, @NativeType("GLenum") int severity, @NativeType("GLchar const *") CharSequence message) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message, false);
-            nglDebugMessageInsert(source, type, id, severity, messageEncoded.remaining(), memAddress(messageEncoded));
+            int messageEncodedLength = stack.nUTF8(message, false);
+            long messageEncoded = stack.getPointerAddress();
+            nglDebugMessageInsert(source, type, id, severity, messageEncodedLength, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -778,8 +779,9 @@ public class GLES32 extends GLES31 {
     public static void glPushDebugGroup(@NativeType("GLenum") int source, @NativeType("GLuint") int id, @NativeType("GLchar const *") CharSequence message) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message, false);
-            nglPushDebugGroup(source, id, messageEncoded.remaining(), memAddress(messageEncoded));
+            int messageEncodedLength = stack.nUTF8(message, false);
+            long messageEncoded = stack.getPointerAddress();
+            nglPushDebugGroup(source, id, messageEncodedLength, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -835,8 +837,9 @@ public class GLES32 extends GLES31 {
     public static void glObjectLabel(@NativeType("GLenum") int identifier, @NativeType("GLuint") int name, @NativeType("GLchar const *") CharSequence label) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer labelEncoded = stack.UTF8(label, false);
-            nglObjectLabel(identifier, name, labelEncoded.remaining(), memAddress(labelEncoded));
+            int labelEncodedLength = stack.nUTF8(label, false);
+            long labelEncoded = stack.getPointerAddress();
+            nglObjectLabel(identifier, name, labelEncodedLength, labelEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -941,8 +944,9 @@ public class GLES32 extends GLES31 {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer labelEncoded = stack.UTF8(label, false);
-            nglObjectPtrLabel(ptr, labelEncoded.remaining(), memAddress(labelEncoded));
+            int labelEncodedLength = stack.nUTF8(label, false);
+            long labelEncoded = stack.getPointerAddress();
+            nglObjectPtrLabel(ptr, labelEncodedLength, labelEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1655,7 +1659,7 @@ public class GLES32 extends GLES31 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, source, type, severity, ids.length, ids, enabled);
+        callPV(source, type, severity, ids.length, ids, enabled, __functionAddress);
     }
 
     /**
@@ -1674,7 +1678,7 @@ public class GLES32 extends GLES31 {
             checkSafe(severities, count);
             checkSafe(lengths, count);
         }
-        return callPPPPPPI(__functionAddress, count, remainingSafe(messageLog), sources, types, ids, severities, lengths, memAddressSafe(messageLog));
+        return callPPPPPPI(count, remainingSafe(messageLog), sources, types, ids, severities, lengths, memAddressSafe(messageLog), __functionAddress);
     }
 
     /**
@@ -1688,7 +1692,7 @@ public class GLES32 extends GLES31 {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, identifier, name, label.remaining(), length, memAddress(label));
+        callPPV(identifier, name, label.remaining(), length, memAddress(label), __functionAddress);
     }
 
     /**
@@ -1703,7 +1707,7 @@ public class GLES32 extends GLES31 {
             check(ptr);
             checkSafe(length, 1);
         }
-        callPPPV(__functionAddress, ptr, label.remaining(), length, memAddress(label));
+        callPPPV(ptr, label.remaining(), length, memAddress(label), __functionAddress);
     }
 
     /**
@@ -1716,7 +1720,7 @@ public class GLES32 extends GLES31 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, x, y, width, height, format, type, pixels.length << 1, pixels);
+        callPV(x, y, width, height, format, type, pixels.length << 1, pixels, __functionAddress);
     }
 
     /**
@@ -1729,7 +1733,7 @@ public class GLES32 extends GLES31 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, x, y, width, height, format, type, pixels.length << 2, pixels);
+        callPV(x, y, width, height, format, type, pixels.length << 2, pixels, __functionAddress);
     }
 
     /**
@@ -1742,7 +1746,7 @@ public class GLES32 extends GLES31 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, x, y, width, height, format, type, pixels.length << 2, pixels);
+        callPV(x, y, width, height, format, type, pixels.length << 2, pixels, __functionAddress);
     }
 
     /**
@@ -1755,7 +1759,7 @@ public class GLES32 extends GLES31 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, program, location, params.length, params);
+        callPV(program, location, params.length, params, __functionAddress);
     }
 
     /**
@@ -1768,7 +1772,7 @@ public class GLES32 extends GLES31 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, program, location, params.length, params);
+        callPV(program, location, params.length, params, __functionAddress);
     }
 
     /**
@@ -1781,7 +1785,7 @@ public class GLES32 extends GLES31 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, program, location, params.length, params);
+        callPV(program, location, params.length, params, __functionAddress);
     }
 
     /**
@@ -1795,7 +1799,7 @@ public class GLES32 extends GLES31 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, target, pname, params);
+        callPV(target, pname, params, __functionAddress);
     }
 
     /**
@@ -1809,7 +1813,7 @@ public class GLES32 extends GLES31 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, target, pname, params);
+        callPV(target, pname, params, __functionAddress);
     }
 
     /**
@@ -1823,7 +1827,7 @@ public class GLES32 extends GLES31 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, target, pname, params);
+        callPV(target, pname, params, __functionAddress);
     }
 
     /**
@@ -1837,7 +1841,7 @@ public class GLES32 extends GLES31 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, target, pname, params);
+        callPV(target, pname, params, __functionAddress);
     }
 
     /**
@@ -1851,7 +1855,7 @@ public class GLES32 extends GLES31 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, sampler, pname, params);
+        callPV(sampler, pname, params, __functionAddress);
     }
 
     /**
@@ -1865,7 +1869,7 @@ public class GLES32 extends GLES31 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, sampler, pname, params);
+        callPV(sampler, pname, params, __functionAddress);
     }
 
     /**
@@ -1879,7 +1883,7 @@ public class GLES32 extends GLES31 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, sampler, pname, params);
+        callPV(sampler, pname, params, __functionAddress);
     }
 
     /**
@@ -1893,7 +1897,7 @@ public class GLES32 extends GLES31 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, sampler, pname, params);
+        callPV(sampler, pname, params, __functionAddress);
     }
 
 }

@@ -621,9 +621,6 @@ public class GL43C extends GL42C {
 
     // --- [ glDispatchComputeIndirect ] ---
 
-    /** Unsafe version of: {@link #glDispatchComputeIndirect DispatchComputeIndirect} */
-    public static native void nglDispatchComputeIndirect(long indirect);
-
     /**
      * Launches one or more compute work groups using parameters stored in a buffer.
      * 
@@ -647,9 +644,7 @@ public class GL43C extends GL42C {
      * 
      * @see <a target="_blank" href="http://docs.gl/gl4/glDispatchComputeIndirect">Reference Page</a>
      */
-    public static void glDispatchComputeIndirect(@NativeType("GLintptr") long indirect) {
-        nglDispatchComputeIndirect(indirect);
-    }
+    public static native void glDispatchComputeIndirect(@NativeType("GLintptr") long indirect);
 
     // --- [ glCopyImageSubData ] ---
 
@@ -756,7 +751,7 @@ public class GL43C extends GL42C {
      * 
      * @see <a target="_blank" href="http://docs.gl/gl4/glDebugMessageControl">Reference Page</a>
      */
-    public static void glDebugMessageControl(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLenum") int severity, @Nullable @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
+    public static void glDebugMessageControl(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLenum") int severity, @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer ids = stack.ints(id);
@@ -822,8 +817,9 @@ public class GL43C extends GL42C {
     public static void glDebugMessageInsert(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLuint") int id, @NativeType("GLenum") int severity, @NativeType("GLchar const *") CharSequence message) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message, false);
-            nglDebugMessageInsert(source, type, id, severity, messageEncoded.remaining(), memAddress(messageEncoded));
+            int messageEncodedLength = stack.nUTF8(message, false);
+            long messageEncoded = stack.getPointerAddress();
+            nglDebugMessageInsert(source, type, id, severity, messageEncodedLength, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -979,8 +975,9 @@ public class GL43C extends GL42C {
     public static void glPushDebugGroup(@NativeType("GLenum") int source, @NativeType("GLuint") int id, @NativeType("GLchar const *") CharSequence message) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message, false);
-            nglPushDebugGroup(source, id, messageEncoded.remaining(), memAddress(messageEncoded));
+            int messageEncodedLength = stack.nUTF8(message, false);
+            long messageEncoded = stack.getPointerAddress();
+            nglPushDebugGroup(source, id, messageEncodedLength, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1035,8 +1032,9 @@ public class GL43C extends GL42C {
     public static void glObjectLabel(@NativeType("GLenum") int identifier, @NativeType("GLuint") int name, @NativeType("GLchar const *") CharSequence label) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer labelEncoded = stack.UTF8(label, false);
-            nglObjectLabel(identifier, name, labelEncoded.remaining(), memAddress(labelEncoded));
+            int labelEncodedLength = stack.nUTF8(label, false);
+            long labelEncoded = stack.getPointerAddress();
+            nglObjectLabel(identifier, name, labelEncodedLength, labelEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1141,8 +1139,9 @@ public class GL43C extends GL42C {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer labelEncoded = stack.UTF8(label, false);
-            nglObjectPtrLabel(ptr, labelEncoded.remaining(), memAddress(labelEncoded));
+            int labelEncodedLength = stack.nUTF8(label, false);
+            long labelEncoded = stack.getPointerAddress();
+            nglObjectPtrLabel(ptr, labelEncodedLength, labelEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1768,8 +1767,9 @@ public class GL43C extends GL42C {
     public static int glGetProgramResourceIndex(@NativeType("GLuint") int program, @NativeType("GLenum") int programInterface, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.UTF8(name);
-            return nglGetProgramResourceIndex(program, programInterface, memAddress(nameEncoded));
+            stack.nUTF8(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nglGetProgramResourceIndex(program, programInterface, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1903,8 +1903,9 @@ public class GL43C extends GL42C {
     public static int glGetProgramResourceLocation(@NativeType("GLuint") int program, @NativeType("GLenum") int programInterface, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nglGetProgramResourceLocation(program, programInterface, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nglGetProgramResourceLocation(program, programInterface, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1945,8 +1946,9 @@ public class GL43C extends GL42C {
     public static int glGetProgramResourceLocationIndex(@NativeType("GLuint") int program, @NativeType("GLenum") int programInterface, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nglGetProgramResourceLocationIndex(program, programInterface, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nglGetProgramResourceLocationIndex(program, programInterface, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2125,7 +2127,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, internalformat, format, type, data);
+        callPV(target, internalformat, format, type, data, __functionAddress);
     }
 
     /**
@@ -2138,7 +2140,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, internalformat, format, type, data);
+        callPV(target, internalformat, format, type, data, __functionAddress);
     }
 
     /**
@@ -2151,7 +2153,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, internalformat, format, type, data);
+        callPV(target, internalformat, format, type, data, __functionAddress);
     }
 
     /**
@@ -2164,7 +2166,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, target, internalformat, offset, size, format, type, data);
+        callPPPV(target, internalformat, offset, size, format, type, data, __functionAddress);
     }
 
     /**
@@ -2177,7 +2179,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, target, internalformat, offset, size, format, type, data);
+        callPPPV(target, internalformat, offset, size, format, type, data, __functionAddress);
     }
 
     /**
@@ -2190,7 +2192,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, target, internalformat, offset, size, format, type, data);
+        callPPPV(target, internalformat, offset, size, format, type, data, __functionAddress);
     }
 
     /**
@@ -2203,7 +2205,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, source, type, severity, lengthSafe(ids), ids, enabled);
+        callPV(source, type, severity, lengthSafe(ids), ids, enabled, __functionAddress);
     }
 
     /**
@@ -2222,7 +2224,7 @@ public class GL43C extends GL42C {
             checkSafe(severities, count);
             checkSafe(lengths, count);
         }
-        return callPPPPPPI(__functionAddress, count, remainingSafe(messageLog), sources, types, ids, severities, lengths, memAddressSafe(messageLog));
+        return callPPPPPPI(count, remainingSafe(messageLog), sources, types, ids, severities, lengths, memAddressSafe(messageLog), __functionAddress);
     }
 
     /**
@@ -2236,7 +2238,7 @@ public class GL43C extends GL42C {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, identifier, name, label.remaining(), length, memAddress(label));
+        callPPV(identifier, name, label.remaining(), length, memAddress(label), __functionAddress);
     }
 
     /**
@@ -2251,7 +2253,7 @@ public class GL43C extends GL42C {
             check(ptr);
             checkSafe(length, 1);
         }
-        callPPPV(__functionAddress, ptr, label.remaining(), length, memAddress(label));
+        callPPPV(ptr, label.remaining(), length, memAddress(label), __functionAddress);
     }
 
     /**
@@ -2265,7 +2267,7 @@ public class GL43C extends GL42C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, target, pname, params);
+        callPV(target, pname, params, __functionAddress);
     }
 
     /**
@@ -2278,7 +2280,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, internalformat, pname, params.length, params);
+        callPV(target, internalformat, pname, params.length, params, __functionAddress);
     }
 
     /**
@@ -2291,7 +2293,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, attachments.length, attachments);
+        callPV(target, attachments.length, attachments, __functionAddress);
     }
 
     /**
@@ -2304,7 +2306,7 @@ public class GL43C extends GL42C {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, attachments.length, attachments, x, y, width, height);
+        callPV(target, attachments.length, attachments, x, y, width, height, __functionAddress);
     }
 
     /**
@@ -2318,7 +2320,7 @@ public class GL43C extends GL42C {
             check(__functionAddress);
             check(indirect, (primcount * (stride == 0 ? (4 * 4) : stride)) >> 2);
         }
-        callPV(__functionAddress, mode, indirect, primcount, stride);
+        callPV(mode, indirect, primcount, stride, __functionAddress);
     }
 
     /**
@@ -2332,7 +2334,7 @@ public class GL43C extends GL42C {
             check(__functionAddress);
             check(indirect, (primcount * (stride == 0 ? (5 * 4) : stride)) >> 2);
         }
-        callPV(__functionAddress, mode, type, indirect, primcount, stride);
+        callPV(mode, type, indirect, primcount, stride, __functionAddress);
     }
 
     /**
@@ -2346,7 +2348,7 @@ public class GL43C extends GL42C {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, program, programInterface, pname, params);
+        callPV(program, programInterface, pname, params, __functionAddress);
     }
 
     /**
@@ -2360,7 +2362,7 @@ public class GL43C extends GL42C {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, program, programInterface, index, name.remaining(), length, memAddress(name));
+        callPPV(program, programInterface, index, name.remaining(), length, memAddress(name), __functionAddress);
     }
 
     /**
@@ -2374,7 +2376,7 @@ public class GL43C extends GL42C {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPPV(__functionAddress, program, programInterface, index, props.length, props, params.length, length, params);
+        callPPPV(program, programInterface, index, props.length, props, params.length, length, params, __functionAddress);
     }
 
 }

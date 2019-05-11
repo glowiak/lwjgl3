@@ -64,7 +64,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  */
 public class Yoga {
 
-    public static final float YGUndefined = 10e20f;
+    public static final float YGUndefined = Float.NaN;
 
     /**
      * YGAlign
@@ -290,22 +290,6 @@ public class Yoga {
         YGPositionTypeAbsolute = 1;
 
     /**
-     * YGPrintOptions
-     * 
-     * <h5>Enum values:</h5>
-     * 
-     * <ul>
-     * <li>{@link #YGPrintOptionsLayout PrintOptionsLayout}</li>
-     * <li>{@link #YGPrintOptionsStyle PrintOptionsStyle}</li>
-     * <li>{@link #YGPrintOptionsChildren PrintOptionsChildren}</li>
-     * </ul>
-     */
-    public static final int
-        YGPrintOptionsLayout   = 1,
-        YGPrintOptionsStyle    = 2,
-        YGPrintOptionsChildren = 4;
-
-    /**
      * YGUnit
      * 
      * <h5>Enum values:</h5>
@@ -339,7 +323,23 @@ public class Yoga {
         YGWrapWrap    = 1,
         YGWrapReverse = 2;
 
-    static { Library.loadSystem(System::load, System::loadLibrary, Yoga.class, Platform.mapLibraryNameBundled("lwjgl_yoga")); }
+    /**
+     * {@code YGMarker}
+     * 
+     * <h5>Enum values:</h5>
+     * 
+     * <ul>
+     * <li>{@link #YGMarkerLayout MarkerLayout}</li>
+     * <li>{@link #YGMarkerMeasure MarkerMeasure}</li>
+     * <li>{@link #YGMarkerBaselineFn MarkerBaselineFn}</li>
+     * </ul>
+     */
+    public static final int
+        YGMarkerLayout     = 0,
+        YGMarkerMeasure    = 1,
+        YGMarkerBaselineFn = 2;
+
+    static { LibYoga.initialize(); }
 
     protected Yoga() {
         throw new UnsupportedOperationException();
@@ -385,6 +385,17 @@ public class Yoga {
         nYGNodeFree(node);
     }
 
+    // --- [ YGNodeFreeRecursiveWithCleanupFunc ] ---
+
+    public static native void nYGNodeFreeRecursiveWithCleanupFunc(long node, long cleanup);
+
+    public static void YGNodeFreeRecursiveWithCleanupFunc(@NativeType("YGNodeRef const") long node, @NativeType("YGNodeCleanupFunc") YGNodeCleanupFuncI cleanup) {
+        if (CHECKS) {
+            check(node);
+        }
+        nYGNodeFreeRecursiveWithCleanupFunc(node, cleanup.address());
+    }
+
     // --- [ YGNodeFreeRecursive ] ---
 
     public static native void nYGNodeFreeRecursive(long node);
@@ -422,24 +433,6 @@ public class Yoga {
             check(child);
         }
         nYGNodeInsertChild(node, child, index);
-    }
-
-    // --- [ YGNodeInsertSharedChild ] ---
-
-    /** Unsafe version of: {@link #YGNodeInsertSharedChild NodeInsertSharedChild} */
-    public static native void nYGNodeInsertSharedChild(long node, long child, int index);
-
-    /**
-     * This function inserts the child {@code YGNodeRef} as a children of the node received by parameter and set the Owner of the child object to null. This
-     * function is expected to be called when using Yoga in persistent mode in order to share a {@code YGNodeRef} object as a child of two different Yoga
-     * trees. The child {@code YGNodeRef} is expected to be referenced from its original owner and from a clone of its original owner.
-     */
-    public static void YGNodeInsertSharedChild(@NativeType("YGNodeRef const") long node, @NativeType("YGNodeRef const") long child, @NativeType("uint32_t") int index) {
-        if (CHECKS) {
-            check(node);
-            check(child);
-        }
-        nYGNodeInsertSharedChild(node, child, index);
     }
 
     // --- [ YGNodeRemoveChild ] ---
@@ -524,6 +517,29 @@ public class Yoga {
         nYGNodeSetChildren(owner, memAddress(children), children.remaining());
     }
 
+    // --- [ YGNodeSetIsReferenceBaseline ] ---
+
+    public static native void nYGNodeSetIsReferenceBaseline(long node, boolean isReferenceBaseline);
+
+    public static void YGNodeSetIsReferenceBaseline(@NativeType("YGNodeRef") long node, @NativeType("bool") boolean isReferenceBaseline) {
+        if (CHECKS) {
+            check(node);
+        }
+        nYGNodeSetIsReferenceBaseline(node, isReferenceBaseline);
+    }
+
+    // --- [ YGNodeIsReferenceBaseline ] ---
+
+    public static native boolean nYGNodeIsReferenceBaseline(long node);
+
+    @NativeType("bool")
+    public static boolean YGNodeIsReferenceBaseline(@NativeType("YGNodeRef") long node) {
+        if (CHECKS) {
+            check(node);
+        }
+        return nYGNodeIsReferenceBaseline(node);
+    }
+
     // --- [ YGNodeCalculateLayout ] ---
 
     /** Unsafe version of: {@link #YGNodeCalculateLayout NodeCalculateLayout} */
@@ -545,8 +561,10 @@ public class Yoga {
     /**
      * Marks a node as dirty.
      * 
-     * <p>Only valid for nodes with a custom measure function set. YG knows when to mark all other nodes as dirty but because nodes with measure functions
-     * depends on information not known to YG they must perform this dirty marking manually.</p>
+     * <p>Only valid for nodes with a custom measure function set.</p>
+     * 
+     * <p>Yoga knows when to mark all other nodes as dirty but because nodes with measure functions depend on information not known to Yoga they must perform
+     * this dirty marking manually.</p>
      */
     public static void YGNodeMarkDirty(@NativeType("YGNodeRef const") long node) {
         if (CHECKS) {
@@ -563,27 +581,14 @@ public class Yoga {
     /**
      * Marks the current node and all its descendants as dirty.
      * 
-     * <p>This function is added to test yoga benchmarks. It is not expected to be used in production as calling {@link #YGNodeCalculateLayout NodeCalculateLayout} will cause the
-     * recalculation of each and every node.</p>
+     * <p>Intended to be used for Yoga benchmarks. Don't use in production, as calling {@link #YGNodeCalculateLayout NodeCalculateLayout} will cause the recalculation of each and every
+     * node.</p>
      */
     public static void YGNodeMarkDirtyAndPropogateToDescendants(@NativeType("YGNodeRef const") long node) {
         if (CHECKS) {
             check(node);
         }
         nYGNodeMarkDirtyAndPropogateToDescendants(node);
-    }
-
-    // --- [ YGNodePrint ] ---
-
-    /** Unsafe version of: {@link #YGNodePrint NodePrint} */
-    public static native void nYGNodePrint(long node, int options);
-
-    /** @param options one of:<br><table><tr><td>{@link #YGPrintOptionsLayout PrintOptionsLayout}</td><td>{@link #YGPrintOptionsStyle PrintOptionsStyle}</td><td>{@link #YGPrintOptionsChildren PrintOptionsChildren}</td></tr></table> */
-    public static void YGNodePrint(@NativeType("YGNodeRef const") long node, @NativeType("YGPrintOptions") int options) {
-        if (CHECKS) {
-            check(node);
-        }
-        nYGNodePrint(node, options);
     }
 
     // --- [ YGFloatIsUndefined ] ---
@@ -641,16 +646,27 @@ public class Yoga {
         nYGNodeSetContext(node, context);
     }
 
-    // --- [ YGNodeGetMeasureFunc ] ---
+    // --- [ YGConfigSetPrintTreeFlag ] ---
 
-    public static native long nYGNodeGetMeasureFunc(long node);
+    public static native void nYGConfigSetPrintTreeFlag(long config, boolean enabled);
 
-    @Nullable
-    public static YGMeasureFunc YGNodeGetMeasureFunc(@NativeType("YGNodeRef const") long node) {
+    public static void YGConfigSetPrintTreeFlag(@NativeType("YGConfigRef") long config, @NativeType("bool") boolean enabled) {
+        if (CHECKS) {
+            check(config);
+        }
+        nYGConfigSetPrintTreeFlag(config, enabled);
+    }
+
+    // --- [ YGNodeHasMeasureFunc ] ---
+
+    public static native boolean nYGNodeHasMeasureFunc(long node);
+
+    @NativeType("bool")
+    public static boolean YGNodeHasMeasureFunc(@NativeType("YGNodeRef const") long node) {
         if (CHECKS) {
             check(node);
         }
-        return YGMeasureFunc.createSafe(nYGNodeGetMeasureFunc(node));
+        return nYGNodeHasMeasureFunc(node);
     }
 
     // --- [ YGNodeSetMeasureFunc ] ---
@@ -664,16 +680,16 @@ public class Yoga {
         nYGNodeSetMeasureFunc(node, memAddressSafe(measureFunc));
     }
 
-    // --- [ YGNodeGetBaselineFunc ] ---
+    // --- [ YGNodeHasBaselineFunc ] ---
 
-    public static native long nYGNodeGetBaselineFunc(long node);
+    public static native boolean nYGNodeHasBaselineFunc(long node);
 
-    @Nullable
-    public static YGBaselineFunc YGNodeGetBaselineFunc(@NativeType("YGNodeRef const") long node) {
+    @NativeType("bool")
+    public static boolean YGNodeHasBaselineFunc(@NativeType("YGNodeRef const") long node) {
         if (CHECKS) {
             check(node);
         }
-        return YGBaselineFunc.createSafe(nYGNodeGetBaselineFunc(node));
+        return nYGNodeHasBaselineFunc(node);
     }
 
     // --- [ YGNodeSetBaselineFunc ] ---
@@ -708,18 +724,6 @@ public class Yoga {
             check(node);
         }
         nYGNodeSetDirtiedFunc(node, memAddressSafe(dirtiedFunc));
-    }
-
-    // --- [ YGNodeGetPrintFunc ] ---
-
-    public static native long nYGNodeGetPrintFunc(long node);
-
-    @Nullable
-    public static YGPrintFunc YGNodeGetPrintFunc(@NativeType("YGNodeRef const") long node) {
-        if (CHECKS) {
-            check(node);
-        }
-        return YGPrintFunc.createSafe(nYGNodeGetPrintFunc(node));
     }
 
     // --- [ YGNodeSetPrintFunc ] ---
@@ -1753,59 +1757,6 @@ public class Yoga {
         nYGConfigSetLogger(config, memAddressSafe(logger));
     }
 
-    // --- [ YGLog ] ---
-
-    /** Unsafe version of: {@link #YGLog Log} */
-    public static native void nYGLog(long node, int level, long message);
-
-    /** @param level one of:<br><table><tr><td>{@link #YGLogLevelError LogLevelError}</td><td>{@link #YGLogLevelWarn LogLevelWarn}</td><td>{@link #YGLogLevelInfo LogLevelInfo}</td><td>{@link #YGLogLevelDebug LogLevelDebug}</td><td>{@link #YGLogLevelVerbose LogLevelVerbose}</td><td>{@link #YGLogLevelFatal LogLevelFatal}</td></tr></table> */
-    public static void YGLog(@NativeType("YGNodeRef const") long node, @NativeType("YGLogLevel") int level, @NativeType("char const *") ByteBuffer message) {
-        if (CHECKS) {
-            check(node);
-            checkNT1(message);
-        }
-        nYGLog(node, level, memAddress(message));
-    }
-
-    /** @param level one of:<br><table><tr><td>{@link #YGLogLevelError LogLevelError}</td><td>{@link #YGLogLevelWarn LogLevelWarn}</td><td>{@link #YGLogLevelInfo LogLevelInfo}</td><td>{@link #YGLogLevelDebug LogLevelDebug}</td><td>{@link #YGLogLevelVerbose LogLevelVerbose}</td><td>{@link #YGLogLevelFatal LogLevelFatal}</td></tr></table> */
-    public static void YGLog(@NativeType("YGNodeRef const") long node, @NativeType("YGLogLevel") int level, @NativeType("char const *") CharSequence message) {
-        if (CHECKS) {
-            check(node);
-        }
-        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
-        try {
-            ByteBuffer messageEncoded = stack.UTF8(message);
-            nYGLog(node, level, memAddress(messageEncoded));
-        } finally {
-            stack.setPointer(stackPointer);
-        }
-    }
-
-    // --- [ YGLogWithConfig ] ---
-
-    public static native void nYGLogWithConfig(long config, int level, long message);
-
-    public static void YGLogWithConfig(@NativeType("YGConfigRef const") long config, @NativeType("YGLogLevel") int level, @NativeType("char const *") ByteBuffer message) {
-        if (CHECKS) {
-            check(config);
-            checkNT1(message);
-        }
-        nYGLogWithConfig(config, level, memAddress(message));
-    }
-
-    public static void YGLogWithConfig(@NativeType("YGConfigRef const") long config, @NativeType("YGLogLevel") int level, @NativeType("char const *") CharSequence message) {
-        if (CHECKS) {
-            check(config);
-        }
-        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
-        try {
-            ByteBuffer messageEncoded = stack.UTF8(message);
-            nYGLogWithConfig(config, level, memAddress(messageEncoded));
-        } finally {
-            stack.setPointer(stackPointer);
-        }
-    }
-
     // --- [ YGAssert ] ---
 
     public static native void nYGAssert(boolean condition, long message);
@@ -1820,8 +1771,9 @@ public class Yoga {
     public static void YGAssert(@NativeType("bool") boolean condition, @NativeType("char const *") CharSequence message) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message);
-            nYGAssert(condition, memAddress(messageEncoded));
+            stack.nUTF8(message, true);
+            long messageEncoded = stack.getPointerAddress();
+            nYGAssert(condition, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1845,8 +1797,9 @@ public class Yoga {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message);
-            nYGAssertWithNode(node, condition, memAddress(messageEncoded));
+            stack.nUTF8(message, true);
+            long messageEncoded = stack.getPointerAddress();
+            nYGAssertWithNode(node, condition, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1870,8 +1823,9 @@ public class Yoga {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer messageEncoded = stack.UTF8(message);
-            nYGAssertWithConfig(config, condition, memAddress(messageEncoded));
+            stack.nUTF8(message, true);
+            long messageEncoded = stack.getPointerAddress();
+            nYGAssertWithConfig(config, condition, messageEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -2043,6 +1997,17 @@ public class Yoga {
         return nYGConfigGetContext(config);
     }
 
+    // --- [ YGConfigSetMarkerCallbacks ] ---
+
+    public static native void nYGConfigSetMarkerCallbacks(long config, long callbacks);
+
+    public static void YGConfigSetMarkerCallbacks(@NativeType("YGConfigRef") long config, YGMarkerCallbacks callbacks) {
+        if (CHECKS) {
+            check(config);
+        }
+        nYGConfigSetMarkerCallbacks(config, callbacks.address());
+    }
+
     // --- [ YGRoundValueToPixelGrid ] ---
 
     public static native float YGRoundValueToPixelGrid(float value, float pointScaleFactor, @NativeType("bool") boolean forceCeil, @NativeType("bool") boolean forceFloor);
@@ -2203,18 +2168,6 @@ public class Yoga {
         return memASCII(__result);
     }
 
-    // --- [ YGPrintOptionsToString ] ---
-
-    /** Unsafe version of: {@link #YGPrintOptionsToString PrintOptionsToString} */
-    public static native long nYGPrintOptionsToString(int value);
-
-    /** @param value one of:<br><table><tr><td>{@link #YGPrintOptionsLayout PrintOptionsLayout}</td><td>{@link #YGPrintOptionsStyle PrintOptionsStyle}</td><td>{@link #YGPrintOptionsChildren PrintOptionsChildren}</td></tr></table> */
-    @NativeType("char const *")
-    public static String YGPrintOptionsToString(@NativeType("YGPrintOptions") int value) {
-        long __result = nYGPrintOptionsToString(value);
-        return memASCII(__result);
-    }
-
     // --- [ YGUnitToString ] ---
 
     /** Unsafe version of: {@link #YGUnitToString UnitToString} */
@@ -2238,5 +2191,38 @@ public class Yoga {
         long __result = nYGWrapToString(value);
         return memASCII(__result);
     }
+
+    // --- [ YGValueAuto ] ---
+
+    private static native void nYGValueAuto(long __result);
+
+    private static YGValue YGValueAuto(YGValue __result) {
+        nYGValueAuto(__result.address());
+        return __result;
+    }
+
+    public static final YGValue YGValueAuto = YGValueAuto(YGValue.create());
+
+    // --- [ YGValueUndefined ] ---
+
+    private static native void nYGValueUndefined(long __result);
+
+    private static YGValue YGValueUndefined(YGValue __result) {
+        nYGValueUndefined(__result.address());
+        return __result;
+    }
+
+    public static final YGValue YGValueUndefined = YGValueUndefined(YGValue.create());
+
+    // --- [ YGValueZero ] ---
+
+    private static native void nYGValueZero(long __result);
+
+    private static YGValue YGValueZero(YGValue __result) {
+        nYGValueZero(__result.address());
+        return __result;
+    }
+
+    public static final YGValue YGValueZero = YGValueZero(YGValue.create());
 
 }

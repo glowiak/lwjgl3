@@ -61,7 +61,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     void const * pNext;
  *     VkDescriptorSetLayoutCreateFlags flags;
  *     uint32_t bindingCount;
- *     {@link VkDescriptorSetLayoutBinding VkDescriptorSetLayoutBinding const} * pBindings;
+ *     {@link VkDescriptorSetLayoutBinding VkDescriptorSetLayoutBinding} const * pBindings;
  * }</code></pre>
  */
 public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeResource {
@@ -99,18 +99,14 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
         PBINDINGS = layout.offsetof(4);
     }
 
-    VkDescriptorSetLayoutCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkDescriptorSetLayoutCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkDescriptorSetLayoutCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkDescriptorSetLayoutCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -171,30 +167,31 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDescriptorSetLayoutCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDescriptorSetLayoutCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkDescriptorSetLayoutCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkDescriptorSetLayoutCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkDescriptorSetLayoutCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkDescriptorSetLayoutCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkDescriptorSetLayoutCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkDescriptorSetLayoutCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkDescriptorSetLayoutCreateInfo create() {
-        return new VkDescriptorSetLayoutCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkDescriptorSetLayoutCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkDescriptorSetLayoutCreateInfo} instance for the specified memory address. */
     public static VkDescriptorSetLayoutCreateInfo create(long address) {
-        return new VkDescriptorSetLayoutCreateInfo(address, null);
+        return wrap(VkDescriptorSetLayoutCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDescriptorSetLayoutCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkDescriptorSetLayoutCreateInfo.class, address);
     }
 
     /**
@@ -203,7 +200,7 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -212,7 +209,7 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -221,7 +218,8 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -231,43 +229,43 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkDescriptorSetLayoutCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkDescriptorSetLayoutCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkDescriptorSetLayoutCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkDescriptorSetLayoutCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkDescriptorSetLayoutCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkDescriptorSetLayoutCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkDescriptorSetLayoutCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkDescriptorSetLayoutCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkDescriptorSetLayoutCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDescriptorSetLayoutCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkDescriptorSetLayoutCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkDescriptorSetLayoutCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkDescriptorSetLayoutCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkDescriptorSetLayoutCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkDescriptorSetLayoutCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -295,7 +293,7 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -305,30 +303,30 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
      * @param capacity the buffer capacity
      */
     public static VkDescriptorSetLayoutCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkDescriptorSetLayoutCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkDescriptorSetLayoutCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkDescriptorSetLayoutCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkDescriptorSetLayoutCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkDescriptorSetLayoutCreateInfo.FLAGS); }
     /** Unsafe version of {@link #bindingCount}. */
-    public static int nbindingCount(long struct) { return memGetInt(struct + VkDescriptorSetLayoutCreateInfo.BINDINGCOUNT); }
+    public static int nbindingCount(long struct) { return UNSAFE.getInt(null, struct + VkDescriptorSetLayoutCreateInfo.BINDINGCOUNT); }
     /** Unsafe version of {@link #pBindings}. */
     @Nullable public static VkDescriptorSetLayoutBinding.Buffer npBindings(long struct) { return VkDescriptorSetLayoutBinding.createSafe(memGetAddress(struct + VkDescriptorSetLayoutCreateInfo.PBINDINGS), nbindingCount(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkDescriptorSetLayoutCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkDescriptorSetLayoutCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkDescriptorSetLayoutCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkDescriptorSetLayoutCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkDescriptorSetLayoutCreateInfo.FLAGS, value); }
     /** Sets the specified value to the {@code bindingCount} field of the specified {@code struct}. */
-    public static void nbindingCount(long struct, int value) { memPutInt(struct + VkDescriptorSetLayoutCreateInfo.BINDINGCOUNT, value); }
+    public static void nbindingCount(long struct, int value) { UNSAFE.putInt(null, struct + VkDescriptorSetLayoutCreateInfo.BINDINGCOUNT, value); }
     /** Unsafe version of {@link #pBindings(VkDescriptorSetLayoutBinding.Buffer) pBindings}. */
     public static void npBindings(long struct, @Nullable VkDescriptorSetLayoutBinding.Buffer value) { memPutAddress(struct + VkDescriptorSetLayoutCreateInfo.PBINDINGS, memAddressSafe(value)); nbindingCount(struct, value == null ? 0 : value.remaining()); }
 
@@ -351,7 +349,7 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -360,8 +358,10 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
     /** An array of {@link VkDescriptorSetLayoutCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkDescriptorSetLayoutCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkDescriptorSetLayoutCreateInfo ELEMENT_FACTORY = VkDescriptorSetLayoutCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkDescriptorSetLayoutCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkDescriptorSetLayoutCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -387,18 +387,8 @@ public class VkDescriptorSetLayoutCreateInfo extends Struct implements NativeRes
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkDescriptorSetLayoutCreateInfo newInstance(long address) {
-            return new VkDescriptorSetLayoutCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkDescriptorSetLayoutCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

@@ -46,53 +46,53 @@ val NV_fence = "NVFence".nativeClassGLES("NV_fence", postfix = NV) {
         "DeleteFencesNV",
         "",
 
-        AutoSize("fences")..GLsizei.IN("n", ""),
-        SingleValue("fence")..GLuint.const.p.IN("fences", "")
+        AutoSize("fences")..GLsizei("n", ""),
+        SingleValue("fence")..GLuint.const.p("fences", "")
     )
 
     void(
         "GenFencesNV",
         "",
 
-        AutoSize("fences")..GLsizei.IN("n", ""),
-        ReturnParam..GLuint.p.OUT("fences", "")
+        AutoSize("fences")..GLsizei("n", ""),
+        ReturnParam..GLuint.p("fences", "")
     )
 
     GLboolean(
         "IsFenceNV",
         "",
 
-        GLuint.IN("fence", "")
+        GLuint("fence", "")
     )
 
     GLboolean(
         "TestFenceNV",
         "",
 
-        GLuint.IN("fence", "")
+        GLuint("fence", "")
     )
 
     void(
         "GetFenceivNV",
         "",
 
-        GLuint.IN("fence", ""),
-        GLenum.IN("pname", ""),
-        ReturnParam..Check(1)..GLint.p.OUT("params", "")
+        GLuint("fence", ""),
+        GLenum("pname", ""),
+        ReturnParam..Check(1)..GLint.p("params", "")
     )
 
     void(
         "FinishFenceNV",
         "",
 
-        GLuint.IN("fence", "")
+        GLuint("fence", "")
     )
 
     void(
         "SetFenceNV",
         "",
 
-        GLuint.IN("fence", ""),
-        GLenum.IN("condition", "")
+        GLuint("fence", ""),
+        GLenum("condition", "")
     )
 }

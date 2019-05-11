@@ -1074,8 +1074,9 @@ public class GLES30 extends GLES20 {
     public static int glGetFragDataLocation(@NativeType("GLuint") int program, @NativeType("GLchar const *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer nameEncoded = stack.ASCII(name);
-            return nglGetFragDataLocation(program, memAddress(nameEncoded));
+            stack.nASCII(name, true);
+            long nameEncoded = stack.getPointerAddress();
+            return nglGetFragDataLocation(program, nameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1237,8 +1238,9 @@ public class GLES30 extends GLES20 {
     public static int glGetUniformBlockIndex(@NativeType("GLuint") int program, @NativeType("GLchar const *") CharSequence uniformBlockName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer uniformBlockNameEncoded = stack.ASCII(uniformBlockName);
-            return nglGetUniformBlockIndex(program, memAddress(uniformBlockNameEncoded));
+            stack.nASCII(uniformBlockName, true);
+            long uniformBlockNameEncoded = stack.getPointerAddress();
+            return nglGetUniformBlockIndex(program, uniformBlockNameEncoded);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -1815,7 +1817,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, level, internalformat, width, height, depth, border, format, type, pixels);
+        callPV(target, level, internalformat, width, height, depth, border, format, type, pixels, __functionAddress);
     }
 
     /**
@@ -1828,7 +1830,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, level, internalformat, width, height, depth, border, format, type, pixels);
+        callPV(target, level, internalformat, width, height, depth, border, format, type, pixels, __functionAddress);
     }
 
     /**
@@ -1841,7 +1843,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, level, internalformat, width, height, depth, border, format, type, pixels);
+        callPV(target, level, internalformat, width, height, depth, border, format, type, pixels, __functionAddress);
     }
 
     /**
@@ -1854,7 +1856,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+        callPV(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, __functionAddress);
     }
 
     /**
@@ -1867,7 +1869,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+        callPV(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, __functionAddress);
     }
 
     /**
@@ -1880,7 +1882,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+        callPV(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels, __functionAddress);
     }
 
     /**
@@ -1893,7 +1895,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, ids.length, ids);
+        callPV(ids.length, ids, __functionAddress);
     }
 
     /**
@@ -1906,7 +1908,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, ids.length, ids);
+        callPV(ids.length, ids, __functionAddress);
     }
 
     /**
@@ -1920,7 +1922,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, target, pname, params);
+        callPV(target, pname, params, __functionAddress);
     }
 
     /**
@@ -1934,7 +1936,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, id, pname, params);
+        callPV(id, pname, params, __functionAddress);
     }
 
     /**
@@ -1947,7 +1949,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, bufs.length, bufs);
+        callPV(bufs.length, bufs, __functionAddress);
     }
 
     /**
@@ -1960,7 +1962,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 6, transpose, value);
+        callPV(location, value.length / 6, transpose, value, __functionAddress);
     }
 
     /**
@@ -1973,7 +1975,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 6, transpose, value);
+        callPV(location, value.length / 6, transpose, value, __functionAddress);
     }
 
     /**
@@ -1986,7 +1988,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 3, transpose, value);
+        callPV(location, value.length >> 3, transpose, value, __functionAddress);
     }
 
     /**
@@ -1999,7 +2001,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 3, transpose, value);
+        callPV(location, value.length >> 3, transpose, value, __functionAddress);
     }
 
     /**
@@ -2012,7 +2014,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 12, transpose, value);
+        callPV(location, value.length / 12, transpose, value, __functionAddress);
     }
 
     /**
@@ -2025,7 +2027,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 12, transpose, value);
+        callPV(location, value.length / 12, transpose, value, __functionAddress);
     }
 
     /**
@@ -2038,7 +2040,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, arrays.length, arrays);
+        callPV(arrays.length, arrays, __functionAddress);
     }
 
     /**
@@ -2051,7 +2053,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, arrays.length, arrays);
+        callPV(arrays.length, arrays, __functionAddress);
     }
 
     /**
@@ -2065,7 +2067,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(data, 1);
         }
-        callPV(__functionAddress, target, index, data);
+        callPV(target, index, data, __functionAddress);
     }
 
     /**
@@ -2081,7 +2083,7 @@ public class GLES30 extends GLES20 {
             check(size, 1);
             check(type, 1);
         }
-        callPPPPV(__functionAddress, program, index, name.remaining(), length, size, type, memAddress(name));
+        callPPPPV(program, index, name.remaining(), length, size, type, memAddress(name), __functionAddress);
     }
 
     /**
@@ -2095,7 +2097,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, index, pname, params);
+        callPV(index, pname, params, __functionAddress);
     }
 
     /**
@@ -2109,7 +2111,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, index, pname, params);
+        callPV(index, pname, params, __functionAddress);
     }
 
     /**
@@ -2123,7 +2125,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2137,7 +2139,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(v, 4);
         }
-        callPV(__functionAddress, index, v);
+        callPV(index, v, __functionAddress);
     }
 
     /**
@@ -2151,7 +2153,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, program, location, params);
+        callPV(program, location, params, __functionAddress);
     }
 
     /**
@@ -2164,7 +2166,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length, value);
+        callPV(location, value.length, value, __functionAddress);
     }
 
     /**
@@ -2177,7 +2179,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 1, value);
+        callPV(location, value.length >> 1, value, __functionAddress);
     }
 
     /**
@@ -2190,7 +2192,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length / 3, value);
+        callPV(location, value.length / 3, value, __functionAddress);
     }
 
     /**
@@ -2203,7 +2205,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, location, value.length >> 2, value);
+        callPV(location, value.length >> 2, value, __functionAddress);
     }
 
     /**
@@ -2217,7 +2219,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(value, 1);
         }
-        callPV(__functionAddress, buffer, drawbuffer, value);
+        callPV(buffer, drawbuffer, value, __functionAddress);
     }
 
     /**
@@ -2231,7 +2233,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(value, 1);
         }
-        callPV(__functionAddress, buffer, drawbuffer, value);
+        callPV(buffer, drawbuffer, value, __functionAddress);
     }
 
     /**
@@ -2245,7 +2247,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(value, 1);
         }
-        callPV(__functionAddress, buffer, drawbuffer, value);
+        callPV(buffer, drawbuffer, value, __functionAddress);
     }
 
     /**
@@ -2259,7 +2261,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(uniformIndices, uniformNames.remaining());
         }
-        callPPV(__functionAddress, program, uniformNames.remaining(), memAddress(uniformNames), uniformIndices);
+        callPPV(program, uniformNames.remaining(), memAddress(uniformNames), uniformIndices, __functionAddress);
     }
 
     /**
@@ -2273,7 +2275,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, uniformIndices.length);
         }
-        callPPV(__functionAddress, program, uniformIndices.length, uniformIndices, pname, params);
+        callPPV(program, uniformIndices.length, uniformIndices, pname, params, __functionAddress);
     }
 
     /**
@@ -2287,7 +2289,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, program, uniformBlockIndex, pname, params);
+        callPV(program, uniformBlockIndex, pname, params, __functionAddress);
     }
 
     /**
@@ -2301,7 +2303,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             checkSafe(length, 1);
         }
-        callPPV(__functionAddress, program, uniformBlockIndex, uniformBlockName.remaining(), length, memAddress(uniformBlockName));
+        callPPV(program, uniformBlockIndex, uniformBlockName.remaining(), length, memAddress(uniformBlockName), __functionAddress);
     }
 
     /**
@@ -2315,7 +2317,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(data, 1);
         }
-        callPV(__functionAddress, pname, data);
+        callPV(pname, data, __functionAddress);
     }
 
     /**
@@ -2330,7 +2332,7 @@ public class GLES30 extends GLES20 {
             check(sync);
             checkSafe(length, 1);
         }
-        callPPPV(__functionAddress, sync, pname, values.length, length, values);
+        callPPPV(sync, pname, values.length, length, values, __functionAddress);
     }
 
     /**
@@ -2344,7 +2346,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(data, 1);
         }
-        callPV(__functionAddress, target, index, data);
+        callPV(target, index, data, __functionAddress);
     }
 
     /**
@@ -2358,7 +2360,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, target, pname, params);
+        callPV(target, pname, params, __functionAddress);
     }
 
     /**
@@ -2371,7 +2373,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, samplers.length, samplers);
+        callPV(samplers.length, samplers, __functionAddress);
     }
 
     /**
@@ -2384,7 +2386,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, samplers.length, samplers);
+        callPV(samplers.length, samplers, __functionAddress);
     }
 
     /**
@@ -2398,7 +2400,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(param, 1);
         }
-        callPV(__functionAddress, sampler, pname, param);
+        callPV(sampler, pname, param, __functionAddress);
     }
 
     /**
@@ -2412,7 +2414,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(param, 1);
         }
-        callPV(__functionAddress, sampler, pname, param);
+        callPV(sampler, pname, param, __functionAddress);
     }
 
     /**
@@ -2426,7 +2428,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, sampler, pname, params);
+        callPV(sampler, pname, params, __functionAddress);
     }
 
     /**
@@ -2440,7 +2442,7 @@ public class GLES30 extends GLES20 {
             check(__functionAddress);
             check(params, 1);
         }
-        callPV(__functionAddress, sampler, pname, params);
+        callPV(sampler, pname, params, __functionAddress);
     }
 
     /**
@@ -2453,7 +2455,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, ids.length, ids);
+        callPV(ids.length, ids, __functionAddress);
     }
 
     /**
@@ -2466,7 +2468,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, ids.length, ids);
+        callPV(ids.length, ids, __functionAddress);
     }
 
     /**
@@ -2481,7 +2483,7 @@ public class GLES30 extends GLES20 {
             checkSafe(length, 1);
             check(binaryFormat, 1);
         }
-        callPPPV(__functionAddress, program, binary.remaining(), length, binaryFormat, memAddress(binary));
+        callPPPV(program, binary.remaining(), length, binaryFormat, memAddress(binary), __functionAddress);
     }
 
     /**
@@ -2494,7 +2496,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, attachments.length, attachments);
+        callPV(target, attachments.length, attachments, __functionAddress);
     }
 
     /**
@@ -2507,7 +2509,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, attachments.length, attachments, x, y, width, height);
+        callPV(target, attachments.length, attachments, x, y, width, height, __functionAddress);
     }
 
     /**
@@ -2520,7 +2522,7 @@ public class GLES30 extends GLES20 {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPV(__functionAddress, target, internalformat, pname, params.length, params);
+        callPV(target, internalformat, pname, params.length, params, __functionAddress);
     }
 
 }

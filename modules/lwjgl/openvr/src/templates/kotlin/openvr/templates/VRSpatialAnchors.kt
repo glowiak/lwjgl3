@@ -10,7 +10,6 @@ import openvr.*
 val VRSpatialAnchors = "VRSpatialAnchors".nativeClass(
     Module.OPENVR,
     prefixMethod = "VRSpatialAnchors_",
-    library = OPENVR_LIBRARY,
     binding = OPENVR_FNTABLE_BINDING
 ) {
     documentation =
@@ -24,8 +23,8 @@ val VRSpatialAnchors = "VRSpatialAnchors".nativeClass(
         wait for an event or occasionally poll #GetSpatialAnchorPose() to find the virtual coordinate associated with this anchor.
         """,
 
-        charASCII.const.p.IN("pchDescriptor", ""),
-        Check(1)..SpatialAnchorHandle_t.p.OUT("pHandleOut", "")
+        charASCII.const.p("pchDescriptor", ""),
+        Check(1)..SpatialAnchorHandle_t.p("pHandleOut", "")
     )
 
     EVRSpatialAnchorError(
@@ -45,10 +44,10 @@ val VRSpatialAnchors = "VRSpatialAnchors".nativeClass(
         highest fidelity.
         """,
 
-        TrackedDeviceIndex_t.IN("unDeviceIndex", ""),
-        ETrackingUniverseOrigin.IN("eOrigin", ""),
-        SpatialAnchorPose_t.p.IN("pPose", ""),
-        Check(1)..SpatialAnchorHandle_t.p.OUT("pHandleOut", "")
+        TrackedDeviceIndex_t("unDeviceIndex", ""),
+        ETrackingUniverseOrigin("eOrigin", ""),
+        SpatialAnchorPose_t.p("pPose", ""),
+        Check(1)..SpatialAnchorHandle_t.p("pHandleOut", "")
     )
 
     EVRSpatialAnchorError(
@@ -60,9 +59,9 @@ val VRSpatialAnchors = "VRSpatialAnchors".nativeClass(
         available.
         """,
 
-        SpatialAnchorHandle_t.IN("unHandle", ""),
-        ETrackingUniverseOrigin.IN("eOrigin", ""),
-        SpatialAnchorPose_t.p.OUT("pPoseOut", "")
+        SpatialAnchorHandle_t("unHandle", ""),
+        ETrackingUniverseOrigin("eOrigin", ""),
+        SpatialAnchorPose_t.p("pPoseOut", "")
     )
 
     EVRSpatialAnchorError(
@@ -75,9 +74,9 @@ val VRSpatialAnchors = "VRSpatialAnchors".nativeClass(
         will be the descriptor provided by the driver.
         """,
 
-        SpatialAnchorHandle_t.IN("unHandle", ""),
-        charASCII.p.OUT("pchDescriptorOut", ""),
-        AutoSize("pchDescriptorOut")..Check(1)..uint32_t.p.INOUT("punDescriptorBufferLenInOut", ""),
+        SpatialAnchorHandle_t("unHandle", ""),
+        charASCII.p("pchDescriptorOut", ""),
+        AutoSize("pchDescriptorOut")..Check(1)..uint32_t.p("punDescriptorBufferLenInOut", ""),
 
         returnDoc = "true if the descriptor fits into the buffer, else false. Buffer size should be at least {@code k_unMaxSpatialAnchorDescriptorSize}"
     )

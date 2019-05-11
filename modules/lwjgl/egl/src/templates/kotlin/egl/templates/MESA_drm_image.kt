@@ -34,18 +34,18 @@ val MESA_drm_image = "MESADRMImage".nativeClassEGL("MESA_drm_image", postfix = M
         "CreateDRMImageMESA",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        nullable..noneTerminated..EGLint.const.p.IN("attrib_list", "")
+        EGLDisplay("dpy", ""),
+        nullable..noneTerminated..EGLint.const.p("attrib_list", "")
     )
 
     EGLBoolean(
         "ExportDRMImageMESA",
         "",
 
-        EGLDisplay.IN("dpy", ""),
-        EGLImageKHR.IN("image", ""),
-        nullable..Check(1)..EGLint.p.OUT("name", ""),
-        nullable..Check(1)..EGLint.p.OUT("handle", ""),
-        nullable..Check(1)..EGLint.p.OUT("stride", "")
+        EGLDisplay("dpy", ""),
+        EGLImageKHR("image", ""),
+        nullable..Check(1)..EGLint.p("name", ""),
+        nullable..Check(1)..EGLint.p("handle", ""),
+        nullable..Check(1)..EGLint.p("stride", "")
     )
 }

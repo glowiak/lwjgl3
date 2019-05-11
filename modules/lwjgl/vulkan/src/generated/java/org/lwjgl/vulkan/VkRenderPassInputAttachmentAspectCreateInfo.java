@@ -36,7 +36,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <ul>
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
- * <li>{@code aspectReferenceCount} &ndash; the number of elements in the pAspectReferences array.</li>
+ * <li>{@code aspectReferenceCount} &ndash; the number of elements in the {@code pAspectReferences} array.</li>
  * <li>{@code pAspectReferences} &ndash; points to an array of {@code aspectReferenceCount} number of {@link VkInputAttachmentAspectReference} structures describing which aspect(s) <b>can</b> be accessed for a given input attachment within a given subpass.</li>
  * </ul>
  * 
@@ -47,7 +47,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     VkStructureType sType;
  *     void const * pNext;
  *     uint32_t aspectReferenceCount;
- *     {@link VkInputAttachmentAspectReference VkInputAttachmentAspectReference const} * pAspectReferences;
+ *     {@link VkInputAttachmentAspectReference VkInputAttachmentAspectReference} const * pAspectReferences;
  * }</code></pre>
  */
 public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implements NativeResource {
@@ -82,18 +82,14 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
         PASPECTREFERENCES = layout.offsetof(3);
     }
 
-    VkRenderPassInputAttachmentAspectCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkRenderPassInputAttachmentAspectCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkRenderPassInputAttachmentAspectCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkRenderPassInputAttachmentAspectCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -146,30 +142,31 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
 
     // -----------------------------------
 
-    /** Returns a new {@link VkRenderPassInputAttachmentAspectCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkRenderPassInputAttachmentAspectCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkRenderPassInputAttachmentAspectCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkRenderPassInputAttachmentAspectCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkRenderPassInputAttachmentAspectCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkRenderPassInputAttachmentAspectCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkRenderPassInputAttachmentAspectCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkRenderPassInputAttachmentAspectCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkRenderPassInputAttachmentAspectCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkRenderPassInputAttachmentAspectCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkRenderPassInputAttachmentAspectCreateInfo create() {
-        return new VkRenderPassInputAttachmentAspectCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkRenderPassInputAttachmentAspectCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkRenderPassInputAttachmentAspectCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkRenderPassInputAttachmentAspectCreateInfo} instance for the specified memory address. */
     public static VkRenderPassInputAttachmentAspectCreateInfo create(long address) {
-        return new VkRenderPassInputAttachmentAspectCreateInfo(address, null);
+        return wrap(VkRenderPassInputAttachmentAspectCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkRenderPassInputAttachmentAspectCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkRenderPassInputAttachmentAspectCreateInfo.class, address);
     }
 
     /**
@@ -178,7 +175,7 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkRenderPassInputAttachmentAspectCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -187,7 +184,7 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkRenderPassInputAttachmentAspectCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -196,7 +193,8 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkRenderPassInputAttachmentAspectCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -206,43 +204,43 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkRenderPassInputAttachmentAspectCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkRenderPassInputAttachmentAspectCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkRenderPassInputAttachmentAspectCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkRenderPassInputAttachmentAspectCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkRenderPassInputAttachmentAspectCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkRenderPassInputAttachmentAspectCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkRenderPassInputAttachmentAspectCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkRenderPassInputAttachmentAspectCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkRenderPassInputAttachmentAspectCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkRenderPassInputAttachmentAspectCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkRenderPassInputAttachmentAspectCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkRenderPassInputAttachmentAspectCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkRenderPassInputAttachmentAspectCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkRenderPassInputAttachmentAspectCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkRenderPassInputAttachmentAspectCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkRenderPassInputAttachmentAspectCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -270,7 +268,7 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkRenderPassInputAttachmentAspectCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -280,26 +278,26 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
      * @param capacity the buffer capacity
      */
     public static VkRenderPassInputAttachmentAspectCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkRenderPassInputAttachmentAspectCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkRenderPassInputAttachmentAspectCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkRenderPassInputAttachmentAspectCreateInfo.PNEXT); }
     /** Unsafe version of {@link #aspectReferenceCount}. */
-    public static int naspectReferenceCount(long struct) { return memGetInt(struct + VkRenderPassInputAttachmentAspectCreateInfo.ASPECTREFERENCECOUNT); }
+    public static int naspectReferenceCount(long struct) { return UNSAFE.getInt(null, struct + VkRenderPassInputAttachmentAspectCreateInfo.ASPECTREFERENCECOUNT); }
     /** Unsafe version of {@link #pAspectReferences}. */
     public static VkInputAttachmentAspectReference.Buffer npAspectReferences(long struct) { return VkInputAttachmentAspectReference.create(memGetAddress(struct + VkRenderPassInputAttachmentAspectCreateInfo.PASPECTREFERENCES), naspectReferenceCount(struct)); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkRenderPassInputAttachmentAspectCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkRenderPassInputAttachmentAspectCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkRenderPassInputAttachmentAspectCreateInfo.PNEXT, value); }
     /** Sets the specified value to the {@code aspectReferenceCount} field of the specified {@code struct}. */
-    public static void naspectReferenceCount(long struct, int value) { memPutInt(struct + VkRenderPassInputAttachmentAspectCreateInfo.ASPECTREFERENCECOUNT, value); }
+    public static void naspectReferenceCount(long struct, int value) { UNSAFE.putInt(null, struct + VkRenderPassInputAttachmentAspectCreateInfo.ASPECTREFERENCECOUNT, value); }
     /** Unsafe version of {@link #pAspectReferences(VkInputAttachmentAspectReference.Buffer) pAspectReferences}. */
     public static void npAspectReferences(long struct, VkInputAttachmentAspectReference.Buffer value) { memPutAddress(struct + VkRenderPassInputAttachmentAspectCreateInfo.PASPECTREFERENCES, value.address()); naspectReferenceCount(struct, value.remaining()); }
 
@@ -320,7 +318,7 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -329,8 +327,10 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
     /** An array of {@link VkRenderPassInputAttachmentAspectCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkRenderPassInputAttachmentAspectCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkRenderPassInputAttachmentAspectCreateInfo ELEMENT_FACTORY = VkRenderPassInputAttachmentAspectCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkRenderPassInputAttachmentAspectCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkRenderPassInputAttachmentAspectCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -356,18 +356,8 @@ public class VkRenderPassInputAttachmentAspectCreateInfo extends Struct implemen
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkRenderPassInputAttachmentAspectCreateInfo newInstance(long address) {
-            return new VkRenderPassInputAttachmentAspectCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkRenderPassInputAttachmentAspectCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

@@ -100,7 +100,7 @@ public class EXTDisplaySurfaceCounter {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPJPI(__functionAddress, physicalDevice.address(), surface, pSurfaceCapabilities);
+        return callPJPI(physicalDevice.address(), surface, pSurfaceCapabilities, __functionAddress);
     }
 
     /**
@@ -118,7 +118,7 @@ public class EXTDisplaySurfaceCounter {
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetPhysicalDeviceSurfaceCapabilities2EXT GetPhysicalDeviceSurfaceCapabilities2EXT} behaves similarly to {@link KHRSurface#vkGetPhysicalDeviceSurfaceCapabilitiesKHR GetPhysicalDeviceSurfaceCapabilitiesKHR}, with the ability to return extended information by adding extension structures to the {@code pNext} chain of its {@code pSurfaceCapabilities} parameter.</p>
+     * <p>{@code vkGetPhysicalDeviceSurfaceCapabilities2EXT} behaves similarly to {@link KHRSurface#vkGetPhysicalDeviceSurfaceCapabilitiesKHR GetPhysicalDeviceSurfaceCapabilitiesKHR}, with the ability to return extended information by adding extension structures to the {@code pNext} chain of its {@code pSurfaceCapabilities} parameter.</p>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 

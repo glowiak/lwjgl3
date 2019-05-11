@@ -90,7 +90,7 @@ public class NVDeviceDiagnosticCheckpoints {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>Device diagnostic checkpoints are inserted into the command stream by calling {@code vkCmdSetCheckpointNV}.</p>
+     * <p>Device diagnostic checkpoints are inserted into the command stream by calling {@link #vkCmdSetCheckpointNV CmdSetCheckpointNV}.</p>
      * 
      * <pre><code>
      * void vkCmdSetCheckpointNV(
@@ -101,7 +101,7 @@ public class NVDeviceDiagnosticCheckpoints {
      * 
      * <ul>
      * <li>{@code commandBuffer} <b>must</b> be a valid {@code VkCommandBuffer} handle</li>
-     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
+     * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a></li>
      * <li>The {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics, compute, or transfer operations</li>
      * </ul>
      * 
@@ -114,7 +114,7 @@ public class NVDeviceDiagnosticCheckpoints {
      * <h5>Command Properties</h5>
      * 
      * <table class="lwjgl">
-     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
+     * <thead><tr><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkCommandBufferLevel">Command Buffer Levels</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkCmdBeginRenderPass">Render Pass Scope</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkQueueFlagBits">Supported Queue Types</a></th><th><a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-types">Pipeline Type</a></th></tr></thead>
      * <tbody><tr><td>Primary Secondary</td><td>Both</td><td>Graphics Compute Transfer</td><td></td></tr></tbody>
      * </table>
      *
@@ -127,7 +127,7 @@ public class NVDeviceDiagnosticCheckpoints {
             check(__functionAddress);
             check(pCheckpointMarker);
         }
-        callPPV(__functionAddress, commandBuffer.address(), pCheckpointMarker);
+        callPPV(commandBuffer.address(), pCheckpointMarker, __functionAddress);
     }
 
     // --- [ vkGetQueueCheckpointDataNV ] ---
@@ -142,7 +142,7 @@ public class NVDeviceDiagnosticCheckpoints {
         if (CHECKS) {
             check(__functionAddress);
         }
-        callPPPV(__functionAddress, queue.address(), pCheckpointDataCount, pCheckpointData);
+        callPPPV(queue.address(), pCheckpointDataCount, pCheckpointData, __functionAddress);
     }
 
     /**
@@ -150,7 +150,7 @@ public class NVDeviceDiagnosticCheckpoints {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>If the device encounters an error during execution, the implementation will return a {@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST} error to the application at a certain point during host execution. When this happens, the application <b>can</b> call {@code vkGetQueueCheckpointDataNV} to retrieve information on the most recent diagnostic checkpoints that were executed by the device.</p>
+     * <p>If the device encounters an error during execution, the implementation will return a {@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST} error to the application at a certain point during host execution. When this happens, the application <b>can</b> call {@link #vkGetQueueCheckpointDataNV GetQueueCheckpointDataNV} to retrieve information on the most recent diagnostic checkpoints that were executed by the device.</p>
      * 
      * <pre><code>
      * void vkGetQueueCheckpointDataNV(
@@ -204,7 +204,7 @@ public class NVDeviceDiagnosticCheckpoints {
             check(pCheckpointDataCount, 1);
             checkSafe(pCheckpointData, pCheckpointDataCount[0]);
         }
-        callPPPV(__functionAddress, queue.address(), pCheckpointDataCount, memAddressSafe(pCheckpointData));
+        callPPPV(queue.address(), pCheckpointDataCount, memAddressSafe(pCheckpointData), __functionAddress);
     }
 
 }

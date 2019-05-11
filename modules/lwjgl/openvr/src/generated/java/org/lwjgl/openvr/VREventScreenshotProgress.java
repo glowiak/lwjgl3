@@ -45,18 +45,14 @@ public class VREventScreenshotProgress extends Struct {
         PROGRESS = layout.offsetof(0);
     }
 
-    VREventScreenshotProgress(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VREventScreenshotProgress} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VREventScreenshotProgress} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VREventScreenshotProgress(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -67,15 +63,15 @@ public class VREventScreenshotProgress extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link VREventScreenshotProgress} instance for the specified memory address. */
+    /** Returns a new {@code VREventScreenshotProgress} instance for the specified memory address. */
     public static VREventScreenshotProgress create(long address) {
-        return new VREventScreenshotProgress(address, null);
+        return wrap(VREventScreenshotProgress.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VREventScreenshotProgress createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VREventScreenshotProgress.class, address);
     }
 
     /**
@@ -85,27 +81,29 @@ public class VREventScreenshotProgress extends Struct {
      * @param capacity the buffer capacity
      */
     public static VREventScreenshotProgress.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VREventScreenshotProgress.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #progress}. */
-    public static float nprogress(long struct) { return memGetFloat(struct + VREventScreenshotProgress.PROGRESS); }
+    public static float nprogress(long struct) { return UNSAFE.getFloat(null, struct + VREventScreenshotProgress.PROGRESS); }
 
     // -----------------------------------
 
     /** An array of {@link VREventScreenshotProgress} structs. */
     public static class Buffer extends StructBuffer<VREventScreenshotProgress, Buffer> {
 
+        private static final VREventScreenshotProgress ELEMENT_FACTORY = VREventScreenshotProgress.create(-1L);
+
         /**
-         * Creates a new {@link VREventScreenshotProgress.Buffer} instance backed by the specified container.
+         * Creates a new {@code VREventScreenshotProgress.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -131,18 +129,8 @@ public class VREventScreenshotProgress extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VREventScreenshotProgress newInstance(long address) {
-            return new VREventScreenshotProgress(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VREventScreenshotProgress getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code progress} field. */

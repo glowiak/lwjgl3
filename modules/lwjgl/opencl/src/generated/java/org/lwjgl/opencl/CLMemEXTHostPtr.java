@@ -60,18 +60,14 @@ public class CLMemEXTHostPtr extends Struct implements NativeResource {
         HOST_CACHE_POLICY = layout.offsetof(1);
     }
 
-    CLMemEXTHostPtr(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link CLMemEXTHostPtr} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code CLMemEXTHostPtr} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public CLMemEXTHostPtr(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -114,30 +110,31 @@ public class CLMemEXTHostPtr extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link CLMemEXTHostPtr} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code CLMemEXTHostPtr} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static CLMemEXTHostPtr malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(CLMemEXTHostPtr.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link CLMemEXTHostPtr} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code CLMemEXTHostPtr} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static CLMemEXTHostPtr calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(CLMemEXTHostPtr.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link CLMemEXTHostPtr} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code CLMemEXTHostPtr} instance allocated with {@link BufferUtils}. */
     public static CLMemEXTHostPtr create() {
-        return new CLMemEXTHostPtr(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(CLMemEXTHostPtr.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link CLMemEXTHostPtr} instance for the specified memory address. */
+    /** Returns a new {@code CLMemEXTHostPtr} instance for the specified memory address. */
     public static CLMemEXTHostPtr create(long address) {
-        return new CLMemEXTHostPtr(address, null);
+        return wrap(CLMemEXTHostPtr.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static CLMemEXTHostPtr createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(CLMemEXTHostPtr.class, address);
     }
 
     /**
@@ -146,7 +143,7 @@ public class CLMemEXTHostPtr extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLMemEXTHostPtr.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -155,7 +152,7 @@ public class CLMemEXTHostPtr extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLMemEXTHostPtr.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -164,7 +161,8 @@ public class CLMemEXTHostPtr extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLMemEXTHostPtr.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -174,43 +172,43 @@ public class CLMemEXTHostPtr extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLMemEXTHostPtr.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static CLMemEXTHostPtr.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link CLMemEXTHostPtr} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code CLMemEXTHostPtr} instance allocated on the thread-local {@link MemoryStack}. */
     public static CLMemEXTHostPtr mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link CLMemEXTHostPtr} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code CLMemEXTHostPtr} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static CLMemEXTHostPtr callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link CLMemEXTHostPtr} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code CLMemEXTHostPtr} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static CLMemEXTHostPtr mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(CLMemEXTHostPtr.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link CLMemEXTHostPtr} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code CLMemEXTHostPtr} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static CLMemEXTHostPtr callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(CLMemEXTHostPtr.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -238,7 +236,7 @@ public class CLMemEXTHostPtr extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLMemEXTHostPtr.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -248,28 +246,30 @@ public class CLMemEXTHostPtr extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static CLMemEXTHostPtr.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #allocation_type}. */
-    public static int nallocation_type(long struct) { return memGetInt(struct + CLMemEXTHostPtr.ALLOCATION_TYPE); }
+    public static int nallocation_type(long struct) { return UNSAFE.getInt(null, struct + CLMemEXTHostPtr.ALLOCATION_TYPE); }
     /** Unsafe version of {@link #host_cache_policy}. */
-    public static int nhost_cache_policy(long struct) { return memGetInt(struct + CLMemEXTHostPtr.HOST_CACHE_POLICY); }
+    public static int nhost_cache_policy(long struct) { return UNSAFE.getInt(null, struct + CLMemEXTHostPtr.HOST_CACHE_POLICY); }
 
     /** Unsafe version of {@link #allocation_type(int) allocation_type}. */
-    public static void nallocation_type(long struct, int value) { memPutInt(struct + CLMemEXTHostPtr.ALLOCATION_TYPE, value); }
+    public static void nallocation_type(long struct, int value) { UNSAFE.putInt(null, struct + CLMemEXTHostPtr.ALLOCATION_TYPE, value); }
     /** Unsafe version of {@link #host_cache_policy(int) host_cache_policy}. */
-    public static void nhost_cache_policy(long struct, int value) { memPutInt(struct + CLMemEXTHostPtr.HOST_CACHE_POLICY, value); }
+    public static void nhost_cache_policy(long struct, int value) { UNSAFE.putInt(null, struct + CLMemEXTHostPtr.HOST_CACHE_POLICY, value); }
 
     // -----------------------------------
 
     /** An array of {@link CLMemEXTHostPtr} structs. */
     public static class Buffer extends StructBuffer<CLMemEXTHostPtr, Buffer> implements NativeResource {
 
+        private static final CLMemEXTHostPtr ELEMENT_FACTORY = CLMemEXTHostPtr.create(-1L);
+
         /**
-         * Creates a new {@link CLMemEXTHostPtr.Buffer} instance backed by the specified container.
+         * Creates a new {@code CLMemEXTHostPtr.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -295,18 +295,8 @@ public class CLMemEXTHostPtr extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected CLMemEXTHostPtr newInstance(long address) {
-            return new CLMemEXTHostPtr(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected CLMemEXTHostPtr getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code allocation_type} field. */

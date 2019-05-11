@@ -640,11 +640,6 @@ public class GL43 extends GL42 {
 
     // --- [ glDispatchComputeIndirect ] ---
 
-    /** Unsafe version of: {@link #glDispatchComputeIndirect DispatchComputeIndirect} */
-    public static void nglDispatchComputeIndirect(long indirect) {
-        GL43C.nglDispatchComputeIndirect(indirect);
-    }
-
     /**
      * Launches one or more compute work groups using parameters stored in a buffer.
      * 
@@ -781,7 +776,7 @@ public class GL43 extends GL42 {
      * 
      * @see <a target="_blank" href="http://docs.gl/gl4/glDebugMessageControl">Reference Page</a>
      */
-    public static void glDebugMessageControl(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLenum") int severity, @Nullable @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
+    public static void glDebugMessageControl(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLenum") int severity, @NativeType("GLuint const *") int id, @NativeType("GLboolean") boolean enabled) {
         GL43C.glDebugMessageControl(source, type, severity, id, enabled);
     }
 

@@ -21,18 +21,22 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
- * <li>{@code handle} &ndash; texture handle</li>
+ * <li>{@code access} &ndash; attachment access</li>
+ * <li>{@code handle} &ndash; render target texture handle</li>
  * <li>{@code mip} &ndash; mip level</li>
  * <li>{@code layer} &ndash; cubemap side or depth layer/slice</li>
+ * <li>{@code resolve} &ndash; resolve flags. One of:<br><table><tr><td>{@link BGFX#BGFX_RESOLVE_NONE RESOLVE_NONE}</td><td>{@link BGFX#BGFX_RESOLVE_AUTO_GEN_MIPS RESOLVE_AUTO_GEN_MIPS}</td></tr></table></li>
  * </ul>
  * 
  * <h3>Layout</h3>
  * 
  * <pre><code>
  * struct bgfx_attachment_t {
+ *     bgfx_access_t access;
  *     bgfx_texture_handle_t handle;
  *     uint16_t mip;
  *     uint16_t layer;
+ *     uint8_t resolve;
  * }</code></pre>
  */
 @NativeType("struct bgfx_attachment_t")
@@ -46,42 +50,47 @@ public class BGFXAttachment extends Struct implements NativeResource {
 
     /** The struct member offsets. */
     public static final int
+        ACCESS,
         HANDLE,
         MIP,
-        LAYER;
+        LAYER,
+        RESOLVE;
 
     static {
         Layout layout = __struct(
+            __member(4),
             __member(2),
             __member(2),
-            __member(2)
+            __member(2),
+            __member(1)
         );
 
         SIZEOF = layout.getSize();
         ALIGNOF = layout.getAlignment();
 
-        HANDLE = layout.offsetof(0);
-        MIP = layout.offsetof(1);
-        LAYER = layout.offsetof(2);
-    }
-
-    BGFXAttachment(long address, @Nullable ByteBuffer container) {
-        super(address, container);
+        ACCESS = layout.offsetof(0);
+        HANDLE = layout.offsetof(1);
+        MIP = layout.offsetof(2);
+        LAYER = layout.offsetof(3);
+        RESOLVE = layout.offsetof(4);
     }
 
     /**
-     * Creates a {@link BGFXAttachment} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code BGFXAttachment} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public BGFXAttachment(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
     public int sizeof() { return SIZEOF; }
 
+    /** Returns the value of the {@code access} field. */
+    @NativeType("bgfx_access_t")
+    public int access() { return naccess(address()); }
     /** Returns the value of the {@code handle} field. */
     @NativeType("bgfx_texture_handle_t")
     public short handle() { return nhandle(address()); }
@@ -91,23 +100,34 @@ public class BGFXAttachment extends Struct implements NativeResource {
     /** Returns the value of the {@code layer} field. */
     @NativeType("uint16_t")
     public short layer() { return nlayer(address()); }
+    /** Returns the value of the {@code resolve} field. */
+    @NativeType("uint8_t")
+    public byte resolve() { return nresolve(address()); }
 
+    /** Sets the specified value to the {@code access} field. */
+    public BGFXAttachment access(@NativeType("bgfx_access_t") int value) { naccess(address(), value); return this; }
     /** Sets the specified value to the {@code handle} field. */
     public BGFXAttachment handle(@NativeType("bgfx_texture_handle_t") short value) { nhandle(address(), value); return this; }
     /** Sets the specified value to the {@code mip} field. */
     public BGFXAttachment mip(@NativeType("uint16_t") short value) { nmip(address(), value); return this; }
     /** Sets the specified value to the {@code layer} field. */
     public BGFXAttachment layer(@NativeType("uint16_t") short value) { nlayer(address(), value); return this; }
+    /** Sets the specified value to the {@code resolve} field. */
+    public BGFXAttachment resolve(@NativeType("uint8_t") byte value) { nresolve(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public BGFXAttachment set(
+        int access,
         short handle,
         short mip,
-        short layer
+        short layer,
+        byte resolve
     ) {
+        access(access);
         handle(handle);
         mip(mip);
         layer(layer);
+        resolve(resolve);
 
         return this;
     }
@@ -126,30 +146,31 @@ public class BGFXAttachment extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link BGFXAttachment} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code BGFXAttachment} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static BGFXAttachment malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(BGFXAttachment.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link BGFXAttachment} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code BGFXAttachment} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static BGFXAttachment calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(BGFXAttachment.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link BGFXAttachment} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code BGFXAttachment} instance allocated with {@link BufferUtils}. */
     public static BGFXAttachment create() {
-        return new BGFXAttachment(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(BGFXAttachment.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link BGFXAttachment} instance for the specified memory address. */
+    /** Returns a new {@code BGFXAttachment} instance for the specified memory address. */
     public static BGFXAttachment create(long address) {
-        return new BGFXAttachment(address, null);
+        return wrap(BGFXAttachment.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static BGFXAttachment createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(BGFXAttachment.class, address);
     }
 
     /**
@@ -158,7 +179,7 @@ public class BGFXAttachment extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static BGFXAttachment.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -167,7 +188,7 @@ public class BGFXAttachment extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static BGFXAttachment.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -176,7 +197,8 @@ public class BGFXAttachment extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static BGFXAttachment.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -186,43 +208,43 @@ public class BGFXAttachment extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static BGFXAttachment.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static BGFXAttachment.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link BGFXAttachment} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code BGFXAttachment} instance allocated on the thread-local {@link MemoryStack}. */
     public static BGFXAttachment mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link BGFXAttachment} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code BGFXAttachment} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static BGFXAttachment callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link BGFXAttachment} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code BGFXAttachment} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static BGFXAttachment mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(BGFXAttachment.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link BGFXAttachment} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code BGFXAttachment} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static BGFXAttachment callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(BGFXAttachment.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -250,7 +272,7 @@ public class BGFXAttachment extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static BGFXAttachment.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -260,32 +282,42 @@ public class BGFXAttachment extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static BGFXAttachment.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #access}. */
+    public static int naccess(long struct) { return UNSAFE.getInt(null, struct + BGFXAttachment.ACCESS); }
     /** Unsafe version of {@link #handle}. */
-    public static short nhandle(long struct) { return memGetShort(struct + BGFXAttachment.HANDLE); }
+    public static short nhandle(long struct) { return UNSAFE.getShort(null, struct + BGFXAttachment.HANDLE); }
     /** Unsafe version of {@link #mip}. */
-    public static short nmip(long struct) { return memGetShort(struct + BGFXAttachment.MIP); }
+    public static short nmip(long struct) { return UNSAFE.getShort(null, struct + BGFXAttachment.MIP); }
     /** Unsafe version of {@link #layer}. */
-    public static short nlayer(long struct) { return memGetShort(struct + BGFXAttachment.LAYER); }
+    public static short nlayer(long struct) { return UNSAFE.getShort(null, struct + BGFXAttachment.LAYER); }
+    /** Unsafe version of {@link #resolve}. */
+    public static byte nresolve(long struct) { return UNSAFE.getByte(null, struct + BGFXAttachment.RESOLVE); }
 
+    /** Unsafe version of {@link #access(int) access}. */
+    public static void naccess(long struct, int value) { UNSAFE.putInt(null, struct + BGFXAttachment.ACCESS, value); }
     /** Unsafe version of {@link #handle(short) handle}. */
-    public static void nhandle(long struct, short value) { memPutShort(struct + BGFXAttachment.HANDLE, value); }
+    public static void nhandle(long struct, short value) { UNSAFE.putShort(null, struct + BGFXAttachment.HANDLE, value); }
     /** Unsafe version of {@link #mip(short) mip}. */
-    public static void nmip(long struct, short value) { memPutShort(struct + BGFXAttachment.MIP, value); }
+    public static void nmip(long struct, short value) { UNSAFE.putShort(null, struct + BGFXAttachment.MIP, value); }
     /** Unsafe version of {@link #layer(short) layer}. */
-    public static void nlayer(long struct, short value) { memPutShort(struct + BGFXAttachment.LAYER, value); }
+    public static void nlayer(long struct, short value) { UNSAFE.putShort(null, struct + BGFXAttachment.LAYER, value); }
+    /** Unsafe version of {@link #resolve(byte) resolve}. */
+    public static void nresolve(long struct, byte value) { UNSAFE.putByte(null, struct + BGFXAttachment.RESOLVE, value); }
 
     // -----------------------------------
 
     /** An array of {@link BGFXAttachment} structs. */
     public static class Buffer extends StructBuffer<BGFXAttachment, Buffer> implements NativeResource {
 
+        private static final BGFXAttachment ELEMENT_FACTORY = BGFXAttachment.create(-1L);
+
         /**
-         * Creates a new {@link BGFXAttachment.Buffer} instance backed by the specified container.
+         * Creates a new {@code BGFXAttachment.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -311,20 +343,13 @@ public class BGFXAttachment extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
+        protected BGFXAttachment getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
-        @Override
-        protected BGFXAttachment newInstance(long address) {
-            return new BGFXAttachment(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
-        }
-
+        /** Returns the value of the {@code access} field. */
+        @NativeType("bgfx_access_t")
+        public int access() { return BGFXAttachment.naccess(address()); }
         /** Returns the value of the {@code handle} field. */
         @NativeType("bgfx_texture_handle_t")
         public short handle() { return BGFXAttachment.nhandle(address()); }
@@ -334,13 +359,20 @@ public class BGFXAttachment extends Struct implements NativeResource {
         /** Returns the value of the {@code layer} field. */
         @NativeType("uint16_t")
         public short layer() { return BGFXAttachment.nlayer(address()); }
+        /** Returns the value of the {@code resolve} field. */
+        @NativeType("uint8_t")
+        public byte resolve() { return BGFXAttachment.nresolve(address()); }
 
+        /** Sets the specified value to the {@code access} field. */
+        public BGFXAttachment.Buffer access(@NativeType("bgfx_access_t") int value) { BGFXAttachment.naccess(address(), value); return this; }
         /** Sets the specified value to the {@code handle} field. */
         public BGFXAttachment.Buffer handle(@NativeType("bgfx_texture_handle_t") short value) { BGFXAttachment.nhandle(address(), value); return this; }
         /** Sets the specified value to the {@code mip} field. */
         public BGFXAttachment.Buffer mip(@NativeType("uint16_t") short value) { BGFXAttachment.nmip(address(), value); return this; }
         /** Sets the specified value to the {@code layer} field. */
         public BGFXAttachment.Buffer layer(@NativeType("uint16_t") short value) { BGFXAttachment.nlayer(address(), value); return this; }
+        /** Sets the specified value to the {@code resolve} field. */
+        public BGFXAttachment.Buffer resolve(@NativeType("uint8_t") byte value) { BGFXAttachment.nresolve(address(), value); return this; }
 
     }
 

@@ -22,8 +22,9 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>If {@code image} was created with a <em>multi-planar</em> format and the {@link VK11#VK_IMAGE_CREATE_DISJOINT_BIT IMAGE_CREATE_DISJOINT_BIT} flag, there <b>must</b> be a {@link VkImagePlaneMemoryRequirementsInfo} in the {@code pNext} chain of the {@link VkImageMemoryRequirementsInfo2} structure</li>
+ * <li>If {@code image} was created with {@link VK11#VK_IMAGE_CREATE_DISJOINT_BIT IMAGE_CREATE_DISJOINT_BIT} and with {@link EXTImageDrmFormatModifier#VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT}, then there <b>must</b> be a {@link VkImagePlaneMemoryRequirementsInfo} in the {@code pNext} chain of the {@link VkImageMemoryRequirementsInfo2} structure</li>
  * <li>If {@code image} was not created with the {@link VK11#VK_IMAGE_CREATE_DISJOINT_BIT IMAGE_CREATE_DISJOINT_BIT} flag, there <b>must</b> not be a {@link VkImagePlaneMemoryRequirementsInfo} in the {@code pNext} chain of the {@link VkImageMemoryRequirementsInfo2} structure</li>
- * <li>If {@code image} was created with a single-plane format, there <b>must</b> not be a {@link VkImagePlaneMemoryRequirementsInfo} in the {@code pNext} chain of the {@link VkImageMemoryRequirementsInfo2} structure</li>
+ * <li>If {@code image} was created with a single-plane format and with any {@code tiling} other than {@link EXTImageDrmFormatModifier#VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT}, then there <b>must</b> not be a {@link VkImagePlaneMemoryRequirementsInfo} in the {@code pNext} chain of the {@link VkImageMemoryRequirementsInfo2} structure</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -84,18 +85,14 @@ public class VkImageMemoryRequirementsInfo2 extends Struct implements NativeReso
         IMAGE = layout.offsetof(2);
     }
 
-    VkImageMemoryRequirementsInfo2(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkImageMemoryRequirementsInfo2} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkImageMemoryRequirementsInfo2} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkImageMemoryRequirementsInfo2(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -145,30 +142,31 @@ public class VkImageMemoryRequirementsInfo2 extends Struct implements NativeReso
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImageMemoryRequirementsInfo2} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImageMemoryRequirementsInfo2} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkImageMemoryRequirementsInfo2 malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkImageMemoryRequirementsInfo2.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkImageMemoryRequirementsInfo2} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkImageMemoryRequirementsInfo2} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkImageMemoryRequirementsInfo2 calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkImageMemoryRequirementsInfo2.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkImageMemoryRequirementsInfo2} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkImageMemoryRequirementsInfo2} instance allocated with {@link BufferUtils}. */
     public static VkImageMemoryRequirementsInfo2 create() {
-        return new VkImageMemoryRequirementsInfo2(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkImageMemoryRequirementsInfo2.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkImageMemoryRequirementsInfo2} instance for the specified memory address. */
+    /** Returns a new {@code VkImageMemoryRequirementsInfo2} instance for the specified memory address. */
     public static VkImageMemoryRequirementsInfo2 create(long address) {
-        return new VkImageMemoryRequirementsInfo2(address, null);
+        return wrap(VkImageMemoryRequirementsInfo2.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImageMemoryRequirementsInfo2 createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkImageMemoryRequirementsInfo2.class, address);
     }
 
     /**
@@ -177,7 +175,7 @@ public class VkImageMemoryRequirementsInfo2 extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkImageMemoryRequirementsInfo2.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -186,7 +184,7 @@ public class VkImageMemoryRequirementsInfo2 extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkImageMemoryRequirementsInfo2.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -195,7 +193,8 @@ public class VkImageMemoryRequirementsInfo2 extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkImageMemoryRequirementsInfo2.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -205,43 +204,43 @@ public class VkImageMemoryRequirementsInfo2 extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkImageMemoryRequirementsInfo2.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkImageMemoryRequirementsInfo2.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkImageMemoryRequirementsInfo2} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkImageMemoryRequirementsInfo2} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkImageMemoryRequirementsInfo2 mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkImageMemoryRequirementsInfo2} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkImageMemoryRequirementsInfo2} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkImageMemoryRequirementsInfo2 callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkImageMemoryRequirementsInfo2} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkImageMemoryRequirementsInfo2} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImageMemoryRequirementsInfo2 mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkImageMemoryRequirementsInfo2.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkImageMemoryRequirementsInfo2} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkImageMemoryRequirementsInfo2} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkImageMemoryRequirementsInfo2 callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkImageMemoryRequirementsInfo2.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -269,7 +268,7 @@ public class VkImageMemoryRequirementsInfo2 extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkImageMemoryRequirementsInfo2.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -279,32 +278,34 @@ public class VkImageMemoryRequirementsInfo2 extends Struct implements NativeReso
      * @param capacity the buffer capacity
      */
     public static VkImageMemoryRequirementsInfo2.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkImageMemoryRequirementsInfo2.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkImageMemoryRequirementsInfo2.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkImageMemoryRequirementsInfo2.PNEXT); }
     /** Unsafe version of {@link #image}. */
-    public static long nimage(long struct) { return memGetLong(struct + VkImageMemoryRequirementsInfo2.IMAGE); }
+    public static long nimage(long struct) { return UNSAFE.getLong(null, struct + VkImageMemoryRequirementsInfo2.IMAGE); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkImageMemoryRequirementsInfo2.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkImageMemoryRequirementsInfo2.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkImageMemoryRequirementsInfo2.PNEXT, value); }
     /** Unsafe version of {@link #image(long) image}. */
-    public static void nimage(long struct, long value) { memPutLong(struct + VkImageMemoryRequirementsInfo2.IMAGE, value); }
+    public static void nimage(long struct, long value) { UNSAFE.putLong(null, struct + VkImageMemoryRequirementsInfo2.IMAGE, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkImageMemoryRequirementsInfo2} structs. */
     public static class Buffer extends StructBuffer<VkImageMemoryRequirementsInfo2, Buffer> implements NativeResource {
 
+        private static final VkImageMemoryRequirementsInfo2 ELEMENT_FACTORY = VkImageMemoryRequirementsInfo2.create(-1L);
+
         /**
-         * Creates a new {@link VkImageMemoryRequirementsInfo2.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkImageMemoryRequirementsInfo2.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -330,18 +331,8 @@ public class VkImageMemoryRequirementsInfo2 extends Struct implements NativeReso
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkImageMemoryRequirementsInfo2 newInstance(long address) {
-            return new VkImageMemoryRequirementsInfo2(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkImageMemoryRequirementsInfo2 getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

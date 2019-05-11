@@ -50,18 +50,14 @@ class NkConfigStackButtonBehavior extends Struct {
         ELEMENTS = layout.offsetof(1);
     }
 
-    NkConfigStackButtonBehavior(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link NkConfigStackButtonBehavior} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code NkConfigStackButtonBehavior} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     NkConfigStackButtonBehavior(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -78,15 +74,15 @@ class NkConfigStackButtonBehavior extends Struct {
 
     // -----------------------------------
 
-    /** Returns a new {@link NkConfigStackButtonBehavior} instance for the specified memory address. */
+    /** Returns a new {@code NkConfigStackButtonBehavior} instance for the specified memory address. */
     public static NkConfigStackButtonBehavior create(long address) {
-        return new NkConfigStackButtonBehavior(address, null);
+        return wrap(NkConfigStackButtonBehavior.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkConfigStackButtonBehavior createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(NkConfigStackButtonBehavior.class, address);
     }
 
     /**
@@ -96,19 +92,19 @@ class NkConfigStackButtonBehavior extends Struct {
      * @param capacity the buffer capacity
      */
     public static NkConfigStackButtonBehavior.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static NkConfigStackButtonBehavior.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #head}. */
-    public static int nhead(long struct) { return memGetInt(struct + NkConfigStackButtonBehavior.HEAD); }
+    public static int nhead(long struct) { return UNSAFE.getInt(null, struct + NkConfigStackButtonBehavior.HEAD); }
     /** Unsafe version of {@link #elements}. */
     public static NkConfigStackButtonBehaviorElement.Buffer nelements(long struct) { return NkConfigStackButtonBehaviorElement.create(struct + NkConfigStackButtonBehavior.ELEMENTS, 8); }
     /** Unsafe version of {@link #elements(int) elements}. */
@@ -121,8 +117,10 @@ class NkConfigStackButtonBehavior extends Struct {
     /** An array of {@link NkConfigStackButtonBehavior} structs. */
     public static class Buffer extends StructBuffer<NkConfigStackButtonBehavior, Buffer> {
 
+        private static final NkConfigStackButtonBehavior ELEMENT_FACTORY = NkConfigStackButtonBehavior.create(-1L);
+
         /**
-         * Creates a new {@link NkConfigStackButtonBehavior.Buffer} instance backed by the specified container.
+         * Creates a new {@code NkConfigStackButtonBehavior.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -148,18 +146,8 @@ class NkConfigStackButtonBehavior extends Struct {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected NkConfigStackButtonBehavior newInstance(long address) {
-            return new NkConfigStackButtonBehavior(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected NkConfigStackButtonBehavior getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code head} field. */

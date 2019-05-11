@@ -25,14 +25,31 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
- * <li>{@code mName} &ndash; The name of the node.</li>
+ * <li>{@code mName} &ndash; 
+ * The name of the node.
+ * 
+ * <p>The name might be empty (length of zero) but all nodes which need to be referenced by either bones or animations are named. Multiple nodes may have the
+ * same name, except for nodes which are referenced by bones (see {@link AIBone} and {@link AIMesh}{@code ::mBones}). Their names <b>must</b> be unique.</p>
+ * 
+ * <p>Cameras and lights reference a specific node by name - if there are multiple nodes with this name, they are assigned to each of them.</p>
+ * 
+ * <p>There are no limitations with regard to the characters contained in the name string as it is usually taken directly from the source file.</p>
+ * 
+ * <p>Implementations should be able to handle tokens such as whitespace, tabs, line feeds, quotation marks, ampersands etc.</p>
+ * 
+ * <p>Sometimes assimp introduces new nodes not present in the source file into the hierarchy (usually out of necessity because sometimes the source
+ * hierarchy format is simply not compatible). Their names are surrounded by {@code <>} e.g. {@code <DummyRootNode>}.</p></li>
  * <li>{@code mTransformation} &ndash; The transformation relative to the node's parent.</li>
  * <li>{@code mParent} &ndash; Parent node. {@code NULL} if this node is the root node.</li>
  * <li>{@code mNumChildren} &ndash; The number of child nodes of this node.</li>
  * <li>{@code mChildren} &ndash; The child nodes of this node. {@code NULL} if {@code mNumChildren} is 0.</li>
  * <li>{@code mNumMeshes} &ndash; The number of meshes of this node.</li>
- * <li>{@code mMeshes} &ndash; The meshes of this node. Each entry is an index into the mesh list of the aiScene.</li>
- * <li>{@code mMetadata} &ndash; Metadata associated with this node or {@code NULL} if there is no metadata.</li>
+ * <li>{@code mMeshes} &ndash; The meshes of this node. Each entry is an index into the mesh list of the {@link AIScene}.</li>
+ * <li>{@code mMetadata} &ndash; 
+ * Metadata associated with this node or {@code NULL} if there is no metadata.
+ * 
+ * <p>Whether any metadata is generated depends on the source file format. See the importer notes page for more information on every source file format.
+ * Importers that don't document any metadata don't write any.</p></li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -94,18 +111,14 @@ public class AINode extends Struct implements NativeResource {
         MMETADATA = layout.offsetof(7);
     }
 
-    AINode(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link AINode} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code AINode} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public AINode(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -190,30 +203,31 @@ public class AINode extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link AINode} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AINode} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static AINode malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(AINode.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link AINode} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AINode} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static AINode calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(AINode.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link AINode} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code AINode} instance allocated with {@link BufferUtils}. */
     public static AINode create() {
-        return new AINode(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(AINode.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link AINode} instance for the specified memory address. */
+    /** Returns a new {@code AINode} instance for the specified memory address. */
     public static AINode create(long address) {
-        return new AINode(address, null);
+        return wrap(AINode.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AINode createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(AINode.class, address);
     }
 
     /**
@@ -222,7 +236,7 @@ public class AINode extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AINode.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -231,7 +245,7 @@ public class AINode extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AINode.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -240,7 +254,8 @@ public class AINode extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AINode.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -250,43 +265,43 @@ public class AINode extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AINode.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AINode.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link AINode} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code AINode} instance allocated on the thread-local {@link MemoryStack}. */
     public static AINode mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link AINode} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code AINode} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static AINode callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link AINode} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code AINode} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static AINode mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(AINode.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link AINode} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code AINode} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static AINode callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(AINode.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -314,7 +329,7 @@ public class AINode extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AINode.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -324,7 +339,7 @@ public class AINode extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AINode.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -336,11 +351,11 @@ public class AINode extends Struct implements NativeResource {
     /** Unsafe version of {@link #mParent}. */
     @Nullable public static AINode nmParent(long struct) { return AINode.createSafe(memGetAddress(struct + AINode.MPARENT)); }
     /** Unsafe version of {@link #mNumChildren}. */
-    public static int nmNumChildren(long struct) { return memGetInt(struct + AINode.MNUMCHILDREN); }
+    public static int nmNumChildren(long struct) { return UNSAFE.getInt(null, struct + AINode.MNUMCHILDREN); }
     /** Unsafe version of {@link #mChildren() mChildren}. */
     @Nullable public static PointerBuffer nmChildren(long struct) { return memPointerBufferSafe(memGetAddress(struct + AINode.MCHILDREN), nmNumChildren(struct)); }
     /** Unsafe version of {@link #mNumMeshes}. */
-    public static int nmNumMeshes(long struct) { return memGetInt(struct + AINode.MNUMMESHES); }
+    public static int nmNumMeshes(long struct) { return UNSAFE.getInt(null, struct + AINode.MNUMMESHES); }
     /** Unsafe version of {@link #mMeshes() mMeshes}. */
     @Nullable public static IntBuffer nmMeshes(long struct) { return memIntBufferSafe(memGetAddress(struct + AINode.MMESHES), nmNumMeshes(struct)); }
     /** Unsafe version of {@link #mMetadata}. */
@@ -353,11 +368,11 @@ public class AINode extends Struct implements NativeResource {
     /** Unsafe version of {@link #mParent(AINode) mParent}. */
     public static void nmParent(long struct, @Nullable AINode value) { memPutAddress(struct + AINode.MPARENT, memAddressSafe(value)); }
     /** Sets the specified value to the {@code mNumChildren} field of the specified {@code struct}. */
-    public static void nmNumChildren(long struct, int value) { memPutInt(struct + AINode.MNUMCHILDREN, value); }
+    public static void nmNumChildren(long struct, int value) { UNSAFE.putInt(null, struct + AINode.MNUMCHILDREN, value); }
     /** Unsafe version of {@link #mChildren(PointerBuffer) mChildren}. */
     public static void nmChildren(long struct, @Nullable PointerBuffer value) { memPutAddress(struct + AINode.MCHILDREN, memAddressSafe(value)); nmNumChildren(struct, value == null ? 0 : value.remaining()); }
     /** Sets the specified value to the {@code mNumMeshes} field of the specified {@code struct}. */
-    public static void nmNumMeshes(long struct, int value) { memPutInt(struct + AINode.MNUMMESHES, value); }
+    public static void nmNumMeshes(long struct, int value) { UNSAFE.putInt(null, struct + AINode.MNUMMESHES, value); }
     /** Unsafe version of {@link #mMeshes(IntBuffer) mMeshes}. */
     public static void nmMeshes(long struct, @Nullable IntBuffer value) { memPutAddress(struct + AINode.MMESHES, memAddressSafe(value)); nmNumMeshes(struct, value == null ? 0 : value.remaining()); }
     /** Unsafe version of {@link #mMetadata(AIMetaData) mMetadata}. */
@@ -389,7 +404,7 @@ public class AINode extends Struct implements NativeResource {
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -398,8 +413,10 @@ public class AINode extends Struct implements NativeResource {
     /** An array of {@link AINode} structs. */
     public static class Buffer extends StructBuffer<AINode, Buffer> implements NativeResource {
 
+        private static final AINode ELEMENT_FACTORY = AINode.create(-1L);
+
         /**
-         * Creates a new {@link AINode.Buffer} instance backed by the specified container.
+         * Creates a new {@code AINode.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -425,18 +442,8 @@ public class AINode extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected AINode newInstance(long address) {
-            return new AINode(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected AINode getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns a {@link AIString} view of the {@code mName} field. */

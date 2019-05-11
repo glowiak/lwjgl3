@@ -25,7 +25,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
  * </ul>
  * 
- * <p>Note that the stages at which a checkpoint marker <b>can</b> be executed are implementation-defined and <b>can</b> be queried by calling {@code vkGetPhysicalDeviceQueueFamilyProperties2}.</p>
+ * <p>Note that the stages at which a checkpoint marker <b>can</b> be executed are implementation-defined and <b>can</b> be queried by calling {@link VK11#vkGetPhysicalDeviceQueueFamilyProperties2 GetPhysicalDeviceQueueFamilyProperties2}.</p>
  * 
  * <h5>See Also</h5>
  * 
@@ -82,18 +82,14 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
         PCHECKPOINTMARKER = layout.offsetof(3);
     }
 
-    VkCheckpointDataNV(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkCheckpointDataNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkCheckpointDataNV} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkCheckpointDataNV(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -142,30 +138,31 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCheckpointDataNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCheckpointDataNV} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkCheckpointDataNV malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkCheckpointDataNV.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkCheckpointDataNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkCheckpointDataNV} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkCheckpointDataNV calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkCheckpointDataNV.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkCheckpointDataNV} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkCheckpointDataNV} instance allocated with {@link BufferUtils}. */
     public static VkCheckpointDataNV create() {
-        return new VkCheckpointDataNV(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkCheckpointDataNV.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkCheckpointDataNV} instance for the specified memory address. */
+    /** Returns a new {@code VkCheckpointDataNV} instance for the specified memory address. */
     public static VkCheckpointDataNV create(long address) {
-        return new VkCheckpointDataNV(address, null);
+        return wrap(VkCheckpointDataNV.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCheckpointDataNV createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkCheckpointDataNV.class, address);
     }
 
     /**
@@ -174,7 +171,7 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCheckpointDataNV.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -183,7 +180,7 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCheckpointDataNV.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -192,7 +189,8 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCheckpointDataNV.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -202,43 +200,43 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCheckpointDataNV.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkCheckpointDataNV.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkCheckpointDataNV} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkCheckpointDataNV} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkCheckpointDataNV mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkCheckpointDataNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkCheckpointDataNV} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkCheckpointDataNV callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkCheckpointDataNV} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkCheckpointDataNV} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCheckpointDataNV mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkCheckpointDataNV.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkCheckpointDataNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkCheckpointDataNV} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkCheckpointDataNV callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkCheckpointDataNV.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -266,7 +264,7 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCheckpointDataNV.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -276,22 +274,22 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static VkCheckpointDataNV.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkCheckpointDataNV.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkCheckpointDataNV.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkCheckpointDataNV.PNEXT); }
     /** Unsafe version of {@link #stage}. */
-    public static int nstage(long struct) { return memGetInt(struct + VkCheckpointDataNV.STAGE); }
+    public static int nstage(long struct) { return UNSAFE.getInt(null, struct + VkCheckpointDataNV.STAGE); }
     /** Unsafe version of {@link #pCheckpointMarker}. */
     public static long npCheckpointMarker(long struct) { return memGetAddress(struct + VkCheckpointDataNV.PCHECKPOINTMARKER); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkCheckpointDataNV.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkCheckpointDataNV.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkCheckpointDataNV.PNEXT, value); }
 
@@ -300,8 +298,10 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
     /** An array of {@link VkCheckpointDataNV} structs. */
     public static class Buffer extends StructBuffer<VkCheckpointDataNV, Buffer> implements NativeResource {
 
+        private static final VkCheckpointDataNV ELEMENT_FACTORY = VkCheckpointDataNV.create(-1L);
+
         /**
-         * Creates a new {@link VkCheckpointDataNV.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkCheckpointDataNV.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -327,18 +327,8 @@ public class VkCheckpointDataNV extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkCheckpointDataNV newInstance(long address) {
-            return new VkCheckpointDataNV(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkCheckpointDataNV getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

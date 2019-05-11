@@ -347,8 +347,9 @@ public class GL46C extends GL45C {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pEntryPointEncoded = stack.UTF8(pEntryPoint);
-            nglSpecializeShader(shader, memAddress(pEntryPointEncoded), pConstantIndex.remaining(), memAddress(pConstantIndex), memAddress(pConstantValue));
+            stack.nUTF8(pEntryPoint, true);
+            long pEntryPointEncoded = stack.getPointerAddress();
+            nglSpecializeShader(shader, pEntryPointEncoded, pConstantIndex.remaining(), memAddress(pConstantIndex), memAddress(pConstantValue));
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -365,7 +366,7 @@ public class GL46C extends GL45C {
             check(__functionAddress);
             check(indirect, (maxdrawcount * (stride == 0 ? (4 * 4) : stride)) >> 2);
         }
-        callPPV(__functionAddress, mode, indirect, drawcount, maxdrawcount, stride);
+        callPPV(mode, indirect, drawcount, maxdrawcount, stride, __functionAddress);
     }
 
     /**
@@ -379,7 +380,7 @@ public class GL46C extends GL45C {
             check(__functionAddress);
             check(indirect, (maxdrawcount * (stride == 0 ? (5 * 4) : stride)) >> 2);
         }
-        callPPV(__functionAddress, mode, type, indirect, drawcount, maxdrawcount, stride);
+        callPPV(mode, type, indirect, drawcount, maxdrawcount, stride, __functionAddress);
     }
 
     /**
@@ -394,7 +395,7 @@ public class GL46C extends GL45C {
             checkNT1(pEntryPoint);
             check(pConstantValue, pConstantIndex.length);
         }
-        callPPPV(__functionAddress, shader, memAddress(pEntryPoint), pConstantIndex.length, pConstantIndex, pConstantValue);
+        callPPPV(shader, memAddress(pEntryPoint), pConstantIndex.length, pConstantIndex, pConstantValue, __functionAddress);
     }
 
     /**
@@ -410,8 +411,9 @@ public class GL46C extends GL45C {
         }
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
-            ByteBuffer pEntryPointEncoded = stack.UTF8(pEntryPoint);
-            callPPPV(__functionAddress, shader, memAddress(pEntryPointEncoded), pConstantIndex.length, pConstantIndex, pConstantValue);
+            stack.nUTF8(pEntryPoint, true);
+            long pEntryPointEncoded = stack.getPointerAddress();
+            callPPPV(shader, pEntryPointEncoded, pConstantIndex.length, pConstantIndex, pConstantValue, __functionAddress);
         } finally {
             stack.setPointer(stackPointer);
         }

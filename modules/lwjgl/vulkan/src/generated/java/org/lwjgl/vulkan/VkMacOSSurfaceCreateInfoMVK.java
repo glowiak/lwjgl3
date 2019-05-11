@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h5>Valid Usage</h5>
  * 
  * <ul>
- * <li>{@code pView} <b>must</b> be a valid {@code NSView} and <b>must</b> be backed by a {@code CALayer} instance of type {@code CAMetalLayer}.</li>
+ * <li>{@code pView} <b>must</b> be a valid {@code NSView} and <b>must</b> be backed by a {@code CALayer} instance of type dlink:CAMetalLayer.</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -43,7 +43,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
  * <li>{@code flags} &ndash; reserved for future use.</li>
- * <li>{@code pView} &ndash; a reference to a {@code NSView} object which will display this surface. This {@code NSView} <b>must</b> be backed by a {@code CALayer} instance of type {@code CAMetalLayer}.</li>
+ * <li>{@code pView} &ndash; a reference to a {@code NSView} object which will display this surface. This {@code NSView} <b>must</b> be backed by a {@code CALayer} instance of type dlink:CAMetalLayer.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -88,18 +88,14 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
         PVIEW = layout.offsetof(3);
     }
 
-    VkMacOSSurfaceCreateInfoMVK(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkMacOSSurfaceCreateInfoMVK} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkMacOSSurfaceCreateInfoMVK} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkMacOSSurfaceCreateInfoMVK(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -156,30 +152,31 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
 
     // -----------------------------------
 
-    /** Returns a new {@link VkMacOSSurfaceCreateInfoMVK} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkMacOSSurfaceCreateInfoMVK} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkMacOSSurfaceCreateInfoMVK malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkMacOSSurfaceCreateInfoMVK.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkMacOSSurfaceCreateInfoMVK} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkMacOSSurfaceCreateInfoMVK} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkMacOSSurfaceCreateInfoMVK calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkMacOSSurfaceCreateInfoMVK.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkMacOSSurfaceCreateInfoMVK} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkMacOSSurfaceCreateInfoMVK} instance allocated with {@link BufferUtils}. */
     public static VkMacOSSurfaceCreateInfoMVK create() {
-        return new VkMacOSSurfaceCreateInfoMVK(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkMacOSSurfaceCreateInfoMVK.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkMacOSSurfaceCreateInfoMVK} instance for the specified memory address. */
+    /** Returns a new {@code VkMacOSSurfaceCreateInfoMVK} instance for the specified memory address. */
     public static VkMacOSSurfaceCreateInfoMVK create(long address) {
-        return new VkMacOSSurfaceCreateInfoMVK(address, null);
+        return wrap(VkMacOSSurfaceCreateInfoMVK.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkMacOSSurfaceCreateInfoMVK createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkMacOSSurfaceCreateInfoMVK.class, address);
     }
 
     /**
@@ -188,7 +185,7 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
      * @param capacity the buffer capacity
      */
     public static VkMacOSSurfaceCreateInfoMVK.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -197,7 +194,7 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
      * @param capacity the buffer capacity
      */
     public static VkMacOSSurfaceCreateInfoMVK.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -206,7 +203,8 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
      * @param capacity the buffer capacity
      */
     public static VkMacOSSurfaceCreateInfoMVK.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -216,43 +214,43 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
      * @param capacity the buffer capacity
      */
     public static VkMacOSSurfaceCreateInfoMVK.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkMacOSSurfaceCreateInfoMVK.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkMacOSSurfaceCreateInfoMVK} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkMacOSSurfaceCreateInfoMVK} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkMacOSSurfaceCreateInfoMVK mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkMacOSSurfaceCreateInfoMVK} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkMacOSSurfaceCreateInfoMVK} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkMacOSSurfaceCreateInfoMVK callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkMacOSSurfaceCreateInfoMVK} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkMacOSSurfaceCreateInfoMVK} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkMacOSSurfaceCreateInfoMVK mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkMacOSSurfaceCreateInfoMVK.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkMacOSSurfaceCreateInfoMVK} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkMacOSSurfaceCreateInfoMVK} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkMacOSSurfaceCreateInfoMVK callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkMacOSSurfaceCreateInfoMVK.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -280,7 +278,7 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
      * @param capacity the buffer capacity
      */
     public static VkMacOSSurfaceCreateInfoMVK.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -290,26 +288,26 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
      * @param capacity the buffer capacity
      */
     public static VkMacOSSurfaceCreateInfoMVK.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkMacOSSurfaceCreateInfoMVK.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkMacOSSurfaceCreateInfoMVK.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkMacOSSurfaceCreateInfoMVK.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkMacOSSurfaceCreateInfoMVK.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkMacOSSurfaceCreateInfoMVK.FLAGS); }
     /** Unsafe version of {@link #pView}. */
     public static long npView(long struct) { return memGetAddress(struct + VkMacOSSurfaceCreateInfoMVK.PVIEW); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkMacOSSurfaceCreateInfoMVK.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkMacOSSurfaceCreateInfoMVK.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkMacOSSurfaceCreateInfoMVK.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkMacOSSurfaceCreateInfoMVK.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkMacOSSurfaceCreateInfoMVK.FLAGS, value); }
     /** Unsafe version of {@link #pView(long) pView}. */
     public static void npView(long struct, long value) { memPutAddress(struct + VkMacOSSurfaceCreateInfoMVK.PVIEW, check(value)); }
 
@@ -330,7 +328,7 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
      */
     public static void validate(long array, int count) {
         for (int i = 0; i < count; i++) {
-            validate(array + i * SIZEOF);
+            validate(array + Integer.toUnsignedLong(i) * SIZEOF);
         }
     }
 
@@ -339,8 +337,10 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
     /** An array of {@link VkMacOSSurfaceCreateInfoMVK} structs. */
     public static class Buffer extends StructBuffer<VkMacOSSurfaceCreateInfoMVK, Buffer> implements NativeResource {
 
+        private static final VkMacOSSurfaceCreateInfoMVK ELEMENT_FACTORY = VkMacOSSurfaceCreateInfoMVK.create(-1L);
+
         /**
-         * Creates a new {@link VkMacOSSurfaceCreateInfoMVK.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkMacOSSurfaceCreateInfoMVK.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -366,18 +366,8 @@ public class VkMacOSSurfaceCreateInfoMVK extends Struct implements NativeResourc
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkMacOSSurfaceCreateInfoMVK newInstance(long address) {
-            return new VkMacOSSurfaceCreateInfoMVK(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkMacOSSurfaceCreateInfoMVK getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

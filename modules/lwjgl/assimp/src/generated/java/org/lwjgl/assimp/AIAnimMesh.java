@@ -17,7 +17,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * NOT CURRENTLY IN USE. An AnimMesh is an attachment to an {@link AIMesh} stores per-vertex animations for a particular frame.
+ * An {@code AnimMesh} is an attachment to an {@link AIMesh} stores per-vertex animations for a particular frame.
  * 
  * <p>You may think of an {@code aiAnimMesh} as a `patch` for the host mesh, which replaces only certain vertex data streams at a particular time. Each mesh
  * stores n attached attached meshes ({@link AIMesh}{@code ::mAnimMeshes}). The actual relationship between the time line and anim meshes is established by
@@ -26,6 +26,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
+ * <li>{@code mName} &ndash; the {@code AnimMesh} name</li>
  * <li>{@code mVertices} &ndash; 
  * Replacement for {@link AIMesh}{@code ::mVertices}. If this array is non-{@code NULL}, it *must* contain {@code mNumVertices} entries. The corresponding array in the
  * host mesh must be non-{@code NULL} as well - animation meshes may neither add or nor remove vertex components (if a replacement array is {@code NULL} and the
@@ -39,12 +40,14 @@ import static org.lwjgl.system.MemoryStack.*;
  * The number of vertices in the {@code aiAnimMesh}, and thus the length of all the member arrays. This has always the same value as the
  * {@code mNumVertices} property in the corresponding {@link AIMesh}. It is duplicated here merely to make the length of the member arrays accessible even if
  * the {@code aiMesh} is not known, e.g. from language bindings.</li>
+ * <li>{@code mWeight} &ndash; Weight of the {@code AnimMesh}.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
  * 
  * <pre><code>
  * struct aiAnimMesh {
+ *     {@link AIString struct aiString} mName;
  *     {@link AIVector3D struct aiVector3D} * mVertices;
  *     {@link AIVector3D struct aiVector3D} * mNormals;
  *     {@link AIVector3D struct aiVector3D} * mTangents;
@@ -52,6 +55,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link AIColor4D struct aiColor4D} * mColors[Assimp.AI_MAX_NUMBER_OF_COLOR_SETS];
  *     {@link AIVector3D struct aiVector3D} * mTextureCoords[Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS];
  *     unsigned int mNumVertices;
+ *     float mWeight;
  * }</code></pre>
  */
 @NativeType("struct aiAnimMesh")
@@ -65,54 +69,61 @@ public class AIAnimMesh extends Struct implements NativeResource {
 
     /** The struct member offsets. */
     public static final int
+        MNAME,
         MVERTICES,
         MNORMALS,
         MTANGENTS,
         MBITANGENTS,
         MCOLORS,
         MTEXTURECOORDS,
-        MNUMVERTICES;
+        MNUMVERTICES,
+        MWEIGHT;
 
     static {
         Layout layout = __struct(
+            __member(AIString.SIZEOF, AIString.ALIGNOF),
             __member(POINTER_SIZE),
             __member(POINTER_SIZE),
             __member(POINTER_SIZE),
             __member(POINTER_SIZE),
             __array(POINTER_SIZE, Assimp.AI_MAX_NUMBER_OF_COLOR_SETS),
             __array(POINTER_SIZE, Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS),
+            __member(4),
             __member(4)
         );
 
         SIZEOF = layout.getSize();
         ALIGNOF = layout.getAlignment();
 
-        MVERTICES = layout.offsetof(0);
-        MNORMALS = layout.offsetof(1);
-        MTANGENTS = layout.offsetof(2);
-        MBITANGENTS = layout.offsetof(3);
-        MCOLORS = layout.offsetof(4);
-        MTEXTURECOORDS = layout.offsetof(5);
-        MNUMVERTICES = layout.offsetof(6);
-    }
-
-    AIAnimMesh(long address, @Nullable ByteBuffer container) {
-        super(address, container);
+        MNAME = layout.offsetof(0);
+        MVERTICES = layout.offsetof(1);
+        MNORMALS = layout.offsetof(2);
+        MTANGENTS = layout.offsetof(3);
+        MBITANGENTS = layout.offsetof(4);
+        MCOLORS = layout.offsetof(5);
+        MTEXTURECOORDS = layout.offsetof(6);
+        MNUMVERTICES = layout.offsetof(7);
+        MWEIGHT = layout.offsetof(8);
     }
 
     /**
-     * Creates a {@link AIAnimMesh} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code AIAnimMesh} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public AIAnimMesh(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
     public int sizeof() { return SIZEOF; }
 
+    /** Returns a {@link AIString} view of the {@code mName} field. */
+    @NativeType("struct aiString")
+    public AIString mName() { return nmName(address()); }
+    /** Passes the {@code mName} field to the specified {@link java.util.function.Consumer Consumer}. */
+    public AIAnimMesh mName(java.util.function.Consumer<AIString> consumer) { consumer.accept(mName()); return this; }
     /** Returns a {@link AIVector3D.Buffer} view of the struct array pointed to by the {@code mVertices} field. */
     @Nullable
     @NativeType("struct aiVector3D *")
@@ -146,7 +157,11 @@ public class AIAnimMesh extends Struct implements NativeResource {
     /** Returns the value of the {@code mNumVertices} field. */
     @NativeType("unsigned int")
     public int mNumVertices() { return nmNumVertices(address()); }
+    /** Returns the value of the {@code mWeight} field. */
+    public float mWeight() { return nmWeight(address()); }
 
+    /** Copies the specified {@link AIString} to the {@code mName} field. */
+    public AIAnimMesh mName(@NativeType("struct aiString") AIString value) { nmName(address(), value); return this; }
     /** Sets the address of the specified {@link AIVector3D.Buffer} to the {@code mVertices} field. */
     public AIAnimMesh mVertices(@Nullable @NativeType("struct aiVector3D *") AIVector3D.Buffer value) { nmVertices(address(), value); return this; }
     /** Sets the address of the specified {@link AIVector3D.Buffer} to the {@code mNormals} field. */
@@ -165,17 +180,22 @@ public class AIAnimMesh extends Struct implements NativeResource {
     public AIAnimMesh mTextureCoords(int index, @Nullable @NativeType("struct aiVector3D *") AIVector3D.Buffer value) { nmTextureCoords(address(), index, value); return this; }
     /** Sets the specified value to the {@code mNumVertices} field. */
     public AIAnimMesh mNumVertices(@NativeType("unsigned int") int value) { nmNumVertices(address(), value); return this; }
+    /** Sets the specified value to the {@code mWeight} field. */
+    public AIAnimMesh mWeight(float value) { nmWeight(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public AIAnimMesh set(
+        AIString mName,
         @Nullable AIVector3D.Buffer mVertices,
         @Nullable AIVector3D.Buffer mNormals,
         @Nullable AIVector3D.Buffer mTangents,
         @Nullable AIVector3D.Buffer mBitangents,
         PointerBuffer mColors,
         PointerBuffer mTextureCoords,
-        int mNumVertices
+        int mNumVertices,
+        float mWeight
     ) {
+        mName(mName);
         mVertices(mVertices);
         mNormals(mNormals);
         mTangents(mTangents);
@@ -183,6 +203,7 @@ public class AIAnimMesh extends Struct implements NativeResource {
         mColors(mColors);
         mTextureCoords(mTextureCoords);
         mNumVertices(mNumVertices);
+        mWeight(mWeight);
 
         return this;
     }
@@ -201,30 +222,31 @@ public class AIAnimMesh extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link AIAnimMesh} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIAnimMesh} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static AIAnimMesh malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(AIAnimMesh.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link AIAnimMesh} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code AIAnimMesh} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static AIAnimMesh calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(AIAnimMesh.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link AIAnimMesh} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code AIAnimMesh} instance allocated with {@link BufferUtils}. */
     public static AIAnimMesh create() {
-        return new AIAnimMesh(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(AIAnimMesh.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link AIAnimMesh} instance for the specified memory address. */
+    /** Returns a new {@code AIAnimMesh} instance for the specified memory address. */
     public static AIAnimMesh create(long address) {
-        return new AIAnimMesh(address, null);
+        return wrap(AIAnimMesh.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIAnimMesh createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(AIAnimMesh.class, address);
     }
 
     /**
@@ -233,7 +255,7 @@ public class AIAnimMesh extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIAnimMesh.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -242,7 +264,7 @@ public class AIAnimMesh extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIAnimMesh.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -251,7 +273,8 @@ public class AIAnimMesh extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIAnimMesh.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -261,43 +284,43 @@ public class AIAnimMesh extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIAnimMesh.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static AIAnimMesh.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link AIAnimMesh} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code AIAnimMesh} instance allocated on the thread-local {@link MemoryStack}. */
     public static AIAnimMesh mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link AIAnimMesh} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code AIAnimMesh} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static AIAnimMesh callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link AIAnimMesh} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code AIAnimMesh} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static AIAnimMesh mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(AIAnimMesh.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link AIAnimMesh} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code AIAnimMesh} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static AIAnimMesh callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(AIAnimMesh.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -325,7 +348,7 @@ public class AIAnimMesh extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIAnimMesh.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -335,11 +358,13 @@ public class AIAnimMesh extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static AIAnimMesh.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #mName}. */
+    public static AIString nmName(long struct) { return AIString.create(struct + AIAnimMesh.MNAME); }
     /** Unsafe version of {@link #mVertices}. */
     @Nullable public static AIVector3D.Buffer nmVertices(long struct) { return AIVector3D.createSafe(memGetAddress(struct + AIAnimMesh.MVERTICES), nmNumVertices(struct)); }
     /** Unsafe version of {@link #mNormals}. */
@@ -361,8 +386,12 @@ public class AIAnimMesh extends Struct implements NativeResource {
         return AIVector3D.createSafe(memGetAddress(struct + AIAnimMesh.MTEXTURECOORDS + check(index, Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS) * POINTER_SIZE), nmNumVertices(struct));
     }
     /** Unsafe version of {@link #mNumVertices}. */
-    public static int nmNumVertices(long struct) { return memGetInt(struct + AIAnimMesh.MNUMVERTICES); }
+    public static int nmNumVertices(long struct) { return UNSAFE.getInt(null, struct + AIAnimMesh.MNUMVERTICES); }
+    /** Unsafe version of {@link #mWeight}. */
+    public static float nmWeight(long struct) { return UNSAFE.getFloat(null, struct + AIAnimMesh.MWEIGHT); }
 
+    /** Unsafe version of {@link #mName(AIString) mName}. */
+    public static void nmName(long struct, AIString value) { memCopy(value.address(), struct + AIAnimMesh.MNAME, AIString.SIZEOF); }
     /** Unsafe version of {@link #mVertices(AIVector3D.Buffer) mVertices}. */
     public static void nmVertices(long struct, @Nullable AIVector3D.Buffer value) { memPutAddress(struct + AIAnimMesh.MVERTICES, memAddressSafe(value)); }
     /** Unsafe version of {@link #mNormals(AIVector3D.Buffer) mNormals}. */
@@ -390,15 +419,19 @@ public class AIAnimMesh extends Struct implements NativeResource {
         memPutAddress(struct + AIAnimMesh.MTEXTURECOORDS + check(index, Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS) * POINTER_SIZE, memAddressSafe(value));
     }
     /** Sets the specified value to the {@code mNumVertices} field of the specified {@code struct}. */
-    public static void nmNumVertices(long struct, int value) { memPutInt(struct + AIAnimMesh.MNUMVERTICES, value); }
+    public static void nmNumVertices(long struct, int value) { UNSAFE.putInt(null, struct + AIAnimMesh.MNUMVERTICES, value); }
+    /** Unsafe version of {@link #mWeight(float) mWeight}. */
+    public static void nmWeight(long struct, float value) { UNSAFE.putFloat(null, struct + AIAnimMesh.MWEIGHT, value); }
 
     // -----------------------------------
 
     /** An array of {@link AIAnimMesh} structs. */
     public static class Buffer extends StructBuffer<AIAnimMesh, Buffer> implements NativeResource {
 
+        private static final AIAnimMesh ELEMENT_FACTORY = AIAnimMesh.create(-1L);
+
         /**
-         * Creates a new {@link AIAnimMesh.Buffer} instance backed by the specified container.
+         * Creates a new {@code AIAnimMesh.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -424,20 +457,15 @@ public class AIAnimMesh extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
+        protected AIAnimMesh getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
-        @Override
-        protected AIAnimMesh newInstance(long address) {
-            return new AIAnimMesh(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
-        }
-
+        /** Returns a {@link AIString} view of the {@code mName} field. */
+        @NativeType("struct aiString")
+        public AIString mName() { return AIAnimMesh.nmName(address()); }
+        /** Passes the {@code mName} field to the specified {@link java.util.function.Consumer Consumer}. */
+        public AIAnimMesh.Buffer mName(java.util.function.Consumer<AIString> consumer) { consumer.accept(mName()); return this; }
         /** Returns a {@link AIVector3D.Buffer} view of the struct array pointed to by the {@code mVertices} field. */
         @Nullable
         @NativeType("struct aiVector3D *")
@@ -471,7 +499,11 @@ public class AIAnimMesh extends Struct implements NativeResource {
         /** Returns the value of the {@code mNumVertices} field. */
         @NativeType("unsigned int")
         public int mNumVertices() { return AIAnimMesh.nmNumVertices(address()); }
+        /** Returns the value of the {@code mWeight} field. */
+        public float mWeight() { return AIAnimMesh.nmWeight(address()); }
 
+        /** Copies the specified {@link AIString} to the {@code mName} field. */
+        public AIAnimMesh.Buffer mName(@NativeType("struct aiString") AIString value) { AIAnimMesh.nmName(address(), value); return this; }
         /** Sets the address of the specified {@link AIVector3D.Buffer} to the {@code mVertices} field. */
         public AIAnimMesh.Buffer mVertices(@Nullable @NativeType("struct aiVector3D *") AIVector3D.Buffer value) { AIAnimMesh.nmVertices(address(), value); return this; }
         /** Sets the address of the specified {@link AIVector3D.Buffer} to the {@code mNormals} field. */
@@ -490,6 +522,8 @@ public class AIAnimMesh extends Struct implements NativeResource {
         public AIAnimMesh.Buffer mTextureCoords(int index, @Nullable @NativeType("struct aiVector3D *") AIVector3D.Buffer value) { AIAnimMesh.nmTextureCoords(address(), index, value); return this; }
         /** Sets the specified value to the {@code mNumVertices} field. */
         public AIAnimMesh.Buffer mNumVertices(@NativeType("unsigned int") int value) { AIAnimMesh.nmNumVertices(address(), value); return this; }
+        /** Sets the specified value to the {@code mWeight} field. */
+        public AIAnimMesh.Buffer mWeight(float value) { AIAnimMesh.nmWeight(address(), value); return this; }
 
     }
 

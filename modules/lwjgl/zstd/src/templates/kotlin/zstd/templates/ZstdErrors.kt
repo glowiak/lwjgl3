@@ -7,7 +7,7 @@ package zstd.templates
 import org.lwjgl.generator.*
 import zstd.*
 
-val ZstdErrors = "ZstdErrors".nativeClass(Module.ZSTD, prefix = "ZSTD", prefixMethod = "ZSTD_", library = ZSTD_LIBRARY) {
+val ZstdErrors = "ZstdErrors".nativeClass(Module.ZSTD, prefix = "ZSTD", prefixMethod = "ZSTD_") {
     /*nativeDirective(
         """DISABLE_WARNINGS()
 #include "zstd_errors.h"
@@ -41,6 +41,7 @@ ENABLE_WARNINGS()""")*/
         "error_workSpace_tooSmall".."66",
         "error_dstSize_tooSmall".."70",
         "error_srcSize_wrong".."72",
+        "error_dstBuffer_null".."74",
         /* following error codes are not stable and may be removed or changed in a future version */
         "error_frameIndex_tooLarge".."100",
         "error_seekableIO".."102"
@@ -50,13 +51,13 @@ ENABLE_WARNINGS()""")*/
         "getErrorCode",
         "",
 
-        size_t.IN("functionResult", "")
+        size_t("functionResult", "")
     )
 
     Nonnull..charASCII.const.p(
         "getErrorString",
         "",
 
-        ZSTD_ErrorCode.IN("code", "")
+        ZSTD_ErrorCode("code", "")
     )
 }

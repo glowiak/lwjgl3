@@ -7,7 +7,7 @@ package stb.templates
 import org.lwjgl.generator.*
 import stb.*
 
-val stb_image = "STBImage".nativeClass(Module.STB, prefix = "STBI_", library = STB_LIBRARY) {
+val stb_image = "STBImage".nativeClass(Module.STB, prefix = "STBI_") {
     includeSTBAPI(
         """#include "lwjgl_malloc.h"
 #define STBI_MALLOC(sz)    org_lwjgl_malloc(sz)
@@ -17,6 +17,9 @@ val stb_image = "STBImage".nativeClass(Module.STB, prefix = "STBI_", library = S
 #define STBI_ASSERT(x)
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
+#ifdef LWJGL_WINDOWS
+    #define STBI_WINDOWS_UTF8
+#endif
 #include "stb_image.h"""")
 
     documentation =
@@ -42,7 +45,7 @@ val stb_image = "STBImage".nativeClass(Module.STB, prefix = "STBI_", library = S
 
         Features:
         ${ul(
-            "decode from memory <s>or through FILE (define STBI_NO_STDIO to remove code)</s>",
+            "decode from memory",
             "decode from arbitrary I/O callbacks",
             "SIMD acceleration on x86/x64 (SSE2) and ARM (NEON)"
         )}
@@ -66,9 +69,9 @@ stbi_image_free(data)""")}
 
         <h3>HDR image support</h3>
 
-        stb_image now supports loading HDR images in general, and currently the Radiance .HDR file format, although the support is provided generically. You
-        can still load any file through the existing interface; if you attempt to load an HDR file, it will be automatically remapped to LDR, assuming gamma
-        2.2 and an arbitrary scale factor defaulting to 1; both of these constants can be reconfigured through this interface:
+        stb_image supports loading HDR images in general, and currently the Radiance .HDR file format specifically. You can still load any file through the
+        existing interface; if you attempt to load an HDR file, it will be automatically remapped to LDR, assuming gamma 2.2 and an arbitrary scale factor
+        defaulting to 1; both of these constants can be reconfigured through this interface:
         ${codeBlock("""
 stbi_hdr_to_ldr_gamma(2.2f);
 stbi_hdr_to_ldr_scale(1.0f);"""
@@ -132,22 +135,22 @@ N=\#channels_in_file     components
         Paletted PNG, BMP, GIF, and PIC images are automatically depalettized.
         """,
 
-        charASCII.const.p.IN("filename", "the file name"),
-        Check(1)..AutoSizeResult..int.p.OUT("x", "outputs the image width in pixels"),
-        Check(1)..AutoSizeResult..int.p.OUT("y", "outputs the image height in pixels"),
-        Check(1)..AutoSizeResult("(desired_channels != 0 ? desired_channels : \$original)")..int.p.OUT(
+        charUTF8.const.p("filename", "the file name"),
+        Check(1)..AutoSizeResult..int.p("x", "outputs the image width in pixels"),
+        Check(1)..AutoSizeResult..int.p("y", "outputs the image height in pixels"),
+        Check(1)..AutoSizeResult("(desired_channels != 0 ? desired_channels : \$original)")..int.p(
             "channels_in_file",
             "outputs number of components in image"
         ),
-        int.IN("desired_channels", "0 or 1..4 to force that many components per pixel", "0 1 2 3 4")
+        int("desired_channels", "0 or 1..4 to force that many components per pixel", "0 1 2 3 4")
     )
 
     val load_from_memory = stbi_uc.p(
         "load_from_memory",
         "In-memory version of #load().",
 
-        stbi_uc.const.p.IN("buffer", "the buffer from which to load the image data"),
-        AutoSize("buffer")..int.IN("len", "the buffer length, in bytes"),
+        stbi_uc.const.p("buffer", "the buffer from which to load the image data"),
+        AutoSize("buffer")..int("len", "the buffer length, in bytes"),
         load["x"],
         load["y"],
         load["channels_in_file"],
@@ -166,8 +169,8 @@ N=\#channels_in_file     components
         end).
         """,
 
-        stbi_io_callbacks.const.p.IN("clbk", "an ##STBIIOCallbacks struct"),
-        nullable..opaque_p.IN("user", "a pointer to user data"),
+        stbi_io_callbacks.const.p("clbk", "an ##STBIIOCallbacks struct"),
+        nullable..opaque_p("user", "a pointer to user data"),
         load["x"],
         load["y"],
         load["channels_in_file"],
@@ -180,10 +183,10 @@ N=\#channels_in_file     components
 
         load_from_memory["buffer"],
         load_from_memory["len"],
-        Check(1)..int.p.p.OUT("delays", "output the delays of each layer in the image"),
+        Check(1)..int.p.p("delays", "output the delays of each layer in the image"),
         load["x"],
         load["y"],
-        Check(1)..AutoSizeResult..int.p.OUT("z", "outputs the number of layers in the image"),
+        Check(1)..AutoSizeResult..int.p("z", "outputs the number of layers in the image"),
         load["channels_in_file"],
         load["desired_channels"]
     )
@@ -262,28 +265,28 @@ N=\#channels_in_file     components
         "hdr_to_ldr_gamma",
         "Changes the gamma value used when converting HDR images to LDR. The default value is 2.2f",
 
-        float.IN("gamma", "the gamma value")
+        float("gamma", "the gamma value")
     )
 
     void(
         "hdr_to_ldr_scale",
         "Changes the scale factor used when converting HDR images to LDR. The default value is 1.0f",
 
-        float.IN("scale", "the scale factor")
+        float("scale", "the scale factor")
     )
 
     void(
         "ldr_to_hdr_gamma",
         "Changes the gamma value used when converting LDR images to HDR. The default value is 2.2f",
 
-        float.IN("gamma", "the gamma value")
+        float("gamma", "the gamma value")
     )
 
     void(
         "ldr_to_hdr_scale",
         "Changes the scale value used when converting LDR images to HDR. The default value is 1.0f",
 
-        float.IN("scale", "the scale factor")
+        float("scale", "the scale factor")
     )
 
     intb(
@@ -311,16 +314,13 @@ N=\#channels_in_file     components
         load_from_callbacks["user"]
     )
 
-    charASCII.const.p(
-        "failure_reason",
-        "Returns a brief reason for failure."
-    )
+    charASCII.const.p("failure_reason", "Returns a brief reason for failure.", void())
 
     OffHeapOnly..void(
         "image_free",
         "Frees a loaded image",
 
-        MultiType(PointerMapping.DATA_SHORT, PointerMapping.DATA_FLOAT)..Unsafe..void.p.IN("retval_from_stbi_load", "an stb image")
+        MultiType(PointerMapping.DATA_SHORT, PointerMapping.DATA_FLOAT)..Unsafe..void.p("retval_from_stbi_load", "an stb image")
     )
 
     intb(
@@ -328,9 +328,9 @@ N=\#channels_in_file     components
         "Returns image dimensions &amp; components without fully decoding the image.",
 
         load["filename"],
-        Check(1)..int.p.OUT("x", "outputs the image width in pixels"),
-        Check(1)..int.p.OUT("y", "outputs the image height in pixels"),
-        Check(1)..int.p.OUT("comp", "outputs number of components in image"),
+        Check(1)..int.p("x", "outputs the image width in pixels"),
+        Check(1)..int.p("y", "outputs the image height in pixels"),
+        Check(1)..int.p("comp", "outputs number of components in image"),
 
         returnDoc = "1 on success, 0 on failure"
     )
@@ -341,9 +341,9 @@ N=\#channels_in_file     components
 
         load_from_memory["buffer"],
         load_from_memory["len"],
-        Check(1)..int.p.OUT("x", "outputs the image width in pixels"),
-        Check(1)..int.p.OUT("y", "outputs the image height in pixels"),
-        Check(1)..int.p.OUT("comp", "outputs number of components in image")
+        Check(1)..int.p("x", "outputs the image width in pixels"),
+        Check(1)..int.p("y", "outputs the image height in pixels"),
+        Check(1)..int.p("comp", "outputs number of components in image")
     )
 
     intb(
@@ -352,9 +352,9 @@ N=\#channels_in_file     components
 
         load_from_callbacks["clbk"],
         load_from_callbacks["user"],
-        Check(1)..int.p.OUT("x", "outputs the image width in pixels"),
-        Check(1)..int.p.OUT("y", "outputs the image height in pixels"),
-        Check(1)..int.p.OUT("comp", "outputs number of components in image")
+        Check(1)..int.p("x", "outputs the image width in pixels"),
+        Check(1)..int.p("y", "outputs the image height in pixels"),
+        Check(1)..int.p("comp", "outputs number of components in image")
     )
 
     intb(
@@ -387,79 +387,79 @@ N=\#channels_in_file     components
         unpremultiplication. Results are undefined if the unpremultiply overflows.
         """,
 
-        intb.IN("flag_true_if_should_unpremultiply", "the unpremultiply flag")
+        intb("flag_true_if_should_unpremultiply", "the unpremultiply flag")
     )
 
     void(
         "convert_iphone_png_to_rgb",
         "Indicate whether we should process iPhone images back to canonical format, or just pass them through \"as-is\".",
 
-        intb.IN("flag_true_if_should_convert", "the convert iPhone PNG to RGB flag")
+        intb("flag_true_if_should_convert", "the convert iPhone PNG to RGB flag")
     )
 
     void(
         "set_flip_vertically_on_load",
         "Flips the image vertically, so the first pixel in the output array is the bottom left.",
 
-        intb.IN("flag_true_if_should_flip", "the flip vertically on load flag")
+        intb("flag_true_if_should_flip", "the flip vertically on load flag")
     )
 
     char.p(
         "zlib_decode_malloc_guesssize",
         "ZLIB client - used by PNG, available for other purposes",
 
-        char.const.p.IN("buffer", ""),
-        AutoSize("buffer")..int.IN("len", ""),
-        int.IN("initial_size", ""),
-        AutoSizeResult..int.p.OUT("outlen", "")
+        char.const.p("buffer", ""),
+        AutoSize("buffer")..int("len", ""),
+        int("initial_size", ""),
+        AutoSizeResult..int.p("outlen", "")
     )
 
     char.p(
         "zlib_decode_malloc_guesssize_headerflag",
         "ZLIB client - used by PNG, available for other purposes",
 
-        char.const.p.IN("buffer", ""),
-        AutoSize("buffer")..int.IN("len", ""),
-        int.IN("initial_size", ""),
-        AutoSizeResult..int.p.OUT("outlen", ""),
-        intb.IN("parse_header", "")
+        char.const.p("buffer", ""),
+        AutoSize("buffer")..int("len", ""),
+        int("initial_size", ""),
+        AutoSizeResult..int.p("outlen", ""),
+        intb("parse_header", "")
     )
 
     char.p(
         "zlib_decode_malloc",
         "ZLIB client - used by PNG, available for other purposes",
 
-        char.const.p.IN("buffer", ""),
-        AutoSize("buffer")..int.IN("len", ""),
-        AutoSizeResult..int.p.OUT("outlen", "")
+        char.const.p("buffer", ""),
+        AutoSize("buffer")..int("len", ""),
+        AutoSizeResult..int.p("outlen", "")
     )
 
     int(
         "zlib_decode_buffer",
         "ZLIB client - used by PNG, available for other purposes",
 
-        char.p.OUT("obuffer", ""),
-        AutoSize("obuffer")..int.IN("olen", ""),
-        char.const.p.IN("ibuffer", ""),
-        AutoSize("ibuffer")..int.IN("ilen", "")
+        char.p("obuffer", ""),
+        AutoSize("obuffer")..int("olen", ""),
+        char.const.p("ibuffer", ""),
+        AutoSize("ibuffer")..int("ilen", "")
     )
 
     char.p(
         "zlib_decode_noheader_malloc",
         "ZLIB client - used by PNG, available for other purposes",
 
-        char.const.p.IN("buffer", ""),
-        AutoSize("buffer")..int.IN("len", ""),
-        AutoSizeResult..int.p.OUT("outlen", "")
+        char.const.p("buffer", ""),
+        AutoSize("buffer")..int("len", ""),
+        AutoSizeResult..int.p("outlen", "")
     )
 
     int(
         "zlib_decode_noheader_buffer",
         "ZLIB client - used by PNG, available for other purposes",
 
-        char.p.OUT("obuffer", ""),
-        AutoSize("obuffer")..int.IN("olen", ""),
-        char.const.p.IN("ibuffer", ""),
-        AutoSize("ibuffer")..int.IN("ilen", "")
+        char.p("obuffer", ""),
+        AutoSize("obuffer")..int("olen", ""),
+        char.const.p("ibuffer", ""),
+        AutoSize("ibuffer")..int("ilen", "")
     )
 }

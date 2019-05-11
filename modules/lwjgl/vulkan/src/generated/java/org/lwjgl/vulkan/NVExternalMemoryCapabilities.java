@@ -28,10 +28,10 @@ import static org.lwjgl.system.JNI.*;
  * </ul></dd>
  * <dt><b>Deprecation state</b></dt>
  * <dd><ul>
- * <li><em>Deprecated</em> by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities">VK_KHR_external_memory_capabilities</a> extension
+ * <li><em>Deprecated</em> by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities">VK_KHR_external_memory_capabilities</a> extension
  * 
  * <ul>
- * <li>Which in turn was <em>promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
+ * <li>Which in turn was <em>promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#versions-1.1-promotions">Vulkan 1.1</a></li>
  * </ul>
  * </li>
  * </ul></dd>
@@ -71,7 +71,7 @@ public class NVExternalMemoryCapabilities {
      * <ul>
      * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV} specifies a handle to memory returned by {@link NVExternalMemoryWin32#vkGetMemoryWin32HandleNV GetMemoryWin32HandleNV}.</li>
      * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV} specifies a handle to memory returned by {@link NVExternalMemoryWin32#vkGetMemoryWin32HandleNV GetMemoryWin32HandleNV}, or one duplicated from such a handle using {@code DuplicateHandle()}.</li>
-     * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV} specifies a valid NT handle to memory returned by {@code IDXGIResource1::ftext:CreateSharedHandle()}, or a handle duplicated from such a handle using {@code DuplicateHandle()}.</li>
+     * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV} specifies a valid NT handle to memory returned by {@code IDXGIResource1::CreateSharedHandle}, or a handle duplicated from such a handle using {@code DuplicateHandle()}.</li>
      * <li>{@link #VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV} specifies a handle to memory returned by {@code IDXGIResource::GetSharedHandle()}.</li>
      * </ul>
      * 
@@ -123,7 +123,7 @@ public class NVExternalMemoryCapabilities {
         if (CHECKS) {
             check(__functionAddress);
         }
-        return callPPI(__functionAddress, physicalDevice.address(), format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
+        return callPPI(physicalDevice.address(), format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties, __functionAddress);
     }
 
     /**

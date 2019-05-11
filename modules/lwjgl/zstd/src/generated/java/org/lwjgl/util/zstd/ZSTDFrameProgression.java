@@ -16,6 +16,17 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code ingested} &ndash; nb input bytes read and buffered</li>
+ * <li>{@code consumed} &ndash; nb input bytes actually compressed</li>
+ * <li>{@code produced} &ndash; nb of compressed bytes generated and buffered</li>
+ * <li>{@code flushed} &ndash; nb of compressed bytes flushed: not provided; can be tracked from caller side</li>
+ * <li>{@code currentJobID} &ndash; mT only: latest started job nb</li>
+ * <li>{@code nbActiveWorkers} &ndash; mT only: nb of workers actively compressing at probe time</li>
+ * </ul>
+ * 
  * <h3>Layout</h3>
  * 
  * <pre><code>
@@ -23,6 +34,9 @@ import static org.lwjgl.system.MemoryStack.*;
  *     unsigned long long ingested;
  *     unsigned long long consumed;
  *     unsigned long long produced;
+ *     unsigned long long flushed;
+ *     unsigned int currentJobID;
+ *     unsigned int nbActiveWorkers;
  * }</code></pre>
  */
 @NativeType("struct ZSTD_frameProgression")
@@ -38,13 +52,19 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
     public static final int
         INGESTED,
         CONSUMED,
-        PRODUCED;
+        PRODUCED,
+        FLUSHED,
+        CURRENTJOBID,
+        NBACTIVEWORKERS;
 
     static {
         Layout layout = __struct(
             __member(8),
             __member(8),
-            __member(8)
+            __member(8),
+            __member(8),
+            __member(4),
+            __member(4)
         );
 
         SIZEOF = layout.getSize();
@@ -53,20 +73,19 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
         INGESTED = layout.offsetof(0);
         CONSUMED = layout.offsetof(1);
         PRODUCED = layout.offsetof(2);
-    }
-
-    ZSTDFrameProgression(long address, @Nullable ByteBuffer container) {
-        super(address, container);
+        FLUSHED = layout.offsetof(3);
+        CURRENTJOBID = layout.offsetof(4);
+        NBACTIVEWORKERS = layout.offsetof(5);
     }
 
     /**
-     * Creates a {@link ZSTDFrameProgression} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code ZSTDFrameProgression} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public ZSTDFrameProgression(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -81,33 +100,43 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
     /** Returns the value of the {@code produced} field. */
     @NativeType("unsigned long long")
     public long produced() { return nproduced(address()); }
+    /** Returns the value of the {@code flushed} field. */
+    @NativeType("unsigned long long")
+    public long flushed() { return nflushed(address()); }
+    /** Returns the value of the {@code currentJobID} field. */
+    @NativeType("unsigned int")
+    public int currentJobID() { return ncurrentJobID(address()); }
+    /** Returns the value of the {@code nbActiveWorkers} field. */
+    @NativeType("unsigned int")
+    public int nbActiveWorkers() { return nnbActiveWorkers(address()); }
 
     // -----------------------------------
 
-    /** Returns a new {@link ZSTDFrameProgression} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code ZSTDFrameProgression} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static ZSTDFrameProgression malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(ZSTDFrameProgression.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link ZSTDFrameProgression} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code ZSTDFrameProgression} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static ZSTDFrameProgression calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(ZSTDFrameProgression.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link ZSTDFrameProgression} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code ZSTDFrameProgression} instance allocated with {@link BufferUtils}. */
     public static ZSTDFrameProgression create() {
-        return new ZSTDFrameProgression(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(ZSTDFrameProgression.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link ZSTDFrameProgression} instance for the specified memory address. */
+    /** Returns a new {@code ZSTDFrameProgression} instance for the specified memory address. */
     public static ZSTDFrameProgression create(long address) {
-        return new ZSTDFrameProgression(address, null);
+        return wrap(ZSTDFrameProgression.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static ZSTDFrameProgression createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(ZSTDFrameProgression.class, address);
     }
 
     /**
@@ -116,7 +145,7 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static ZSTDFrameProgression.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -125,7 +154,7 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static ZSTDFrameProgression.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -134,7 +163,8 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static ZSTDFrameProgression.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -144,43 +174,43 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static ZSTDFrameProgression.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static ZSTDFrameProgression.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link ZSTDFrameProgression} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code ZSTDFrameProgression} instance allocated on the thread-local {@link MemoryStack}. */
     public static ZSTDFrameProgression mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link ZSTDFrameProgression} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code ZSTDFrameProgression} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static ZSTDFrameProgression callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link ZSTDFrameProgression} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code ZSTDFrameProgression} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static ZSTDFrameProgression mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(ZSTDFrameProgression.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link ZSTDFrameProgression} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code ZSTDFrameProgression} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static ZSTDFrameProgression callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(ZSTDFrameProgression.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -208,7 +238,7 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static ZSTDFrameProgression.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -218,25 +248,33 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
      * @param capacity the buffer capacity
      */
     public static ZSTDFrameProgression.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #ingested}. */
-    public static long ningested(long struct) { return memGetLong(struct + ZSTDFrameProgression.INGESTED); }
+    public static long ningested(long struct) { return UNSAFE.getLong(null, struct + ZSTDFrameProgression.INGESTED); }
     /** Unsafe version of {@link #consumed}. */
-    public static long nconsumed(long struct) { return memGetLong(struct + ZSTDFrameProgression.CONSUMED); }
+    public static long nconsumed(long struct) { return UNSAFE.getLong(null, struct + ZSTDFrameProgression.CONSUMED); }
     /** Unsafe version of {@link #produced}. */
-    public static long nproduced(long struct) { return memGetLong(struct + ZSTDFrameProgression.PRODUCED); }
+    public static long nproduced(long struct) { return UNSAFE.getLong(null, struct + ZSTDFrameProgression.PRODUCED); }
+    /** Unsafe version of {@link #flushed}. */
+    public static long nflushed(long struct) { return UNSAFE.getLong(null, struct + ZSTDFrameProgression.FLUSHED); }
+    /** Unsafe version of {@link #currentJobID}. */
+    public static int ncurrentJobID(long struct) { return UNSAFE.getInt(null, struct + ZSTDFrameProgression.CURRENTJOBID); }
+    /** Unsafe version of {@link #nbActiveWorkers}. */
+    public static int nnbActiveWorkers(long struct) { return UNSAFE.getInt(null, struct + ZSTDFrameProgression.NBACTIVEWORKERS); }
 
     // -----------------------------------
 
     /** An array of {@link ZSTDFrameProgression} structs. */
     public static class Buffer extends StructBuffer<ZSTDFrameProgression, Buffer> implements NativeResource {
 
+        private static final ZSTDFrameProgression ELEMENT_FACTORY = ZSTDFrameProgression.create(-1L);
+
         /**
-         * Creates a new {@link ZSTDFrameProgression.Buffer} instance backed by the specified container.
+         * Creates a new {@code ZSTDFrameProgression.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -262,18 +300,8 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected ZSTDFrameProgression newInstance(long address) {
-            return new ZSTDFrameProgression(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected ZSTDFrameProgression getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code ingested} field. */
@@ -285,6 +313,15 @@ public class ZSTDFrameProgression extends Struct implements NativeResource {
         /** Returns the value of the {@code produced} field. */
         @NativeType("unsigned long long")
         public long produced() { return ZSTDFrameProgression.nproduced(address()); }
+        /** Returns the value of the {@code flushed} field. */
+        @NativeType("unsigned long long")
+        public long flushed() { return ZSTDFrameProgression.nflushed(address()); }
+        /** Returns the value of the {@code currentJobID} field. */
+        @NativeType("unsigned int")
+        public int currentJobID() { return ZSTDFrameProgression.ncurrentJobID(address()); }
+        /** Returns the value of the {@code nbActiveWorkers} field. */
+        @NativeType("unsigned int")
+        public int nbActiveWorkers() { return ZSTDFrameProgression.nnbActiveWorkers(address()); }
 
     }
 

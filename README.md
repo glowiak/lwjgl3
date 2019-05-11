@@ -1,11 +1,11 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.lwjgl/lwjgl/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.lwjgl%22%20)
-[![API Javadoc](https://img.shields.io/badge/API-docs-blue.svg?style=flat-square)](https://javadoc.lwjgl.org/)
-[![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md)
+[![Maven Central](https://img.shields.io/maven-central/v/org.lwjgl/lwjgl.svg?label=maven%20central)](https://search.maven.org/search?q=g:org.lwjgl)
+[![API Javadoc](https://img.shields.io/badge/API-docs-blue.svg)](https://javadoc.lwjgl.org/)
+[![License](https://img.shields.io/badge/license-BSD-blue.svg?colorB=lightgray)](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md)
 [![Slack Status](https://slackin-bfxneqmzsp.now.sh/badge.svg)](http://slack.lwjgl.org/)
 
 [![Backers on Open Collective](https://opencollective.com/lwjgl/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/lwjgl/sponsors/badge.svg)](#sponsors)
-![Size](https://github-size-badge.herokuapp.com/LWJGL/lwjgl3.svg)
+![Size](https://img.shields.io/github/repo-size/LWJGL/lwjgl3.svg?label=size&colorB=lightgray)
 [![Build Status](https://travis-ci.org/LWJGL-CI/lwjgl3.svg?branch=master-linux64)](https://travis-ci.org/LWJGL-CI/lwjgl3)
 
 ## LWJGL - Lightweight Java Game Library 3
@@ -128,6 +128,7 @@ improve the chances of a quick and useful response.
 |-------|-----------|
 |[OpenAL](https://www.openal.org/)|A cross-platform 3D audio API appropriate for use with gaming applications and many other types of audio applications.|
 |[OpenAL Soft](http://kcat.strangesoft.net/openal.html)|An LGPL-licensed, cross-platform, software implementation of the OpenAL 3D audio API.|
+|[Opus](https://http://opus-codec.org/)|A totally open, royalty-free, highly versatile audio codec.|
 
 #### Graphics
 
@@ -163,10 +164,15 @@ improve the chances of a quick and useful response.
 
 |Library|Description|
 |-------|-----------|
+|[Bullet Physics](http://bulletphysics.org/)|Real-time collision detection and multi-physics simulation for VR, games, visual effects, robotics, machine learning etc.|
+|[CUDA](https://developer.nvidia.com/cuda-zone/)|A parallel computing platform and programming model developed by NVIDIA for general computing on GPUs.|
 |[dyncall](http://www.dyncall.org/)|Encapsulates architecture-, OS- and compiler-specific function call semantics in a virtual bind argument parameters from left to right and then call interface allowing programmers to call C functions in a completely dynamic manner.|
-|[jemalloc](http://www.canonware.com/jemalloc/)|A general purpose malloc implementation that emphasizes fragmentation avoidance and scalable concurrency support.|
+|[jemalloc](http://jemalloc.net/)|A general purpose malloc implementation that emphasizes fragmentation avoidance and scalable concurrency support.|
+|[libdivide](https://libdivide.com/)|A library that replaces expensive integer divides with comparatively cheap multiplication and bitshifts.|
+|[LLVM](https://llvm.org/)|A collection of modular and reusable compiler and toolchain technologies.|
 |[LMDB](https://symas.com/products/lightning-memory-mapped-database/)|An extraordinarily fast, memory-efficient database. With memory-mapped files, it has the read performance of a pure in-memory database while retaining the persistence of standard disk-based databases.|
 |[LZ4](http://lz4.github.io/lz4/)|A lossless data compression algorithm that is focused on compression and decompression speed.|
+|[Meow hash](https://github.com/cmuratori/meow_hash)|An extremely fast non-cryptographic hash.|
 |[ODBC](https://docs.microsoft.com/en-us/sql/odbc/microsoft-open-database-connectivity-odbc)|A C programming language interface that makes it possible for applications to access data from a variety of database management systems (DBMSs).|
 |[Remotery](https://github.com/Celtoys/Remotery)|A realtime CPU/GPU profiler hosted in a single C file with a viewer that runs in a web browser.|
 |[rpmalloc](https://github.com/rampantpixels/rpmalloc)|A public domain cross platform lock free thread caching 16-byte aligned memory allocator implemented in C.|
@@ -175,32 +181,23 @@ improve the chances of a quick and useful response.
 
 Use of a binding is subject to the terms of the [corresponding license](https://github.com/LWJGL/lwjgl3/tree/master/doc/3rdparty).
 
-## Contributors
+## Supporting this project
 
-This project exists thanks to all the people who contribute. [[Contribute]](/.github/CONTRIBUTING.md).
-<a href="../../graphs/contributors"><img src="https://opencollective.com/lwjgl/contributors.svg?width=890" /></a>
+LWJGL exists thanks to [all the people](https://github.com/LWJGL/lwjgl3/blob/master/BACKERS.md) who [contribute](https://github.com/LWJGL/lwjgl3/blob/master/.github/CONTRIBUTING.md) and back/sponsor our collective.
 
+<a href="https://opencollective.com/lwjgl/donate" target="_blank">
+    <img src="https://opencollective.com/lwjgl/donate/button@2x.png?color=white" width=300 />
+</a>
 
-## Backers
+Our gold sponsors:
 
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/lwjgl#backer)]
-
-<a href="https://opencollective.com/lwjgl#backers" target="_blank"><img src="https://opencollective.com/lwjgl/backers.svg?width=890"></a>
-
-
-## Sponsors
-
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/lwjgl#sponsor)]
-
-<a href="https://opencollective.com/lwjgl/sponsor/0/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/lwjgl/sponsor/1/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/lwjgl/sponsor/2/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/lwjgl/sponsor/3/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/lwjgl/sponsor/4/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/lwjgl/sponsor/5/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/lwjgl/sponsor/6/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/lwjgl/sponsor/7/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/lwjgl/sponsor/8/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/lwjgl/sponsor/9/website" target="_blank"><img src="https://opencollective.com/lwjgl/sponsor/9/avatar.svg"></a>
-
-
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/0/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/1/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/2/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/3/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/4/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/5/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/6/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/7/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/8/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/lwjgl/tiers/gold-sponsor/9/website" target="_blank"><img src="https://opencollective.com/lwjgl/tiers/gold-sponsor/9/avatar.svg"></a>

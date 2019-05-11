@@ -158,6 +158,10 @@ public class VKCapabilitiesDevice {
     public final long
         vkCmdWriteBufferMarkerAMD;
 
+    // AMD_display_native_hdr
+    public final long
+        vkSetLocalDimmingAMD;
+
     // AMD_draw_indirect_count
     public final long
         vkCmdDrawIndirectCountAMD,
@@ -166,6 +170,14 @@ public class VKCapabilitiesDevice {
     // AMD_shader_info
     public final long
         vkGetShaderInfoAMD;
+
+    // EXT_buffer_device_address
+    public final long
+        vkGetBufferDeviceAddressEXT;
+
+    // EXT_calibrated_timestamps
+    public final long
+        vkGetCalibratedTimestampsEXT;
 
     // EXT_conditional_rendering
     public final long
@@ -206,13 +218,36 @@ public class VKCapabilitiesDevice {
     public final long
         vkGetMemoryHostPointerPropertiesEXT;
 
+    // EXT_full_screen_exclusive
+    public final long
+        vkAcquireFullScreenExclusiveModeEXT,
+        vkReleaseFullScreenExclusiveModeEXT,
+        vkGetDeviceGroupSurfacePresentModes2EXT;
+
     // EXT_hdr_metadata
     public final long
         vkSetHdrMetadataEXT;
 
+    // EXT_host_query_reset
+    public final long
+        vkResetQueryPoolEXT;
+
+    // EXT_image_drm_format_modifier
+    public final long
+        vkGetImageDrmFormatModifierPropertiesEXT;
+
     // EXT_sample_locations
     public final long
         vkCmdSetSampleLocationsEXT;
+
+    // EXT_transform_feedback
+    public final long
+        vkCmdBindTransformFeedbackBuffersEXT,
+        vkCmdBeginTransformFeedbackEXT,
+        vkCmdEndTransformFeedbackEXT,
+        vkCmdBeginQueryIndexedEXT,
+        vkCmdEndQueryIndexedEXT,
+        vkCmdDrawIndirectByteCountEXT;
 
     // EXT_validation_cache
     public final long
@@ -347,6 +382,21 @@ public class VKCapabilitiesDevice {
         vkCmdDrawMeshTasksIndirectNV,
         vkCmdDrawMeshTasksIndirectCountNV;
 
+    // NV_ray_tracing
+    public final long
+        vkCreateAccelerationStructureNV,
+        vkDestroyAccelerationStructureNV,
+        vkGetAccelerationStructureMemoryRequirementsNV,
+        vkBindAccelerationStructureMemoryNV,
+        vkCmdBuildAccelerationStructureNV,
+        vkCmdCopyAccelerationStructureNV,
+        vkCmdTraceRaysNV,
+        vkCreateRayTracingPipelinesNV,
+        vkGetRayTracingShaderGroupHandlesNV,
+        vkGetAccelerationStructureHandleNV,
+        vkCmdWriteAccelerationStructuresPropertiesNV,
+        vkCompileDeferredNV;
+
     // NV_scissor_exclusive
     public final long
         vkCmdSetExclusiveScissorNV;
@@ -368,21 +418,9 @@ public class VKCapabilitiesDevice {
         vkRegisterObjectsNVX,
         vkUnregisterObjectsNVX;
 
-    // NVX_raytracing
+    // NVX_image_view_handle
     public final long
-        vkCreateAccelerationStructureNVX,
-        vkDestroyAccelerationStructureNVX,
-        vkGetAccelerationStructureMemoryRequirementsNVX,
-        vkGetAccelerationStructureScratchMemoryRequirementsNVX,
-        vkBindAccelerationStructureMemoryNVX,
-        vkCmdBuildAccelerationStructureNVX,
-        vkCmdCopyAccelerationStructureNVX,
-        vkCmdTraceRaysNVX,
-        vkCreateRaytracingPipelinesNVX,
-        vkGetRaytracingShaderHandlesNVX,
-        vkGetAccelerationStructureHandleNVX,
-        vkCmdWriteAccelerationStructurePropertiesNVX,
-        vkCompileDeferredNVX;
+        vkGetImageViewHandleNVX;
 
     /** The Vulkan API version number. */
     public final int apiVersion;
@@ -393,6 +431,8 @@ public class VKCapabilitiesDevice {
     public final boolean Vulkan11;
     /** When true, {@link AMDBufferMarker} is supported. */
     public final boolean VK_AMD_buffer_marker;
+    /** When true, {@link AMDDisplayNativeHdr} is supported. */
+    public final boolean VK_AMD_display_native_hdr;
     /** When true, {@link AMDDrawIndirectCount} is supported. */
     public final boolean VK_AMD_draw_indirect_count;
     /** When true, {@link AMDGCNShader} is supported. */
@@ -401,6 +441,8 @@ public class VKCapabilitiesDevice {
     public final boolean VK_AMD_gpu_shader_half_float;
     /** When true, {@link AMDGPUShaderInt16} is supported. */
     public final boolean VK_AMD_gpu_shader_int16;
+    /** When true, {@link AMDMemoryOverallocationBehavior} is supported. */
+    public final boolean VK_AMD_memory_overallocation_behavior;
     /** When true, {@link AMDMixedAttachmentSamples} is supported. */
     public final boolean VK_AMD_mixed_attachment_samples;
     /** When true, {@link AMDNegativeViewportHeight} is supported. */
@@ -427,12 +469,18 @@ public class VKCapabilitiesDevice {
     public final boolean VK_EXT_astc_decode_mode;
     /** When true, {@link EXTBlendOperationAdvanced} is supported. */
     public final boolean VK_EXT_blend_operation_advanced;
+    /** When true, {@link EXTBufferDeviceAddress} is supported. */
+    public final boolean VK_EXT_buffer_device_address;
+    /** When true, {@link EXTCalibratedTimestamps} is supported. */
+    public final boolean VK_EXT_calibrated_timestamps;
     /** When true, {@link EXTConditionalRendering} is supported. */
     public final boolean VK_EXT_conditional_rendering;
     /** When true, {@link EXTConservativeRasterization} is supported. */
     public final boolean VK_EXT_conservative_rasterization;
     /** When true, {@link EXTDebugMarker} is supported. */
     public final boolean VK_EXT_debug_marker;
+    /** When true, {@link EXTDepthClipEnable} is supported. */
+    public final boolean VK_EXT_depth_clip_enable;
     /** When true, {@link EXTDepthRangeUnrestricted} is supported. */
     public final boolean VK_EXT_depth_range_unrestricted;
     /** When true, {@link EXTDescriptorIndexing} is supported. */
@@ -445,12 +493,30 @@ public class VKCapabilitiesDevice {
     public final boolean VK_EXT_external_memory_dma_buf;
     /** When true, {@link EXTExternalMemoryHost} is supported. */
     public final boolean VK_EXT_external_memory_host;
+    /** When true, {@link EXTFilterCubic} is supported. */
+    public final boolean VK_EXT_filter_cubic;
+    /** When true, {@link EXTFragmentDensityMap} is supported. */
+    public final boolean VK_EXT_fragment_density_map;
+    /** When true, {@link EXTFullScreenExclusive} is supported. */
+    public final boolean VK_EXT_full_screen_exclusive;
     /** When true, {@link EXTGlobalPriority} is supported. */
     public final boolean VK_EXT_global_priority;
     /** When true, {@link EXTHdrMetadata} is supported. */
     public final boolean VK_EXT_hdr_metadata;
+    /** When true, {@link EXTHostQueryReset} is supported. */
+    public final boolean VK_EXT_host_query_reset;
+    /** When true, {@link EXTImageDrmFormatModifier} is supported. */
+    public final boolean VK_EXT_image_drm_format_modifier;
     /** When true, {@link EXTInlineUniformBlock} is supported. */
     public final boolean VK_EXT_inline_uniform_block;
+    /** When true, {@link EXTMemoryBudget} is supported. */
+    public final boolean VK_EXT_memory_budget;
+    /** When true, {@link EXTMemoryPriority} is supported. */
+    public final boolean VK_EXT_memory_priority;
+    /** When true, {@link EXTPciBusInfo} is supported. */
+    public final boolean VK_EXT_pci_bus_info;
+    /** When true, {@link EXTPipelineCreationFeedback} is supported. */
+    public final boolean VK_EXT_pipeline_creation_feedback;
     /** When true, {@link EXTPostDepthCoverage} is supported. */
     public final boolean VK_EXT_post_depth_coverage;
     /** When true, {@link EXTQueueFamilyForeign} is supported. */
@@ -459,6 +525,10 @@ public class VKCapabilitiesDevice {
     public final boolean VK_EXT_sample_locations;
     /** When true, {@link EXTSamplerFilterMinmax} is supported. */
     public final boolean VK_EXT_sampler_filter_minmax;
+    /** When true, {@link EXTScalarBlockLayout} is supported. */
+    public final boolean VK_EXT_scalar_block_layout;
+    /** When true, {@link EXTSeparateStencilUsage} is supported. */
+    public final boolean VK_EXT_separate_stencil_usage;
     /** When true, {@link EXTShaderStencilExport} is supported. */
     public final boolean VK_EXT_shader_stencil_export;
     /** When true, {@link EXTShaderSubgroupBallot} is supported. */
@@ -467,12 +537,20 @@ public class VKCapabilitiesDevice {
     public final boolean VK_EXT_shader_subgroup_vote;
     /** When true, {@link EXTShaderViewportIndexLayer} is supported. */
     public final boolean VK_EXT_shader_viewport_index_layer;
+    /** When true, {@link EXTTransformFeedback} is supported. */
+    public final boolean VK_EXT_transform_feedback;
     /** When true, {@link EXTValidationCache} is supported. */
     public final boolean VK_EXT_validation_cache;
     /** When true, {@link EXTVertexAttributeDivisor} is supported. */
     public final boolean VK_EXT_vertex_attribute_divisor;
+    /** When true, {@link EXTYcbcrImageArrays} is supported. */
+    public final boolean VK_EXT_ycbcr_image_arrays;
+    /** When true, {@link GOOGLEDecorateString} is supported. */
+    public final boolean VK_GOOGLE_decorate_string;
     /** When true, {@link GOOGLEDisplayTiming} is supported. */
     public final boolean VK_GOOGLE_display_timing;
+    /** When true, {@link GOOGLEHlslFunctionality1} is supported. */
+    public final boolean VK_GOOGLE_hlsl_functionality1;
     /** When true, {@link IMGFilterCubic} is supported. */
     public final boolean VK_IMG_filter_cubic;
     /** When true, {@link IMGFormatPVRTC} is supported. */
@@ -487,6 +565,8 @@ public class VKCapabilitiesDevice {
     public final boolean VK_KHR_create_renderpass2;
     /** When true, {@link KHRDedicatedAllocation} is supported. */
     public final boolean VK_KHR_dedicated_allocation;
+    /** When true, {@link KHRDepthStencilResolve} is supported. */
+    public final boolean VK_KHR_depth_stencil_resolve;
     /** When true, {@link KHRDescriptorUpdateTemplate} is supported. */
     public final boolean VK_KHR_descriptor_update_template;
     /** When true, {@link KHRDeviceGroup} is supported. */
@@ -541,12 +621,18 @@ public class VKCapabilitiesDevice {
     public final boolean VK_KHR_shader_atomic_int64;
     /** When true, {@link KHRShaderDrawParameters} is supported. */
     public final boolean VK_KHR_shader_draw_parameters;
+    /** When true, {@link KHRShaderFloat16Int8} is supported. */
+    public final boolean VK_KHR_shader_float16_int8;
+    /** When true, {@link KHRShaderFloatControls} is supported. */
+    public final boolean VK_KHR_shader_float_controls;
     /** When true, {@link KHRSharedPresentableImage} is supported. */
     public final boolean VK_KHR_shared_presentable_image;
     /** When true, {@link KHRStorageBufferStorageClass} is supported. */
     public final boolean VK_KHR_storage_buffer_storage_class;
     /** When true, {@link KHRSwapchain} is supported. */
     public final boolean VK_KHR_swapchain;
+    /** When true, {@link KHRSwapchainMutableFormat} is supported. */
+    public final boolean VK_KHR_swapchain_mutable_format;
     /** When true, {@link KHRVariablePointers} is supported. */
     public final boolean VK_KHR_variable_pointers;
     /** When true, {@link KHRVulkanMemoryModel} is supported. */
@@ -557,10 +643,14 @@ public class VKCapabilitiesDevice {
     public final boolean VK_NV_clip_space_w_scaling;
     /** When true, {@link NVComputeShaderDerivatives} is supported. */
     public final boolean VK_NV_compute_shader_derivatives;
+    /** When true, {@link NVCooperativeMatrix} is supported. */
+    public final boolean VK_NV_cooperative_matrix;
     /** When true, {@link NVCornerSampledImage} is supported. */
     public final boolean VK_NV_corner_sampled_image;
     /** When true, {@link NVDedicatedAllocation} is supported. */
     public final boolean VK_NV_dedicated_allocation;
+    /** When true, {@link NVDedicatedAllocationImageAliasing} is supported. */
+    public final boolean VK_NV_dedicated_allocation_image_aliasing;
     /** When true, {@link NVDeviceDiagnosticCheckpoints} is supported. */
     public final boolean VK_NV_device_diagnostic_checkpoints;
     /** When true, {@link NVExternalMemory} is supported. */
@@ -581,6 +671,8 @@ public class VKCapabilitiesDevice {
     public final boolean VK_NV_glsl_shader;
     /** When true, {@link NVMeshShader} is supported. */
     public final boolean VK_NV_mesh_shader;
+    /** When true, {@link NVRayTracing} is supported. */
+    public final boolean VK_NV_ray_tracing;
     /** When true, {@link NVRepresentativeFragmentTest} is supported. */
     public final boolean VK_NV_representative_fragment_test;
     /** When true, {@link NVSampleMaskOverrideCoverage} is supported. */
@@ -601,23 +693,25 @@ public class VKCapabilitiesDevice {
     public final boolean VK_NV_win32_keyed_mutex;
     /** When true, {@link NVXDeviceGeneratedCommands} is supported. */
     public final boolean VK_NVX_device_generated_commands;
+    /** When true, {@link NVXImageViewHandle} is supported. */
+    public final boolean VK_NVX_image_view_handle;
     /** When true, {@link NVXMultiviewPerViewAttributes} is supported. */
     public final boolean VK_NVX_multiview_per_view_attributes;
-    /** When true, {@link NVXRaytracing} is supported. */
-    public final boolean VK_NVX_raytracing;
 
     VKCapabilitiesDevice(FunctionProvider provider, VKCapabilitiesInstance capsInstance, Set<String> ext) {
         this.apiVersion = capsInstance.apiVersion;
 
-        Map<String, Long> caps = new HashMap<>(247);
+        Map<String, Long> caps = new HashMap<>(261);
 
         Vulkan10 = VK10.checkCapsDevice(provider, caps, ext);
         Vulkan11 = VK11.checkCapsDevice(provider, caps, ext);
         VK_AMD_buffer_marker = AMDBufferMarker.checkCapsDevice(provider, caps, ext);
+        VK_AMD_display_native_hdr = AMDDisplayNativeHdr.checkCapsDevice(provider, caps, ext);
         VK_AMD_draw_indirect_count = AMDDrawIndirectCount.checkCapsDevice(provider, caps, ext);
         VK_AMD_gcn_shader = ext.contains("VK_AMD_gcn_shader");
         VK_AMD_gpu_shader_half_float = ext.contains("VK_AMD_gpu_shader_half_float");
         VK_AMD_gpu_shader_int16 = ext.contains("VK_AMD_gpu_shader_int16");
+        VK_AMD_memory_overallocation_behavior = ext.contains("VK_AMD_memory_overallocation_behavior");
         VK_AMD_mixed_attachment_samples = ext.contains("VK_AMD_mixed_attachment_samples");
         VK_AMD_negative_viewport_height = ext.contains("VK_AMD_negative_viewport_height");
         VK_AMD_rasterization_order = ext.contains("VK_AMD_rasterization_order");
@@ -631,30 +725,48 @@ public class VKCapabilitiesDevice {
         VK_AMD_texture_gather_bias_lod = ext.contains("VK_AMD_texture_gather_bias_lod");
         VK_EXT_astc_decode_mode = ext.contains("VK_EXT_astc_decode_mode");
         VK_EXT_blend_operation_advanced = ext.contains("VK_EXT_blend_operation_advanced");
+        VK_EXT_buffer_device_address = EXTBufferDeviceAddress.checkCapsDevice(provider, caps, ext);
+        VK_EXT_calibrated_timestamps = EXTCalibratedTimestamps.checkCapsDevice(provider, caps, ext);
         VK_EXT_conditional_rendering = EXTConditionalRendering.checkCapsDevice(provider, caps, ext);
         VK_EXT_conservative_rasterization = ext.contains("VK_EXT_conservative_rasterization");
         VK_EXT_debug_marker = EXTDebugMarker.checkCapsDevice(provider, caps, ext);
         EXTDebugUtils.checkCapsDevice(provider, caps, capsInstance);
+        VK_EXT_depth_clip_enable = ext.contains("VK_EXT_depth_clip_enable");
         VK_EXT_depth_range_unrestricted = ext.contains("VK_EXT_depth_range_unrestricted");
         VK_EXT_descriptor_indexing = ext.contains("VK_EXT_descriptor_indexing");
         VK_EXT_discard_rectangles = EXTDiscardRectangles.checkCapsDevice(provider, caps, ext);
         VK_EXT_display_control = EXTDisplayControl.checkCapsDevice(provider, caps, ext);
         VK_EXT_external_memory_dma_buf = ext.contains("VK_EXT_external_memory_dma_buf");
         VK_EXT_external_memory_host = EXTExternalMemoryHost.checkCapsDevice(provider, caps, ext);
+        VK_EXT_filter_cubic = ext.contains("VK_EXT_filter_cubic");
+        VK_EXT_fragment_density_map = ext.contains("VK_EXT_fragment_density_map");
+        VK_EXT_full_screen_exclusive = EXTFullScreenExclusive.checkCapsDevice(provider, caps, ext);
         VK_EXT_global_priority = ext.contains("VK_EXT_global_priority");
         VK_EXT_hdr_metadata = EXTHdrMetadata.checkCapsDevice(provider, caps, ext);
+        VK_EXT_host_query_reset = EXTHostQueryReset.checkCapsDevice(provider, caps, ext);
+        VK_EXT_image_drm_format_modifier = EXTImageDrmFormatModifier.checkCapsDevice(provider, caps, ext);
         VK_EXT_inline_uniform_block = ext.contains("VK_EXT_inline_uniform_block");
+        VK_EXT_memory_budget = ext.contains("VK_EXT_memory_budget");
+        VK_EXT_memory_priority = ext.contains("VK_EXT_memory_priority");
+        VK_EXT_pci_bus_info = ext.contains("VK_EXT_pci_bus_info");
+        VK_EXT_pipeline_creation_feedback = ext.contains("VK_EXT_pipeline_creation_feedback");
         VK_EXT_post_depth_coverage = ext.contains("VK_EXT_post_depth_coverage");
         VK_EXT_queue_family_foreign = ext.contains("VK_EXT_queue_family_foreign");
         VK_EXT_sample_locations = EXTSampleLocations.checkCapsDevice(provider, caps, ext);
         VK_EXT_sampler_filter_minmax = ext.contains("VK_EXT_sampler_filter_minmax");
+        VK_EXT_scalar_block_layout = ext.contains("VK_EXT_scalar_block_layout");
+        VK_EXT_separate_stencil_usage = ext.contains("VK_EXT_separate_stencil_usage");
         VK_EXT_shader_stencil_export = ext.contains("VK_EXT_shader_stencil_export");
         VK_EXT_shader_subgroup_ballot = ext.contains("VK_EXT_shader_subgroup_ballot");
         VK_EXT_shader_subgroup_vote = ext.contains("VK_EXT_shader_subgroup_vote");
         VK_EXT_shader_viewport_index_layer = ext.contains("VK_EXT_shader_viewport_index_layer");
+        VK_EXT_transform_feedback = EXTTransformFeedback.checkCapsDevice(provider, caps, ext);
         VK_EXT_validation_cache = EXTValidationCache.checkCapsDevice(provider, caps, ext);
         VK_EXT_vertex_attribute_divisor = ext.contains("VK_EXT_vertex_attribute_divisor");
+        VK_EXT_ycbcr_image_arrays = ext.contains("VK_EXT_ycbcr_image_arrays");
+        VK_GOOGLE_decorate_string = ext.contains("VK_GOOGLE_decorate_string");
         VK_GOOGLE_display_timing = GOOGLEDisplayTiming.checkCapsDevice(provider, caps, ext);
+        VK_GOOGLE_hlsl_functionality1 = ext.contains("VK_GOOGLE_hlsl_functionality1");
         VK_IMG_filter_cubic = ext.contains("VK_IMG_filter_cubic");
         VK_IMG_format_pvrtc = ext.contains("VK_IMG_format_pvrtc");
         VK_KHR_16bit_storage = ext.contains("VK_KHR_16bit_storage");
@@ -662,6 +774,7 @@ public class VKCapabilitiesDevice {
         VK_KHR_bind_memory2 = KHRBindMemory2.checkCapsDevice(provider, caps, ext);
         VK_KHR_create_renderpass2 = KHRCreateRenderpass2.checkCapsDevice(provider, caps, ext);
         VK_KHR_dedicated_allocation = ext.contains("VK_KHR_dedicated_allocation");
+        VK_KHR_depth_stencil_resolve = ext.contains("VK_KHR_depth_stencil_resolve");
         VK_KHR_descriptor_update_template = KHRDescriptorUpdateTemplate.checkCapsDevice(provider, caps, ext);
         VK_KHR_device_group = KHRDeviceGroup.checkCapsDevice(provider, caps, ext);
         VK_KHR_display_swapchain = KHRDisplaySwapchain.checkCapsDevice(provider, caps, ext);
@@ -689,16 +802,21 @@ public class VKCapabilitiesDevice {
         VK_KHR_sampler_ycbcr_conversion = KHRSamplerYcbcrConversion.checkCapsDevice(provider, caps, ext);
         VK_KHR_shader_atomic_int64 = ext.contains("VK_KHR_shader_atomic_int64");
         VK_KHR_shader_draw_parameters = ext.contains("VK_KHR_shader_draw_parameters");
+        VK_KHR_shader_float16_int8 = ext.contains("VK_KHR_shader_float16_int8");
+        VK_KHR_shader_float_controls = ext.contains("VK_KHR_shader_float_controls");
         VK_KHR_shared_presentable_image = KHRSharedPresentableImage.checkCapsDevice(provider, caps, ext);
         VK_KHR_storage_buffer_storage_class = ext.contains("VK_KHR_storage_buffer_storage_class");
         VK_KHR_swapchain = KHRSwapchain.checkCapsDevice(provider, caps, ext);
+        VK_KHR_swapchain_mutable_format = ext.contains("VK_KHR_swapchain_mutable_format");
         VK_KHR_variable_pointers = ext.contains("VK_KHR_variable_pointers");
         VK_KHR_vulkan_memory_model = ext.contains("VK_KHR_vulkan_memory_model");
         VK_KHR_win32_keyed_mutex = ext.contains("VK_KHR_win32_keyed_mutex");
         VK_NV_clip_space_w_scaling = NVClipSpaceWScaling.checkCapsDevice(provider, caps, ext);
         VK_NV_compute_shader_derivatives = ext.contains("VK_NV_compute_shader_derivatives");
+        VK_NV_cooperative_matrix = ext.contains("VK_NV_cooperative_matrix");
         VK_NV_corner_sampled_image = ext.contains("VK_NV_corner_sampled_image");
         VK_NV_dedicated_allocation = ext.contains("VK_NV_dedicated_allocation");
+        VK_NV_dedicated_allocation_image_aliasing = ext.contains("VK_NV_dedicated_allocation_image_aliasing");
         VK_NV_device_diagnostic_checkpoints = NVDeviceDiagnosticCheckpoints.checkCapsDevice(provider, caps, ext);
         VK_NV_external_memory = ext.contains("VK_NV_external_memory");
         VK_NV_external_memory_win32 = NVExternalMemoryWin32.checkCapsDevice(provider, caps, ext);
@@ -709,6 +827,7 @@ public class VKCapabilitiesDevice {
         VK_NV_geometry_shader_passthrough = ext.contains("VK_NV_geometry_shader_passthrough");
         VK_NV_glsl_shader = ext.contains("VK_NV_glsl_shader");
         VK_NV_mesh_shader = NVMeshShader.checkCapsDevice(provider, caps, ext);
+        VK_NV_ray_tracing = NVRayTracing.checkCapsDevice(provider, caps, ext);
         VK_NV_representative_fragment_test = ext.contains("VK_NV_representative_fragment_test");
         VK_NV_sample_mask_override_coverage = ext.contains("VK_NV_sample_mask_override_coverage");
         VK_NV_scissor_exclusive = NVScissorExclusive.checkCapsDevice(provider, caps, ext);
@@ -719,8 +838,8 @@ public class VKCapabilitiesDevice {
         VK_NV_viewport_swizzle = ext.contains("VK_NV_viewport_swizzle");
         VK_NV_win32_keyed_mutex = ext.contains("VK_NV_win32_keyed_mutex");
         VK_NVX_device_generated_commands = NVXDeviceGeneratedCommands.checkCapsDevice(provider, caps, ext);
+        VK_NVX_image_view_handle = NVXImageViewHandle.checkCapsDevice(provider, caps, ext);
         VK_NVX_multiview_per_view_attributes = ext.contains("VK_NVX_multiview_per_view_attributes");
-        VK_NVX_raytracing = NVXRaytracing.checkCapsDevice(provider, caps, ext);
 
         vkGetDeviceProcAddr = VK.get(caps, "vkGetDeviceProcAddr");
         vkDestroyDevice = VK.get(caps, "vkDestroyDevice");
@@ -860,9 +979,12 @@ public class VKCapabilitiesDevice {
         vkUpdateDescriptorSetWithTemplate = VK.get(caps, "vkUpdateDescriptorSetWithTemplate");
         vkGetDescriptorSetLayoutSupport = VK.get(caps, "vkGetDescriptorSetLayoutSupport");
         vkCmdWriteBufferMarkerAMD = VK.get(caps, "vkCmdWriteBufferMarkerAMD");
+        vkSetLocalDimmingAMD = VK.get(caps, "vkSetLocalDimmingAMD");
         vkCmdDrawIndirectCountAMD = VK.get(caps, "vkCmdDrawIndirectCountAMD");
         vkCmdDrawIndexedIndirectCountAMD = VK.get(caps, "vkCmdDrawIndexedIndirectCountAMD");
         vkGetShaderInfoAMD = VK.get(caps, "vkGetShaderInfoAMD");
+        vkGetBufferDeviceAddressEXT = VK.get(caps, "vkGetBufferDeviceAddressEXT");
+        vkGetCalibratedTimestampsEXT = VK.get(caps, "vkGetCalibratedTimestampsEXT");
         vkCmdBeginConditionalRenderingEXT = VK.get(caps, "vkCmdBeginConditionalRenderingEXT");
         vkCmdEndConditionalRenderingEXT = VK.get(caps, "vkCmdEndConditionalRenderingEXT");
         vkDebugMarkerSetObjectTagEXT = VK.get(caps, "vkDebugMarkerSetObjectTagEXT");
@@ -884,8 +1006,19 @@ public class VKCapabilitiesDevice {
         vkRegisterDisplayEventEXT = VK.get(caps, "vkRegisterDisplayEventEXT");
         vkGetSwapchainCounterEXT = VK.get(caps, "vkGetSwapchainCounterEXT");
         vkGetMemoryHostPointerPropertiesEXT = VK.get(caps, "vkGetMemoryHostPointerPropertiesEXT");
+        vkAcquireFullScreenExclusiveModeEXT = VK.get(caps, "vkAcquireFullScreenExclusiveModeEXT");
+        vkReleaseFullScreenExclusiveModeEXT = VK.get(caps, "vkReleaseFullScreenExclusiveModeEXT");
+        vkGetDeviceGroupSurfacePresentModes2EXT = VK.get(caps, "vkGetDeviceGroupSurfacePresentModes2EXT");
         vkSetHdrMetadataEXT = VK.get(caps, "vkSetHdrMetadataEXT");
+        vkResetQueryPoolEXT = VK.get(caps, "vkResetQueryPoolEXT");
+        vkGetImageDrmFormatModifierPropertiesEXT = VK.get(caps, "vkGetImageDrmFormatModifierPropertiesEXT");
         vkCmdSetSampleLocationsEXT = VK.get(caps, "vkCmdSetSampleLocationsEXT");
+        vkCmdBindTransformFeedbackBuffersEXT = VK.get(caps, "vkCmdBindTransformFeedbackBuffersEXT");
+        vkCmdBeginTransformFeedbackEXT = VK.get(caps, "vkCmdBeginTransformFeedbackEXT");
+        vkCmdEndTransformFeedbackEXT = VK.get(caps, "vkCmdEndTransformFeedbackEXT");
+        vkCmdBeginQueryIndexedEXT = VK.get(caps, "vkCmdBeginQueryIndexedEXT");
+        vkCmdEndQueryIndexedEXT = VK.get(caps, "vkCmdEndQueryIndexedEXT");
+        vkCmdDrawIndirectByteCountEXT = VK.get(caps, "vkCmdDrawIndirectByteCountEXT");
         vkCreateValidationCacheEXT = VK.get(caps, "vkCreateValidationCacheEXT");
         vkDestroyValidationCacheEXT = VK.get(caps, "vkDestroyValidationCacheEXT");
         vkMergeValidationCachesEXT = VK.get(caps, "vkMergeValidationCachesEXT");
@@ -944,6 +1077,18 @@ public class VKCapabilitiesDevice {
         vkCmdDrawMeshTasksNV = VK.get(caps, "vkCmdDrawMeshTasksNV");
         vkCmdDrawMeshTasksIndirectNV = VK.get(caps, "vkCmdDrawMeshTasksIndirectNV");
         vkCmdDrawMeshTasksIndirectCountNV = VK.get(caps, "vkCmdDrawMeshTasksIndirectCountNV");
+        vkCreateAccelerationStructureNV = VK.get(caps, "vkCreateAccelerationStructureNV");
+        vkDestroyAccelerationStructureNV = VK.get(caps, "vkDestroyAccelerationStructureNV");
+        vkGetAccelerationStructureMemoryRequirementsNV = VK.get(caps, "vkGetAccelerationStructureMemoryRequirementsNV");
+        vkBindAccelerationStructureMemoryNV = VK.get(caps, "vkBindAccelerationStructureMemoryNV");
+        vkCmdBuildAccelerationStructureNV = VK.get(caps, "vkCmdBuildAccelerationStructureNV");
+        vkCmdCopyAccelerationStructureNV = VK.get(caps, "vkCmdCopyAccelerationStructureNV");
+        vkCmdTraceRaysNV = VK.get(caps, "vkCmdTraceRaysNV");
+        vkCreateRayTracingPipelinesNV = VK.get(caps, "vkCreateRayTracingPipelinesNV");
+        vkGetRayTracingShaderGroupHandlesNV = VK.get(caps, "vkGetRayTracingShaderGroupHandlesNV");
+        vkGetAccelerationStructureHandleNV = VK.get(caps, "vkGetAccelerationStructureHandleNV");
+        vkCmdWriteAccelerationStructuresPropertiesNV = VK.get(caps, "vkCmdWriteAccelerationStructuresPropertiesNV");
+        vkCompileDeferredNV = VK.get(caps, "vkCompileDeferredNV");
         vkCmdSetExclusiveScissorNV = VK.get(caps, "vkCmdSetExclusiveScissorNV");
         vkCmdBindShadingRateImageNV = VK.get(caps, "vkCmdBindShadingRateImageNV");
         vkCmdSetViewportShadingRatePaletteNV = VK.get(caps, "vkCmdSetViewportShadingRatePaletteNV");
@@ -956,19 +1101,7 @@ public class VKCapabilitiesDevice {
         vkDestroyObjectTableNVX = VK.get(caps, "vkDestroyObjectTableNVX");
         vkRegisterObjectsNVX = VK.get(caps, "vkRegisterObjectsNVX");
         vkUnregisterObjectsNVX = VK.get(caps, "vkUnregisterObjectsNVX");
-        vkCreateAccelerationStructureNVX = VK.get(caps, "vkCreateAccelerationStructureNVX");
-        vkDestroyAccelerationStructureNVX = VK.get(caps, "vkDestroyAccelerationStructureNVX");
-        vkGetAccelerationStructureMemoryRequirementsNVX = VK.get(caps, "vkGetAccelerationStructureMemoryRequirementsNVX");
-        vkGetAccelerationStructureScratchMemoryRequirementsNVX = VK.get(caps, "vkGetAccelerationStructureScratchMemoryRequirementsNVX");
-        vkBindAccelerationStructureMemoryNVX = VK.get(caps, "vkBindAccelerationStructureMemoryNVX");
-        vkCmdBuildAccelerationStructureNVX = VK.get(caps, "vkCmdBuildAccelerationStructureNVX");
-        vkCmdCopyAccelerationStructureNVX = VK.get(caps, "vkCmdCopyAccelerationStructureNVX");
-        vkCmdTraceRaysNVX = VK.get(caps, "vkCmdTraceRaysNVX");
-        vkCreateRaytracingPipelinesNVX = VK.get(caps, "vkCreateRaytracingPipelinesNVX");
-        vkGetRaytracingShaderHandlesNVX = VK.get(caps, "vkGetRaytracingShaderHandlesNVX");
-        vkGetAccelerationStructureHandleNVX = VK.get(caps, "vkGetAccelerationStructureHandleNVX");
-        vkCmdWriteAccelerationStructurePropertiesNVX = VK.get(caps, "vkCmdWriteAccelerationStructurePropertiesNVX");
-        vkCompileDeferredNVX = VK.get(caps, "vkCompileDeferredNVX");
+        vkGetImageViewHandleNVX = VK.get(caps, "vkGetImageViewHandleNVX");
     }
 
 }

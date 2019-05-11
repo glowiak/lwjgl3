@@ -26,8 +26,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>If {@code topology} is {@link VK10#VK_PRIMITIVE_TOPOLOGY_POINT_LIST PRIMITIVE_TOPOLOGY_POINT_LIST}, {@link VK10#VK_PRIMITIVE_TOPOLOGY_LINE_LIST PRIMITIVE_TOPOLOGY_LINE_LIST}, {@link VK10#VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST PRIMITIVE_TOPOLOGY_TRIANGLE_LIST}, {@link VK10#VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY}, {@link VK10#VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY} or {@link VK10#VK_PRIMITIVE_TOPOLOGY_PATCH_LIST PRIMITIVE_TOPOLOGY_PATCH_LIST}, {@code primitiveRestartEnable} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-geometryShader">geometry shaders</a> feature is not enabled, {@code topology} <b>must</b> not be any of {@link VK10#VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY}, {@link VK10#VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY}, {@link VK10#VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY} or {@link VK10#VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY}</li>
- * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-tessellationShader">tessellation shaders</a> feature is not enabled, {@code topology} <b>must</b> not be {@link VK10#VK_PRIMITIVE_TOPOLOGY_PATCH_LIST PRIMITIVE_TOPOLOGY_PATCH_LIST}</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-geometryShader">geometry shaders</a> feature is not enabled, {@code topology} <b>must</b> not be any of {@link VK10#VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY}, {@link VK10#VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY}, {@link VK10#VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY} or {@link VK10#VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY}</li>
+ * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-tessellationShader">tessellation shaders</a> feature is not enabled, {@code topology} <b>must</b> not be {@link VK10#VK_PRIMITIVE_TOPOLOGY_PATCH_LIST PRIMITIVE_TOPOLOGY_PATCH_LIST}</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -50,7 +50,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
  * <li>{@code flags} &ndash; reserved for future use.</li>
  * <li>{@code topology} &ndash; a {@code VkPrimitiveTopology} defining the primitive topology, as described below.</li>
- * <li>{@code primitiveRestartEnable} &ndash; controls whether a special vertex index value is treated as restarting the assembly of primitives. This enable only applies to indexed draws ({@link VK10#vkCmdDrawIndexed CmdDrawIndexed} and {@link VK10#vkCmdDrawIndexedIndirect CmdDrawIndexedIndirect}), and the special index value is either 0xFFFFFFFF when the {@code indexType} parameter of {@link VK10#vkCmdBindIndexBuffer CmdBindIndexBuffer} is equal to {@link VK10#VK_INDEX_TYPE_UINT32 INDEX_TYPE_UINT32}, or 0xFFFF when {@code indexType} is equal to {@link VK10#VK_INDEX_TYPE_UINT16 INDEX_TYPE_UINT16}. Primitive restart is not allowed for “list” topologies.</li>
+ * <li>{@code primitiveRestartEnable} &ndash; controls whether a special vertex index value is treated as restarting the assembly of primitives. This enable only applies to indexed draws ({@link VK10#vkCmdDrawIndexed CmdDrawIndexed} and {@link VK10#vkCmdDrawIndexedIndirect CmdDrawIndexedIndirect}), and the special index value is either 0xFFFFFFFF when the {@code indexType} parameter of {@code vkCmdBindIndexBuffer} is equal to {@link VK10#VK_INDEX_TYPE_UINT32 INDEX_TYPE_UINT32}, or 0xFFFF when {@code indexType} is equal to {@link VK10#VK_INDEX_TYPE_UINT16 INDEX_TYPE_UINT16}. Primitive restart is not allowed for “list” topologies.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
@@ -99,18 +99,14 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
         PRIMITIVERESTARTENABLE = layout.offsetof(4);
     }
 
-    VkPipelineInputAssemblyStateCreateInfo(long address, @Nullable ByteBuffer container) {
-        super(address, container);
-    }
-
     /**
-     * Creates a {@link VkPipelineInputAssemblyStateCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
+     * Creates a {@code VkPipelineInputAssemblyStateCreateInfo} instance at the current position of the specified {@link ByteBuffer} container. Changes to the buffer's content will be
      * visible to the struct instance and vice versa.
      *
      * <p>The created instance holds a strong reference to the container object.</p>
      */
     public VkPipelineInputAssemblyStateCreateInfo(ByteBuffer container) {
-        this(memAddress(container), __checkContainer(container, SIZEOF));
+        super(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
     @Override
@@ -174,30 +170,31 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineInputAssemblyStateCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineInputAssemblyStateCreateInfo} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
     public static VkPipelineInputAssemblyStateCreateInfo malloc() {
-        return create(nmemAllocChecked(SIZEOF));
+        return wrap(VkPipelineInputAssemblyStateCreateInfo.class, nmemAllocChecked(SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineInputAssemblyStateCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
+    /** Returns a new {@code VkPipelineInputAssemblyStateCreateInfo} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
     public static VkPipelineInputAssemblyStateCreateInfo calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
+        return wrap(VkPipelineInputAssemblyStateCreateInfo.class, nmemCallocChecked(1, SIZEOF));
     }
 
-    /** Returns a new {@link VkPipelineInputAssemblyStateCreateInfo} instance allocated with {@link BufferUtils}. */
+    /** Returns a new {@code VkPipelineInputAssemblyStateCreateInfo} instance allocated with {@link BufferUtils}. */
     public static VkPipelineInputAssemblyStateCreateInfo create() {
-        return new VkPipelineInputAssemblyStateCreateInfo(BufferUtils.createByteBuffer(SIZEOF));
+        ByteBuffer container = BufferUtils.createByteBuffer(SIZEOF);
+        return wrap(VkPipelineInputAssemblyStateCreateInfo.class, memAddress(container), container);
     }
 
-    /** Returns a new {@link VkPipelineInputAssemblyStateCreateInfo} instance for the specified memory address. */
+    /** Returns a new {@code VkPipelineInputAssemblyStateCreateInfo} instance for the specified memory address. */
     public static VkPipelineInputAssemblyStateCreateInfo create(long address) {
-        return new VkPipelineInputAssemblyStateCreateInfo(address, null);
+        return wrap(VkPipelineInputAssemblyStateCreateInfo.class, address);
     }
 
     /** Like {@link #create(long) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineInputAssemblyStateCreateInfo createSafe(long address) {
-        return address == NULL ? null : create(address);
+        return address == NULL ? null : wrap(VkPipelineInputAssemblyStateCreateInfo.class, address);
     }
 
     /**
@@ -206,7 +203,7 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPipelineInputAssemblyStateCreateInfo.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemAllocChecked(__checkMalloc(capacity, SIZEOF)), capacity);
     }
 
     /**
@@ -215,7 +212,7 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPipelineInputAssemblyStateCreateInfo.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, nmemCallocChecked(capacity, SIZEOF), capacity);
     }
 
     /**
@@ -224,7 +221,8 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPipelineInputAssemblyStateCreateInfo.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
+        ByteBuffer container = __create(capacity, SIZEOF);
+        return wrap(Buffer.class, memAddress(container), capacity, container);
     }
 
     /**
@@ -234,43 +232,43 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPipelineInputAssemblyStateCreateInfo.Buffer create(long address, int capacity) {
-        return new Buffer(address, capacity);
+        return wrap(Buffer.class, address, capacity);
     }
 
     /** Like {@link #create(long, int) create}, but returns {@code null} if {@code address} is {@code NULL}. */
     @Nullable
     public static VkPipelineInputAssemblyStateCreateInfo.Buffer createSafe(long address, int capacity) {
-        return address == NULL ? null : create(address, capacity);
+        return address == NULL ? null : wrap(Buffer.class, address, capacity);
     }
 
     // -----------------------------------
 
-    /** Returns a new {@link VkPipelineInputAssemblyStateCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
+    /** Returns a new {@code VkPipelineInputAssemblyStateCreateInfo} instance allocated on the thread-local {@link MemoryStack}. */
     public static VkPipelineInputAssemblyStateCreateInfo mallocStack() {
         return mallocStack(stackGet());
     }
 
-    /** Returns a new {@link VkPipelineInputAssemblyStateCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
+    /** Returns a new {@code VkPipelineInputAssemblyStateCreateInfo} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
     public static VkPipelineInputAssemblyStateCreateInfo callocStack() {
         return callocStack(stackGet());
     }
 
     /**
-     * Returns a new {@link VkPipelineInputAssemblyStateCreateInfo} instance allocated on the specified {@link MemoryStack}.
+     * Returns a new {@code VkPipelineInputAssemblyStateCreateInfo} instance allocated on the specified {@link MemoryStack}.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineInputAssemblyStateCreateInfo mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
+        return wrap(VkPipelineInputAssemblyStateCreateInfo.class, stack.nmalloc(ALIGNOF, SIZEOF));
     }
 
     /**
-     * Returns a new {@link VkPipelineInputAssemblyStateCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
+     * Returns a new {@code VkPipelineInputAssemblyStateCreateInfo} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
      *
      * @param stack the stack from which to allocate
      */
     public static VkPipelineInputAssemblyStateCreateInfo callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
+        return wrap(VkPipelineInputAssemblyStateCreateInfo.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
 
     /**
@@ -298,7 +296,7 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPipelineInputAssemblyStateCreateInfo.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
     }
 
     /**
@@ -308,40 +306,42 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
      * @param capacity the buffer capacity
      */
     public static VkPipelineInputAssemblyStateCreateInfo.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
+        return wrap(Buffer.class, stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
 
     /** Unsafe version of {@link #sType}. */
-    public static int nsType(long struct) { return memGetInt(struct + VkPipelineInputAssemblyStateCreateInfo.STYPE); }
+    public static int nsType(long struct) { return UNSAFE.getInt(null, struct + VkPipelineInputAssemblyStateCreateInfo.STYPE); }
     /** Unsafe version of {@link #pNext}. */
     public static long npNext(long struct) { return memGetAddress(struct + VkPipelineInputAssemblyStateCreateInfo.PNEXT); }
     /** Unsafe version of {@link #flags}. */
-    public static int nflags(long struct) { return memGetInt(struct + VkPipelineInputAssemblyStateCreateInfo.FLAGS); }
+    public static int nflags(long struct) { return UNSAFE.getInt(null, struct + VkPipelineInputAssemblyStateCreateInfo.FLAGS); }
     /** Unsafe version of {@link #topology}. */
-    public static int ntopology(long struct) { return memGetInt(struct + VkPipelineInputAssemblyStateCreateInfo.TOPOLOGY); }
+    public static int ntopology(long struct) { return UNSAFE.getInt(null, struct + VkPipelineInputAssemblyStateCreateInfo.TOPOLOGY); }
     /** Unsafe version of {@link #primitiveRestartEnable}. */
-    public static int nprimitiveRestartEnable(long struct) { return memGetInt(struct + VkPipelineInputAssemblyStateCreateInfo.PRIMITIVERESTARTENABLE); }
+    public static int nprimitiveRestartEnable(long struct) { return UNSAFE.getInt(null, struct + VkPipelineInputAssemblyStateCreateInfo.PRIMITIVERESTARTENABLE); }
 
     /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkPipelineInputAssemblyStateCreateInfo.STYPE, value); }
+    public static void nsType(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineInputAssemblyStateCreateInfo.STYPE, value); }
     /** Unsafe version of {@link #pNext(long) pNext}. */
     public static void npNext(long struct, long value) { memPutAddress(struct + VkPipelineInputAssemblyStateCreateInfo.PNEXT, value); }
     /** Unsafe version of {@link #flags(int) flags}. */
-    public static void nflags(long struct, int value) { memPutInt(struct + VkPipelineInputAssemblyStateCreateInfo.FLAGS, value); }
+    public static void nflags(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineInputAssemblyStateCreateInfo.FLAGS, value); }
     /** Unsafe version of {@link #topology(int) topology}. */
-    public static void ntopology(long struct, int value) { memPutInt(struct + VkPipelineInputAssemblyStateCreateInfo.TOPOLOGY, value); }
+    public static void ntopology(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineInputAssemblyStateCreateInfo.TOPOLOGY, value); }
     /** Unsafe version of {@link #primitiveRestartEnable(boolean) primitiveRestartEnable}. */
-    public static void nprimitiveRestartEnable(long struct, int value) { memPutInt(struct + VkPipelineInputAssemblyStateCreateInfo.PRIMITIVERESTARTENABLE, value); }
+    public static void nprimitiveRestartEnable(long struct, int value) { UNSAFE.putInt(null, struct + VkPipelineInputAssemblyStateCreateInfo.PRIMITIVERESTARTENABLE, value); }
 
     // -----------------------------------
 
     /** An array of {@link VkPipelineInputAssemblyStateCreateInfo} structs. */
     public static class Buffer extends StructBuffer<VkPipelineInputAssemblyStateCreateInfo, Buffer> implements NativeResource {
 
+        private static final VkPipelineInputAssemblyStateCreateInfo ELEMENT_FACTORY = VkPipelineInputAssemblyStateCreateInfo.create(-1L);
+
         /**
-         * Creates a new {@link VkPipelineInputAssemblyStateCreateInfo.Buffer} instance backed by the specified container.
+         * Creates a new {@code VkPipelineInputAssemblyStateCreateInfo.Buffer} instance backed by the specified container.
          *
          * Changes to the container's content will be visible to the struct buffer instance and vice versa. The two buffers' position, limit, and mark values
          * will be independent. The new buffer's position will be zero, its capacity and its limit will be the number of bytes remaining in this buffer divided
@@ -367,18 +367,8 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
         }
 
         @Override
-        protected Buffer newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int pos, int lim, int cap) {
-            return new Buffer(address, container, mark, pos, lim, cap);
-        }
-
-        @Override
-        protected VkPipelineInputAssemblyStateCreateInfo newInstance(long address) {
-            return new VkPipelineInputAssemblyStateCreateInfo(address, container);
-        }
-
-        @Override
-        public int sizeof() {
-            return SIZEOF;
+        protected VkPipelineInputAssemblyStateCreateInfo getElementFactory() {
+            return ELEMENT_FACTORY;
         }
 
         /** Returns the value of the {@code sType} field. */

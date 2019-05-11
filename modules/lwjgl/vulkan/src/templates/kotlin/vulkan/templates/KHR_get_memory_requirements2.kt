@@ -11,7 +11,7 @@ import vulkan.*
 val KHR_get_memory_requirements2 = "KHRGetMemoryRequirements2".nativeClassVK("KHR_get_memory_requirements2", type = "device", postfix = KHR) {
     documentation =
         """
-        This extension provides new entry points to query memory requirements of images and buffers in a way that can be easily extended by other extensions, without introducing any further entry points. The Vulkan 1.0 ##VkMemoryRequirements and ##VkSparseImageMemoryRequirements structures do not include a {@code sType}/{@code pNext}, this extension wraps them in new structures with {@code sType}/{@code pNext} so an application can query a chain of memory requirements structures by constructing the chain and letting the implementation fill them in. A new command is added for each ftext:vkGet*MemoryRequrements command in core Vulkan 1.0.
+        This extension provides new entry points to query memory requirements of images and buffers in a way that can be easily extended by other extensions, without introducing any further entry points. The Vulkan 1.0 ##VkMemoryRequirements and ##VkSparseImageMemoryRequirements structures do not include a {@code sType}/{@code pNext}, this extension wraps them in new structures with {@code sType}/{@code pNext} so an application can query a chain of memory requirements structures by constructing the chain and letting the implementation fill them in. A new command is added for each {@code vkGet*MemoryRequrements} command in core Vulkan 1.0.
 
         <h5>Promotion to Vulkan 1.1</h5>
         All functionality in this extension is included in core Vulkan 1.1, with the KHR suffix omitted. The original type, enum and command names are still available as aliases of the core functionality.
@@ -36,7 +36,7 @@ val KHR_get_memory_requirements2 = "KHRGetMemoryRequirements2".nativeClassVK("KH
 
             <dt><b>Deprecation state</b></dt>
             <dd><ul>
-                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
+                <li><em>Promoted</em> to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html\#versions-1.1-promotions">Vulkan 1.1</a></li>
             </ul></dd>
 
             <dt><b>Contact</b></dt>
@@ -90,27 +90,27 @@ val KHR_get_memory_requirements2 = "KHRGetMemoryRequirements2".nativeClassVK("KH
         "GetImageMemoryRequirements2KHR",
         "See #GetImageMemoryRequirements2().",
 
-        VkDevice.IN("device", "the logical device that owns the image."),
-        VkImageMemoryRequirementsInfo2.const.p.IN("pInfo", "a pointer to an instance of the ##VkImageMemoryRequirementsInfo2 structure containing parameters required for the memory requirements query."),
-        VkMemoryRequirements2.p.OUT("pMemoryRequirements", "points to an instance of the ##VkMemoryRequirements2 structure in which the memory requirements of the image object are returned.")
+        VkDevice("device", "the logical device that owns the image."),
+        VkImageMemoryRequirementsInfo2.const.p("pInfo", "a pointer to an instance of the ##VkImageMemoryRequirementsInfo2 structure containing parameters required for the memory requirements query."),
+        VkMemoryRequirements2.p("pMemoryRequirements", "points to an instance of the ##VkMemoryRequirements2 structure in which the memory requirements of the image object are returned.")
     )
 
     void(
         "GetBufferMemoryRequirements2KHR",
         "See #GetBufferMemoryRequirements2().",
 
-        VkDevice.IN("device", "the logical device that owns the buffer."),
-        VkBufferMemoryRequirementsInfo2.const.p.IN("pInfo", "a pointer to an instance of the ##VkBufferMemoryRequirementsInfo2 structure containing parameters required for the memory requirements query."),
-        VkMemoryRequirements2.p.OUT("pMemoryRequirements", "points to an instance of the ##VkMemoryRequirements2 structure in which the memory requirements of the buffer object are returned.")
+        VkDevice("device", "the logical device that owns the buffer."),
+        VkBufferMemoryRequirementsInfo2.const.p("pInfo", "a pointer to an instance of the ##VkBufferMemoryRequirementsInfo2 structure containing parameters required for the memory requirements query."),
+        VkMemoryRequirements2.p("pMemoryRequirements", "points to an instance of the ##VkMemoryRequirements2 structure in which the memory requirements of the buffer object are returned.")
     )
 
     void(
         "GetImageSparseMemoryRequirements2KHR",
         "See #GetImageSparseMemoryRequirements2().",
 
-        VkDevice.IN("device", "the logical device that owns the image."),
-        VkImageSparseMemoryRequirementsInfo2.const.p.IN("pInfo", "a pointer to an instance of the ##VkImageSparseMemoryRequirementsInfo2 structure containing parameters required for the memory requirements query."),
-        AutoSize("pSparseMemoryRequirements")..Check(1)..uint32_t.p.INOUT("pSparseMemoryRequirementCount", "a pointer to an integer related to the number of sparse memory requirements available or queried, as described below."),
-        nullable..VkSparseImageMemoryRequirements2.p.OUT("pSparseMemoryRequirements", "either {@code NULL} or a pointer to an array of ##VkSparseImageMemoryRequirements2 structures.")
+        VkDevice("device", "the logical device that owns the image."),
+        VkImageSparseMemoryRequirementsInfo2.const.p("pInfo", "a pointer to an instance of the ##VkImageSparseMemoryRequirementsInfo2 structure containing parameters required for the memory requirements query."),
+        AutoSize("pSparseMemoryRequirements")..Check(1)..uint32_t.p("pSparseMemoryRequirementCount", "a pointer to an integer related to the number of sparse memory requirements available or queried, as described below."),
+        nullable..VkSparseImageMemoryRequirements2.p("pSparseMemoryRequirements", "either {@code NULL} or a pointer to an array of ##VkSparseImageMemoryRequirements2 structures.")
     )
 }
