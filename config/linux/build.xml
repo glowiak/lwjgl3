@@ -22,8 +22,8 @@
     <macrodef name="compile">
         <attribute name="dest" default="${dest}"/>
         <attribute name="lang" default="c"/>
-        <attribute name="gcc.exec" default="gcc${gcc.suffix}"/>
-        <attribute name="gpp.exec" default="g++${gcc.suffix}"/>
+        <attribute name="gcc.exec" default="cc${gcc.suffix}"/>
+        <attribute name="gpp.exec" default="c++${gcc.suffix}"/>
         <attribute name="lto" default="-flto"/>
         <attribute name="flags" default=""/>
         <attribute name="simple" default="false"/>
@@ -64,8 +64,8 @@
         <attribute name="module"/>
         <attribute name="linker" default="gcc"/>
         <attribute name="lang" default="c"/>
-        <attribute name="gcc.exec" default="gcc${gcc.suffix}"/>
-        <attribute name="gpp.exec" default="g++${gcc.suffix}"/>
+        <attribute name="gcc.exec" default="cc${gcc.suffix}"/>
+        <attribute name="gpp.exec" default="c++${gcc.suffix}"/>
         <attribute name="flags" default="-Werror -Wfatal-errors"/>
         <attribute name="simple" default="false"/>
         <element name="beforeCompile" optional="true"/>
@@ -139,8 +139,8 @@
 
     <macrodef name="build_simple">
         <attribute name="module"/>
-        <attribute name="gcc.exec" default="gcc${gcc.suffix}"/>
-        <attribute name="gpp.exec" default="g++${gcc.suffix}"/>
+        <attribute name="gcc.exec" default="cc${gcc.suffix}"/>
+        <attribute name="gpp.exec" default="c++${gcc.suffix}"/>
         <sequential>
             <build module="@{module}" gcc.exec="@{gcc.exec}" gpp.exec="@{gpp.exec}" simple="true" if:true="${binding.@{module}}"/>
         </sequential>
