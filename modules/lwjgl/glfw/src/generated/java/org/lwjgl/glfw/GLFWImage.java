@@ -229,6 +229,9 @@ public class GLFWImage extends Struct implements NativeResource {
     public static GLFWImage callocStack(MemoryStack stack) {
         return wrap(GLFWImage.class, stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
+    public static GLFWImage.Buffer malloc(int capacity, MemoryStack stack) {
+        return wrap(Buffer.class, stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
+    }
 
     /**
      * Returns a new {@link GLFWImage.Buffer} instance allocated on the thread-local {@link MemoryStack}.
